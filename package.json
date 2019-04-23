@@ -7,6 +7,7 @@
     "url": "https://github.com/nishantnaagnihotri/tark-vitark.git"
   },
   "dependencies": {
+    "express": "^4.16.4",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-redux": "^6.0.0",
@@ -17,7 +18,12 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build-server": "babel src/ -d server-dist",
+    "buid-serve-server": "npm run build-server && npm run serve-server",
+    "start-server": "nodemon --watch src --ext js,jsx --exec npm run buid-serve-server",
+    "serve-server": "node server-dist/server.js",
+    "test-server": "mocha --require @babel/register"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -27,5 +33,13 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "@babel/cli": "^7.4.3",
+    "@babel/core": "^7.4.3",
+    "@babel/preset-env": "^7.4.3",
+    "@babel/register": "^7.4.0",
+    "mocha": "^6.1.4",
+    "nodemon": "^1.18.11"
+  }
 }
