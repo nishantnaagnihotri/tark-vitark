@@ -1,5 +1,13 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## AI Collaboration Contract
+
+For consistent behavior across sessions, use:
+
+- `AGENTS.md`
+- `.github/copilot-instructions.md`
+- `.github/agents/studio-architect.agent.md`
+
 ## Available Scripts
 
 In the project directory, you can run:
