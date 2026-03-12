@@ -15,13 +15,13 @@ Current primary agent:
 
 Additional role-specific agents:
 
-- `.github/agents/ux-designer.agent.md`
+- `.github/agents/ux-strategist.agent.md`
 
 ## Agent Selection Guide
 
 - Use `.github/agents/studio-architect.agent.md` for end-to-end delivery: planning, architecture, implementation, tests, docs, and release-ready increments.
-- Use `.github/agents/ux-designer.agent.md` for UI/UX-heavy work: user flows, interaction behavior, accessibility, responsive layouts, and visual direction.
-- If a task spans both, start with `studio-architect` for scope and sequencing, then hand focused interface tasks to `ux-designer`.
+- Use `.github/agents/ux-strategist.agent.md` for UI/UX-heavy work: user flows, interaction behavior, accessibility, responsive layouts, and visual direction.
+- If a task spans both, start with `studio-architect` for scope and sequencing, then hand focused interface tasks to `ux-strategist`.
 
 ## Current State
 
