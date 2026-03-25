@@ -70,3 +70,16 @@ Tracks durable product/process decisions so future sessions and agents can inher
   - Lower duplication and reduced drift risk.
 - Follow-up:
   - Revisit baseline after first implementation slice to validate sufficiency and clarity.
+
+## 2026-03-25 - Dual UX Artifact Policy
+- Status: Accepted
+- Context: UX behavior needs a durable text spec for implementation plus a visual artifact for design validation.
+- Decision:
+  - Keep UX spec docs in-repo as canonical behavioral guidance.
+  - Require a Figma link for UX slices, or an explicit waiver with rationale when not needed.
+  - Enforce this in UX Gate criteria and issue intake template.
+- Consequences:
+  - Better cross-role clarity between behavior and visual design intent.
+  - Slight process overhead for maintaining an additional link field.
+- Follow-up:
+  - After 3 slices, evaluate whether waiver usage is clear and consistent.

@@ -123,6 +123,15 @@ body:
     validations:
       required: true
 
+  - type: input
+    id: figma_link
+    attributes:
+      label: Figma Link or Waiver
+      description: "Provide Figma file/frame link. If not needed, enter: Figma not required for this slice - <reason>."
+      placeholder: https://www.figma.com/file/... or Figma not required for this slice - low-risk backend-only change
+    validations:
+      required: true
+
   - type: dropdown
     id: readiness
     attributes:

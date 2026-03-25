@@ -109,7 +109,8 @@ Every slice should pass through these gates.
 - Exit criteria:
   - Primary flow and alternative states are specified.
   - Accessibility and responsive behavior expectations are stated.
-  - UX artifacts are linked in slice docs.
+  - UX spec is linked in slice docs.
+  - Figma artifact link is provided, or an explicit "Figma not required for this slice" waiver is documented with rationale.
 
 3. Build Gate
 - Owner: Feature Engineer
@@ -191,6 +192,7 @@ Copy this section into slice docs and fill per role.
 - [ ] Empty/loading/error states documented.
 - [ ] Mobile and accessibility expectations documented.
 - [ ] UX artifacts linked.
+- [ ] Figma artifact link or explicit waiver with rationale is documented.
 
 ### Feature Engineer
 - [ ] Implementation aligns with UX and contract.

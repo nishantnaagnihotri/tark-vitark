@@ -80,3 +80,7 @@ Provide a clean, low-friction reading experience where users can understand a de
 ## 11. Implementation Notes
 - Keep structure simple and reusable for future interactive enhancements.
 - Use semantic containers so later features (vote/comment) can attach without major layout refactor.
+
+## 12. Figma Artifact
+- Figma link: TBD
+- Waiver: Not applied
