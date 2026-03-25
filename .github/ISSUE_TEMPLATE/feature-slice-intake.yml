@@ -1,0 +1,96 @@
+name: Feature Slice Intake
+description: Create a feature slice issue with required functional requirement traceability.
+title: "[Slice]: "
+labels:
+  - slice
+  - needs-triage
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for new feature slices.
+
+        Source-of-truth docs:
+        - docs/functional-requirements-index.md
+        - docs/functional-requirements-template.md
+        - docs/requirements-lifecycle.md
+
+  - type: textarea
+    id: requirement_ids
+    attributes:
+      label: Requirement IDs
+      description: Use IDs like FR-auth-001, FR-auth-002.
+      placeholder: |
+        FR-auth-001
+        FR-auth-002
+    validations:
+      required: true
+
+  - type: input
+    id: requirements_index_link
+    attributes:
+      label: Requirements Index Link
+      description: Link to the exact row/update in docs/functional-requirements-index.md (commit or PR link is acceptable).
+      placeholder: https://github.com/<org>/<repo>/blob/<branch>/docs/functional-requirements-index.md
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem_outcome
+    attributes:
+      label: Problem and User Outcome
+      description: What user problem are we solving and what outcome should improve?
+      placeholder: |
+        Problem:
+        Target user:
+        Desired outcome:
+        Success metric(s):
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope (In and Out)
+      description: Keep scope boundaries explicit to avoid drift.
+      placeholder: |
+        In scope:
+        -
+
+        Out of scope:
+        -
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance Criteria
+      description: List clear, testable acceptance criteria.
+      placeholder: |
+        AC-1:
+        AC-2:
+        AC-3:
+    validations:
+      required: true
+
+  - type: dropdown
+    id: readiness
+    attributes:
+      label: Plan Gate Readiness
+      description: Select current requirement readiness.
+      options:
+        - Proposed
+        - Approved
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: policy_ack
+    attributes:
+      label: Policy Acknowledgement
+      options:
+        - label: I confirm repo docs are the requirements source of truth, and this issue is an execution tracker.
+          required: true
+        - label: I confirm this issue references the same requirement IDs used in implementation and QA evidence.
+          required: true

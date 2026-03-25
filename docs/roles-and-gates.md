@@ -5,6 +5,14 @@ Define a lightweight, scalable role model for supervised AI-driven delivery.
 
 This document is designed for incremental adoption: start with a core set of roles and activate additional roles only when risk or complexity justifies it.
 
+## Functional Requirements Ownership
+To keep slices implementation-ready, every non-trivial slice should have a short Functional Requirements Spec.
+
+- Ownership can be fulfilled by a dedicated Product Manager role or by the Studio Architect when the team is lean.
+- The artifact should be concise, testable, and directly usable by UX, engineering, and QA.
+- Use `docs/functional-requirements-template.md` as the default template.
+- Track approved requirements in `docs/functional-requirements-index.md` to preserve continuity across sessions.
+
 ## Core Role Set
 
 1. Studio Architect
@@ -12,32 +20,37 @@ This document is designed for incremental adoption: start with a core set of rol
 - Maintains lifecycle continuity across UX, implementation, review, and release.
 - Ensures each slice has clear acceptance criteria and measurable outcomes.
 
-2. UX Strategist
+2. Product Manager
+- Owns problem framing, functional scope definition, and acceptance criteria quality.
+- Ensures requirements are clear, testable, and aligned with user outcomes.
+- Maintains the Functional Requirements Spec and resolves requirement ambiguity before Build Gate.
+
+3. UX Strategist
 - Converts product intent into concrete user flows and interaction states.
 - Defines copy intent, empty/loading/error states, and accessibility expectations.
 - Produces a focused UX spec per slice.
 
-3. Feature Engineer
+4. Feature Engineer
 - Implements approved slice scope end-to-end.
 - Keeps changes reversible, modular, and testable.
 - Adds required tests and run instructions.
 
-4. Quality Engineer
+5. Quality Engineer
 - Designs and validates test coverage for the critical path.
 - Verifies acceptance criteria and regression safety.
 - Documents test results and unresolved risks.
 
-5. Code Steward
+6. Code Steward
 - Reviews maintainability, architectural fit, and code clarity.
 - Checks modular boundaries and avoids unnecessary complexity.
 - Ensures docs and implementation stay aligned.
 
-6. Security Steward
+7. Security Steward
 - Reviews auth/session implications, data exposure, secrets handling, and dependency risk.
 - Runs targeted threat-minded checks for high-risk changes.
 - Required for security-sensitive slices.
 
-7. Release Engineer
+8. Release Engineer
 - Owns build, migration safety checks, rollout plan, and rollback plan.
 - Verifies release readiness and operational safety.
 - Required when deployment risk is non-trivial.
@@ -64,6 +77,7 @@ Activate only when justified by slice risk/profile.
 
 Phase 1: Default active roles
 - Studio Architect
+- Product Manager
 - UX Strategist
 - Feature Engineer
 - Quality Engineer
@@ -83,6 +97,8 @@ Every slice should pass through these gates.
 - Owner: Studio Architect
 - Exit criteria:
   - Problem statement, target user, and scope are explicit.
+  - Functional Requirements Spec is complete and linked.
+  - Functional Requirements Index entry is created or updated for the slice.
   - Acceptance criteria are measurable.
   - Risk profile and required roles are declared.
 
@@ -139,6 +155,11 @@ Use these triggers to avoid process overhead.
   - Resource cost spikes
   - Large frontend bundles or heavy query paths
 
+- Product Manager trigger (when PM is not default-active):
+  - Scope ambiguity or conflicting stakeholder expectations
+  - New feature area without existing requirement patterns
+  - Repeated rework due to unclear acceptance criteria
+
 - Accessibility Reviewer trigger:
   - Critical user-facing flows
   - Public-facing features with broad usage
@@ -154,6 +175,13 @@ Copy this section into slice docs and fill per role.
 - [ ] Acceptance criteria are explicit.
 - [ ] Required roles selected based on triggers.
 - [ ] Final gate decision and follow-ups recorded.
+
+### Product Manager
+- [ ] Problem statement and user outcome are explicit.
+- [ ] In-scope and out-of-scope are defined.
+- [ ] Acceptance criteria are testable and unambiguous.
+- [ ] Functional Requirements Spec is linked and current.
+- [ ] Functional Requirements Index is updated with IDs, status, and links.
 
 ### UX Strategist
 - [ ] Primary flow documented.
@@ -196,6 +224,7 @@ To preserve continuity across sessions, treat these as mandatory updates per sli
 
 1. Append decisions to `docs/decision-log.md`.
 2. Update durable patterns in `docs/patterns.md`.
-3. Record role trigger refinements in this file when process changes.
+3. Update `docs/functional-requirements-index.md` for requirement status changes.
+4. Record role trigger refinements in this file when process changes.
 
 This creates a stable source of truth for future delegation and automation.

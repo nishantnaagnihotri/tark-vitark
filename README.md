@@ -16,10 +16,12 @@ Current primary agent:
 Additional role-specific agents:
 
 - `.github/agents/ux-strategist.agent.md`
+- `.github/agents/product-manager.agent.md`
 
 ## Agent Selection Guide
 
 - Use `.github/agents/studio-architect.agent.md` for end-to-end delivery: planning, architecture, implementation, tests, docs, and release-ready increments.
+- Use `.github/agents/product-manager.agent.md` for requirements continuity: functional specs, acceptance criteria quality, and requirement traceability across slices.
 - Use `.github/agents/ux-strategist.agent.md` for UI/UX-heavy work: user flows, interaction behavior, accessibility, responsive layouts, and visual direction.
 - If a task spans both, start with `studio-architect` for scope and sequencing, then hand focused interface tasks to `ux-strategist`.
 
@@ -27,6 +29,8 @@ Additional role-specific agents:
 
 - Previous React/Cra scaffolding has been removed.
 - The repository is ready to initialize a new stack from scratch.
+- Feature slice issue intake template is available at `.github/ISSUE_TEMPLATE/feature-slice-intake.yml`.
+- Required GitHub labels can be bootstrapped with `bash scripts/setup-github-labels.sh`.
 
 ## Next Step
 

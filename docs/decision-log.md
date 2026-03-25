@@ -30,3 +30,30 @@ Tracks durable product/process decisions so future sessions and agents can inher
 - Consequences:
   - Faster delegation with less ambiguity.
   - Lower cognitive load when assigning slice tasks.
+
+## 2026-03-25 - Lightweight Product Management Lane
+- Status: Accepted
+- Context: Slices need clearer functional requirements to reduce rework and improve handoff quality.
+- Decision:
+  - Add Product Manager to the default active role set.
+  - Require a concise Functional Requirements Spec for non-trivial slices before implementation.
+  - Standardize the requirements artifact using `docs/functional-requirements-template.md`.
+- Consequences:
+  - Better clarity for UX, engineering, and QA handoffs.
+  - Slight additional process overhead at Plan Gate.
+- Follow-up:
+  - Reassess after 3 slices whether PM remains always-active or becomes trigger-based.
+
+## 2026-03-25 - Functional Requirements Continuity System
+- Status: Accepted
+- Context: Team needs one role/agent to retain complete functional requirement knowledge across the full lifecycle.
+- Decision:
+  - Introduce Product Manager custom agent as the default requirements owner.
+  - Establish `docs/functional-requirements-index.md` as the cross-slice requirements source of truth.
+  - Define lifecycle operating rules in `docs/requirements-lifecycle.md`.
+  - Require requirements index updates during Plan Gate and requirement status transitions.
+- Consequences:
+  - Stronger cross-session continuity and lower ambiguity at handoff points.
+  - Requires disciplined index maintenance to avoid drift.
+- Follow-up:
+  - After first 3 implemented slices, audit traceability from requirement IDs to tests and ship decisions.
