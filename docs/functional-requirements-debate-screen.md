@@ -6,20 +6,21 @@
 - Date: 2026-03-25
 - Related links:
   - Decision log entry: docs/decision-log.md
-  - UX spec: TBD
+  - UX spec: docs/ux-spec-debate-screen.md
   - Tracking issue/task: https://github.com/nishantnaagnihotri/tark-vitark/issues/1
 
 ## 2. Problem and User Outcome
 - Problem statement: Users need a clear screen to read a debate topic and view arguments from both sides in a structured way.
 - Target user/persona: Any client user who is viewing a debate.
 - Desired outcome: User can understand the debate topic and quickly scan favour and against arguments.
-- Success metric(s): The screen renders one topic with visible favour and against sections and at least one argument in each section.
+- Success metric(s): The screen renders one topic with a mobile-first chronological argument stream that includes at least three favour and three against arguments.
 
 ## 3. Scope
 ### In Scope
 - Static debate topic display.
-- Static arguments in favour section with multiple items.
-- Static arguments against section with multiple items.
+- Static arguments in favour and against with multiple items.
+- Mobile layout shows a single chronological stream preserving posted order across both sides.
+- Mobile layout aligns favour arguments left and against arguments right.
 - Layout focused on readability and clear separation of both sides.
 
 ### Out of Scope
@@ -32,9 +33,10 @@
 
 ## 5. Functional Requirements
 - FR-debate-screen-001: The screen must display one debate topic heading.
-- FR-debate-screen-002: The screen must display a list of at least three arguments in favour.
-- FR-debate-screen-003: The screen must display a list of at least three arguments against.
+- FR-debate-screen-002: The screen must include at least three arguments tagged in favour.
+- FR-debate-screen-003: The screen must include at least three arguments tagged against.
 - FR-debate-screen-004: The layout must visually distinguish favour and against sections.
+- FR-debate-screen-005: On mobile layout, arguments must appear in posted order in a single mixed stream, with favour left-aligned and against right-aligned.
 
 ## 6. Non-Functional Requirements
 - NFR-1: The layout must be mobile-first, with primary readability optimized for small screens.
@@ -43,18 +45,20 @@
 
 ## 7. Acceptance Criteria (Testable)
 - AC-1: On load, a debate topic title is visible.
-- AC-2: A section labeled for favour arguments is visible with at least three argument items.
-- AC-3: A section labeled for against arguments is visible with at least three argument items.
+- AC-2: The rendered dataset includes at least three favour arguments.
+- AC-3: The rendered dataset includes at least three against arguments.
 - AC-4: Favour and against sections are visually distinguishable and readable with a mobile-first layout.
 - AC-5: No interactive controls are present (for example, no vote, comment, post, or submit actions).
+- AC-6: On mobile width, argument cards/items appear in posted order irrespective of side tag, with favour entries left-aligned and against entries right-aligned.
 
 ## 8. Traceability Matrix
 | FR ID | Behavior | Linked AC IDs | Test Evidence |
 |---|---|---|---|
 | FR-debate-screen-001 | Debate topic heading is rendered on screen. | AC-1 | TBD |
-| FR-debate-screen-002 | Favour section renders at least three arguments. | AC-2 | TBD |
-| FR-debate-screen-003 | Against section renders at least three arguments. | AC-3 | TBD |
+| FR-debate-screen-002 | Rendered content includes at least three favour arguments. | AC-2 | TBD |
+| FR-debate-screen-003 | Rendered content includes at least three against arguments. | AC-3 | TBD |
 | FR-debate-screen-004 | Favour and against sections are visually distinct and readable in mobile-first layout. | AC-4 | TBD |
+| FR-debate-screen-005 | Mobile stream preserves posted order across both sides and aligns favour left, against right. | AC-6 | TBD |
 
 ## 9. States and Edge Cases
 - Empty state: Not required in this slice; static sample data is mandatory.
@@ -64,6 +68,7 @@
   - Long debate topic text should wrap without overflow.
   - Long argument content should wrap and remain readable.
   - Uneven argument counts across favour and against should render correctly.
+  - Timestamp ties should use stable secondary ordering to prevent visual jitter.
   - Dense content (at least three items per side) should remain scannable without visual clutter.
 
 ## 10. Constraints and Dependencies
