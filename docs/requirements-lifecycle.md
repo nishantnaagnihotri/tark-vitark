@@ -19,6 +19,16 @@ Purpose: ensure one agent role can maintain full, current knowledge of functiona
 - Default issue intake form: `.github/ISSUE_TEMPLATE/feature-slice-intake.yml`.
 - Required labels bootstrap: `bash scripts/setup-github-labels.sh`.
 
+## Standard Issue Structure
+Every feature-slice issue should follow this structure:
+- Top summary section listing in-scope FR IDs.
+- Problem/outcome, scope, and acceptance criteria sections.
+- NFR baseline inheritance acknowledgement section.
+- Traceability Matrix section mapping FR ID -> behavior -> AC IDs -> evidence.
+- UX spec link section (or `TBD` until UX Gate completes).
+
+Rationale: top FR summary provides fast triage scanning, while matrix provides full traceability detail.
+
 ## Ownership Model
 - Primary owner: Product Manager
 - Fallback owner (lean mode): Studio Architect

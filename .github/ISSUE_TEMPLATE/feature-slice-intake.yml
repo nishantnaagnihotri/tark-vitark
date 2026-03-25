@@ -13,16 +13,30 @@ body:
         Source-of-truth docs:
         - docs/functional-requirements-index.md
         - docs/functional-requirements-template.md
+        - docs/non-functional-requirements-baseline.md
         - docs/requirements-lifecycle.md
+
+        Issue structure rule:
+        - Keep a compact in-scope FR ID summary near the top.
+        - Keep a detailed FR-to-AC Traceability Matrix in the issue body.
 
   - type: textarea
     id: requirement_ids
     attributes:
-      label: Requirement IDs
-      description: Use IDs like FR-auth-001, FR-auth-002.
+      label: In-Scope Requirement IDs (Top Summary)
+      description: Keep this compact for quick triage and handoff. Use IDs like FR-debate-screen-001.
       placeholder: |
-        FR-auth-001
-        FR-auth-002
+        FR-debate-screen-001
+        FR-debate-screen-002
+    validations:
+      required: true
+
+  - type: input
+    id: slice_requirements_spec_link
+    attributes:
+      label: Slice Requirements Spec Link
+      description: Link to docs/functional-requirements-*.md for this slice.
+      placeholder: https://github.com/<org>/<repo>/blob/<branch>/docs/functional-requirements-<slice>.md
     validations:
       required: true
 
@@ -32,6 +46,20 @@ body:
       label: Requirements Index Link
       description: Link to the exact row/update in docs/functional-requirements-index.md (commit or PR link is acceptable).
       placeholder: https://github.com/<org>/<repo>/blob/<branch>/docs/functional-requirements-index.md
+    validations:
+      required: true
+
+  - type: textarea
+    id: nfr_baseline_ack
+    attributes:
+      label: NFR Baseline Inheritance
+      description: Confirm baseline inheritance and record any slice-specific NFR additions/exceptions.
+      placeholder: |
+        Baseline inherited from docs/non-functional-requirements-baseline.md: Yes
+        Slice-specific additions:
+        -
+        Exceptions (if any, with rationale):
+        -
     validations:
       required: true
 
@@ -71,6 +99,27 @@ body:
         AC-1:
         AC-2:
         AC-3:
+    validations:
+      required: true
+
+  - type: textarea
+    id: traceability_matrix
+    attributes:
+      label: Traceability Matrix
+      description: Map FR IDs to behavior and AC IDs.
+      placeholder: |
+        | FR ID | Behavior | Linked AC IDs | Test Evidence |
+        |---|---|---|---|
+        | FR-... | ... | AC-... | TBD |
+    validations:
+      required: true
+
+  - type: input
+    id: ux_spec_link
+    attributes:
+      label: UX Spec Link
+      description: Link UX spec if available now. If pending, enter TBD and update at UX Gate.
+      placeholder: https://github.com/<org>/<repo>/blob/<branch>/docs/ux-spec-<slice>.md or TBD
     validations:
       required: true
 
