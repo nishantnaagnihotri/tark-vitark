@@ -76,5 +76,28 @@ Avoid fake completeness, shallow abstractions, and unnecessary dependencies.
 At the start of a new chat, load:
 
 - `AGENTS.md`
+- `docs/current-state.md`
+- `docs/functional-requirements-index.md`
+- active slice requirements spec (if one is active)
+- active slice UX spec (if one exists)
+- `docs/decision-log.md`
 
 Then follow them strictly for that session.
+
+## Knowledge Persistence Protocol
+
+To prevent context loss across chats, all significant work must be written through to repo docs in the same task.
+
+Required write-through updates:
+
+1. If requirements changed:
+   - update `docs/functional-requirements-index.md`
+   - update the active slice spec under `docs/functional-requirements-*.md`
+2. If UX behavior changed:
+   - update the corresponding `docs/ux-spec-*.md`
+3. If process or governance changed:
+   - update `docs/decision-log.md`
+   - update `docs/patterns.md` or `docs/roles-and-gates.md` as needed
+4. Always update `docs/current-state.md` when gate status, active slice, or critical context changes.
+
+No task is considered complete until write-through updates are finished.

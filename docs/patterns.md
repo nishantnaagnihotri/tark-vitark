@@ -27,6 +27,16 @@ Durable working patterns for planning, delivery, and delegation.
 - Assign stable requirement IDs and reuse them across UX notes, implementation tasks, and QA evidence.
 - On every significant requirement change, update both the index and `docs/decision-log.md`.
 
+## Startup-First Context Pattern
+- Start every new chat by loading `docs/current-state.md` before deeper artifacts.
+- Then load requirements index, active slice specs, and decision log.
+- This preserves high signal in limited context windows.
+
+## Write-Through Persistence Pattern
+- Do not leave critical decisions only in chat history.
+- In the same task, write changes to the relevant canonical docs.
+- Treat task completion as blocked until required docs are updated.
+
 ## Persistence Pattern
 - Record process and architecture decisions in `docs/decision-log.md`.
 - Record repeatable delivery heuristics in this file.

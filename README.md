@@ -31,6 +31,7 @@ Additional role-specific agents:
 - The repository is ready to initialize a new stack from scratch.
 - Feature slice issue intake template is available at `.github/ISSUE_TEMPLATE/feature-slice-intake.yml`.
 - Required GitHub labels can be bootstrapped with `bash scripts/setup-github-labels.sh`.
+- Startup context for every chat is tracked in `docs/current-state.md`.
 
 ## Next Step
 
