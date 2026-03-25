@@ -83,3 +83,17 @@ Tracks durable product/process decisions so future sessions and agents can inher
   - Slight process overhead for maintaining an additional link field.
 - Follow-up:
   - After 3 slices, evaluate whether waiver usage is clear and consistent.
+
+## 2026-03-26 - Agent-First Default and UX Figma Handoff Contract
+- Status: Accepted
+- Context: Team requires fully agentic execution by default, with minimal manual intervention even for UX/Figma work, and stronger reuse from design to code.
+- Decision:
+  - Enforce agent-first as mandatory in shared protocol and operating docs.
+  - Restrict manual actions to external blockers only, with explicit blocker and automation follow-up logging.
+  - Introduce deterministic UX Figma protocol in `docs/ux-figma-agentic-protocol.md`.
+  - Require every active UX spec to include both Figma Production Contract and Code Translation Contract.
+- Consequences:
+  - Lower design-to-code ambiguity and cleaner developer handoff.
+  - Slightly higher UX documentation rigor per slice.
+- Follow-up:
+  - Revisit after first 2 implemented slices to evaluate whether contract granularity should be tightened or reduced.

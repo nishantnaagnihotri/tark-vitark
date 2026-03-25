@@ -37,6 +37,18 @@ Durable working patterns for planning, delivery, and delegation.
 - In the same task, write changes to the relevant canonical docs.
 - Treat task completion as blocked until required docs are updated.
 
+## Agent-First Execution Pattern
+- Default every workflow step to agent execution.
+- Allow manual fallback only for external platform blockers (auth, API availability, provider outage).
+- When fallback occurs, record blocker, minimal manual action, and the automation follow-up in the same task.
+
+## UX-to-Code Contract Pattern
+- Every active UX spec must include:
+	- Figma Production Contract
+	- Code Translation Contract
+- Use stable naming conventions for frames, components, and tokens to maximize reuse.
+- Ensure Developer Agent can map design artifacts to code components without ambiguous interpretation.
+
 ## Persistence Pattern
 - Record process and architecture decisions in `docs/decision-log.md`.
 - Record repeatable delivery heuristics in this file.

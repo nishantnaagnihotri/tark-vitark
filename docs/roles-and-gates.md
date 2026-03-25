@@ -5,6 +5,8 @@ Define a lightweight, scalable role model for supervised AI-driven delivery.
 
 This document is designed for incremental adoption: start with a core set of roles and activate additional roles only when risk or complexity justifies it.
 
+Agent-first execution is mandatory by default. Manual steps are fallback-only for external platform blockers and must be documented with an automation follow-up.
+
 ## Functional Requirements Ownership
 To keep slices implementation-ready, every non-trivial slice should have a short Functional Requirements Spec.
 
@@ -110,6 +112,7 @@ Every slice should pass through these gates.
   - Primary flow and alternative states are specified.
   - Accessibility and responsive behavior expectations are stated.
   - UX spec is linked in slice docs.
+  - UX spec includes Figma Production Contract and Code Translation Contract sections.
   - Figma artifact link is provided, or an explicit "Figma not required for this slice" waiver is documented with rationale.
 
 3. Build Gate
@@ -192,6 +195,7 @@ Copy this section into slice docs and fill per role.
 - [ ] Empty/loading/error states documented.
 - [ ] Mobile and accessibility expectations documented.
 - [ ] UX artifacts linked.
+- [ ] Figma Production Contract and Code Translation Contract are complete.
 - [ ] Figma artifact link or explicit waiver with rationale is documented.
 
 ### Feature Engineer

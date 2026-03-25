@@ -27,6 +27,14 @@ All significant outputs must be write-through persisted in repo docs during the 
 - Process updates: decision log and patterns/roles docs
 - State updates: current-state doc
 
+## Agent-First Default
+- Execute through agents and repo automation by default for planning, UX, implementation, QA, and documentation.
+- Use manual work only when an external dependency cannot be automated in the current environment.
+- Every manual fallback must include:
+	- blocker description
+	- minimal required human action
+	- explicit follow-up to restore full agent execution
+
 ## Canonical Artifacts
 - `docs/current-state.md` for one-page startup context
 - `docs/non-functional-requirements-baseline.md` for inherited delivery-wide NFRs

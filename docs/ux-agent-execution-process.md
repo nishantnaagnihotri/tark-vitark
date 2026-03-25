@@ -37,6 +37,7 @@ Example:
 2. Validate inherited NFR baseline constraints relevant to UX output.
 3. Produce or update UX artifact details:
 - UX spec completeness (flow, states, responsiveness, accessibility)
+- Figma production contract and code translation contract (per `docs/ux-figma-agentic-protocol.md`)
 - Figma file/frame link, or approved waiver if allowed
 4. Synchronize artifacts:
 - Update active `docs/ux-spec-*.md`
@@ -54,10 +55,13 @@ Example:
 - Do not change functional requirements unless ambiguity blocks UX output.
 - If FR changes are required, request PM/Architect clarification and log assumptions.
 - Preserve mobile-first baseline unless a documented exception exists.
+- Keep UX execution agent-first; use manual fallback only for external platform blockers.
+- In fallback mode, still generate complete contracts in-repo, then request minimal manual link placement.
 
 ## Done Criteria
 - UX Gate exit criteria in docs/roles-and-gates.md are all satisfied.
 - Active slice shows updated UX artifact links.
+- UX spec includes Figma Production Contract and Code Translation Contract.
 - Current-state `Next Gate` advances appropriately.
 
 ## Output Format

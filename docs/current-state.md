@@ -3,7 +3,7 @@
 Single-page startup context for every new chat.
 
 ## Last Updated
-- Date: 2026-03-25
+- Date: 2026-03-26
 - Updated by role: Studio Architect
 
 ## Active Slice
@@ -38,10 +38,16 @@ Line format:
 - Add Figma file/frame link for debate-screen UX artifact.
 - Confirm final label text choice: "In Favour/Against" vs "For/Against"
 - Confirm desktop behavior preference if stream and columns diverge for long content
+- Confirm Figma API/MCP availability to remove manual fallback for link placement.
 
 ## Next Gate
 - UX Gate
 - Expected artifact: Figma link added for debate-screen (no waiver), then proceed to Build Gate
+
+## Agentic UX Protocol Status
+- Agent-first policy: enforced
+- UX Figma protocol: `docs/ux-figma-agentic-protocol.md`
+- Active fallback blocker: direct Figma API/MCP availability not yet confirmed
 
 ## Update Rule
 When a significant decision, requirement, or gate transition happens, update this file in the same task as:

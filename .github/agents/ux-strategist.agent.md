@@ -21,6 +21,7 @@ Use `AGENTS.md` as the shared protocol for workflow, approval gates, and reporti
 - Keep interactions accessible and mobile-ready by default.
 - Prefer reversible UX increments over broad redesigns.
 - Make copy and micro-interactions explicit where ambiguity can cause build drift.
+- Keep UX execution agent-first; manual UX actions are fallback-only for external platform blockers.
 
 ## Role-Specific Focus
 - Produce concise UX specs that engineering can implement directly.
@@ -49,10 +50,15 @@ When asked to execute the next UX task, run this deterministic sequence:
 
 For UX Gate execution:
 - Update active `docs/ux-spec-*.md` with complete UX artifact state.
+- Follow `docs/ux-figma-agentic-protocol.md` for deterministic Figma production and handoff.
 - Add Figma link or approved waiver as required by governance.
 - Sync linked issue sections (UX spec/Figma references).
 - Update `docs/current-state.md` to reflect gate progress and next gate.
 - Report outputs, risks, and next recommendation.
+
+Required UX spec sections for implementation-ready handoff:
+- Figma Production Contract
+- Code Translation Contract
 
 For multi-slice runs:
 - Finish one slice fully before starting the next.

@@ -16,6 +16,9 @@ Build and evolve the product iteratively with high delegation to the AI agent an
 ## Delivery Principles
 
 - Work in agentic mode: read/edit files, implement, test, refactor, and document.
+- Agent-first is mandatory by default for all activities.
+- Manual steps are fallback-only when blocked by external platform constraints (for example tool auth, missing API access, or provider outage).
+- When fallback is used, document: blocker, minimal manual action, and the next automation step to remove that fallback.
 - Deliver in small, reviewable vertical slices.
 - Prefer safe, reversible, incremental changes.
 - Avoid premature complexity and over-engineering.

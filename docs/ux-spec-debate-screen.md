@@ -81,6 +81,51 @@ Provide a clean, low-friction reading experience where users can understand a de
 - Keep structure simple and reusable for future interactive enhancements.
 - Use semantic containers so later features (vote/comment) can attach without major layout refactor.
 
-## 12. Figma Artifact
+## 12. Figma Production Contract
+- Figma page name: Debate
+- Frame list:
+  - mobile: debate-screen-mobile-default
+  - tablet: debate-screen-tablet-default
+  - desktop: debate-screen-desktop-default
+- Component instances:
+  - cmp/debate/topic-header/default
+  - cmp/debate/argument-card/favour
+  - cmp/debate/argument-card/against
+  - cmp/layout/page-container/default
+- Token usage:
+  - tk/color/surface/base
+  - tk/color/surface/favour-bg
+  - tk/color/surface/against-bg
+  - tk/color/text/primary
+  - tk/space/stack/16
+  - tk/space/inset/16
+- State matrix coverage:
+  - default: included in this slice
+  - empty/loading/error/success: out of scope for this read-only slice
+
+## 13. Code Translation Contract
+- frame -> frontend component mapping:
+  - debate-screen-mobile-default -> DebateScreenMobile
+  - debate-screen-tablet-default -> DebateScreenTablet
+  - debate-screen-desktop-default -> DebateScreenDesktop
+- figma component -> reusable UI component mapping:
+  - cmp/debate/topic-header/default -> TopicHeader
+  - cmp/debate/argument-card/favour -> ArgumentCard variant="favour"
+  - cmp/debate/argument-card/against -> ArgumentCard variant="against"
+  - cmp/layout/page-container/default -> PageContainer
+- token -> code variable mapping:
+  - tk/color/surface/base -> --color-surface-base
+  - tk/color/surface/favour-bg -> --color-surface-favour
+  - tk/color/surface/against-bg -> --color-surface-against
+  - tk/color/text/primary -> --color-text-primary
+  - tk/space/stack/16 -> --space-16
+  - tk/space/inset/16 -> --space-16
+- interaction/state -> implementation expectation mapping:
+  - mobile chronological mixed stream -> render list in source order without side grouping
+  - favour side cue -> left alignment + favour token set
+  - against side cue -> right alignment + against token set
+  - tablet/desktop comparability -> optional side-by-side layout at >=768px
+
+## 14. Figma Artifact
 - Figma link: Pending
 - Waiver: Not allowed for this slice

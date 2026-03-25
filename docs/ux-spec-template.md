@@ -48,6 +48,22 @@ Use this template for slice-level UX Gate artifacts.
 ## 11. Implementation Notes
 - 
 
-## 12. Figma Artifact
+## 12. Figma Production Contract
+- Figma page name:
+- Frame list:
+	- mobile:
+	- tablet:
+	- desktop:
+- Component instances:
+- Token usage:
+- State matrix coverage:
+
+## 13. Code Translation Contract
+- frame -> frontend component mapping:
+- figma component -> reusable UI component mapping:
+- token -> code variable mapping:
+- interaction/state -> implementation expectation mapping:
+
+## 14. Figma Artifact
 - Figma link:
 - Waiver: (only if Figma is not required for this slice; include reason)

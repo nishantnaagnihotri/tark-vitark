@@ -21,6 +21,7 @@ Use `AGENTS.md` as the shared protocol for workflow, approval gates, and reporti
 - Avoid premature abstractions and unnecessary dependencies.
 - Optimize for solo builder workflow and low tooling cost.
 - Keep future extraction paths open (jobs, queue/events, caching/CDN, observability).
+- Keep execution agent-first by default; treat manual operations as fallback-only for external blockers.
 
 ## Role-Specific Focus
 - Translate product intent into practical architecture and implementation slices.

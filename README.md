@@ -38,6 +38,7 @@ Additional role-specific agents:
 - PlantUML source: [docs/development-workflow.puml](docs/development-workflow.puml)
 - Diagram image: [docs/assets/diagrams/development-workflow.png](docs/assets/diagrams/development-workflow.png)
 - UX agent execution process: [docs/ux-agent-execution-process.md](docs/ux-agent-execution-process.md)
+- UX Figma agentic protocol: [docs/ux-figma-agentic-protocol.md](docs/ux-figma-agentic-protocol.md)
 
 ![Development workflow diagram](docs/assets/diagrams/development-workflow.png)
 
