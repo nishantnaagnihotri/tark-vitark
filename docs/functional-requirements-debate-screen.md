@@ -48,7 +48,15 @@
 - AC-4: Favour and against sections are visually distinguishable and readable with a mobile-first layout.
 - AC-5: No interactive controls are present (for example, no vote, comment, post, or submit actions).
 
-## 8. States and Edge Cases
+## 8. Traceability Matrix
+| FR ID | Behavior | Linked AC IDs | Test Evidence |
+|---|---|---|---|
+| FR-debate-screen-001 | Debate topic heading is rendered on screen. | AC-1 | TBD |
+| FR-debate-screen-002 | Favour section renders at least three arguments. | AC-2 | TBD |
+| FR-debate-screen-003 | Against section renders at least three arguments. | AC-3 | TBD |
+| FR-debate-screen-004 | Favour and against sections are visually distinct and readable in mobile-first layout. | AC-4 | TBD |
+
+## 9. States and Edge Cases
 - Empty state: Not required in this slice; static sample data is mandatory.
 - Loading state: Not required in this slice.
 - Error state: Not required in this slice.
@@ -58,12 +66,12 @@
   - Uneven argument counts across favour and against should render correctly.
   - Dense content (at least three items per side) should remain scannable without visual clutter.
 
-## 9. Constraints and Dependencies
+## 10. Constraints and Dependencies
 - Technical constraints: Must be a dummy/static screen with no API dependency.
 - Compliance/security constraints: No sensitive data handling in this slice.
 - External dependencies: None required.
 
-## 10. Risks and Open Questions
+## 11. Risks and Open Questions
 - Risks:
   - If layout semantics are unclear, future interaction features may need UI rework.
   - Placeholder sample content may bias final spacing and typography decisions.
@@ -71,10 +79,11 @@
   - Should the section labels be "Favour/Against" or "For/Against"?
   - Should the layout be two-column on desktop and stacked on mobile by default?
 
-## 11. Definition of Ready
+## 12. Definition of Ready
 - [x] Problem and user outcome are clear.
 - [x] In-scope and out-of-scope are explicit.
 - [x] Acceptance criteria are measurable and unambiguous.
 - [x] Non-functional requirements are explicit.
+- [x] FR to behavior and AC mapping is documented.
 - [x] Key states and edge cases are covered.
 - [x] Dependencies and risks are documented.

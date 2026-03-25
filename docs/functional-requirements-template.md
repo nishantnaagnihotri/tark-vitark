@@ -44,25 +44,32 @@ Add more stories only when needed.
 - AC-2:
 - AC-3:
 
-## 8. States and Edge Cases
+## 8. Traceability Matrix
+| FR ID | Behavior | Linked AC IDs | Test Evidence |
+|---|---|---|---|
+| FR-1 |  | AC- | TBD |
+| FR-2 |  | AC- | TBD |
+
+## 9. States and Edge Cases
 - Empty state:
 - Loading state:
 - Error state:
 - Edge cases:
 
-## 9. Constraints and Dependencies
+## 10. Constraints and Dependencies
 - Technical constraints:
 - Compliance/security constraints:
 - External dependencies:
 
-## 10. Risks and Open Questions
+## 11. Risks and Open Questions
 - Risks:
 - Open questions:
 
-## 11. Definition of Ready
+## 12. Definition of Ready
 - [ ] Problem and user outcome are clear.
 - [ ] In-scope and out-of-scope are explicit.
 - [ ] Acceptance criteria are measurable and unambiguous.
 - [ ] Non-functional requirements are explicit.
+- [ ] FR to behavior and AC mapping is documented.
 - [ ] Key states and edge cases are covered.
 - [ ] Dependencies and risks are documented.
