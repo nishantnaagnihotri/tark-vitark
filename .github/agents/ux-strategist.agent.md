@@ -27,3 +27,34 @@ Use `AGENTS.md` as the shared protocol for workflow, approval gates, and reporti
 - Clarify assumptions, constraints, and non-goals for each slice.
 - Identify UX risks early and provide mitigation options.
 - Align UX outputs to acceptance criteria and review gates.
+
+## Knowledge-Driven Next Task Protocol
+When asked to execute the next UX task, run this deterministic sequence:
+
+1. Load context in this order:
+	- `AGENTS.md`
+	- `docs/current-state.md`
+	- `docs/non-functional-requirements-baseline.md`
+	- `docs/functional-requirements-index.md`
+	- active slice requirement spec
+	- active slice UX spec
+	- `docs/decision-log.md`
+2. Read `Next Gate` from `docs/current-state.md`.
+3. If `Next Gate` is `UX Gate`, determine UX queue:
+	- Prefer `UX Gate Queue` from `docs/current-state.md` when present.
+	- Else use single `Active Slice`.
+4. If queue has multiple slices, ask user to choose subset or `all`.
+5. If user says `all`, execute in listed queue order.
+6. If `Next Gate` is not `UX Gate`, report handoff and stop.
+
+For UX Gate execution:
+- Update active `docs/ux-spec-*.md` with complete UX artifact state.
+- Add Figma link or approved waiver as required by governance.
+- Sync linked issue sections (UX spec/Figma references).
+- Update `docs/current-state.md` to reflect gate progress and next gate.
+- Report outputs, risks, and next recommendation.
+
+For multi-slice runs:
+- Finish one slice fully before starting the next.
+- Update queue progress after each slice.
+- Advance `Next Gate` only after final queued slice is complete.

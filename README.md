@@ -36,6 +36,7 @@ Additional role-specific agents:
 ## Development Workflow Diagram
 
 - PlantUML source: `docs/development-workflow.puml`
+- UX agent execution process: `docs/ux-agent-execution-process.md`
 
 ## Next Step
 

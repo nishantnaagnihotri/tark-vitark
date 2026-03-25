@@ -11,6 +11,13 @@ Single-page startup context for every new chat.
 - Status: UX Gate in progress (Figma required; waiver not allowed)
 - Execution issue: https://github.com/nishantnaagnihotri/tark-vitark/issues/1
 
+## UX Gate Queue
+Use this ordered list when multiple slices are in UX Gate.
+Line format:
+`<order>. <slice-key> | issue: <url> | status: <pending|in-progress|done>`
+
+1. debate-screen | issue: https://github.com/nishantnaagnihotri/tark-vitark/issues/1 | status: in-progress
+
 ## Canonical Context (Load In This Order)
 1. AGENTS.md
 2. docs/current-state.md
