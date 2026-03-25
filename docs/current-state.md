@@ -14,10 +14,11 @@ Single-page startup context for every new chat.
 ## Canonical Context (Load In This Order)
 1. AGENTS.md
 2. docs/current-state.md
-3. docs/functional-requirements-index.md
-4. docs/functional-requirements-debate-screen.md
-5. docs/ux-spec-debate-screen.md
-6. docs/decision-log.md
+3. docs/non-functional-requirements-baseline.md
+4. docs/functional-requirements-index.md
+5. docs/functional-requirements-debate-screen.md
+6. docs/ux-spec-debate-screen.md
+7. docs/decision-log.md
 
 ## Current Requirements Snapshot
 - FR-debate-screen-001: show debate topic heading

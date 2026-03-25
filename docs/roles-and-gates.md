@@ -12,6 +12,7 @@ To keep slices implementation-ready, every non-trivial slice should have a short
 - The artifact should be concise, testable, and directly usable by UX, engineering, and QA.
 - Use `docs/functional-requirements-template.md` as the default template.
 - Track approved requirements in `docs/functional-requirements-index.md` to preserve continuity across sessions.
+- Inherit baseline non-functional requirements from `docs/non-functional-requirements-baseline.md` by default.
 
 ## Core Role Set
 
@@ -98,6 +99,7 @@ Every slice should pass through these gates.
 - Exit criteria:
   - Problem statement, target user, and scope are explicit.
   - Functional Requirements Spec is complete and linked.
+  - Baseline NFR inheritance is acknowledged; any exception is documented.
   - Functional Requirements Index entry is created or updated for the slice.
   - Acceptance criteria are measurable.
   - Risk profile and required roles are declared.
@@ -182,6 +184,7 @@ Copy this section into slice docs and fill per role.
 - [ ] Acceptance criteria are testable and unambiguous.
 - [ ] Functional Requirements Spec is linked and current.
 - [ ] Functional Requirements Index is updated with IDs, status, and links.
+- [ ] Baseline NFR inheritance is explicit; additions/deviations are documented.
 
 ### UX Strategist
 - [ ] Primary flow documented.

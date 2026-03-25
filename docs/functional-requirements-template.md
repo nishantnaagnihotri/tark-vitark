@@ -36,8 +36,12 @@ Add more stories only when needed.
 - FR-3:
 
 ## 6. Non-Functional Requirements
-- NFR-1:
-- NFR-2:
+- Inherited baseline: `docs/non-functional-requirements-baseline.md`
+- Baseline acknowledged: Yes/No
+- Slice-specific additions (optional):
+  - NFR-SLICE-001:
+- Baseline deviations/exceptions (optional, require rationale + decision log reference):
+  - NFR-EXCEPTION-001:
 
 ## 7. Acceptance Criteria (Testable)
 - AC-1:

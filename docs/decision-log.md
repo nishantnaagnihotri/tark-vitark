@@ -57,3 +57,16 @@ Tracks durable product/process decisions so future sessions and agents can inher
   - Requires disciplined index maintenance to avoid drift.
 - Follow-up:
   - After first 3 implemented slices, audit traceability from requirement IDs to tests and ship decisions.
+
+## 2026-03-25 - Baseline Non-Functional Requirements Inheritance
+- Status: Accepted
+- Context: Cross-slice NFRs (for example mobile-first) were duplicated in slice docs and risked inconsistency.
+- Decision:
+  - Introduce a single canonical baseline under `docs/non-functional-requirements-baseline.md`.
+  - Require all slices to inherit baseline NFRs by default.
+  - Keep slice specs focused on additions or explicit exceptions only.
+- Consequences:
+  - Stronger consistency across deliverables.
+  - Lower duplication and reduced drift risk.
+- Follow-up:
+  - Revisit baseline after first implementation slice to validate sufficiency and clarity.

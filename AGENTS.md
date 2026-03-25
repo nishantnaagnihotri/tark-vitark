@@ -77,6 +77,7 @@ At the start of a new chat, load:
 
 - `AGENTS.md`
 - `docs/current-state.md`
+- `docs/non-functional-requirements-baseline.md`
 - `docs/functional-requirements-index.md`
 - active slice requirements spec (if one is active)
 - active slice UX spec (if one exists)
@@ -95,9 +96,12 @@ Required write-through updates:
    - update the active slice spec under `docs/functional-requirements-*.md`
 2. If UX behavior changed:
    - update the corresponding `docs/ux-spec-*.md`
-3. If process or governance changed:
+3. If non-functional baseline changed:
+   - update `docs/non-functional-requirements-baseline.md`
+   - update baseline references in specs/templates/governance docs
+4. If process or governance changed:
    - update `docs/decision-log.md`
    - update `docs/patterns.md` or `docs/roles-and-gates.md` as needed
-4. Always update `docs/current-state.md` when gate status, active slice, or critical context changes.
+5. Always update `docs/current-state.md` when gate status, active slice, or critical context changes.
 
 No task is considered complete until write-through updates are finished.

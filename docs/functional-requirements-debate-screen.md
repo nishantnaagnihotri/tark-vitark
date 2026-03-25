@@ -39,9 +39,11 @@
 - FR-debate-screen-005: On mobile layout, arguments must appear in posted order in a single mixed stream, with favour left-aligned and against right-aligned.
 
 ## 6. Non-Functional Requirements
-- NFR-1: The layout must be mobile-first, with primary readability optimized for small screens.
-- NFR-2: On wider screens, favour and against sections may expand to a side-by-side layout while preserving reading clarity.
-- NFR-3: The screen must remain visually readable with long text content (topic and arguments) without horizontal overflow.
+- Inherited baseline: `docs/non-functional-requirements-baseline.md`
+- Baseline acknowledged: Yes
+- Slice-specific additions:
+  - NFR-SLICE-001: On mobile layout, mixed-stream argument alignment (favour left, against right) must remain visually readable with dense text.
+- Baseline deviations/exceptions: None.
 
 ## 7. Acceptance Criteria (Testable)
 - AC-1: On load, a debate topic title is visible.
