@@ -8,7 +8,7 @@ Single-page startup context for every new chat.
 
 ## Active Slice
 - Slice key: debate-screen
-- Status: UX Gate complete, ready for Build Gate
+- Status: UX Gate in progress (Figma required; waiver not allowed)
 - Execution issue: https://github.com/nishantnaagnihotri/tark-vitark/issues/1
 
 ## Canonical Context (Load In This Order)
@@ -28,12 +28,13 @@ Single-page startup context for every new chat.
 - FR-debate-screen-005: mobile stream preserves posted order; favour left, against right
 
 ## Open Questions
+- Add Figma file/frame link for debate-screen UX artifact.
 - Confirm final label text choice: "In Favour/Against" vs "For/Against"
 - Confirm desktop behavior preference if stream and columns diverge for long content
 
 ## Next Gate
-- Build Gate
-- Expected artifact: first read-only UI implementation with static sample data
+- UX Gate
+- Expected artifact: Figma link added for debate-screen (no waiver), then proceed to Build Gate
 
 ## Update Rule
 When a significant decision, requirement, or gate transition happens, update this file in the same task as:
