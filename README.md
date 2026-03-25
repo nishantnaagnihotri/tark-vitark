@@ -33,6 +33,10 @@ Additional role-specific agents:
 - Required GitHub labels can be bootstrapped with `bash scripts/setup-github-labels.sh`.
 - Startup context for every chat is tracked in `docs/current-state.md`.
 
+## Development Workflow Diagram
+
+- PlantUML source: `docs/development-workflow.puml`
+
 ## Next Step
 
 Define the first vertical slice (product goal + stack choice), then scaffold only what is needed for that slice.
