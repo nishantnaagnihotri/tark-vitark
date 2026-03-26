@@ -26,7 +26,6 @@ Every feature-slice issue should follow this structure:
 - NFR baseline inheritance acknowledgement section.
 - Traceability Matrix section mapping FR ID -> behavior -> AC IDs -> evidence.
 - UX spec link section (or `TBD` until UX Gate completes).
-- Optional UX intent brief link section (Plan Gate context only; not a final UX artifact).
 - Figma link section (or explicit waiver text: "Figma not required for this slice - <reason>").
 
 Rationale: top FR summary provides fast triage scanning, while matrix provides full traceability detail.

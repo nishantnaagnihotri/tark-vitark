@@ -39,7 +39,6 @@ Additional role-specific agents:
 - Diagram image: [docs/assets/diagrams/development-workflow.png](docs/assets/diagrams/development-workflow.png)
 - UX agent execution process: [docs/ux-agent-execution-process.md](docs/ux-agent-execution-process.md)
 - UX Figma agentic protocol: [docs/ux-figma-agentic-protocol.md](docs/ux-figma-agentic-protocol.md)
-- Optional pre-gate UX intent brief template: [docs/ux-intent-brief-template.md](docs/ux-intent-brief-template.md)
 
 ![Development workflow diagram](docs/assets/diagrams/development-workflow.png)
 

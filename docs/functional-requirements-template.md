@@ -9,7 +9,6 @@ Keep it concise and implementation-ready.
 - Date:
 - Related links:
   - Decision log entry:
-  - UX intent brief (optional):
   - UX spec (filled after UX Gate):
   - Tracking issue/task:
 
