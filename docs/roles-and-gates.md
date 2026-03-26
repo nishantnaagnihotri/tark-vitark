@@ -102,10 +102,35 @@ Phase 3: Contextual specialists
 ## Slice Gate Model
 Every slice should pass through these gates.
 
+## Throughput Controls
+
+### Gate Timeboxes (Default)
+- Plan Gate: <= 1 working day
+- UX Gate: <= 2 iteration rounds by default, <= 1 working day per round
+- Build Gate: <= 3 working days for one slice
+- Review Gate: <= 1 working day
+- Risk Gate (when active): <= 1 working day
+
+If a gate exceeds timebox, split scope or log an explicit exception in `docs/decision-log.md`.
+
+### Fast-Lane Eligibility (Low-Risk Slices)
+Use fast-lane only when all are true:
+- no auth/security/billing/data migration impact
+- no new external integration
+- no major UX complexity (single-path UI or backend-only)
+- expected implementation <= 1 working day
+
+Fast-lane behavior:
+- keep FR IDs and ACs mandatory
+- keep required tests mandatory
+- allow compact UX artifact if UX Strategist marks full spec unnecessary
+- still require decision-log and current-state synchronization
+
 1. Plan Gate
 - Owner: Studio Architect
 - Exit criteria:
   - Problem statement, target user, and scope are explicit.
+  - Product user story is captured at outcome level.
   - Functional Requirements Spec is complete and linked.
   - Baseline NFR inheritance is acknowledged; any exception is documented.
   - Functional Requirements Index entry is created or updated for the slice.
@@ -126,6 +151,7 @@ Every slice should pass through these gates.
 3. Build Gate
 - Owner: Feature Engineer
 - Exit criteria:
+  - Implementation Story Pack exists and maps FR/AC/UX into concrete build tasks.
   - Implementation satisfies UX spec and build contract.
   - Tests for critical path are present.
   - Non-goals and boundaries are respected.
@@ -208,6 +234,7 @@ Copy this section into slice docs and fill per role.
 - [ ] Figma artifact link or explicit waiver with rationale is documented.
 
 ### Feature Engineer
+- [ ] Implementation Story Pack is present and concrete before coding starts.
 - [ ] Implementation aligns with UX and contract.
 - [ ] Boundaries/non-goals respected.
 - [ ] Tests added or updated.

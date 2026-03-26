@@ -132,6 +132,20 @@ body:
     validations:
       required: true
 
+  - type: textarea
+    id: implementation_story_pack
+    attributes:
+      label: Implementation Story Pack
+      description: Concrete dev stories derived after UX Gate. Use TBD at Plan Gate and fill before Build Gate for non-trivial slices.
+      placeholder: |
+        TBD (to be created after UX Gate)
+
+        Example structure:
+        - DEV-<slice>-001: <goal> | FR: ... | AC: ... | UX: ...
+        - DEV-<slice>-002: <goal> | FR: ... | AC: ... | UX: ...
+    validations:
+      required: true
+
   - type: dropdown
     id: readiness
     attributes:

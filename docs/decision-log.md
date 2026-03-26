@@ -120,3 +120,16 @@ Tracks durable product/process decisions so future sessions and agents can inher
 - Consequences:
   - Preserves UX creative freedom while keeping requirements clarity.
   - Requires clear issue placeholders (`TBD`) until UX Gate outputs are available.
+
+## 2026-03-26 - Throughput and Build-Handoff Optimization
+- Status: Accepted
+- Context: Process quality was strong, but Build Gate start could still suffer from vague implementation decomposition.
+- Decision:
+  - Add gate timeboxes and low-risk fast-lane eligibility rules.
+  - Keep product user story at Plan Gate, and generate implementation stories after UX Gate.
+  - Require an Implementation Story Pack for non-trivial slices before Build Gate.
+- Consequences:
+  - Faster build-start clarity and reduced rework for Feature Engineer.
+  - Slightly more structure in issue/update workflow.
+- Follow-up:
+  - Track lead time and rework over next 3 slices to validate impact.

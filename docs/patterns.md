@@ -49,6 +49,20 @@ Durable working patterns for planning, delivery, and delegation.
 - Use stable naming conventions for frames, components, and tokens to maximize reuse.
 - Ensure Developer Agent can map design artifacts to code components without ambiguous interpretation.
 
+## Timeboxed Gates Pattern
+- Timebox every gate to avoid process drag.
+- If a gate breaches timebox, split slice scope or log explicit exception with rationale.
+
+## Fast-Lane Pattern
+- Use fast-lane only for low-risk, small slices.
+- Keep FR IDs, ACs, tests, and decision persistence mandatory even in fast-lane.
+- Optimize artifact depth, not traceability discipline.
+
+## Concrete Build Stories Pattern
+- Create product-level user stories at Plan Gate.
+- Create implementation stories only after UX Gate outputs are approved.
+- For non-trivial slices, require an Implementation Story Pack before Build Gate.
+
 ## Persistence Pattern
 - Record process and architecture decisions in `docs/decision-log.md`.
 - Record repeatable delivery heuristics in this file.

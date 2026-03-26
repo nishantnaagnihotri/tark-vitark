@@ -39,6 +39,7 @@ Additional role-specific agents:
 - Diagram image: [docs/assets/diagrams/development-workflow.png](docs/assets/diagrams/development-workflow.png)
 - UX agent execution process: [docs/ux-agent-execution-process.md](docs/ux-agent-execution-process.md)
 - UX Figma agentic protocol: [docs/ux-figma-agentic-protocol.md](docs/ux-figma-agentic-protocol.md)
+- Implementation story pack template: [docs/implementation-story-pack-template.md](docs/implementation-story-pack-template.md)
 
 ![Development workflow diagram](docs/assets/diagrams/development-workflow.png)
 

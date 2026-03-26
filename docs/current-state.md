@@ -52,6 +52,11 @@ Load active UX spec only after UX Strategist creates it during UX Gate.
 - Active fallback blocker: direct Figma API/MCP availability not yet confirmed
 - UX spec timing rule: final UX spec is authored by UX Strategist during UX Gate
 
+## Process Optimization Baseline
+- Gate timeboxes: active
+- Fast-lane eligibility: active for low-risk slices
+- Build input contract: Implementation Story Pack required before Build Gate for non-trivial slices
+
 ## Update Rule
 When a significant decision, requirement, or gate transition happens, update this file in the same task as:
 - docs/decision-log.md

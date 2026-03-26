@@ -27,6 +27,7 @@ Every feature-slice issue should follow this structure:
 - Traceability Matrix section mapping FR ID -> behavior -> AC IDs -> evidence.
 - UX spec link section (or `TBD` until UX Gate completes).
 - Figma link section (or explicit waiver text: "Figma not required for this slice - <reason>").
+- Implementation Story Pack section (or `TBD` until UX Gate outputs are approved).
 
 Rationale: top FR summary provides fast triage scanning, while matrix provides full traceability detail.
 
@@ -53,17 +54,27 @@ UX artifact ownership boundary:
 - Add or update the slice row in the requirements index.
 - Mark status as Proposed or Approved.
 - Create or link the corresponding GitHub issue/project item for execution.
+- Capture product-level user story (outcome-oriented, not code-task decomposition).
 
-4. Build and QA traceability
+4. UX Gate completion
+- UX Strategist produces approved UX spec + Figma artifact state.
+- Keep UX and FR traceability links current in issue and docs.
+
+5. Build input decomposition
+- Studio Architect and/or Feature Engineer creates Implementation Story Pack from FR + AC + approved UX.
+- Each implementation story must map to FR IDs and AC IDs.
+- Mark issue section "Implementation Story Pack" as ready before Build Gate starts.
+
+6. Build and QA traceability
 - Feature Engineer references requirement IDs in implementation notes/tasks.
 - Quality Engineer maps test evidence to requirement IDs.
 - Pull requests and test notes should include the same requirement IDs for end-to-end traceability.
 
-5. Change control
+7. Change control
 - If requirements change, update the spec and index in the same session.
 - Record rationale and tradeoffs in the decision log.
 
-6. Ship and maintenance
+8. Ship and maintenance
 - Mark implemented requirements as Implemented.
 - Mark replaced requirements as Deprecated with replacement links.
 
@@ -75,5 +86,6 @@ UX artifact ownership boundary:
 ## Practical Guardrails
 - Keep specs short; avoid long narrative docs.
 - Prefer explicit non-goals to prevent scope creep.
+- No Build Gate for non-trivial slices if Implementation Story Pack is missing.
 - No Build Gate if acceptance criteria are not testable.
 - No Ship Gate if requirements status is stale.
