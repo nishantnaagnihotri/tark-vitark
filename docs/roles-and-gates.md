@@ -31,7 +31,8 @@ To keep slices implementation-ready, every non-trivial slice should have a short
 3. UX Strategist
 - Converts product intent into concrete user flows and interaction states.
 - Defines copy intent, empty/loading/error states, and accessibility expectations.
-- Produces a focused UX spec per slice.
+- Produces and owns the final UX spec per slice.
+- Leads creative iteration rounds with the user until UX direction is approved.
 
 4. Feature Engineer
 - Implements approved slice scope end-to-end.
@@ -109,6 +110,7 @@ Every slice should pass through these gates.
 2. UX Gate
 - Owner: UX Strategist
 - Exit criteria:
+  - UX direction is explicitly approved after iteration rounds when needed.
   - Primary flow and alternative states are specified.
   - Accessibility and responsive behavior expectations are stated.
   - UX spec is linked in slice docs.
@@ -194,6 +196,7 @@ Copy this section into slice docs and fill per role.
 - [ ] Primary flow documented.
 - [ ] Empty/loading/error states documented.
 - [ ] Mobile and accessibility expectations documented.
+- [ ] Creative direction reviewed and approved with user.
 - [ ] UX artifacts linked.
 - [ ] Figma Production Contract and Code Translation Contract are complete.
 - [ ] Figma artifact link or explicit waiver with rationale is documented.

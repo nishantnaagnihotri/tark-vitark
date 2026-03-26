@@ -10,6 +10,7 @@ Single-page startup context for every new chat.
 - Slice key: debate-screen
 - Status: UX Gate in progress (Figma required; waiver not allowed)
 - Execution issue: https://github.com/nishantnaagnihotri/tark-vitark/issues/1
+- UX ownership note: current UX spec is a bootstrap draft and is pending UX Strategist-led creative iteration/approval
 
 ## UX Gate Queue
 Use this ordered list when multiple slices are in UX Gate.

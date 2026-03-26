@@ -2,6 +2,11 @@
 
 Purpose: allow UX Strategist to autonomously execute the next UX task based on repository knowledge artifacts.
 
+Ownership rule:
+- If a UX spec was pre-created by another role, treat it as bootstrap draft context only.
+- UX Strategist is the final owner of UX direction and may refactor or replace the draft as needed.
+- Functional and baseline NFR constraints must still be preserved unless explicitly changed through governance.
+
 ## Inputs (Required Load Order)
 1. AGENTS.md
 2. docs/current-state.md
@@ -35,15 +40,19 @@ Example:
 ## UX Gate Execution Checklist
 1. Validate active slice key and execution issue link.
 2. Validate inherited NFR baseline constraints relevant to UX output.
-3. Produce or update UX artifact details:
+3. Run iterative UX exploration loop:
+- Propose direction A/B (layout, hierarchy, and visual style options)
+- Converge with user feedback
+- Repeat until one direction is approved for execution
+4. Produce or update UX artifact details:
 - UX spec completeness (flow, states, responsiveness, accessibility)
 - Figma production contract and code translation contract (per `docs/ux-figma-agentic-protocol.md`)
 - Figma file/frame link, or approved waiver if allowed
-4. Synchronize artifacts:
+5. Synchronize artifacts:
 - Update active `docs/ux-spec-*.md`
 - Update linked issue body sections (UX Spec link, Figma link/waiver)
 - Update docs/current-state.md gate status and open questions
-5. Report completion with evidence links.
+6. Report completion with evidence links.
 
 ## Multi-Slice Sequencing Rules
 - Process one slice at a time to avoid cross-slice state drift.

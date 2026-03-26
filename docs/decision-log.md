@@ -97,3 +97,16 @@ Tracks durable product/process decisions so future sessions and agents can inher
   - Slightly higher UX documentation rigor per slice.
 - Follow-up:
   - Revisit after first 2 implemented slices to evaluate whether contract granularity should be tightened or reduced.
+
+## 2026-03-26 - UX Strategist Creative Ownership and Iterative Approval
+- Status: Accepted
+- Context: Pre-created UX specs can unintentionally constrain UX creativity and reduce quality.
+- Decision:
+  - Treat architect-authored UX specs as bootstrap drafts only when present.
+  - Assign final UX creative ownership to UX Strategist.
+  - Allow multiple UX iteration rounds with user feedback before UX Gate approval.
+- Consequences:
+  - Better UX quality and stronger design ownership.
+  - Slightly longer UX Gate cycle for complex slices.
+- Follow-up:
+  - Track average iteration rounds across next 3 slices to calibrate UX Gate throughput.
