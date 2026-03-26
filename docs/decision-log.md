@@ -110,3 +110,16 @@ Tracks durable product/process decisions so future sessions and agents can inher
   - Slightly longer UX Gate cycle for complex slices.
 - Follow-up:
   - Track average iteration rounds across next 3 slices to calibrate UX Gate throughput.
+
+## 2026-03-26 - UX Spec Creation Timing and Ownership Boundary
+- Status: Accepted
+- Context: Requirements ownership was being conflated with UX artifact authorship.
+- Decision:
+  - Do not require a finalized UX spec before UX Gate.
+  - Product Manager may provide an optional UX intent brief only.
+  - UX Strategist creates/authors the final UX spec and Figma artifacts during UX Gate.
+- Consequences:
+  - Preserves UX creative freedom while keeping requirements clarity.
+  - Requires clear issue placeholders (`TBD`) until UX Gate outputs are available.
+- Follow-up:
+  - Re-evaluate after next slice whether UX intent briefs are helpful or can stay optional.

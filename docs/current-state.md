@@ -49,6 +49,7 @@ Line format:
 - Agent-first policy: enforced
 - UX Figma protocol: `docs/ux-figma-agentic-protocol.md`
 - Active fallback blocker: direct Figma API/MCP availability not yet confirmed
+- UX spec timing rule: final UX spec is authored by UX Strategist during UX Gate; pre-gate UX intent brief is optional
 
 ## Update Rule
 When a significant decision, requirement, or gate transition happens, update this file in the same task as:

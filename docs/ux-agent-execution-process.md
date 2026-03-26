@@ -3,9 +3,13 @@
 Purpose: allow UX Strategist to autonomously execute the next UX task based on repository knowledge artifacts.
 
 Ownership rule:
-- If a UX spec was pre-created by another role, treat it as bootstrap draft context only.
+- If a UX spec was pre-created by another role, treat it as context only.
 - UX Strategist is the final owner of UX direction and may refactor or replace the draft as needed.
 - Functional and baseline NFR constraints must still be preserved unless explicitly changed through governance.
+
+Creation timing rule:
+- Final UX spec is created/authored in UX Gate by UX Strategist.
+- Before UX Gate, requirement artifacts may include UX intent notes, but not a finalized UX spec.
 
 ## Inputs (Required Load Order)
 1. AGENTS.md
@@ -13,7 +17,7 @@ Ownership rule:
 3. docs/non-functional-requirements-baseline.md
 4. docs/functional-requirements-index.md
 5. active slice requirements spec
-6. active slice UX spec
+6. active slice UX spec (if present from prior UX iterations)
 7. docs/decision-log.md
 
 ## Task Selection Rule
@@ -45,6 +49,7 @@ Example:
 - Converge with user feedback
 - Repeat until one direction is approved for execution
 4. Produce or update UX artifact details:
+- Create the active `docs/ux-spec-*.md` from template if it does not exist yet.
 - UX spec completeness (flow, states, responsiveness, accessibility)
 - Figma production contract and code translation contract (per `docs/ux-figma-agentic-protocol.md`)
 - Figma file/frame link, or approved waiver if allowed

@@ -26,6 +26,7 @@ Every feature-slice issue should follow this structure:
 - NFR baseline inheritance acknowledgement section.
 - Traceability Matrix section mapping FR ID -> behavior -> AC IDs -> evidence.
 - UX spec link section (or `TBD` until UX Gate completes).
+- Optional UX intent brief link section (Plan Gate context only; not a final UX artifact).
 - Figma link section (or explicit waiver text: "Figma not required for this slice - <reason>").
 
 Rationale: top FR summary provides fast triage scanning, while matrix provides full traceability detail.
@@ -34,6 +35,11 @@ Rationale: top FR summary provides fast triage scanning, while matrix provides f
 - Primary owner: Product Manager
 - Fallback owner (lean mode): Studio Architect
 - Consumers: UX Strategist, Feature Engineer, Quality Engineer, Code Steward
+
+UX artifact ownership boundary:
+- Product Manager owns functional requirements and acceptance criteria.
+- Product Manager does not own final UX spec content.
+- UX Strategist owns and authors the final UX spec and Figma artifact during UX Gate.
 
 ## Lifecycle Steps
 1. Intake and framing

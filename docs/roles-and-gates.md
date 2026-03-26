@@ -16,6 +16,11 @@ To keep slices implementation-ready, every non-trivial slice should have a short
 - Track approved requirements in `docs/functional-requirements-index.md` to preserve continuity across sessions.
 - Inherit baseline non-functional requirements from `docs/non-functional-requirements-baseline.md` by default.
 
+UX ownership boundary:
+- Product Manager defines requirement intent and acceptance criteria.
+- Product Manager does not author the final UX spec.
+- UX Strategist authors and owns the final UX spec during UX Gate.
+
 ## Core Role Set
 
 1. Studio Architect
@@ -111,6 +116,7 @@ Every slice should pass through these gates.
 - Owner: UX Strategist
 - Exit criteria:
   - UX direction is explicitly approved after iteration rounds when needed.
+  - UX spec is authored or finalized by UX Strategist.
   - Primary flow and alternative states are specified.
   - Accessibility and responsive behavior expectations are stated.
   - UX spec is linked in slice docs.
