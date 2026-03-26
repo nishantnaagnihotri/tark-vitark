@@ -8,16 +8,16 @@ Single-page startup context for every new chat.
 
 ## Active Slice
 - Slice key: debate-screen
-- Status: UX Gate in progress (Figma required; waiver not allowed)
+- Status: UX Gate pending start (Figma required; waiver not allowed)
 - Execution issue: https://github.com/nishantnaagnihotri/tark-vitark/issues/1
-- UX ownership note: current UX spec is a bootstrap draft and is pending UX Strategist-led creative iteration/approval
+- UX ownership note: UX spec not created yet; UX Strategist will author it during UX Gate
 
 ## UX Gate Queue
 Use this ordered list when multiple slices are in UX Gate.
 Line format:
 `<order>. <slice-key> | issue: <url> | status: <pending|in-progress|done>`
 
-1. debate-screen | issue: https://github.com/nishantnaagnihotri/tark-vitark/issues/1 | status: in-progress
+1. debate-screen | issue: https://github.com/nishantnaagnihotri/tark-vitark/issues/1 | status: pending
 
 ## Canonical Context (Load In This Order)
 1. AGENTS.md
@@ -25,8 +25,9 @@ Line format:
 3. docs/non-functional-requirements-baseline.md
 4. docs/functional-requirements-index.md
 5. docs/functional-requirements-debate-screen.md
-6. docs/ux-spec-debate-screen.md
 7. docs/decision-log.md
+
+Load active UX spec only after UX Strategist creates it during UX Gate.
 
 ## Current Requirements Snapshot
 - FR-debate-screen-001: show debate topic heading
@@ -36,7 +37,7 @@ Line format:
 - FR-debate-screen-005: mobile stream preserves posted order; favour left, against right
 
 ## Open Questions
-- Add Figma file/frame link for debate-screen UX artifact.
+- Create UX spec and Figma file/frame link for debate-screen UX artifact.
 - Confirm final label text choice: "In Favour/Against" vs "For/Against"
 - Confirm desktop behavior preference if stream and columns diverge for long content
 - Confirm Figma API/MCP availability to remove manual fallback for link placement.
