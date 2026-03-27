@@ -36,3 +36,13 @@
 - clarification needed:
   - None.
 - recommendation: advance
+
+## Dispatch Evidence - Cycle 4
+- dispatch action: applied visual-frame evidence validation to prevent false-positive build readiness.
+- verification results:
+  - `./scripts/check-figma-visual-evidence.sh` failed with Figma API 429 after retries.
+  - `./scripts/preflight-gate-transition.sh build` failed because visual frame evidence could not be verified.
+- current status: needs-clarification
+- clarification needed:
+  - author visual FRAME artifacts in Figma file `ltU4U9jpQuWKGInUHC9Bwq` and provide frame-level URL.
+- recommendation: hold

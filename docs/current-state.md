@@ -8,9 +8,9 @@ Single-page startup context for every new chat.
 
 ## Active Slice
 - Slice key: debate-screen
-- Status: Build Gate ready (UX Gate complete)
+- Status: UX Gate in-progress (visual evidence pending)
 - Execution issue: https://github.com/nishantnaagnihotri/tark-vitark/issues/1
-- UX ownership note: UX contract created at docs/ux-spec-debate-screen.md by UX Strategist
+- UX ownership note: UX contract exists, but Figma visual frame evidence is not yet verified
 
 ## Execution Mode
 - Active mode: supervised parallel writers (architect-controlled)
@@ -22,7 +22,7 @@ Use this ordered list when multiple slices are in UX Gate.
 Line format:
 `<order>. <slice-key> | issue: <url> | status: <pending|in-progress|done>`
 
-1. debate-screen | issue: https://github.com/nishantnaagnihotri/tark-vitark/issues/1 | status: done
+1. debate-screen | issue: https://github.com/nishantnaagnihotri/tark-vitark/issues/1 | status: in-progress
 
 ## Active Role Queues
 Use this list when supervised parallel mode is active.
@@ -30,7 +30,7 @@ Line format:
 `<order>. <role> | packet: <id> | scope: <files/modules> | status: <pending|in-progress|done>`
 
 1. Studio Architect | packet: orchestrator-sync | scope: governance reconciliation and gate control | status: in-progress
-2. UX Strategist | packet: ux-debate-screen-001 | scope: docs/handoffs/ux-debate-screen-001.md | status: done
+2. UX Strategist | packet: ux-debate-screen-001 | scope: docs/handoffs/ux-debate-screen-001.md | status: needs-clarification (dispatch cycle 4: visual frame authoring)
 
 ## Canonical Context (Load In This Order)
 1. AGENTS.md
@@ -51,16 +51,17 @@ Active UX contract: docs/ux-spec-debate-screen.md
 - FR-debate-screen-006: desktop renders two columns; For left, Against right
 
 ## Open Questions
-- Begin Build Gate implementation using docs/implementation-story-pack-debate-screen.md.
+- Create actual FRAME artifacts in Figma file `ltU4U9jpQuWKGInUHC9Bwq` and provide a frame-level URL.
+- Re-run visual evidence check after Figma API rate limit window clears.
 
 ## Next Gate
-- Build Gate
-- Expected artifact: implementation changes mapped to FR/AC/UX with test evidence
+- UX Gate
+- Expected artifact: verified Figma FRAME evidence plus frame-level URL synchronization
 
 ## Agentic UX Protocol Status
 - Agent-first policy: enforced
 - UX Figma protocol: `docs/ux-figma-agentic-protocol.md`
-- Active fallback blocker: none (project and file-level Figma access verified)
+- Active fallback blocker: visual frame evidence unavailable (file has no verified FRAME nodes; API returning 429 during verification)
 - UX contract timing rule: final UX contract is authored by UX Strategist during UX Gate
 - UX direction decisions: labels use For/Against; desktop uses two-column layout
 

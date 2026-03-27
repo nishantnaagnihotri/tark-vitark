@@ -409,3 +409,31 @@ Tracks durable product/process decisions so future sessions and agents can inher
   - Build implementation can start against the approved story pack and UX contract.
 - Follow-up:
   - Start Build Gate execution with Feature Engineer packet using `docs/implementation-story-pack-debate-screen.md`.
+
+## 2026-03-27 - Figma Visual Evidence Requirement (Protocol Hardening)
+- Status: Accepted
+- Context: Figma connectivity/read checks were passing while no visible design frames were present in the file.
+- Decision:
+  - Verified direct Figma write path available via comments API (comment id `1693768291`) to prove token write access.
+  - Posted frame checklist guidance in-file via comments API (comment id `1693776552`).
+  - Confirmed this write path does not create visual frame design artifacts.
+  - Added `scripts/check-figma-visual-evidence.sh` to verify actual FRAME evidence from Figma link/file.
+  - Updated Build Gate preflight to require visual frame evidence, not only non-TBD Figma link fields.
+  - Updated UX Figma protocol to distinguish connectivity checks from visual authoring evidence.
+- Consequences:
+  - Prevents false-positive gate advancement when design links exist but frames are missing.
+  - Build Gate preflight now fails until real frame evidence is available and verifiable.
+- Follow-up:
+  - Re-verify debate-screen frame evidence after Figma rate-limit window clears.
+
+## 2026-03-27 - Build Gate Rollback (Visual Evidence Pending)
+- Status: Accepted
+- Context: Visual evidence verification failed (Figma API 429 during retries) and frame-level artifact proof remains unavailable.
+- Decision:
+  - Rolled active slice status back to UX Gate in-progress.
+  - Marked UX packet `ux-debate-screen-001` as `needs-clarification` (cycle 4) pending frame authoring proof.
+- Consequences:
+  - Current state now reflects real readiness instead of optimistic link-only readiness.
+  - Build execution remains blocked until verified FRAME artifact exists.
+- Follow-up:
+  - Create visual frame(s) in Figma and provide frame URL; rerun visual evidence + build preflight.

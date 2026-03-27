@@ -147,6 +147,15 @@ case "$target_gate" in
       echo "ERROR: Figma Link must be set before Build Gate."
       exit 1
     fi
+    if [[ -x "./scripts/check-figma-visual-evidence.sh" ]]; then
+      if ! ./scripts/check-figma-visual-evidence.sh "$figma_link" >/dev/null; then
+        echo "ERROR: Figma Link does not have verified visual frame evidence required for Build Gate."
+        exit 1
+      fi
+    else
+      echo "ERROR: Missing scripts/check-figma-visual-evidence.sh required for Build Gate visual verification."
+      exit 1
+    fi
     if [[ -z "${implementation_story_pack:-}" ]] || contains_tbd "$implementation_story_pack"; then
       echo "ERROR: Implementation Story Pack must be set before Build Gate."
       exit 1

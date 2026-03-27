@@ -43,6 +43,13 @@ Verification policy:
 - UX Gate should prefer direct API/MCP connectivity.
 - If connectivity check fails, continue in fallback mode and log blocker in `docs/current-state.md`.
 
+Authoring capability policy:
+- Connectivity success does not equal visual design creation.
+- `./scripts/check-figma-connectivity.sh` verifies identity/file access (and optional comment write), not frame authoring.
+- Before leaving UX Gate, verify visual evidence with:
+  - `./scripts/check-figma-visual-evidence.sh <figma-link-or-file-key>`
+- Build Gate must not advance unless Figma link resolves to actual FRAME evidence.
+
 ## Slice Input Contract
 Before UX Gate execution, UX Strategist loads:
 1. `AGENTS.md`
@@ -76,6 +83,11 @@ UX Strategist must produce all of these outputs:
 - Final frame URL in UX spec and linked issue.
 - If API unavailable, include fallback marker: `Pending-manual-link` and open question in current-state.
 
+5. Visual evidence proof
+- At least one FRAME node exists in target file.
+- Linked frame URL resolves to a FRAME node (not only a page/canvas node).
+- Evidence command result is recorded in decision log or packet output.
+
 ## Naming Convention (Reuse + Translation)
 - Frames: `<slice>-<viewport>-<state>`
   - Example: `debate-screen-mobile-default`
@@ -95,6 +107,7 @@ When direct Figma automation is blocked:
 ## Done Criteria
 - UX spec is complete and implementation-ready.
 - Figma link is present (or temporary fallback marker is explicitly tracked).
+- Figma visual evidence check passes for the linked frame URL.
 - Code translation contract is complete and unambiguous.
 - `docs/current-state.md` reflects gate progress and open blockers.
 - Linked issue references UX spec and Figma artifact.
