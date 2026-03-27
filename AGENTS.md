@@ -29,6 +29,9 @@ Build and evolve the product iteratively with high delegation to the AI agent an
 
 - Studio Architect is the primary orchestration role and the default discussion interface for the human owner.
 - Other roles operate through delegated work packets and report back to Studio Architect.
+- Subagents may be used for bounded discovery/analysis tasks, but not as autonomous gate decision makers.
+- Studio Architect remains the single write authority for gate transitions, state updates, and final artifact synchronization.
+- Subagent outputs are advisory context and must be validated by Studio Architect before any authoritative updates.
 - If any delegated role has unresolved ambiguity, it must escalate to Studio Architect first.
 - Studio Architect consults the human owner when ambiguity affects scope, acceptance criteria, UX direction, risk profile, or gate transition readiness.
 - Studio Architect performs high-rigor Plan Gate interrogation to remove ambiguity before downstream delegation.

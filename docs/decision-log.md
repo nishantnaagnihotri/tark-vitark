@@ -240,3 +240,29 @@ Tracks durable product/process decisions so future sessions and agents can inher
   - Requires token/API configuration once per environment.
 - Follow-up:
   - Run connectivity script after setting `FIGMA_ACCESS_TOKEN` and optional `FIGMA_FILE_KEY`.
+
+## 2026-03-27 - Debate Screen UX Gate Rollback (Figma Mandatory)
+- Status: Accepted
+- Context: Human owner required strict Figma mandatory policy and blocked progression when only placeholder Figma links were available.
+- Decision:
+  - Revert active slice progression back to UX Gate.
+  - Do not allow UX Gate exit or Build Gate entry with placeholder Figma values (for example `Pending-manual-link`).
+  - Require final real Figma file/frame URL in issue and UX contract before gate advancement.
+- Consequences:
+  - Prevents premature Build Gate starts without final design artifact linkage.
+  - Adds stricter gating discipline for UX completion criteria.
+- Follow-up:
+  - Update guard/preflight scripts so placeholder Figma values fail gate checks.
+
+## 2026-03-27 - Subagent Usage Policy (Architect-Controlled)
+- Status: Accepted
+- Context: Team requested clarity on when to use subagents versus single-agent orchestration.
+- Decision:
+  - Keep Studio Architect as the single authoritative writer for gate transitions, state updates, and final artifact synchronization.
+  - Allow subagents only for bounded discovery/analysis tasks.
+  - Treat subagent outputs as advisory context requiring Studio Architect validation before authoritative updates.
+- Consequences:
+  - Retains speed benefits from delegated analysis while reducing multi-writer drift risk.
+  - Preserves deterministic gate control through one orchestrator.
+- Follow-up:
+  - Reassess after next 2 slices whether discovery latency improved without increasing governance corrections.

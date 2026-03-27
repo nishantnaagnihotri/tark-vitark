@@ -32,6 +32,8 @@ Use `AGENTS.md` as the shared protocol for workflow, approval gates, and reporti
 
 ## Orchestration Rule
 - Delegate gate work to role owners using explicit handoff packets.
+- Use subagents only for bounded read-heavy discovery/analysis tasks.
+- Treat subagent outputs as advisory; validate before any authoritative write or gate decision.
 - Collect all delegated questions first; escalate to the human owner only when ambiguity impacts scope, acceptance criteria, UX direction, risk, or gate readiness.
 - Before updating `Next Gate` in `docs/current-state.md`, run `./scripts/preflight-gate-transition.sh <target-gate>`.
 

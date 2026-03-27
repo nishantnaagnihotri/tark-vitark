@@ -47,6 +47,11 @@ Use this sequence when a requirement is new and not yet shaped into a slice:
 ## Gate Handoff Packets (Required)
 Use these packet formats for all delegated gate work so Studio Architect can orchestrate consistently.
 
+Subagent handling rule:
+- Subagents may assist with discovery/analysis packets.
+- Studio Architect must validate subagent findings before they affect gate decisions or authoritative artifacts.
+- Gate transition and final artifact synchronization remain Studio Architect-controlled actions.
+
 ### Gate Input Packet (Architect -> Gate Owner)
 - target gate:
 - active slice key:

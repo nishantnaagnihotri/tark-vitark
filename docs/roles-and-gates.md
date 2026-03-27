@@ -43,6 +43,9 @@ Working rule:
 - Human owner primarily interacts with Studio Architect.
 - Delegated roles do not directly request decisions from the human owner.
 - Delegated roles return findings, blockers, and open questions to Studio Architect.
+- Subagents are allowed for bounded discovery/analysis only.
+- Subagents must not perform autonomous gate transitions or final state updates.
+- Studio Architect validates subagent output and remains the single authority for authoritative writes.
 - Studio Architect either resolves within existing contracts or escalates to the human owner.
 - Escalation is required when unresolved ambiguity affects:
   - scope or acceptance criteria
