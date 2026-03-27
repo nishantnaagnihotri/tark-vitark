@@ -29,6 +29,30 @@
   - For left / Against right alignment on mobile.
   - Two-column desktop layout with For left and Against right.
 
+## UX Contract Authoring Skeleton (Use in docs/ux-spec-debate-screen.md)
+- UX Direction Summary:
+  - Labels: For / Against
+  - Mobile: single mixed chronological stream
+  - Desktop: two columns (For left, Against right)
+- States:
+  - primary populated state only (no loading/error in this slice)
+  - dense-content readability state (long topic and long arguments)
+- Responsiveness:
+  - mobile first default
+  - desktop breakpoint behavior for column split
+- Accessibility:
+  - heading hierarchy and landmark expectations
+  - readable contrast between sides and text
+  - keyboard focus order (read-only flow)
+- Copy intent:
+  - neutral, argument-focused wording
+  - avoid interaction-oriented labels
+- Code translation mapping:
+  - Topic heading component
+  - Argument card/item component with side variant
+  - Mobile stream container
+  - Desktop two-column container
+
 ## Known Constraints / Non-Goals
 - Do not modify functional requirements unless ambiguity blocks UX output.
 - Keep interaction scope static (no voting, posting, reacting, sorting).
