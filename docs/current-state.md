@@ -30,7 +30,7 @@ Line format:
 `<order>. <role> | packet: <id> | scope: <files/modules> | status: <pending|in-progress|done>`
 
 1. Studio Architect | packet: orchestrator-sync | scope: governance reconciliation and gate control | status: in-progress
-2. UX Strategist | packet: ux-debate-screen-001 | scope: docs/handoffs/ux-debate-screen-001.md | status: in-progress
+2. UX Strategist | packet: ux-debate-screen-001 | scope: docs/handoffs/ux-debate-screen-001.md | status: in-progress (dispatch cycle 2)
 
 ## Canonical Context (Load In This Order)
 1. AGENTS.md

@@ -72,3 +72,12 @@ If any ambiguity or access issue blocks progress:
 
 ## Decision Deadline / Timebox
 - UX packet timebox: 1 working day (or 2 iteration rounds if design direction changes).
+
+## Active Dispatch Cycle
+- cycle: 2
+- status: in-progress
+- immediate deliverables:
+  1. Create `docs/ux-spec-debate-screen.md` using the UX contract skeleton and slice constraints.
+  2. Add final frame URL from file key `ltU4U9jpQuWKGInUHC9Bwq` into UX contract and issue #1.
+  3. Update `docs/handoffs/ux-debate-screen-001-output.md` with final gate recommendation.
+  4. Run `./scripts/validate-process-guards.sh` and `./scripts/preflight-gate-transition.sh build` after synchronization.

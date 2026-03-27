@@ -18,3 +18,11 @@
 - risk notes:
   - UX Gate cannot advance until UX contract and final frame URL are synchronized.
 - recommendation: advance
+
+## Dispatch Evidence - Cycle 2
+- dispatch action: packet reissued with explicit deliverables and same-session tracker sync.
+- current status: in-progress
+- remaining work:
+  - create `docs/ux-spec-debate-screen.md`
+  - add final frame URL in UX contract and issue #1
+  - run build preflight after UX artifact sync

@@ -358,3 +358,16 @@ Tracks durable product/process decisions so future sessions and agents can inher
   - Increases accountability for packet progress visibility.
 - Follow-up:
   - Apply this rule to all future delegated packets across UX/Build/Review gates.
+
+## 2026-03-27 - UX Packet Re-Dispatch (Cycle 2)
+- Status: Accepted
+- Context: Owner requested immediate redelegation to UX role without waiting for additional prompts.
+- Decision:
+  - Reissued packet `ux-debate-screen-001` as dispatch cycle 2 with explicit immediate deliverables.
+  - Synchronized cycle status in current-state, handoff packet, output packet, and issue tracker.
+  - Kept Studio Architect orchestration authority while enforcing same-session dispatch evidence.
+- Consequences:
+  - Delegation is visibly active with concrete next actions.
+  - Remaining gate blocker is execution of UX contract artifact creation and frame-link synchronization.
+- Follow-up:
+  - UX Strategist completes contract artifact and returns final Gate Output Packet recommendation.
