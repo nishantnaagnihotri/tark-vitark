@@ -42,6 +42,12 @@ Durable working patterns for planning, delivery, and delegation.
 - Allow manual fallback only for external platform blockers (auth, API availability, provider outage).
 - When fallback occurs, record blocker, minimal manual action, and the automation follow-up in the same task.
 
+## Supervised Parallel Writers Pattern
+- Default remains single-writer orchestration by Studio Architect.
+- Activate parallel writers only for independent, bounded packets with explicit scope and timebox.
+- Require one lock owner per canonical file while packet work is active.
+- Require Studio Architect reconciliation before authoritative sync and gate transitions.
+
 ## UX-to-Code Contract Pattern
 - Every active UX spec must include:
 	- Figma Production Contract

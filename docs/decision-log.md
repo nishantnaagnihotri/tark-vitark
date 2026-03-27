@@ -266,3 +266,16 @@ Tracks durable product/process decisions so future sessions and agents can inher
   - Preserves deterministic gate control through one orchestrator.
 - Follow-up:
   - Reassess after next 2 slices whether discovery latency improved without increasing governance corrections.
+
+## 2026-03-27 - Supervised Parallel Writer Mode (Architect-Controlled)
+- Status: Accepted
+- Context: Team requested a more team-like execution model where role owners can clear independent queues in parallel.
+- Decision:
+  - Keep Studio Architect as single authority for gate transitions, state updates, and final artifact synchronization.
+  - Allow supervised parallel writers for independent, architect-scoped packets.
+  - Require explicit packet scope, temporary file lock ownership, and Studio Architect reconciliation before authoritative sync.
+- Consequences:
+  - Increases throughput for independent workstreams while keeping deterministic governance control.
+  - Adds reconciliation overhead and requires stricter packet discipline.
+- Follow-up:
+  - Reassess after next 2 slices for queue throughput gain versus reconciliation overhead.

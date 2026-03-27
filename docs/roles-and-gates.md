@@ -43,9 +43,14 @@ Working rule:
 - Human owner primarily interacts with Studio Architect.
 - Delegated roles do not directly request decisions from the human owner.
 - Delegated roles return findings, blockers, and open questions to Studio Architect.
+- Execution modes:
+  - default: single-writer orchestration by Studio Architect
+  - optional: supervised parallel writers for independent packets
 - Subagents are allowed for bounded discovery/analysis only.
 - Subagents must not perform autonomous gate transitions or final state updates.
 - Studio Architect validates subagent output and remains the single authority for authoritative writes.
+- In supervised parallel mode, delegated writers may update only architect-assigned scope and must return output packets for Studio Architect reconciliation.
+- Delegated writers must not edit shared canonical governance files concurrently unless Studio Architect assigns a temporary lock owner.
 - Studio Architect either resolves within existing contracts or escalates to the human owner.
 - Escalation is required when unresolved ambiguity affects:
   - scope or acceptance criteria
@@ -170,6 +175,13 @@ Fast-lane behavior:
 - allow compact UX artifact if UX Strategist marks full spec unnecessary
 - still require decision-log and current-state synchronization
 
+### Parallel Queue Dispatch (Optional)
+- Enable only when at least 2 independent workstreams exist.
+- Studio Architect records active packets in `docs/current-state.md` role queues.
+- Each packet must declare owner, scope boundary, expected output, and timebox.
+- One canonical file can have only one active lock owner at a time.
+- Studio Architect performs reconciliation before any gate transition.
+
 1. Plan Gate
 - Owner: Studio Architect
 - Exit criteria:
@@ -268,6 +280,7 @@ Copy this section into slice docs and fill per role.
 - [ ] Scope is small, reviewable, and measurable.
 - [ ] Acceptance criteria are explicit.
 - [ ] Required roles selected based on triggers.
+- [ ] Parallel packet scopes and file locks are explicit when parallel mode is active.
 - [ ] Final gate decision and follow-ups recorded.
 
 ### Product Manager

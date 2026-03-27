@@ -30,12 +30,21 @@ Build and evolve the product iteratively with high delegation to the AI agent an
 - Studio Architect is the primary orchestration role and the default discussion interface for the human owner.
 - Other roles operate through delegated work packets and report back to Studio Architect.
 - Subagents may be used for bounded discovery/analysis tasks, but not as autonomous gate decision makers.
+- Supervised parallel writers may be activated when work can be split into independent packets.
 - Studio Architect remains the single write authority for gate transitions, state updates, and final artifact synchronization.
+- In supervised parallel mode, delegated writers may update only architect-assigned scope (files/modules) and must return output packets for reconciliation.
+- Delegated writers must not perform concurrent edits on the same canonical file unless Studio Architect assigns a temporary file lock owner.
 - Subagent outputs are advisory context and must be validated by Studio Architect before any authoritative updates.
 - If any delegated role has unresolved ambiguity, it must escalate to Studio Architect first.
 - Studio Architect consults the human owner when ambiguity affects scope, acceptance criteria, UX direction, risk profile, or gate transition readiness.
 - Studio Architect performs high-rigor Plan Gate interrogation to remove ambiguity before downstream delegation.
 - Gate transition updates in `docs/current-state.md` must run preflight validation before status changes.
+
+## Execution Modes
+
+- Default mode: single-writer orchestration by Studio Architect.
+- Optional mode: supervised parallel writers for independent work packets.
+- In both modes, only Studio Architect may finalize `docs/current-state.md` gate transitions and final artifact synchronization.
 
 ## Artifact Ownership Guardrails
 

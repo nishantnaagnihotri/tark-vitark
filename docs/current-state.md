@@ -12,12 +12,24 @@ Single-page startup context for every new chat.
 - Execution issue: https://github.com/nishantnaagnihotri/tark-vitark/issues/1
 - UX ownership note: UX contract not created yet; UX Strategist will author it during UX Gate
 
+## Execution Mode
+- Active mode: supervised parallel writers (architect-controlled)
+- Gate transition authority: Studio Architect only
+- Final artifact synchronization authority: Studio Architect only
+
 ## UX Gate Queue
 Use this ordered list when multiple slices are in UX Gate.
 Line format:
 `<order>. <slice-key> | issue: <url> | status: <pending|in-progress|done>`
 
 1. debate-screen | issue: https://github.com/nishantnaagnihotri/tark-vitark/issues/1 | status: in-progress
+
+## Active Role Queues
+Use this list when supervised parallel mode is active.
+Line format:
+`<order>. <role> | packet: <id> | scope: <files/modules> | status: <pending|in-progress|done>`
+
+1. Studio Architect | packet: orchestrator-sync | scope: governance reconciliation and gate control | status: in-progress
 
 ## Canonical Context (Load In This Order)
 1. AGENTS.md

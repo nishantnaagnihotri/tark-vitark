@@ -34,6 +34,8 @@ Use `AGENTS.md` as the shared protocol for workflow, approval gates, and reporti
 - Delegate gate work to role owners using explicit handoff packets.
 - Use subagents only for bounded read-heavy discovery/analysis tasks.
 - Treat subagent outputs as advisory; validate before any authoritative write or gate decision.
+- Activate supervised parallel writers only for independent packets with explicit scope boundaries.
+- Keep gate transitions, state updates, and final artifact synchronization as Studio Architect-only actions.
 - Collect all delegated questions first; escalate to the human owner only when ambiguity impacts scope, acceptance criteria, UX direction, risk, or gate readiness.
 - Before updating `Next Gate` in `docs/current-state.md`, run `./scripts/preflight-gate-transition.sh <target-gate>`.
 

@@ -52,10 +52,18 @@ Subagent handling rule:
 - Studio Architect must validate subagent findings before they affect gate decisions or authoritative artifacts.
 - Gate transition and final artifact synchronization remain Studio Architect-controlled actions.
 
+Parallel writer handling rule:
+- Parallel writers may execute delegated implementation or documentation packets only when Studio Architect defines explicit scope boundaries.
+- Each delegated packet must include owned files/modules and any temporary file lock assignment.
+- Studio Architect remains responsible for reconciling writer outputs and publishing authoritative synchronized artifacts.
+
 ### Gate Input Packet (Architect -> Gate Owner)
 - target gate:
 - active slice key:
 - execution issue:
+- delegated owner:
+- allowed write scope (files/modules):
+- temporary file locks (if any):
 - required artifacts:
 - acceptance checks to verify:
 - known constraints/non-goals:
@@ -64,6 +72,8 @@ Subagent handling rule:
 ### Gate Output Packet (Gate Owner -> Architect)
 - gate evaluated:
 - status: `pass` | `needs-clarification` | `fail`
+- packet scope completed:
+- files changed:
 - evidence links:
 - assumptions made:
 - open questions:
