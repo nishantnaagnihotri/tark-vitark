@@ -20,6 +20,27 @@ body:
         - Keep a compact in-scope FR ID summary near the top.
         - Keep a detailed FR-to-AC Traceability Matrix in the issue body.
 
+  - type: dropdown
+    id: gate_decision_owner
+    attributes:
+      label: Gate Decision Owner
+      description: Role accountable for gate transition decisions.
+      options:
+        - Studio Architect
+    validations:
+      required: true
+
+  - type: dropdown
+    id: requirements_owner
+    attributes:
+      label: Requirements Owner
+      description: Role accountable for requirements quality and FR/AC integrity.
+      options:
+        - Product Manager
+        - Studio Architect (lean fallback)
+    validations:
+      required: true
+
   - type: textarea
     id: requirement_ids
     attributes:

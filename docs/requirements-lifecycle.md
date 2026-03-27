@@ -19,6 +19,56 @@ Purpose: ensure one agent role can maintain full, current knowledge of functiona
 - Default issue intake form: `.github/ISSUE_TEMPLATE/feature-slice-intake.yml`.
 - Required labels bootstrap: `bash scripts/setup-github-labels.sh`.
 
+## New Requirement Kickoff (How To Start)
+Use this sequence when a requirement is new and not yet shaped into a slice:
+
+1. Entry discussion with Studio Architect
+- Provide a concise brief: problem, target user, desired outcome, success signal, constraints.
+
+2. Plan intake framing by Studio Architect
+- Propose safe initial slice boundary and declare risk profile.
+- Confirm required roles and whether fast-lane is eligible.
+
+3. Requirement shaping by Product Manager
+- Produce or update slice requirements spec with FR IDs and ACs.
+- Confirm baseline NFR inheritance and explicit non-goals.
+
+4. Execution tracker creation
+- Open/update issue using `.github/ISSUE_TEMPLATE/feature-slice-intake.yml`.
+- Set `Gate Decision Owner` to Studio Architect.
+- Set `Requirements Owner` to Product Manager (or Studio Architect in lean fallback).
+- Keep UX Contract Link and Figma Link as `TBD` until UX Gate completion.
+
+5. Plan Gate decision
+- Studio Architect validates Plan Gate exit criteria and either:
+  - advances to UX Gate, or
+  - requests requirement refinement.
+
+## Gate Handoff Packets (Required)
+Use these packet formats for all delegated gate work so Studio Architect can orchestrate consistently.
+
+### Gate Input Packet (Architect -> Gate Owner)
+- target gate:
+- active slice key:
+- execution issue:
+- required artifacts:
+- acceptance checks to verify:
+- known constraints/non-goals:
+- decision deadline or timebox:
+
+### Gate Output Packet (Gate Owner -> Architect)
+- gate evaluated:
+- status: `pass` | `needs-clarification` | `fail`
+- evidence links:
+- assumptions made:
+- open questions:
+- risk notes:
+- recommendation: `advance` | `hold` | `re-scope`
+
+Escalation rule:
+- Gate owners escalate only to Studio Architect.
+- Studio Architect is responsible for consulting the human owner when needed.
+
 ## Standard Issue Structure
 Every feature-slice issue should follow this structure:
 - Top summary section listing in-scope FR IDs.

@@ -25,6 +25,14 @@ Build and evolve the product iteratively with high delegation to the AI agent an
 - Default architecture: modular monolith with clear module boundaries.
 - Keep future extraction paths open (domain boundaries, observability, background jobs, queue/event readiness).
 
+## Orchestration Model
+
+- Studio Architect is the primary orchestration role and the default discussion interface for the human owner.
+- Other roles operate through delegated work packets and report back to Studio Architect.
+- If any delegated role has unresolved ambiguity, it must escalate to Studio Architect first.
+- Studio Architect consults the human owner when ambiguity affects scope, acceptance criteria, UX direction, risk profile, or gate transition readiness.
+- Gate transition updates in `docs/current-state.md` must run preflight validation before status changes.
+
 ## Artifact Ownership Guardrails
 
 - Only UX Strategist may create or author slice UX contracts under `docs/ux-spec-*.md`.

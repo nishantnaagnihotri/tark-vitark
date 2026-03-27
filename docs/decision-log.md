@@ -173,3 +173,31 @@ Tracks durable product/process decisions so future sessions and agents can inher
   - Stronger process drift detection before task finalization.
 - Follow-up:
   - After next slice, evaluate whether broad historical-slice checks should be added to the same script.
+
+## 2026-03-27 - Plan Gate Ownership Clarification and New Requirement Kickoff
+- Status: Accepted
+- Context: Role overlap between Studio Architect and Product Manager created ambiguity when starting new requirements.
+- Decision:
+  - Clarify decision split: Studio Architect owns gate transitions and sequencing; Product Manager owns requirement quality and FR/AC integrity.
+  - Add explicit "New Requirement Start Flow" in `docs/roles-and-gates.md`.
+  - Add explicit "New Requirement Kickoff" sequence in `docs/requirements-lifecycle.md`.
+  - Add required issue fields: `Gate Decision Owner` and `Requirements Owner` in `.github/ISSUE_TEMPLATE/feature-slice-intake.yml`.
+- Consequences:
+  - Cleaner entry point for new requirement discussions.
+  - Lower handoff ambiguity before UX and Build Gates.
+- Follow-up:
+  - Validate across next 2 slices whether fallback usage (Studio Architect as requirements owner) remains rare and justified.
+
+## 2026-03-27 - Architect-Centric Orchestration Automation
+- Status: Accepted
+- Context: Human owner requested a single discussion interface through Studio Architect, with delegated roles reporting back through architect and preflight checks before gate transitions.
+- Decision:
+  - Enforce Studio Architect as primary human-facing orchestrator in shared protocol and role docs.
+  - Require delegated roles to escalate unresolved questions to Studio Architect first.
+  - Add required gate handoff packet format in `docs/requirements-lifecycle.md`.
+  - Add `scripts/preflight-gate-transition.sh` and require it before updating `Next Gate` in `docs/current-state.md`.
+- Consequences:
+  - More deterministic gate flow with lower direct role-to-human interruption.
+  - Stronger guardrails before gate-state updates.
+- Follow-up:
+  - After next slice, evaluate whether late-gate (`risk`/`ship`) checks should be expanded in preflight automation.

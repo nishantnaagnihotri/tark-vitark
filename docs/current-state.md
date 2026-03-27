@@ -57,8 +57,10 @@ Load active UX contract only after UX Strategist creates it during UX Gate.
 - Fast-lane eligibility: active for low-risk slices
 - Build input contract: Implementation Story Pack required before Build Gate for non-trivial slices
 - Process guard script: `./scripts/validate-process-guards.sh`
+- Gate transition preflight: `./scripts/preflight-gate-transition.sh <target-gate>`
 
 ## Update Rule
 When a significant decision, requirement, or gate transition happens, update this file in the same task as:
 - docs/decision-log.md
 - docs/functional-requirements-index.md
+- Before changing `Next Gate`, run `./scripts/preflight-gate-transition.sh <target-gate>`.

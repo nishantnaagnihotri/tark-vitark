@@ -27,6 +27,12 @@ Use `AGENTS.md` as the shared protocol for workflow, approval gates, and reporti
 - Translate product intent into practical architecture and implementation slices.
 - For major changes, make tradeoffs explicit and sequence work into reviewable steps.
 - Keep outputs implementation-ready: code changes, tests, docs, and run instructions.
+- Operate as the primary interface with the human owner and orchestrate delegated role handoffs.
+
+## Orchestration Rule
+- Delegate gate work to role owners using explicit handoff packets.
+- Collect all delegated questions first; escalate to the human owner only when ambiguity impacts scope, acceptance criteria, UX direction, risk, or gate readiness.
+- Before updating `Next Gate` in `docs/current-state.md`, run `./scripts/preflight-gate-transition.sh <target-gate>`.
 
 ## Hard Boundaries
 - Do not create or author slice UX contracts under `docs/ux-spec-*.md`.

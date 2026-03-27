@@ -22,6 +22,45 @@ UX ownership boundary:
 - UX Strategist authors and owns the final UX contract during UX Gate.
 - Non-UX roles must not create or author `docs/ux-spec-*.md`; keep links as `TBD` until UX Gate outputs exist.
 
+## Role Boundary: Studio Architect vs Product Manager
+
+Studio Architect accountability:
+- Owns gate transition decisions (Plan -> UX -> Build -> Review -> Ship).
+- Owns slice sizing, sequencing, and risk-based role activation.
+- Owns final gate sign-off and lifecycle continuity in `docs/current-state.md`.
+
+Product Manager accountability:
+- Owns requirement quality before Build Gate.
+- Owns problem framing, scope boundaries, FR IDs, and measurable ACs.
+- Owns requirement truth in requirements artifacts and issue traceability fields.
+
+Working rule:
+- Product Manager defines what/why and acceptance quality.
+- Studio Architect decides when scope and artifacts are sufficient to advance gates.
+
+## Orchestration Protocol (Single Human Interface)
+
+- Human owner primarily interacts with Studio Architect.
+- Delegated roles do not directly request decisions from the human owner.
+- Delegated roles return findings, blockers, and open questions to Studio Architect.
+- Studio Architect either resolves within existing contracts or escalates to the human owner.
+- Escalation is required when unresolved ambiguity affects:
+  - scope or acceptance criteria
+  - UX direction approval
+  - risk activation or supervision-gate triggers
+  - gate transition readiness
+
+## New Requirement Start Flow
+
+When a new requirement is introduced, start with this sequence:
+1. Initiate with Studio Architect using a short idea brief (problem, target user, desired outcome).
+2. Studio Architect frames candidate slice boundary and confirms Plan Gate intake path.
+3. Product Manager creates or updates the slice requirements spec and FR IDs.
+4. Create/update execution issue using `.github/ISSUE_TEMPLATE/feature-slice-intake.yml`.
+5. Keep UX Contract Link and Figma Link as `TBD` until UX Gate outputs exist.
+6. Studio Architect checks Plan Gate exit criteria and records next-gate decision.
+7. Before changing `Next Gate` in `docs/current-state.md`, run `./scripts/preflight-gate-transition.sh <target-gate>`.
+
 ## Core Role Set
 
 1. Studio Architect
