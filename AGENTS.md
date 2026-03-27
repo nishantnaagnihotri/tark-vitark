@@ -91,7 +91,7 @@ At the start of a new chat, load:
 - `docs/non-functional-requirements-baseline.md`
 - `docs/functional-requirements-index.md`
 - active slice requirements spec (if one is active)
-- active slice UX spec (if one exists)
+- active slice UX contract (if one exists)
 - `docs/decision-log.md`
 
 Then follow them strictly for that session.

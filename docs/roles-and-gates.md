@@ -37,7 +37,7 @@ UX ownership boundary:
 3. UX Strategist
 - Converts product intent into concrete user flows and interaction states.
 - Defines copy intent, empty/loading/error states, and accessibility expectations.
-- Produces and owns the final UX spec per slice.
+- Produces and owns the final UX contract per slice.
 - Leads creative iteration rounds with the user until UX direction is approved.
 
 4. Feature Engineer
@@ -152,7 +152,7 @@ Fast-lane behavior:
 - Owner: Feature Engineer
 - Exit criteria:
   - Implementation Story Pack exists and maps FR/AC/UX into concrete build tasks.
-  - Implementation satisfies UX spec and build contract.
+  - Implementation satisfies UX contract and build contract.
   - Tests for critical path are present.
   - Non-goals and boundaries are respected.
 
