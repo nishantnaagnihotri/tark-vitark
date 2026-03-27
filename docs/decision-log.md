@@ -383,3 +383,29 @@ Tracks durable product/process decisions so future sessions and agents can inher
   - Preserves deterministic escalation path under no-idle packet policy.
 - Follow-up:
   - Run the packet in UX Strategist context to author `docs/ux-spec-debate-screen.md`, then rerun build preflight.
+
+## 2026-03-27 - UX Contract Authored (debate-screen)
+- Status: Accepted
+- Context: UX packet cycle 3 required concrete artifact progress under no-idle dispatch policy.
+- Decision:
+  - Created `docs/ux-spec-debate-screen.md` with Figma Production Contract and Code Translation Contract sections.
+  - Updated active slice requirement links to reference the new UX contract.
+  - Moved UX packet status from clarification to synchronization for issue/preflight reconciliation.
+- Consequences:
+  - Primary UX Gate artifact now exists and is implementation-ready.
+  - Remaining advancement blockers move from UX authoring to downstream Build Gate input checks.
+- Follow-up:
+  - Sync issue UX Contract Link and rerun build preflight.
+
+## 2026-03-27 - UX Gate Completion and Build Gate Ready
+- Status: Accepted
+- Context: UX contract, Figma link, and implementation story pack links were synchronized in issue tracking.
+- Decision:
+  - Verified `docs/ux-spec-debate-screen.md` is present and linked.
+  - Verified Build Gate preflight passed for target `build`.
+  - Updated current state to mark debate-screen UX queue complete and Next Gate as Build Gate.
+- Consequences:
+  - UX Gate artifacts are complete for this slice.
+  - Build implementation can start against the approved story pack and UX contract.
+- Follow-up:
+  - Start Build Gate execution with Feature Engineer packet using `docs/implementation-story-pack-debate-screen.md`.

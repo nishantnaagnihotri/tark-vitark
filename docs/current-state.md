@@ -8,9 +8,9 @@ Single-page startup context for every new chat.
 
 ## Active Slice
 - Slice key: debate-screen
-- Status: UX Gate in-progress (Figma required)
+- Status: Build Gate ready (UX Gate complete)
 - Execution issue: https://github.com/nishantnaagnihotri/tark-vitark/issues/1
-- UX ownership note: UX contract not created yet; UX Strategist will author it during UX Gate
+- UX ownership note: UX contract created at docs/ux-spec-debate-screen.md by UX Strategist
 
 ## Execution Mode
 - Active mode: supervised parallel writers (architect-controlled)
@@ -22,7 +22,7 @@ Use this ordered list when multiple slices are in UX Gate.
 Line format:
 `<order>. <slice-key> | issue: <url> | status: <pending|in-progress|done>`
 
-1. debate-screen | issue: https://github.com/nishantnaagnihotri/tark-vitark/issues/1 | status: in-progress
+1. debate-screen | issue: https://github.com/nishantnaagnihotri/tark-vitark/issues/1 | status: done
 
 ## Active Role Queues
 Use this list when supervised parallel mode is active.
@@ -30,7 +30,7 @@ Line format:
 `<order>. <role> | packet: <id> | scope: <files/modules> | status: <pending|in-progress|done>`
 
 1. Studio Architect | packet: orchestrator-sync | scope: governance reconciliation and gate control | status: in-progress
-2. UX Strategist | packet: ux-debate-screen-001 | scope: docs/handoffs/ux-debate-screen-001.md | status: needs-clarification (dispatch cycle 3: UX-role execution context)
+2. UX Strategist | packet: ux-debate-screen-001 | scope: docs/handoffs/ux-debate-screen-001.md | status: done
 
 ## Canonical Context (Load In This Order)
 1. AGENTS.md
@@ -40,7 +40,7 @@ Line format:
 5. docs/functional-requirements-debate-screen.md
 7. docs/decision-log.md
 
-Load active UX contract only after UX Strategist creates it during UX Gate.
+Active UX contract: docs/ux-spec-debate-screen.md
 
 ## Current Requirements Snapshot
 - FR-debate-screen-001: show debate topic heading
@@ -51,13 +51,11 @@ Load active UX contract only after UX Strategist creates it during UX Gate.
 - FR-debate-screen-006: desktop renders two columns; For left, Against right
 
 ## Open Questions
-- Create minimal UX contract and add Figma file/frame link for debate-screen UX artifact.
-- Add final debate-screen frame URL in Figma after UX frame authoring in file key `ltU4U9jpQuWKGInUHC9Bwq`.
-- Confirm execution context for UX Strategist authoring step so `docs/ux-spec-debate-screen.md` can be produced in this cycle.
+- Begin Build Gate implementation using docs/implementation-story-pack-debate-screen.md.
 
 ## Next Gate
-- UX Gate
-- Expected artifact: Figma link + minimal UX contract added for debate-screen, then proceed to Build Gate
+- Build Gate
+- Expected artifact: implementation changes mapped to FR/AC/UX with test evidence
 
 ## Agentic UX Protocol Status
 - Agent-first policy: enforced

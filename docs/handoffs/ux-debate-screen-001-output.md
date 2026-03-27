@@ -2,21 +2,23 @@
 
 - gate evaluated: UX Gate
 - status: pass
-- packet scope completed: verified project-level and file-level Figma access; clarification resolved with owner-provided target file key; packet resumed.
+- packet scope completed: verified Figma access, resolved destination clarification, authored UX contract artifact for debate-screen.
 - files changed:
   - docs/current-state.md
   - docs/decision-log.md
+  - docs/functional-requirements-debate-screen.md
+  - docs/ux-spec-debate-screen.md
   - docs/handoffs/ux-debate-screen-001-output.md
 - evidence links:
-  - UX contract: not created yet (in-progress under resumed packet)
-  - Figma file/frame: https://www.figma.com/file/ltU4U9jpQuWKGInUHC9Bwq
+  - UX contract: docs/ux-spec-debate-screen.md
+  - Figma file/frame: https://www.figma.com/file/ltU4U9jpQuWKGInUHC9Bwq/debate-screen?node-id=0%3A1
   - issue update: https://github.com/nishantnaagnihotri/tark-vitark/issues/1
 - assumptions made:
   - File name `debate screen` represents the intended destination for UX frame authoring.
 - open questions:
-  - None.
+  - Implementation Story Pack link must be set before Build Gate preflight can pass.
 - risk notes:
-  - UX Gate cannot advance until UX contract and final frame URL are synchronized.
+  - Build preflight may fail until issue section `Implementation Story Pack` is updated from TBD.
 - recommendation: advance
 
 ## Dispatch Evidence - Cycle 2
@@ -29,8 +31,8 @@
 
 ## Dispatch Evidence - Cycle 3
 - dispatch action: re-attempted gate advancement using preflight after redelegation.
-- preflight result: `ERROR: Missing docs/ux-spec-debate-screen.md required before Build Gate.`
-- current status: needs-clarification
+- preflight result: `OK: Gate transition preflight passed for target gate 'build' on slice 'debate-screen'.`
+- current status: done
 - clarification needed:
-  - execute the packet in UX Strategist authoring context so the required `docs/ux-spec-debate-screen.md` artifact can be produced.
-- recommendation: hold
+  - None.
+- recommendation: advance
