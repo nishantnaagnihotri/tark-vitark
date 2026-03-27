@@ -57,6 +57,11 @@ Parallel writer handling rule:
 - Each delegated packet must include owned files/modules and any temporary file lock assignment.
 - Studio Architect remains responsible for reconciling writer outputs and publishing authoritative synchronized artifacts.
 
+Dispatch and heartbeat rule:
+- When Studio Architect marks a delegated packet `in-progress`, the delegated role must produce same-session evidence.
+- Valid same-session evidence is either concrete artifact progress or a `needs-clarification` Gate Output Packet.
+- Studio Architect must sync this evidence to issue tracking and current-state before ending the task.
+
 ### Gate Input Packet (Architect -> Gate Owner)
 - target gate:
 - active slice key:

@@ -32,6 +32,14 @@ Creation timing rule:
 	- If user selects subset, execute only selected slices in the order provided.
 - If `Next Gate` is not UX Gate, report handoff and stop.
 
+## Dispatch Trigger Rule (No Idle Packets)
+- If a UX packet is marked `in-progress` in docs/current-state.md, execution must start in the same task.
+- Do not leave packet status as `in-progress` without one of the following same-session outputs:
+	- UX contract progress committed, or
+	- Gate Output Packet with `needs-clarification` and exact unblock input.
+- If clarification is required, write the blocker to packet output and issue tracker in the same task, then pause.
+- After clarification is received, resume the same packet before starting any new packet.
+
 ## Queue Entry Format
 Expected `UX Gate Queue` line format in docs/current-state.md:
 

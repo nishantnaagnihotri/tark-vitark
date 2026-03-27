@@ -345,3 +345,16 @@ Tracks durable product/process decisions so future sessions and agents can inher
   - Remaining UX Gate work is now artifact completion, not access clarification.
 - Follow-up:
   - Create/update `docs/ux-spec-debate-screen.md`, sync issue links, then run UX Gate preflight.
+
+## 2026-03-27 - No Idle Delegated Packet Rule
+- Status: Accepted
+- Context: Delegated UX packet was tracked but execution momentum was unclear to the human owner.
+- Decision:
+  - Require same-session execution evidence whenever a packet is set to `in-progress`.
+  - Allow only two valid evidence paths: artifact progress or explicit `needs-clarification` output.
+  - Require Studio Architect to synchronize packet evidence to current-state and issue tracker in the same task.
+- Consequences:
+  - Reduces perceived delegation stalls and improves team-like operational flow.
+  - Increases accountability for packet progress visibility.
+- Follow-up:
+  - Apply this rule to all future delegated packets across UX/Build/Review gates.
