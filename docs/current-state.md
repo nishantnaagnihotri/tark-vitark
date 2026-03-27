@@ -30,6 +30,7 @@ Line format:
 `<order>. <role> | packet: <id> | scope: <files/modules> | status: <pending|in-progress|done>`
 
 1. Studio Architect | packet: orchestrator-sync | scope: governance reconciliation and gate control | status: in-progress
+2. UX Strategist | packet: ux-debate-screen-001 | scope: docs/handoffs/ux-debate-screen-001.md | status: in-progress
 
 ## Canonical Context (Load In This Order)
 1. AGENTS.md
@@ -51,7 +52,7 @@ Load active UX contract only after UX Strategist creates it during UX Gate.
 
 ## Open Questions
 - Create minimal UX contract and add Figma file/frame link for debate-screen UX artifact.
-- Complete Figma API/MCP connectivity setup for UX agent and run connectivity verification.
+- Add final debate-screen frame URL in Figma after UX frame authoring in file key `ltU4U9jpQuWKGInUHC9Bwq`.
 
 ## Next Gate
 - UX Gate
@@ -60,7 +61,7 @@ Load active UX contract only after UX Strategist creates it during UX Gate.
 ## Agentic UX Protocol Status
 - Agent-first policy: enforced
 - UX Figma protocol: `docs/ux-figma-agentic-protocol.md`
-- Active fallback blocker: Figma connectivity setup in progress
+- Active fallback blocker: none (project and file-level Figma access verified)
 - UX contract timing rule: final UX contract is authored by UX Strategist during UX Gate
 - UX direction decisions: labels use For/Against; desktop uses two-column layout
 

@@ -279,3 +279,69 @@ Tracks durable product/process decisions so future sessions and agents can inher
   - Adds reconciliation overhead and requires stricter packet discipline.
 - Follow-up:
   - Reassess after next 2 slices for queue throughput gain versus reconciliation overhead.
+
+## 2026-03-27 - UX Packet Resume Status (Figma File-Key Blocker)
+- Status: Accepted
+- Context: UX Gate resumed under supervised parallel mode for `debate-screen` with packet `ux-debate-screen-001`.
+- Decision:
+  - Confirmed Figma API identity check is passing.
+  - Marked packet as blocked for file-level operations until `FIGMA_FILE_KEY` or final file URL is provided.
+  - Keep UX Gate in-progress with no gate advancement until blocker is resolved.
+- Consequences:
+  - Work is actively resumed with explicit queue state and escalation path.
+  - UX artifact completion remains paused on external access input.
+- Follow-up:
+  - On receiving file key/URL, rerun `./scripts/check-figma-connectivity.sh` with file-level verification and continue UX packet execution.
+
+## 2026-03-27 - Figma Project Access Verified (UX Packet Unblocked)
+- Status: Accepted
+- Context: User shared Figma project URL for TarkVitark and requested resume of UX execution.
+- Decision:
+  - Verified project-level access via Figma Projects API for project key `115942335`.
+  - Retrieved file key `MLAPMipLLy33DTUGEM33ZT` from project listing and passed file-level connectivity check.
+  - Removed connectivity blocker and resumed UX packet `ux-debate-screen-001` in active state.
+- Consequences:
+  - UX Strategist packet can proceed with artifact authoring under supervised orchestration.
+  - UX Gate advancement remains blocked until final UX contract and frame URL are produced.
+- Follow-up:
+  - Capture final frame URL in UX contract and execution issue, then run UX Gate preflight for advancement.
+
+## 2026-03-27 - UX Gate Input Packet Issued (debate-screen)
+- Status: Accepted
+- Context: After Figma access unblock, workflow needed immediate concrete delegation rather than passive waiting.
+- Decision:
+  - Issued explicit Gate Input Packet artifact at `docs/handoffs/ux-debate-screen-001.md`.
+  - Linked active UX role queue entry in `docs/current-state.md` to the packet artifact.
+  - Defined escalation loop for doubts so delegated UX work can pause, clarify, and resume without process drift.
+- Consequences:
+  - Delegated UX execution now has deterministic scope, acceptance checks, and resume protocol.
+  - Reduces ambiguity and improves parallel team-like flow under Studio Architect supervision.
+- Follow-up:
+  - UX Strategist executes packet and returns Gate Output Packet evidence for reconciliation.
+
+## 2026-03-27 - UX Packet Clarification Required (Target Figma Destination)
+- Status: Accepted
+- Context: UX packet execution inspected the currently accessible file key `MLAPMipLLy33DTUGEM33ZT` and found team-library starter content without an explicit debate-screen destination frame.
+- Decision:
+  - Mark UX packet `ux-debate-screen-001` as `needs-clarification`.
+  - Hold UX Gate advancement until destination is confirmed:
+    - use current file key for debate-screen frames, or
+    - provide dedicated product file/frame URL.
+- Consequences:
+  - Prevents UX artifact creation in a potentially incorrect Figma destination.
+  - Keeps delegation loop deterministic: pause -> clarify -> resume.
+- Follow-up:
+  - On owner clarification, resume packet in same handoff file and complete UX contract authoring.
+
+## 2026-03-27 - UX Destination Clarified and Packet Resumed
+- Status: Accepted
+- Context: Owner provided destination file key `ltU4U9jpQuWKGInUHC9Bwq` for debate-screen UX work.
+- Decision:
+  - Verified file-level access with the provided key and confirmed file metadata includes name `debate screen`.
+  - Resolved `needs-clarification` hold and moved UX packet `ux-debate-screen-001` back to `in-progress`.
+  - Updated handoff packet access context to the confirmed file key.
+- Consequences:
+  - UX execution is unblocked for contract authoring and frame linking.
+  - Remaining UX Gate work is now artifact completion, not access clarification.
+- Follow-up:
+  - Create/update `docs/ux-spec-debate-screen.md`, sync issue links, then run UX Gate preflight.
