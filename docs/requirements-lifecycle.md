@@ -25,8 +25,8 @@ Every feature-slice issue should follow this structure:
 - Problem/outcome, scope, and acceptance criteria sections.
 - NFR baseline inheritance acknowledgement section.
 - Traceability Matrix section mapping FR ID -> behavior -> AC IDs -> evidence.
-- UX spec link section (or `TBD` until UX Gate completes).
-- Figma link section (or explicit waiver text: "Figma not required for this slice - <reason>").
+- UX contract link section (or `TBD` until UX Gate completes).
+- Figma link section (or `TBD` until UX Gate completes).
 - Implementation Story Pack section (or `TBD` until UX Gate outputs are approved).
 
 Rationale: top FR summary provides fast triage scanning, while matrix provides full traceability detail.
@@ -38,8 +38,8 @@ Rationale: top FR summary provides fast triage scanning, while matrix provides f
 
 UX artifact ownership boundary:
 - Product Manager owns functional requirements and acceptance criteria.
-- Product Manager does not own final UX spec content.
-- UX Strategist owns and authors the final UX spec and Figma artifact during UX Gate.
+- Product Manager does not own final UX contract content.
+- UX Strategist owns and authors the final UX contract and Figma artifact during UX Gate.
 
 ## Lifecycle Steps
 1. Intake and framing
@@ -57,7 +57,7 @@ UX artifact ownership boundary:
 - Capture product-level user story (outcome-oriented, not code-task decomposition).
 
 4. UX Gate completion
-- UX Strategist produces approved UX spec + Figma artifact state.
+- UX Strategist produces approved UX contract + Figma artifact state.
 - Keep UX and FR traceability links current in issue and docs.
 
 5. Build input decomposition

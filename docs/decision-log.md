@@ -133,3 +133,43 @@ Tracks durable product/process decisions so future sessions and agents can inher
   - Slightly more structure in issue/update workflow.
 - Follow-up:
   - Track lead time and rework over next 3 slices to validate impact.
+
+## 2026-03-26 - UX Artifact Ownership Enforcement and Guard Script
+- Status: Accepted
+- Context: A process breach occurred when a non-UX role created a slice UX spec before UX Gate execution.
+- Decision:
+  - Enforce explicit ownership rule: only UX Strategist may create or author `docs/ux-spec-*.md`.
+  - Require non-UX roles to keep UX references as `TBD` until UX Gate outputs exist.
+  - Add executable guard `scripts/validate-process-guards.sh` to detect current-state and UX artifact mismatch for the active slice.
+- Consequences:
+  - Reduces cross-role process drift for UX artifacts.
+  - Adds one lightweight verification step when governance artifacts are touched.
+- Follow-up:
+  - Expand guard checks after next 2 slices to cover issue-body link consistency.
+
+## 2026-03-27 - Hybrid UX Artifact Model (Figma-First + Minimal UX Contract)
+- Status: Accepted
+- Context: Figma-only artifacts are strong for visual intent but weaker for deterministic agent implementation of edge cases and traceability.
+- Decision:
+  - Adopt hybrid UX model as default.
+  - Figma is the primary visual source for layout/style decisions.
+  - `docs/ux-spec-*.md` remains required as a minimal UX contract for non-visual behavior, accessibility, responsiveness, state handling, and code translation mapping.
+  - Remove waiver-oriented language from default UX Gate expectations.
+- Consequences:
+  - More reliable agentic implementation with clearer automation-friendly constraints.
+  - Slight documentation overhead, reduced by keeping the contract minimal.
+- Follow-up:
+  - After next 2 slices, review whether template sections can be further reduced without hurting implementation reliability.
+
+## 2026-03-27 - Hybrid Terminology Alignment and Issue Consistency Guards
+- Status: Accepted
+- Context: Two residual risks remained: naming ambiguity from `ux-spec-*.md` path retention and missing automated checks for issue UX/Figma field consistency.
+- Decision:
+  - Standardize user-facing language to "UX contract" while retaining `docs/ux-spec-*.md` path for compatibility.
+  - Update issue template labels to "UX Contract Link" and "Figma Link".
+  - Extend `scripts/validate-process-guards.sh` to enforce issue body consistency with active gate and UX contract file state.
+- Consequences:
+  - Lower contributor confusion without introducing file rename churn.
+  - Stronger process drift detection before task finalization.
+- Follow-up:
+  - After next slice, evaluate whether broad historical-slice checks should be added to the same script.

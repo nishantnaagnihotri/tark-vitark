@@ -33,6 +33,11 @@ Additional role-specific agents:
 - Required GitHub labels can be bootstrapped with [scripts/setup-github-labels.sh](scripts/setup-github-labels.sh).
 - Startup context for every chat is tracked in [docs/current-state.md](docs/current-state.md).
 
+## UX Artifact Naming Note
+
+- Files under [docs/](docs/) matching `ux-spec-*.md` are minimal UX contracts in the hybrid model.
+- Figma remains the primary visual source, while the markdown UX contract captures non-visual implementation constraints and traceability.
+
 ## Development Workflow Diagram
 
 - PlantUML source: [docs/development-workflow.puml](docs/development-workflow.puml)

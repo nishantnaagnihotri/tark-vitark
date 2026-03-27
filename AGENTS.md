@@ -25,6 +25,13 @@ Build and evolve the product iteratively with high delegation to the AI agent an
 - Default architecture: modular monolith with clear module boundaries.
 - Keep future extraction paths open (domain boundaries, observability, background jobs, queue/event readiness).
 
+## Artifact Ownership Guardrails
+
+- Only UX Strategist may create or author slice UX contracts under `docs/ux-spec-*.md`.
+- Non-UX roles (including Studio Architect and Feature Engineer) must not create or finalize slice UX contracts.
+- If UX output is not available yet, non-UX roles must keep references as `TBD` and hand off to UX Gate.
+- If `docs/current-state.md` indicates active slice UX contract is not created yet, creating that file is a process violation.
+
 ## Required Workflow Per Task
 
 1. Understand goal and restate scope/constraints briefly.
@@ -36,7 +43,8 @@ Build and evolve the product iteratively with high delegation to the AI agent an
    - impacted files/modules
 4. Implement in a focused way.
 5. Add/update tests, docs, setup instructions, and observability hooks where relevant.
-6. Report results in the required format.
+6. Run process consistency checks when governance artifacts changed.
+7. Report results in the required format.
 
 ## Required Post-Task Report Format
 

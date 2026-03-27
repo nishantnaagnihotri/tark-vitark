@@ -117,8 +117,8 @@ body:
   - type: input
     id: ux_spec_link
     attributes:
-      label: UX Spec Link
-      description: Link UX spec if available now. If pending, enter TBD and update at UX Gate.
+      label: UX Contract Link
+      description: Link UX contract if available now. If pending, enter TBD and update at UX Gate.
       placeholder: https://github.com/<org>/<repo>/blob/<branch>/docs/ux-spec-<slice>.md or TBD
     validations:
       required: true
@@ -126,9 +126,9 @@ body:
   - type: input
     id: figma_link
     attributes:
-      label: Figma Link or Waiver
-      description: "Provide Figma file/frame link. If not needed, enter: Figma not required for this slice - <reason>."
-      placeholder: https://www.figma.com/file/... or Figma not required for this slice - low-risk backend-only change
+      label: Figma Link
+      description: Provide Figma file/frame link. If pending, enter TBD and update at UX Gate.
+      placeholder: https://www.figma.com/file/... or TBD
     validations:
       required: true
 

@@ -18,8 +18,9 @@ To keep slices implementation-ready, every non-trivial slice should have a short
 
 UX ownership boundary:
 - Product Manager defines requirement intent and acceptance criteria.
-- Product Manager does not author the final UX spec.
-- UX Strategist authors and owns the final UX spec during UX Gate.
+- Product Manager does not author the final UX contract.
+- UX Strategist authors and owns the final UX contract during UX Gate.
+- Non-UX roles must not create or author `docs/ux-spec-*.md`; keep links as `TBD` until UX Gate outputs exist.
 
 ## Core Role Set
 
@@ -141,12 +142,11 @@ Fast-lane behavior:
 - Owner: UX Strategist
 - Exit criteria:
   - UX direction is explicitly approved after iteration rounds when needed.
-  - UX spec is authored or finalized by UX Strategist.
-  - Primary flow and alternative states are specified.
-  - Accessibility and responsive behavior expectations are stated.
-  - UX spec is linked in slice docs.
-  - UX spec includes Figma Production Contract and Code Translation Contract sections.
-  - Figma artifact link is provided, or an explicit "Figma not required for this slice" waiver is documented with rationale.
+  - Figma artifact is the primary visual source for the slice.
+  - Minimal UX contract is authored or finalized by UX Strategist in `docs/ux-spec-*.md`.
+  - Minimal UX contract captures non-visual implementation constraints: states, responsiveness, accessibility, and copy intent.
+  - Minimal UX contract includes Figma link plus code translation mapping section.
+  - UX contract is linked in slice docs.
 
 3. Build Gate
 - Owner: Feature Engineer
@@ -230,8 +230,8 @@ Copy this section into slice docs and fill per role.
 - [ ] Mobile and accessibility expectations documented.
 - [ ] Creative direction reviewed and approved with user.
 - [ ] UX artifacts linked.
-- [ ] Figma Production Contract and Code Translation Contract are complete.
-- [ ] Figma artifact link or explicit waiver with rationale is documented.
+- [ ] Figma artifact is complete and linked.
+- [ ] Minimal UX contract is complete for non-visual behavior and code translation mapping.
 
 ### Feature Engineer
 - [ ] Implementation Story Pack is present and concrete before coding starts.

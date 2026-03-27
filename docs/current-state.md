@@ -8,9 +8,9 @@ Single-page startup context for every new chat.
 
 ## Active Slice
 - Slice key: debate-screen
-- Status: UX Gate pending start (Figma required; waiver not allowed)
+- Status: UX Gate pending start (Figma required)
 - Execution issue: https://github.com/nishantnaagnihotri/tark-vitark/issues/1
-- UX ownership note: UX spec not created yet; UX Strategist will author it during UX Gate
+- UX ownership note: UX contract not created yet; UX Strategist will author it during UX Gate
 
 ## UX Gate Queue
 Use this ordered list when multiple slices are in UX Gate.
@@ -27,7 +27,7 @@ Line format:
 5. docs/functional-requirements-debate-screen.md
 7. docs/decision-log.md
 
-Load active UX spec only after UX Strategist creates it during UX Gate.
+Load active UX contract only after UX Strategist creates it during UX Gate.
 
 ## Current Requirements Snapshot
 - FR-debate-screen-001: show debate topic heading
@@ -37,25 +37,26 @@ Load active UX spec only after UX Strategist creates it during UX Gate.
 - FR-debate-screen-005: mobile stream preserves posted order; favour left, against right
 
 ## Open Questions
-- Create UX spec and add Figma file/frame link for debate-screen UX artifact.
+- Create minimal UX contract and add Figma file/frame link for debate-screen UX artifact.
 - Confirm final label text choice: "In Favour/Against" vs "For/Against"
 - Confirm desktop behavior preference if stream and columns diverge for long content
 - Confirm Figma API/MCP availability to remove manual fallback for link placement.
 
 ## Next Gate
 - UX Gate
-- Expected artifact: Figma link added for debate-screen (no waiver), then proceed to Build Gate
+- Expected artifact: Figma link + minimal UX contract added for debate-screen, then proceed to Build Gate
 
 ## Agentic UX Protocol Status
 - Agent-first policy: enforced
 - UX Figma protocol: `docs/ux-figma-agentic-protocol.md`
 - Active fallback blocker: direct Figma API/MCP availability not yet confirmed
-- UX spec timing rule: final UX spec is authored by UX Strategist during UX Gate
+- UX contract timing rule: final UX contract is authored by UX Strategist during UX Gate
 
 ## Process Optimization Baseline
 - Gate timeboxes: active
 - Fast-lane eligibility: active for low-risk slices
 - Build input contract: Implementation Story Pack required before Build Gate for non-trivial slices
+- Process guard script: `./scripts/validate-process-guards.sh`
 
 ## Update Rule
 When a significant decision, requirement, or gate transition happens, update this file in the same task as:

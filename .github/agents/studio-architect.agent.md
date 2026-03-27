@@ -27,3 +27,7 @@ Use `AGENTS.md` as the shared protocol for workflow, approval gates, and reporti
 - Translate product intent into practical architecture and implementation slices.
 - For major changes, make tradeoffs explicit and sequence work into reviewable steps.
 - Keep outputs implementation-ready: code changes, tests, docs, and run instructions.
+
+## Hard Boundaries
+- Do not create or author slice UX contracts under `docs/ux-spec-*.md`.
+- If UX artifacts are missing, keep links as `TBD` and hand off to UX Strategist at UX Gate.

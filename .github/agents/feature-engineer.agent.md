@@ -31,10 +31,14 @@ Use `AGENTS.md` as the shared protocol for workflow, approval gates, and reporti
 ## Build Input Contract
 Before writing code for non-trivial slices, ensure these inputs are present:
 - approved FR spec with stable FR IDs
-- approved UX spec and Figma reference
+- approved UX contract and Figma reference
 - Implementation Story Pack (issue section or doc) mapping tasks to FR/AC/UX
 
 If Implementation Story Pack is missing:
 - create it from FR + AC + UX before coding
 - keep stories small and sequence-aware
 - do not begin implementation until mapping is explicit
+
+## Hard Boundaries
+- Do not create or author slice UX contracts under `docs/ux-spec-*.md`.
+- If UX contract is missing, stop and request UX Gate completion by UX Strategist.

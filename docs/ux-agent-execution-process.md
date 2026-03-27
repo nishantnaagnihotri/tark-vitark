@@ -3,13 +3,13 @@
 Purpose: allow UX Strategist to autonomously execute the next UX task based on repository knowledge artifacts.
 
 Ownership rule:
-- If a UX spec was pre-created by another role, treat it as context only.
-- UX Strategist is the final owner of UX direction and may refactor or replace the draft as needed.
+- UX Strategist is the only role that may create or author slice UX contracts under `docs/ux-spec-*.md`.
+- Any non-UX-authored UX contract draft is a process violation and must be removed or reset to `TBD` references.
 - Functional and baseline NFR constraints must still be preserved unless explicitly changed through governance.
 
 Creation timing rule:
-- Final UX spec is created/authored in UX Gate by UX Strategist.
-- Before UX Gate, requirement artifacts may include UX intent notes, but not a finalized UX spec.
+- Final UX contract is created/authored in UX Gate by UX Strategist.
+- Before UX Gate, requirement artifacts may include UX intent notes, but not a finalized UX contract.
 
 ## Inputs (Required Load Order)
 1. AGENTS.md
@@ -17,7 +17,7 @@ Creation timing rule:
 3. docs/non-functional-requirements-baseline.md
 4. docs/functional-requirements-index.md
 5. active slice requirements spec
-6. active slice UX spec (if present from prior UX iterations)
+6. active slice UX contract (if present from prior UX iterations)
 7. docs/decision-log.md
 
 ## Task Selection Rule
@@ -50,14 +50,15 @@ Example:
 - Repeat until one direction is approved for execution
 4. Produce or update UX artifact details:
 - Create the active `docs/ux-spec-*.md` from template if it does not exist yet.
-- UX spec completeness (flow, states, responsiveness, accessibility)
-- Figma production contract and code translation contract (per `docs/ux-figma-agentic-protocol.md`)
-- Figma file/frame link, or approved waiver if allowed
+- Treat Figma as the primary visual artifact for layout and style decisions.
+- Complete minimal UX contract for non-visual behavior (flow, states, responsiveness, accessibility, copy intent).
+- Add Figma file/frame link and code translation mapping.
 5. Synchronize artifacts:
 - Update active `docs/ux-spec-*.md`
-- Update linked issue body sections (UX Spec link, Figma link/waiver)
+- Update linked issue body sections (UX contract link, Figma link)
 - Update docs/current-state.md gate status and open questions
 6. Report completion with evidence links.
+7. Run `./scripts/validate-process-guards.sh` before finalizing task updates.
 
 ## Multi-Slice Sequencing Rules
 - Process one slice at a time to avoid cross-slice state drift.
@@ -75,7 +76,7 @@ Example:
 ## Done Criteria
 - UX Gate exit criteria in docs/roles-and-gates.md are all satisfied.
 - Active slice shows updated UX artifact links.
-- UX spec includes Figma Production Contract and Code Translation Contract.
+- UX contract captures non-visual constraints and code translation mapping, with linked Figma artifact.
 - Current-state `Next Gate` advances appropriately.
 
 ## Output Format

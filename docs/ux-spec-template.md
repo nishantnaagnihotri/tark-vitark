@@ -1,6 +1,11 @@
-# UX Spec Template
+# UX Contract Template (Hybrid: Figma-first + Minimal Markdown)
 
 Use this template for slice-level UX Gate artifacts.
+
+Guidance:
+- Keep this artifact minimal and implementation-focused.
+- Treat Figma as the primary visual source (layout, style, spacing, component visuals).
+- Use this markdown contract for non-visual behavior and traceability.
 
 ## 1. Scope Alignment
 - Slice:
@@ -26,7 +31,7 @@ Use this template for slice-level UX Gate artifacts.
 ## 5. Content and Copy
 - 
 
-## 6. Visual and Spacing Rules
+## 6. Non-Visual Behavioral Rules
 - 
 
 ## 7. Responsive Rules
@@ -48,7 +53,7 @@ Use this template for slice-level UX Gate artifacts.
 ## 11. Implementation Notes
 - 
 
-## 12. Figma Production Contract
+## 12. Figma Reference (Primary Visual Source)
 - Figma page name:
 - Frame list:
 	- mobile:
@@ -66,4 +71,3 @@ Use this template for slice-level UX Gate artifacts.
 
 ## 14. Figma Artifact
 - Figma link:
-- Waiver: (only if Figma is not required for this slice; include reason)

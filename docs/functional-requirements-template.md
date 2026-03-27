@@ -9,7 +9,7 @@ Keep it concise and implementation-ready.
 - Date:
 - Related links:
   - Decision log entry:
-  - UX spec (filled after UX Gate):
+  - UX contract (filled after UX Gate):
   - Tracking issue/task:
 
 ## 2. Problem and User Outcome

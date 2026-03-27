@@ -6,7 +6,7 @@
 - Date: 2026-03-25
 - Related links:
   - Decision log entry: docs/decision-log.md
-  - UX spec: TBD (to be created by UX Strategist during UX Gate)
+  - UX contract: TBD (to be created by UX Strategist during UX Gate)
   - Tracking issue/task: https://github.com/nishantnaagnihotri/tark-vitark/issues/1
 
 ## 2. Problem and User Outcome
