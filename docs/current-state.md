@@ -30,7 +30,7 @@ Line format:
 `<order>. <role> | packet: <id> | scope: <files/modules> | status: <pending|in-progress|done>`
 
 1. Studio Architect | packet: orchestrator-sync | scope: governance reconciliation and gate control | status: in-progress
-2. UX Strategist | packet: ux-debate-screen-001 | scope: docs/handoffs/ux-debate-screen-001.md | status: in-progress (dispatch cycle 2)
+2. UX Strategist | packet: ux-debate-screen-001 | scope: docs/handoffs/ux-debate-screen-001.md | status: needs-clarification (dispatch cycle 3: UX-role execution context)
 
 ## Canonical Context (Load In This Order)
 1. AGENTS.md
@@ -53,6 +53,7 @@ Load active UX contract only after UX Strategist creates it during UX Gate.
 ## Open Questions
 - Create minimal UX contract and add Figma file/frame link for debate-screen UX artifact.
 - Add final debate-screen frame URL in Figma after UX frame authoring in file key `ltU4U9jpQuWKGInUHC9Bwq`.
+- Confirm execution context for UX Strategist authoring step so `docs/ux-spec-debate-screen.md` can be produced in this cycle.
 
 ## Next Gate
 - UX Gate

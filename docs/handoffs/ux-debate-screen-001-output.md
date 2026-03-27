@@ -26,3 +26,11 @@
   - create `docs/ux-spec-debate-screen.md`
   - add final frame URL in UX contract and issue #1
   - run build preflight after UX artifact sync
+
+## Dispatch Evidence - Cycle 3
+- dispatch action: re-attempted gate advancement using preflight after redelegation.
+- preflight result: `ERROR: Missing docs/ux-spec-debate-screen.md required before Build Gate.`
+- current status: needs-clarification
+- clarification needed:
+  - execute the packet in UX Strategist authoring context so the required `docs/ux-spec-debate-screen.md` artifact can be produced.
+- recommendation: hold

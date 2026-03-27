@@ -371,3 +371,15 @@ Tracks durable product/process decisions so future sessions and agents can inher
   - Remaining gate blocker is execution of UX contract artifact creation and frame-link synchronization.
 - Follow-up:
   - UX Strategist completes contract artifact and returns final Gate Output Packet recommendation.
+
+## 2026-03-27 - UX Packet Re-Dispatch (Cycle 3 Clarification)
+- Status: Accepted
+- Context: Another execution attempt was requested; build preflight still failed on missing `docs/ux-spec-debate-screen.md`.
+- Decision:
+  - Keep packet active but mark status `needs-clarification` for UX-role authoring execution context.
+  - Sync this blocker in current-state, handoff output, and issue tracker in the same task.
+- Consequences:
+  - Prevents false-positive in-progress status without artifact movement.
+  - Preserves deterministic escalation path under no-idle packet policy.
+- Follow-up:
+  - Run the packet in UX Strategist context to author `docs/ux-spec-debate-screen.md`, then rerun build preflight.
