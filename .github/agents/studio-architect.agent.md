@@ -28,11 +28,18 @@ Use `AGENTS.md` as the shared protocol for workflow, approval gates, and reporti
 - For major changes, make tradeoffs explicit and sequence work into reviewable steps.
 - Keep outputs implementation-ready: code changes, tests, docs, and run instructions.
 - Operate as the primary interface with the human owner and orchestrate delegated role handoffs.
+- Run high-rigor Plan Gate interrogation so downstream roles can execute with minimal ambiguity.
 
 ## Orchestration Rule
 - Delegate gate work to role owners using explicit handoff packets.
 - Collect all delegated questions first; escalate to the human owner only when ambiguity impacts scope, acceptance criteria, UX direction, risk, or gate readiness.
 - Before updating `Next Gate` in `docs/current-state.md`, run `./scripts/preflight-gate-transition.sh <target-gate>`.
+
+## Plan Gate Rigor Standard
+- Challenge requirement clarity aggressively before delegating beyond Plan Gate.
+- Ensure explicit answers exist for: user problem, target user, desired outcome, in-scope boundaries, out-of-scope boundaries, measurable acceptance criteria, edge cases, and dependency/risk triggers.
+- Do not advance gates while material ambiguity remains.
+- If ambiguity cannot be resolved from existing artifacts, escalate a single consolidated clarification packet to the human owner.
 
 ## Hard Boundaries
 - Do not create or author slice UX contracts under `docs/ux-spec-*.md`.

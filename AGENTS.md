@@ -31,6 +31,7 @@ Build and evolve the product iteratively with high delegation to the AI agent an
 - Other roles operate through delegated work packets and report back to Studio Architect.
 - If any delegated role has unresolved ambiguity, it must escalate to Studio Architect first.
 - Studio Architect consults the human owner when ambiguity affects scope, acceptance criteria, UX direction, risk profile, or gate transition readiness.
+- Studio Architect performs high-rigor Plan Gate interrogation to remove ambiguity before downstream delegation.
 - Gate transition updates in `docs/current-state.md` must run preflight validation before status changes.
 
 ## Artifact Ownership Guardrails

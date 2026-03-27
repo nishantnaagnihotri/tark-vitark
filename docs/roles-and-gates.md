@@ -67,6 +67,7 @@ When a new requirement is introduced, start with this sequence:
 - Owns slice planning, scope control, and final sign-off.
 - Maintains lifecycle continuity across UX, implementation, review, and release.
 - Ensures each slice has clear acceptance criteria and measurable outcomes.
+- Owns Plan Gate interrogation depth before downstream delegation.
 
 2. Product Manager
 - Owns problem framing, functional scope definition, and acceptance criteria quality.
@@ -176,6 +177,17 @@ Fast-lane behavior:
   - Functional Requirements Index entry is created or updated for the slice.
   - Acceptance criteria are measurable.
   - Risk profile and required roles are declared.
+  - Architect challenge checklist is completed; unresolved material ambiguity is either resolved or escalated to the human owner.
+
+### Plan Gate Challenge Checklist (Studio Architect)
+- What exact user problem is in scope for this slice now?
+- Which user/persona is in scope, and who is explicitly out of scope?
+- What measurable outcome defines success for this slice?
+- What is explicitly out of scope to prevent drift?
+- Which acceptance criteria are objectively testable?
+- Which edge cases could cause interpretation drift later?
+- Which dependencies or blockers could stall downstream gates?
+- Which risks require conditional role activation (Security/Release/Risk Gate)?
 
 2. UX Gate
 - Owner: UX Strategist

@@ -201,3 +201,16 @@ Tracks durable product/process decisions so future sessions and agents can inher
   - Stronger guardrails before gate-state updates.
 - Follow-up:
   - After next slice, evaluate whether late-gate (`risk`/`ship`) checks should be expanded in preflight automation.
+
+## 2026-03-27 - High-Rigor Plan Gate Interrogation Standard
+- Status: Accepted
+- Context: Efficient downstream delegation requires stronger ambiguity removal at Plan Gate so later gates do not repeatedly bounce back to the human owner.
+- Decision:
+  - Assign explicit responsibility to Studio Architect for high-rigor Plan Gate interrogation.
+  - Add mandatory Plan Gate challenge checklist in `docs/roles-and-gates.md`.
+  - Require no gate advancement while material ambiguity remains unresolved unless escalated and clarified by the human owner.
+- Consequences:
+  - Higher clarity before UX and Build delegation.
+  - Slightly higher upfront questioning effort at Plan Gate.
+- Follow-up:
+  - Review after next 2 slices whether clarification loops after Plan Gate decreased.
