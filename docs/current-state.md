@@ -3,12 +3,12 @@
 Single-page startup context for every new chat.
 
 ## Last Updated
-- Date: 2026-03-26
+- Date: 2026-03-27
 - Updated by role: Studio Architect
 
 ## Active Slice
 - Slice key: debate-screen
-- Status: UX Gate pending start (Figma required)
+- Status: UX Gate in-progress (Figma required)
 - Execution issue: https://github.com/nishantnaagnihotri/tark-vitark/issues/1
 - UX ownership note: UX contract not created yet; UX Strategist will author it during UX Gate
 
@@ -17,7 +17,7 @@ Use this ordered list when multiple slices are in UX Gate.
 Line format:
 `<order>. <slice-key> | issue: <url> | status: <pending|in-progress|done>`
 
-1. debate-screen | issue: https://github.com/nishantnaagnihotri/tark-vitark/issues/1 | status: pending
+1. debate-screen | issue: https://github.com/nishantnaagnihotri/tark-vitark/issues/1 | status: in-progress
 
 ## Canonical Context (Load In This Order)
 1. AGENTS.md
@@ -31,16 +31,15 @@ Load active UX contract only after UX Strategist creates it during UX Gate.
 
 ## Current Requirements Snapshot
 - FR-debate-screen-001: show debate topic heading
-- FR-debate-screen-002: include at least 3 favour arguments
-- FR-debate-screen-003: include at least 3 against arguments
+- FR-debate-screen-002: include at least 3 For arguments
+- FR-debate-screen-003: include at least 3 Against arguments
 - FR-debate-screen-004: visually distinguish sides
-- FR-debate-screen-005: mobile stream preserves posted order; favour left, against right
+- FR-debate-screen-005: mobile stream preserves posted order; For left, Against right
+- FR-debate-screen-006: desktop renders two columns; For left, Against right
 
 ## Open Questions
 - Create minimal UX contract and add Figma file/frame link for debate-screen UX artifact.
-- Confirm final label text choice: "In Favour/Against" vs "For/Against"
-- Confirm desktop behavior preference if stream and columns diverge for long content
-- Confirm Figma API/MCP availability to remove manual fallback for link placement.
+- Complete Figma API/MCP connectivity setup for UX agent and run connectivity verification.
 
 ## Next Gate
 - UX Gate
@@ -49,8 +48,9 @@ Load active UX contract only after UX Strategist creates it during UX Gate.
 ## Agentic UX Protocol Status
 - Agent-first policy: enforced
 - UX Figma protocol: `docs/ux-figma-agentic-protocol.md`
-- Active fallback blocker: direct Figma API/MCP availability not yet confirmed
+- Active fallback blocker: Figma connectivity setup in progress
 - UX contract timing rule: final UX contract is authored by UX Strategist during UX Gate
+- UX direction decisions: labels use For/Against; desktop uses two-column layout
 
 ## Process Optimization Baseline
 - Gate timeboxes: active

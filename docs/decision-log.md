@@ -214,3 +214,29 @@ Tracks durable product/process decisions so future sessions and agents can inher
   - Slightly higher upfront questioning effort at Plan Gate.
 - Follow-up:
   - Review after next 2 slices whether clarification loops after Plan Gate decreased.
+
+## 2026-03-27 - Debate Screen UX Direction Clarifications
+- Status: Accepted
+- Context: UX Gate required closure on copy labels and desktop layout behavior before UX contract authoring.
+- Decision:
+  - Use labels: "For" and "Against".
+  - Use desktop layout: two columns with For on left and Against on right.
+  - Keep mobile behavior unchanged: mixed chronological stream with For left and Against right alignment.
+- Consequences:
+  - Removes interpretation ambiguity for UX Strategist and Feature Engineer.
+  - Enables deterministic UX contract completion for the active slice.
+- Follow-up:
+  - Reflect these decisions in UX contract and Figma frames during UX Gate execution.
+
+## 2026-03-27 - Figma Connectivity Setup Kickoff
+- Status: Accepted
+- Context: Team chose to reduce manual fallback by setting up direct Figma connectivity for UX agent workflow.
+- Decision:
+  - Add explicit connectivity setup instructions to `docs/ux-figma-agentic-protocol.md`.
+  - Add executable verification script `scripts/check-figma-connectivity.sh`.
+  - Track connectivity completion in `docs/current-state.md` until verification passes.
+- Consequences:
+  - Clear path to enable agent-first UX artifact production.
+  - Requires token/API configuration once per environment.
+- Follow-up:
+  - Run connectivity script after setting `FIGMA_ACCESS_TOKEN` and optional `FIGMA_FILE_KEY`.

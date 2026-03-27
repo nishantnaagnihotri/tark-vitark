@@ -18,7 +18,7 @@ Single source of truth for functional requirements across all slices.
 
 | Slice | Requirement IDs | Summary | Status | Source Spec | Execution Link | Acceptance Evidence | Decision Links | Owner |
 |---|---|---|---|---|---|---|---|---|
-| debate-screen | FR-debate-screen-001, FR-debate-screen-002, FR-debate-screen-003, FR-debate-screen-004 | User can view one debate topic with multiple favour and against arguments in a mobile-first read-only layout | Proposed | docs/functional-requirements-debate-screen.md | https://github.com/nishantnaagnihotri/tark-vitark/issues/1 | _TBD_ | docs/decision-log.md | Product Manager |
+| debate-screen | FR-debate-screen-001, FR-debate-screen-002, FR-debate-screen-003, FR-debate-screen-004, FR-debate-screen-005, FR-debate-screen-006 | User can view one debate topic with For and Against arguments in a mobile-first read-only stream and a two-column desktop layout | Approved | docs/functional-requirements-debate-screen.md | https://github.com/nishantnaagnihotri/tark-vitark/issues/1 | _TBD_ | docs/decision-log.md | Product Manager |
 
 ## Handoff Checklist
 - Product Manager:

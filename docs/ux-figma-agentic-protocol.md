@@ -22,6 +22,27 @@ Purpose: enable UX Strategist to produce Figma artifacts for pending slices with
    - status/empty/error block
 5. Store Figma file link in `docs/current-state.md` once available.
 
+## Connectivity Setup (API/MCP)
+Configure one of these paths for UX Strategist automation:
+
+### Path A: Figma API token
+1. Generate a Figma personal access token from your Figma account settings.
+2. Export one environment variable in the active shell:
+  - `FIGMA_ACCESS_TOKEN=<token>`
+3. Optional, for file access checks:
+  - `FIGMA_FILE_KEY=<file-key>`
+4. Run connectivity verification:
+  - `./scripts/check-figma-connectivity.sh`
+
+### Path B: MCP connector
+1. Configure the Figma MCP server in your local agent tooling.
+2. Confirm UX Strategist can list files/frames through MCP tools.
+3. Run `./scripts/check-figma-connectivity.sh` to verify API fallback path status.
+
+Verification policy:
+- UX Gate should prefer direct API/MCP connectivity.
+- If connectivity check fails, continue in fallback mode and log blocker in `docs/current-state.md`.
+
 ## Slice Input Contract
 Before UX Gate execution, UX Strategist loads:
 1. `AGENTS.md`
