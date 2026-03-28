@@ -64,6 +64,12 @@ Provide a clear, mobile-first, read-only debate view where users can quickly sca
 - Treat Figma as primary visual reference.
 - Implement visual side distinction without relying on color alone.
 - Keep component structure simple and reusable for future interactive slices.
+- Visual direction (approved and applied):
+  - Tone: Editorial debate surface
+  - Typography vibe: Contemporary hybrid hierarchy
+  - Color intensity: Medium
+  - Density: Comfortable
+  - Mobile first impression: Calm reading flow with clear side identity
 
 ## 12. Figma Production Contract
 - Figma page name: Page 1

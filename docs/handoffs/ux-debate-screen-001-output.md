@@ -51,3 +51,18 @@
 - clarification needed:
   - none on frame authoring; only verification retry after API rate-limit window.
 - recommendation: hold
+
+## Dispatch Evidence - Cycle 6
+- dispatch action: applied full UI redesign pass via Figma MCP write tools on all three debate frames.
+- redesign summary:
+  - strengthened hierarchy and typographic scale in headers
+  - improved For/Against visual semantics using medium-intensity side palettes
+  - refined mobile stream rhythm and desktop two-column readability
+- evidence links:
+  - mobile frame: https://www.figma.com/file/ltU4U9jpQuWKGInUHC9Bwq/debate-screen?node-id=11%3A2
+  - tablet frame: https://www.figma.com/file/ltU4U9jpQuWKGInUHC9Bwq/debate-screen?node-id=11%3A3
+  - desktop frame: https://www.figma.com/file/ltU4U9jpQuWKGInUHC9Bwq/debate-screen?node-id=11%3A4
+- current status: in-progress
+- blocker:
+  - verification tools are rate-limited (Figma REST 429; MCP Starter read-call cap reached).
+- recommendation: hold

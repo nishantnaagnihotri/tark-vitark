@@ -464,3 +464,16 @@ Tracks durable product/process decisions so future sessions and agents can inher
   - Build Gate remains temporarily blocked by verification infrastructure, not missing design.
 - Follow-up:
   - Re-run visual-evidence script later and advance gate immediately on first successful pass.
+
+## 2026-03-28 - Debate Screen UI Redesign Applied in Figma
+- Status: Accepted
+- Context: User requested a stronger UI direction and approved proceeding with redesign.
+- Decision:
+  - Applied redesign directly in Figma via MCP write tools for frames `11:2`, `11:3`, `11:4`.
+  - Updated UX contract notes to capture applied visual direction settings.
+  - Synchronized issue/docs with frame-level links and cycle-6 dispatch evidence.
+- Consequences:
+  - Debate-screen visuals now reflect an editorial, clearer hierarchy and stronger side semantics.
+  - Gate remains in UX due verification tooling limits, not missing design artifacts.
+- Follow-up:
+  - Re-run visual-evidence and build preflight checks as soon as rate limits clear.

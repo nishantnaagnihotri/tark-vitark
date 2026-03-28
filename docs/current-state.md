@@ -8,9 +8,9 @@ Single-page startup context for every new chat.
 
 ## Active Slice
 - Slice key: debate-screen
-- Status: UX Gate in-progress (frames authored; verification rate-limited)
+- Status: UX Gate in-progress (redesign complete; verification pending)
 - Execution issue: https://github.com/nishantnaagnihotri/tark-vitark/issues/1
-- UX ownership note: UX contract exists and MCP created frame nodes (11:2, 11:3, 11:4); API-based visual check currently rate-limited
+- UX ownership note: UX contract exists and MCP redesigned frame nodes (11:2, 11:3, 11:4); automated verification is blocked by API/MCP limits
 
 ## Execution Mode
 - Active mode: supervised parallel writers (architect-controlled)
@@ -30,7 +30,7 @@ Line format:
 `<order>. <role> | packet: <id> | scope: <files/modules> | status: <pending|in-progress|done>`
 
 1. Studio Architect | packet: orchestrator-sync | scope: governance reconciliation and gate control | status: in-progress
-2. UX Strategist | packet: ux-debate-screen-001 | scope: docs/handoffs/ux-debate-screen-001.md | status: in-progress (dispatch cycle 5: verification retry)
+2. UX Strategist | packet: ux-debate-screen-001 | scope: docs/handoffs/ux-debate-screen-001.md | status: in-progress (dispatch cycle 6: redesign applied)
 
 ## Canonical Context (Load In This Order)
 1. AGENTS.md
@@ -51,8 +51,9 @@ Active UX contract: docs/ux-spec-debate-screen.md
 - FR-debate-screen-006: desktop renders two columns; For left, Against right
 
 ## Open Questions
-- Re-run `./scripts/check-figma-visual-evidence.sh` after Figma API rate-limit window clears.
-- On successful API verification, rerun Build preflight and advance `Next Gate`.
+- Re-run `./scripts/check-figma-visual-evidence.sh` after API 429 window clears.
+- Retry MCP read tools after monthly call-limit reset or plan upgrade to capture fresh metadata evidence.
+- On successful verification, rerun Build preflight and advance `Next Gate`.
 
 ## Next Gate
 - UX Gate
@@ -61,7 +62,7 @@ Active UX contract: docs/ux-spec-debate-screen.md
 ## Agentic UX Protocol Status
 - Agent-first policy: enforced
 - UX Figma protocol: `docs/ux-figma-agentic-protocol.md`
-- Active fallback blocker: API verification rate-limited (429) despite MCP-confirmed FRAME nodes in file
+- Active fallback blocker: verification tooling limits (API 429 + MCP Starter read-call cap) despite successful frame redesign write
 - UX contract timing rule: final UX contract is authored by UX Strategist during UX Gate
 - UX direction decisions: labels use For/Against; desktop uses two-column layout
 
