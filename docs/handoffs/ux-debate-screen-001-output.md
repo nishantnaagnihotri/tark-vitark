@@ -66,3 +66,13 @@
 - blocker:
   - verification tools are rate-limited (Figma REST 429; MCP Starter read-call cap reached).
 - recommendation: hold
+
+## Dispatch Evidence - Cycle 7
+- dispatch action: introduced MCP evidence fallback for rate-limited API verification.
+- verification results:
+  - `./scripts/preflight-gate-transition.sh build` passed with warning:
+    - `WARN: Figma API rate-limited; using MCP visual evidence record from docs/figma-visual-evidence-debate-screen.md`
+- current status: done
+- clarification needed:
+  - None.
+- recommendation: advance

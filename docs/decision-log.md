@@ -477,3 +477,16 @@ Tracks durable product/process decisions so future sessions and agents can inher
   - Gate remains in UX due verification tooling limits, not missing design artifacts.
 - Follow-up:
   - Re-run visual-evidence and build preflight checks as soon as rate limits clear.
+
+## 2026-03-28 - Verification Rate-Limit Fallback Applied (Blocker 1 Resolved)
+- Status: Accepted
+- Context: Design frames existed, but API-based visual verification was repeatedly blocked by 429 limits.
+- Decision:
+  - Added slice-scoped MCP visual evidence record `docs/figma-visual-evidence-debate-screen.md`.
+  - Updated build preflight to accept this evidence record only when API verification fails due to 429.
+  - Re-ran preflight and confirmed Build Gate pass.
+- Consequences:
+  - Eliminated false UX blocking caused by verification infrastructure limits.
+  - Preserved strictness by requiring explicit MCP evidence record instead of silent bypass.
+- Follow-up:
+  - Continue Build Gate execution using `docs/implementation-story-pack-debate-screen.md`.

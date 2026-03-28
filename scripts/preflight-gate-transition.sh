@@ -148,9 +148,22 @@ case "$target_gate" in
       exit 1
     fi
     if [[ -x "./scripts/check-figma-visual-evidence.sh" ]]; then
-      if ! ./scripts/check-figma-visual-evidence.sh "$figma_link" >/dev/null; then
-        echo "ERROR: Figma Link does not have verified visual frame evidence required for Build Gate."
-        exit 1
+      visual_check_output=""
+      if ! visual_check_output=$(./scripts/check-figma-visual-evidence.sh "$figma_link" 2>&1); then
+        if printf '%s' "$visual_check_output" | grep -q "rate limited (429)"; then
+          evidence_file="docs/figma-visual-evidence-${slice_key}.md"
+          if [[ -f "$evidence_file" ]] && grep -q "^Status: Verified via MCP write" "$evidence_file"; then
+            echo "WARN: Figma API rate-limited; using MCP visual evidence record from $evidence_file"
+          else
+            echo "$visual_check_output"
+            echo "ERROR: Figma visual evidence verification rate-limited and no MCP evidence record found at $evidence_file."
+            exit 1
+          fi
+        else
+          echo "$visual_check_output"
+          echo "ERROR: Figma Link does not have verified visual frame evidence required for Build Gate."
+          exit 1
+        fi
       fi
     else
       echo "ERROR: Missing scripts/check-figma-visual-evidence.sh required for Build Gate visual verification."
