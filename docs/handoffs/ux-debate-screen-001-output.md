@@ -40,9 +40,14 @@
 ## Dispatch Evidence - Cycle 4
 - dispatch action: applied visual-frame evidence validation to prevent false-positive build readiness.
 - verification results:
-  - `./scripts/check-figma-visual-evidence.sh` failed with Figma API 429 after retries.
-  - `./scripts/preflight-gate-transition.sh build` failed because visual frame evidence could not be verified.
-- current status: needs-clarification
+  - `mcp_com_figma_mcp_use_figma` successfully created/updated FRAME nodes:
+    - `debate-screen-mobile-default` (11:2)
+    - `debate-screen-tablet-default` (11:3)
+    - `debate-screen-desktop-default` (11:4)
+  - `mcp_com_figma_mcp_get_metadata` confirmed the three FRAME nodes.
+  - `./scripts/check-figma-visual-evidence.sh` still failed with Figma API 429 after retries.
+  - `./scripts/preflight-gate-transition.sh build` still failed because API-based visual evidence check is rate-limited.
+- current status: in-progress
 - clarification needed:
-  - author visual FRAME artifacts in Figma file `ltU4U9jpQuWKGInUHC9Bwq` and provide frame-level URL.
+  - none on frame authoring; only verification retry after API rate-limit window.
 - recommendation: hold

@@ -437,3 +437,30 @@ Tracks durable product/process decisions so future sessions and agents can inher
   - Build execution remains blocked until verified FRAME artifact exists.
 - Follow-up:
   - Create visual frame(s) in Figma and provide frame URL; rerun visual evidence + build preflight.
+
+## 2026-03-28 - MCP Frame Authoring Succeeded (debate-screen)
+- Status: Accepted
+- Context: User enabled Figma MCP and requested a fresh frame-creation attempt.
+- Decision:
+  - Used `mcp_com_figma_mcp_use_figma` to create/update three frames:
+    - `debate-screen-mobile-default` (node `11:2`)
+    - `debate-screen-tablet-default` (node `11:3`)
+    - `debate-screen-desktop-default` (node `11:4`)
+  - Verified frame presence via `mcp_com_figma_mcp_get_metadata`.
+- Consequences:
+  - Visual design artifacts now exist in Figma for the active slice.
+  - Remaining blocker shifted from frame creation to API verification rate limiting.
+- Follow-up:
+  - Retry `scripts/check-figma-visual-evidence.sh` and build preflight after cooldown window.
+
+## 2026-03-28 - Visual Verification Rate-Limit Hold
+- Status: Accepted
+- Context: API-based visual-evidence script continues returning 429 even after retries/cooldown.
+- Decision:
+  - Keep slice in UX Gate `in-progress` while verification retries continue.
+  - Keep frame-level URLs synchronized in UX contract and issue tracking.
+- Consequences:
+  - Prevents false gate advancement while maintaining truthful status.
+  - Build Gate remains temporarily blocked by verification infrastructure, not missing design.
+- Follow-up:
+  - Re-run visual-evidence script later and advance gate immediately on first successful pass.

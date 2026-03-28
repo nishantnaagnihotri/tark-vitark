@@ -8,9 +8,9 @@ Single-page startup context for every new chat.
 
 ## Active Slice
 - Slice key: debate-screen
-- Status: UX Gate in-progress (visual evidence pending)
+- Status: UX Gate in-progress (frames authored; verification rate-limited)
 - Execution issue: https://github.com/nishantnaagnihotri/tark-vitark/issues/1
-- UX ownership note: UX contract exists, but Figma visual frame evidence is not yet verified
+- UX ownership note: UX contract exists and MCP created frame nodes (11:2, 11:3, 11:4); API-based visual check currently rate-limited
 
 ## Execution Mode
 - Active mode: supervised parallel writers (architect-controlled)
@@ -30,7 +30,7 @@ Line format:
 `<order>. <role> | packet: <id> | scope: <files/modules> | status: <pending|in-progress|done>`
 
 1. Studio Architect | packet: orchestrator-sync | scope: governance reconciliation and gate control | status: in-progress
-2. UX Strategist | packet: ux-debate-screen-001 | scope: docs/handoffs/ux-debate-screen-001.md | status: needs-clarification (dispatch cycle 4: visual frame authoring)
+2. UX Strategist | packet: ux-debate-screen-001 | scope: docs/handoffs/ux-debate-screen-001.md | status: in-progress (dispatch cycle 5: verification retry)
 
 ## Canonical Context (Load In This Order)
 1. AGENTS.md
@@ -51,8 +51,8 @@ Active UX contract: docs/ux-spec-debate-screen.md
 - FR-debate-screen-006: desktop renders two columns; For left, Against right
 
 ## Open Questions
-- Create actual FRAME artifacts in Figma file `ltU4U9jpQuWKGInUHC9Bwq` and provide a frame-level URL.
-- Re-run visual evidence check after Figma API rate limit window clears.
+- Re-run `./scripts/check-figma-visual-evidence.sh` after Figma API rate-limit window clears.
+- On successful API verification, rerun Build preflight and advance `Next Gate`.
 
 ## Next Gate
 - UX Gate
@@ -61,7 +61,7 @@ Active UX contract: docs/ux-spec-debate-screen.md
 ## Agentic UX Protocol Status
 - Agent-first policy: enforced
 - UX Figma protocol: `docs/ux-figma-agentic-protocol.md`
-- Active fallback blocker: visual frame evidence unavailable (file has no verified FRAME nodes; API returning 429 during verification)
+- Active fallback blocker: API verification rate-limited (429) despite MCP-confirmed FRAME nodes in file
 - UX contract timing rule: final UX contract is authored by UX Strategist during UX Gate
 - UX direction decisions: labels use For/Against; desktop uses two-column layout
 

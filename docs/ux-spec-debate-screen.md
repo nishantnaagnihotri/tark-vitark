@@ -68,9 +68,9 @@ Provide a clear, mobile-first, read-only debate view where users can quickly sca
 ## 12. Figma Production Contract
 - Figma page name: Page 1
 - Frame list:
-  - mobile: Debate Screen - Mobile Stream (in file destination)
-  - tablet: Debate Screen - Tablet Transitional Layout
-  - desktop: Debate Screen - Two Column
+  - mobile: debate-screen-mobile-default
+  - tablet: debate-screen-tablet-default
+  - desktop: debate-screen-desktop-default
 - Component instances:
   - TopicHeading
   - ArgumentItem (variant: For, Against)
@@ -102,4 +102,7 @@ Provide a clear, mobile-first, read-only debate view where users can quickly sca
   - stable chronological ordering on mobile
 
 ## 14. Figma Artifact
-- Figma link: https://www.figma.com/file/ltU4U9jpQuWKGInUHC9Bwq/debate-screen?node-id=0%3A1
+- Figma links:
+  - mobile: https://www.figma.com/file/ltU4U9jpQuWKGInUHC9Bwq/debate-screen?node-id=11%3A2
+  - tablet: https://www.figma.com/file/ltU4U9jpQuWKGInUHC9Bwq/debate-screen?node-id=11%3A3
+  - desktop: https://www.figma.com/file/ltU4U9jpQuWKGInUHC9Bwq/debate-screen?node-id=11%3A4
