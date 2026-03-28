@@ -503,4 +503,17 @@ Tracks durable product/process decisions so future sessions and agents can inher
   - Reduced preflight fragility from external API rate limits.
   - Strict visual proof requirement remains enforced through deterministic evidence-file validation.
 - Follow-up:
-  - Keep `scripts/check-figma-visual-evidence.sh` as optional diagnostic tooling or retire it in a later cleanup pass.
+  - Retire remaining REST Figma verification scripts to avoid mixed operational paths.
+
+## 2026-03-28 - REST Figma Script Retirement (MCP-Only)
+- Status: Accepted
+- Context: Team confirmed MCP as the sole Figma interaction path and requested full removal of legacy REST verification scripts.
+- Decision:
+  - Removed `scripts/check-figma-connectivity.sh`.
+  - Removed `scripts/check-figma-visual-evidence.sh`.
+  - Updated UX protocol documentation to remove API token/script guidance.
+- Consequences:
+  - Repository now has a single Figma operating path (MCP), reducing process ambiguity.
+  - Any future Figma verification automation must be implemented through MCP evidence workflows.
+- Follow-up:
+  - Keep slice evidence files (`docs/figma-visual-evidence-<slice>.md`) synchronized during UX Gate completion.
