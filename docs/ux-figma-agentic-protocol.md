@@ -22,10 +22,15 @@ Purpose: enable UX Strategist to produce Figma artifacts for pending slices with
    - status/empty/error block
 5. Store Figma file link in `docs/current-state.md` once available.
 
-## Connectivity Setup (API/MCP)
-Configure one of these paths for UX Strategist automation:
+## Connectivity Setup (MCP-First)
+Configure MCP as the default path for UX Strategist automation.
 
-### Path A: Figma API token
+### Path A: MCP connector (Primary)
+1. Configure the Figma MCP server in your local agent tooling.
+2. Confirm UX Strategist can list files/frames through MCP tools.
+3. Use MCP write/read cycle (`use_figma` + `get_metadata` or `get_design_context`) as the verification source.
+
+### Path B: Figma API token (Optional troubleshooting)
 1. Generate a Figma personal access token from your Figma account settings.
 2. Export one environment variable in the active shell:
   - `FIGMA_ACCESS_TOKEN=<token>`
@@ -34,21 +39,21 @@ Configure one of these paths for UX Strategist automation:
 4. Run connectivity verification:
   - `./scripts/check-figma-connectivity.sh`
 
-### Path B: MCP connector
-1. Configure the Figma MCP server in your local agent tooling.
-2. Confirm UX Strategist can list files/frames through MCP tools.
-3. Run `./scripts/check-figma-connectivity.sh` to verify API fallback path status.
-
 Verification policy:
-- UX Gate should prefer direct API/MCP connectivity.
-- If connectivity check fails, continue in fallback mode and log blocker in `docs/current-state.md`.
+- UX Gate uses MCP interaction as the canonical source for design authoring and verification.
+- API connectivity checks are optional diagnostics and do not gate progression when MCP evidence exists.
 
 Authoring capability policy:
 - Connectivity success does not equal visual design creation.
 - `./scripts/check-figma-connectivity.sh` verifies identity/file access (and optional comment write), not frame authoring.
-- Before leaving UX Gate, verify visual evidence with:
-  - `./scripts/check-figma-visual-evidence.sh <figma-link-or-file-key>`
-- Build Gate must not advance unless Figma link resolves to actual FRAME evidence.
+- Before leaving UX Gate, record MCP visual evidence in:
+  - `docs/figma-visual-evidence-<slice>.md`
+- Evidence record must include:
+  - `Status: Verified via MCP write`
+  - `Date: <yyyy-mm-dd>`
+  - verified frame names with node IDs
+  - frame links
+- Build Gate must not advance unless the MCP visual evidence record exists and is valid for the active slice.
 
 ## Slice Input Contract
 Before UX Gate execution, UX Strategist loads:
@@ -85,8 +90,8 @@ UX Strategist must produce all of these outputs:
 
 5. Visual evidence proof
 - At least one FRAME node exists in target file.
-- Linked frame URL resolves to a FRAME node (not only a page/canvas node).
-- Evidence command result is recorded in decision log or packet output.
+- Evidence is recorded in `docs/figma-visual-evidence-<slice>.md` from MCP write/read verification.
+- Frame links in the evidence record and issue are synchronized.
 
 ## Naming Convention (Reuse + Translation)
 - Frames: `<slice>-<viewport>-<state>`
@@ -96,8 +101,8 @@ UX Strategist must produce all of these outputs:
 - Tokens: `tk/<category>/<semantic>/<scale>`
   - Example: `tk/color/surface/favour-bg`
 
-## Fallback Mode (No Figma API/MCP)
-When direct Figma automation is blocked:
+## Fallback Mode (No MCP)
+When MCP automation is blocked:
 1. UX Strategist still completes UX spec including production and translation contracts.
 2. UX Strategist generates a precise frame/component checklist for manual creation.
 3. Human performs minimal action: create/update frames and paste URLs.
@@ -107,7 +112,7 @@ When direct Figma automation is blocked:
 ## Done Criteria
 - UX spec is complete and implementation-ready.
 - Figma link is present (or temporary fallback marker is explicitly tracked).
-- Figma visual evidence check passes for the linked frame URL.
+- MCP visual evidence record exists for the active slice and is synchronized with the linked frame URL.
 - Code translation contract is complete and unambiguous.
 - `docs/current-state.md` reflects gate progress and open blockers.
 - Linked issue references UX spec and Figma artifact.

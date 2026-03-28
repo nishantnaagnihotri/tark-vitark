@@ -490,3 +490,17 @@ Tracks durable product/process decisions so future sessions and agents can inher
   - Preserved strictness by requiring explicit MCP evidence record instead of silent bypass.
 - Follow-up:
   - Continue Build Gate execution using `docs/implementation-story-pack-debate-screen.md`.
+
+## 2026-03-28 - MCP-First Figma Verification Policy
+- Status: Accepted
+- Context: Figma MCP is now available and stable; API-based verification introduced avoidable dependency and rate-limit failure modes in gate checks.
+- Decision:
+  - Switched Build Gate preflight to require slice-scoped MCP evidence record `docs/figma-visual-evidence-<slice>.md` as the primary verifier.
+  - Removed Build Gate dependency on `scripts/check-figma-visual-evidence.sh` execution path.
+  - Updated UX Figma protocol to MCP-first verification and evidence recording requirements.
+- Consequences:
+  - Gate checks now align directly with agentic MCP workflow.
+  - Reduced preflight fragility from external API rate limits.
+  - Strict visual proof requirement remains enforced through deterministic evidence-file validation.
+- Follow-up:
+  - Keep `scripts/check-figma-visual-evidence.sh` as optional diagnostic tooling or retire it in a later cleanup pass.

@@ -8,7 +8,7 @@ Single-page startup context for every new chat.
 
 ## Active Slice
 - Slice key: debate-screen
-- Status: Build Gate ready (UX Gate complete with MCP visual evidence fallback)
+- Status: Build Gate ready (UX Gate complete with MCP visual evidence)
 - Execution issue: https://github.com/nishantnaagnihotri/tark-vitark/issues/1
 - UX ownership note: UX contract exists; redesigned frame nodes (11:2, 11:3, 11:4) recorded in docs/figma-visual-evidence-debate-screen.md
 
@@ -60,7 +60,7 @@ Active UX contract: docs/ux-spec-debate-screen.md
 ## Agentic UX Protocol Status
 - Agent-first policy: enforced
 - UX Figma protocol: `docs/ux-figma-agentic-protocol.md`
-- Active fallback blocker: none for gate progression (API 429 mitigated by MCP visual evidence record)
+- Active fallback blocker: none (MCP visual evidence is the primary gate verifier)
 - UX contract timing rule: final UX contract is authored by UX Strategist during UX Gate
 - UX direction decisions: labels use For/Against; desktop uses two-column layout
 
