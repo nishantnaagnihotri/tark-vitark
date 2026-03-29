@@ -213,7 +213,7 @@ On first response in any new activity:
 
 | Slice | Gate 1 | Gate 2 | Gate 3 | Gate 4 | Gate 5 | Gate 6 |
 |---|---|---|---|---|---|---|
-| `coming-soon-splash-page` | ✅ Pass | ✅ Conditional Pass | ⬜ Pending | ⬜ Pending | ⬜ Pending | ⬜ Pending |
+| `coming-soon-splash-page` | ✅ Pass | ✅ Full Pass | ⬜ Pending | ⬜ Pending | ⬜ Pending | ⬜ Pending |
 
 ## Context Update Log
 
@@ -327,6 +327,13 @@ Template:
 - Open questions status: None pending for this setup slice.
 - Next micro-goal: Dry-run the end-to-end Issue -> Dev PR -> Merge recommendation flow.
 - Blockers/owner decisions: None for current slice.
+
+### 2026-03-29
+- Gate status: Gate 2 (PRD) upgraded to FULL PASS for `coming-soon-splash-page` slice.
+- Artifact changes: Updated `docs/slices/coming-soon-splash-page/02-prd.md` — all 5 open questions (OQ-1–OQ-5) resolved with PO confirmation; gate decision upgraded from Conditional Pass to Full Pass; RISK-2 and RISK-4 mitigations updated to reflect resolution; Section 7.5 OQ status table and Section 7.7 handoff notes updated.
+- Open questions status: All resolved. OQ-1 (browser baseline): last 2 versions Chrome/Firefox/Safari, IE excluded. OQ-2 (mobile scroll): acceptable. OQ-3 (tone): designer discretion. OQ-4 (CSS animations): permitted. OQ-5 (breakpoints): 1280px/375px sufficient.
+- Next micro-goal: Gate 3 (Design) — UX substep for `coming-soon-splash-page` using `02-prd.md` as input.
+- Blockers/owner decisions: None. All open questions resolved.
 
 ### 2026-03-29
 - Gate status: Gate 2 (PRD) complete for `coming-soon-splash-page` slice. CONDITIONAL PASS.
