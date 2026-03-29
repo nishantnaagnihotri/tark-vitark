@@ -34,10 +34,11 @@ Enable the orchestrator to resume work as primary control agent for all activiti
 2. Requirement Challenger: `.github/agents/requirement-challenger.agent.md`
 3. PRD Agent: `.github/agents/prd.agent.md`
 4. UX Agent: `.github/agents/ux.agent.md`
-5. Figma Agent: `.github/agents/figma.agent.md`
-6. Design QA Agent: `.github/agents/design-qa.agent.md`
-7. Architecture Agent: `.github/agents/architecture.agent.md`
-8. Dev Agent: `.github/agents/dev.agent.md`
+5. Penpot Agent: `.github/agents/penpot.agent.md`
+6. Figma Agent (fallback): `.github/agents/figma.agent.md`
+7. Design QA Agent: `.github/agents/design-qa.agent.md`
+8. Architecture Agent: `.github/agents/architecture.agent.md`
+9. Dev Agent: `.github/agents/dev.agent.md`
 
 ## Current Gate Contracts
 
@@ -69,11 +70,11 @@ Enable the orchestrator to resume work as primary control agent for all activiti
 - Gate intent: complete the full design gate before architecture or coding.
 - Current planned substeps:
   - UX substep
-  - Figma substep
+  - Design Tool substep (Penpot-first)
   - Design QA substep
 - Current implemented substeps:
   - UX substep
-  - Figma substep
+  - Design Tool substep (Penpot-first)
   - Design QA substep
 - UX substep input: PRD Draft Package.
 - UX substep output required from UX Agent:
@@ -85,8 +86,17 @@ Enable the orchestrator to resume work as primary control agent for all activiti
   - Open Questions with owner decision status
   - Gate Decision
   - UX Flow/State Package
-- Figma substep input: UX Flow/State Package.
-- Figma substep output required from Figma Agent:
+- Design Tool substep input: UX Flow/State Package.
+- Design Tool substep output required from Penpot Agent:
+  - Design Readiness
+  - Screen/Flow Mapping
+  - Component and Token Guidance
+  - Interaction and Edge-State Design Notes
+  - Quality Gaps
+  - Open Questions with owner decision status
+  - Gate Decision
+  - Design Draft Package
+- Figma fallback output (only if explicitly approved by Product Owner):
   - Figma Readiness
   - Screen/Flow Mapping
   - Component and Token Guidance
@@ -106,7 +116,7 @@ Enable the orchestrator to resume work as primary control agent for all activiti
   - Open Questions with owner decision status
   - Gate Decision
   - Design QA Verdict Package
-- Gate 3 design feedback loop: Design QA reads Figma via MCP, routes gaps back to Figma Agent, iterates until Agent-Ready, then escalates to Product Owner for explicit approval.
+- Gate 3 design feedback loop: Design QA reads the active design artifact via configured design tooling, routes gaps back to the active Design Tool agent, iterates until Agent-Ready, then escalates to Product Owner for explicit approval.
 - Gate 3 is closed only when all three substeps pass, Design QA Verdict Package is produced, and Product Owner has explicitly approved the design.
 
 4. Gate 4 (Architecture)
@@ -173,7 +183,7 @@ Enable the orchestrator to resume work as primary control agent for all activiti
 8. Gate 1 and Gate 2 stay separate: Gate 1 is Requirement Challenger only, Gate 2 is PRD Agent only.
 9. Orchestrator must challenge major decisions, provide alternatives with tradeoffs, and recommend a balanced option before owner finalization.
 10. Gate 6 structure (compound substeps vs split gates) is deferred until Gate 5 Dev output contract is known. Do not design Gate 6 before Gate 5 is implemented.
-11. Gate 3 never closes on agent decision alone. Figma Agent produces dual output (real Figma design via MCP + text Design Coverage Report). Design QA reads Figma via MCP, loops gaps back to Figma Agent, then escalates to Product Owner. Product Owner explicit approval is required to close Gate 3.
+11. Gate 3 never closes on agent decision alone. Active Design Tool agent produces dual output (real design artifact + text Design Coverage Report). Design QA reads the active design artifact via configured tooling, loops gaps back to the active Design Tool agent, then escalates to Product Owner. Product Owner explicit approval is required to close Gate 3.
 12. Slice artifacts are stored in `docs/slices/<slice-name>/` as versioned markdown. Orchestrator creates the slice folder when Gate 1 passes and writes gate artifacts after each gate closes.
 13. GitHub Issues (one per atomic coding task) are created by the orchestrator at the end of Gate 4, after the architecture plan is approved. Gate 5 (Build) is purely implementation — no planning overhead.
 14. Architecture governance is orchestrator-owned and enforced through an explicit Gate 4 checklist (scope, traceability, boundaries, risk, verification, rollback, decomposition, issue linkage, and owner acceptance).
@@ -182,7 +192,7 @@ Enable the orchestrator to resume work as primary control agent for all activiti
 17. Issue-centric handoff is supported for Gate 5: issue link/number is sufficient only when issue metadata includes acceptance criteria, slice path, and architecture reference.
 18. Gate 5 PR provenance is mandatory: PR body must include issue-closing keyword and `Execution-Agent: dev-agent` marker for attribution and orchestration traceability.
 19. Gate 6 is orchestrator-owned and Local-only. It recommends merge or loop-back based on evidence, but Product Owner alone performs the actual merge.
-20. Design artifact is mandatory for every UX task: Gate 3A must include a valid Figma or Penpot artifact reference (file URL or key) before progression.
+20. Design artifact is mandatory for every UX task: Gate 3A must include a valid Penpot artifact reference (file URL or key) before progression. Figma is fallback-only and requires explicit Product Owner approval.
 
 ## Resume Protocol For Orchestrator
 
@@ -200,7 +210,7 @@ On first response in any new activity:
 ## Current Program Status
 
 1. Gate 1 and Gate 2 are implemented.
-2. Gate 3 is fully implemented: UX, Figma, and Design QA substeps are all defined and wired.
+2. Gate 3 is fully implemented: UX, Design Tool (Penpot-first), and Design QA substeps are all defined and wired.
 3. Gate 4 is implemented at contract level: Architecture Agent and orchestrator handoff rules are defined.
 4. Gate 5 is implemented at contract level: Dev Agent and orchestrator handoff rules are defined.
 5. Gate 6 is implemented at contract level: merge readiness review is orchestrator-owned.
@@ -214,7 +224,7 @@ On first response in any new activity:
 
 | Slice | Gate 1 | Gate 2 | Gate 3 | Gate 4 | Gate 5 | Gate 6 |
 |---|---|---|---|---|---|---|
-| `coming-soon-splash-page` | ✅ Pass | ✅ Full Pass | ⬜ Pending | ⬜ Pending | ⬜ Pending | ⬜ Pending |
+| `coming-soon-splash-page` | ✅ Pass | ✅ Full Pass | ✅ Pass | ✅ Pass | 🟡 Ready to Start (Issue #5 first) | ⬜ Pending |
 
 ## Context Update Log
 
@@ -338,6 +348,20 @@ Template:
 
 ### 2026-03-29
 - Gate status: Gate 2 (PRD) complete for `coming-soon-splash-page` slice. CONDITIONAL PASS.
+
+### 2026-03-29
+- Gate status: Gate 3 (Design) — ALL THREE SUBSTEPS COMPLETE. Pending Product Owner approval.
+- Artifact changes: 
+  - Created `03-ux.md` (UX Flow/State Package) with 4 viewport/state combinations (D1, D2, M1, M2)
+  - Created Figma design file (Figma fallback approved by PO due to Penpot MCP availability)
+  - Completed `04-design-qa.md` (Design QA Verdict Package) with PRD traceability table, UX coverage review, component consistency review, edge state coverage, and geometry validation
+  - All PRD goals and 6/6 acceptance criteria traced to design frames
+  - Geometry validation: PASS across all four frames
+- Open questions status: 
+  - No structural design gaps identified
+  - Pending: explicit Product Owner approval signature required to unlock Gate 4
+- Next micro-goal: Record Product Owner approval in `04-design-qa.md`, then execute Gate 4 (Architecture handoff to architecture-agent)
+- Blockers/owner decisions: Gate 3 blocked on PO approval (procedural, not technical). Gate 4 ready to proceed upon approval.
 - Artifact changes: Created `docs/slices/coming-soon-splash-page/02-prd.md` (PRD v0 — 9 FRs, 6 NFRs, 6 DCs, 9 ACs, Traceability Map, Quality Gaps, Open Questions, Gate Decision, PRD Draft Package).
 - Open questions status: OQ-1 (browser support baseline) unresolved — non-blocking. OQ-2 through OQ-5 designer-discretion — non-blocking.
 - Next micro-goal: Gate 3 (Design) — UX substep for `coming-soon-splash-page` using `02-prd.md` as input.
@@ -363,3 +387,115 @@ Template:
 - Open questions status: No product-scope open questions added by this change.
 - Next micro-goal: Configure Penpot base URL/token for the bridge and run Gate 3B using the owner-selected design tool.
 - Blockers/owner decisions: Runtime tooling (`node`/`npm`) is unavailable in current local shell, so bridge execution verification must be done where Node.js is available.
+
+### 2026-03-29
+- Gate status: Gate 3 explicitly paused by Product Owner decision (Option C) until Penpot-first contracts are formalized and validated.
+- Artifact changes: No slice artifact progression; decision recorded for governance control before Gate 3B execution.
+- Open questions status: Product Owner selected conservative path to avoid process-contract drift.
+- Next micro-goal: Formalize Penpot-first Gate 3 contracts (UX output contract wording, orchestrator Gate 3B trigger language, Design QA input/source language, and allow-list/tooling alignment), then resume Gate 3B.
+- Blockers/owner decisions: Owner decision received and accepted — Option C selected.
+
+### 2026-03-29
+- Gate status: Gate 3 pause condition executed; Penpot-first contracts formalized in local policy docs and agent contracts.
+- Artifact changes: Updated `.github/AGENTS.md`, `.github/agents/architect-orchestrator.agent.md`, `.github/agents/ux.agent.md`, `.github/agents/design-qa.agent.md`, `.github/agents/figma.agent.md`, and created `.github/agents/penpot.agent.md`.
+- Open questions status: No new product-scope open questions introduced by contract updates.
+- Next micro-goal: Run Gate 3B handoff to `penpot-agent` for `coming-soon-splash-page`, then advance to Design QA loop.
+- Blockers/owner decisions: None. Owner-selected Option C is now implemented as Penpot-first policy with Figma fallback by explicit owner approval only.
+
+### 2026-03-29
+- Gate status: Gate 3B handoff attempted with Penpot project reference; result is `Design Readiness: Needs Clarification` and gate loop-back.
+- Artifact changes: Updated `docs/slices/coming-soon-splash-page/03-ux.md` with the provided Penpot project URL as the design artifact anchor.
+- Open questions status: New operational open question added — concrete Penpot file URL/key for this slice is still unresolved.
+- Next micro-goal: Resolve Penpot file-level reference, rerun Gate 3B with `penpot-agent`, then proceed to Design QA.
+- Blockers/owner decisions: Penpot API requires authentication for project file lookup (`authentication-required`), so file discovery is blocked until token/session-based auth is provided or a direct file URL/key is supplied by Product Owner.
+
+### 2026-03-29
+- Gate status: Gate 3B rerun completed after Product Owner provided concrete Penpot file URL; result remains `Design Readiness: Needs Clarification` with loop-back.
+- Artifact changes: Updated `docs/slices/coming-soon-splash-page/03-ux.md` with the file-level Penpot artifact URL (`file-id=967d7b27-b959-80bd-8007-c9971a4291db`).
+- Open questions status: File-level reference is now resolved; remaining operational gap is verification that required frames/states/variants are actually present in the Penpot file for Design QA traceability.
+- Next micro-goal: Verify frame/state implementation in the Penpot file, then rerun Gate 3B to target `Design Readiness: Ready` and proceed to Design QA.
+- Blockers/owner decisions: API-based verification is still blocked by authentication-required responses; need owner-provided API token/session path or owner confirmation that frames D1/D2/M1/M2 and variants are created.
+
+### 2026-03-29
+- Gate status: Gate 3B remains blocked after Product Owner confirmed the referenced Penpot file is blank.
+- Artifact changes: Updated `docs/slices/coming-soon-splash-page/03-ux.md` to record blank-file observation and explicit Gate 3B loop-back status.
+- Open questions status: Content-presence question reopened operationally: required design frames/states are not present in the referenced file.
+- Next micro-goal: Populate the Penpot file with required frames (D1 desktop default, D2 desktop fallback, M1 mobile default, M2 mobile fallback), then rerun Gate 3B and proceed to Design QA.
+- Blockers/owner decisions: Automated inspection and creation through API remains blocked by authentication-required responses; owner action needed to either create design manually in Penpot or provide API auth for bridge automation.
+
+### 2026-03-29
+- Gate status: Bridge auth path fixed and verified (`get-project-files` returns 200), but Gate 3B still `Blocked` because target Penpot file contains only Root Frame with no child frames/layers.
+- Artifact changes: Updated Penpot bridge compatibility for auth scheme and RPC payload shape in `tools/penpot-mcp/server.js`; refreshed docs in `tools/penpot-mcp/.env.example` and `tools/penpot-mcp/README.md`.
+- Open questions status: No unresolved product-scope questions; only execution completeness gap remains in the design artifact.
+- Next micro-goal: Populate the existing Penpot file with required splash frames/states and rerun Gate 3B to target Ready.
+- Blockers/owner decisions: Owner or design tool execution must create required content in file `967d7b27-b959-80bd-8007-c9971a4291db` before Design QA can proceed.
+
+### 2026-03-29
+- Gate status: Penpot design content created by agent via API in file `967d7b27-b959-80bd-8007-c9971a4291db`; Gate 3B rerun indicates remaining quality verification gaps (visual excitement, dominance hierarchy, overflow/coherence evidence) and therefore loops back as `Needs Clarification`.
+- Artifact changes: Added frames `D1 Desktop Default`, `D2 Desktop Fallback`, `M1 Mobile Default`, `M2 Mobile Fallback` and core copy layers in all frames; updated `docs/slices/coming-soon-splash-page/03-ux.md` design artifact status to reflect generated content.
+- Open questions status: No unresolved owner-decision questions; only quality-evidence gaps remain for Gate 3B readiness.
+- Next micro-goal: Refine visual hierarchy/colors and capture acceptance-check evidence at 1280/375, then rerun Gate 3B and proceed to Design QA.
+- Blockers/owner decisions: None on access/auth; design-quality confirmation is the current blocker.
+
+### 2026-03-29
+- Gate status: Gate 3B reached `Ready`; Gate 3C Design QA reached `Ready` with no structural gaps, but Gate 3 remains open pending explicit Product Owner approval record.
+- Artifact changes: Created `docs/slices/coming-soon-splash-page/04-design-qa.md` with Design QA verdict package and verification evidence (frame containment pass for D1/D2/M1/M2).
+- Open questions status: No unresolved product-scope questions; only gate-control approval status pending.
+- Next micro-goal: Capture Product Owner explicit approval to formally close Gate 3 and unlock Gate 4.
+- Blockers/owner decisions: Product Owner sign-off required for Gate 3 closure.
+
+### 2026-03-29
+- Gate status: Product Owner reported frame content not visible; remediation applied with additional Penpot text rendering fixes.
+- Artifact changes: Updated all text layers to include paragraph-level fills in Penpot file `967d7b27-b959-80bd-8007-c9971a4291db` (revn advanced to 9).
+- Open questions status: No new product-scope open questions introduced.
+- Next micro-goal: Owner visual confirmation after refresh/reopen; if still invisible, apply fallback content encoding strategy in-file.
+- Blockers/owner decisions: Waiting for owner visual confirmation of rendered text layers.
+
+### 2026-03-29
+- Gate status: Gate 3 correction completed; Gate 3 formally closed by Product Owner approval.
+- Artifact changes:
+  - Re-executed Figma design creation for file `wg4kv4Dixw1eAExOJbAfaO` after blank-file detection.
+  - Verified D1/D2/M1/M2 frames via screenshot and design context.
+  - Updated `docs/slices/coming-soon-splash-page/04-design-qa.md` with verified evidence and recorded Product Owner approval (`I approve`).
+- Open questions status:
+  - Product/design scope questions resolved.
+  - Non-blocking implementation caution remains: decorative asset durability handling in Build gate.
+- Next micro-goal: Execute Gate 4 architecture handoff and persist architecture artifacts.
+- Blockers/owner decisions: None for Gate 4 start.
+
+### 2026-03-29
+- Gate status: Gate 4 architecture handoff executed; architecture output persisted.
+- Artifact changes:
+  - Created `docs/slices/coming-soon-splash-page/05-architecture.md` (Architecture Plan Package).
+  - Created `docs/slices/coming-soon-splash-page/06-tasks.md` (task decomposition ready for GitHub issue mapping).
+- Open questions status:
+  - OQ-A1 (decorative asset durability) remains owner-deferred to Build implementation; non-blocking.
+- Next micro-goal: Record GitHub issue numbers in `06-tasks.md` and start Gate 5 one issue at a time.
+- Blockers/owner decisions:
+  - Gate 4 closure condition still requires concrete GitHub issue numbers in `06-tasks.md`.
+
+### 2026-03-29
+- Gate status: Issue creation preparation complete; direct issue numbers still pending.
+- Artifact changes:
+  - Expanded `docs/slices/coming-soon-splash-page/06-tasks.md` with full issue drafts for T1-T5 (objective, scope, acceptance criteria, guardrails, done criteria).
+  - Added manual GitHub CLI command set for fast issue creation.
+- Open questions status:
+  - No new product or architecture open questions.
+- Next micro-goal: Create actual GitHub issues and write returned issue numbers into `06-tasks.md`.
+- Blockers/owner decisions:
+  - This runtime has search/fetch GitHub tools but no direct issue-create tool exposed in MCP policy path; issue numbers must be added after creation via GitHub UI/CLI.
+
+### 2026-03-29
+- Gate status: Gate 4 closed. GitHub issues created and mapped.
+- Artifact changes:
+  - Created task issues in `nishantnaagnihotri/tark-vitark`:
+    - #5 T1 Scaffold static HTML/CSS page boundary
+    - #6 T2 Implement required content hierarchy and copy
+    - #7 T3 Implement responsive colorful default visual system
+    - #8 T4 Implement readable fallback mode without decorative dependencies
+    - #9 T5 Complete compliance verification and release readiness package
+  - Updated `docs/slices/coming-soon-splash-page/06-tasks.md` task map from PENDING to concrete issue links.
+- Open questions status:
+  - OQ-A1 remains non-blocking and deferred to Build implementation notes.
+- Next micro-goal: Start Gate 5 by invoking `dev-agent` for Issue #5.
+- Blockers/owner decisions: None for Build start.

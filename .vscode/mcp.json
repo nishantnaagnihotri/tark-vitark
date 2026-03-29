@@ -1,0 +1,11 @@
+{
+    "servers": {
+        "penpot": {
+            "command": "/bin/bash",
+            "args": [
+                "-lc",
+                ". \"$HOME/.nvm/nvm.sh\" && nvm use v25.8.2 >/dev/null && set -a && source /home/nishant/workspace/tark-vitark/tools/penpot-mcp/.env && set +a && node /home/nishant/workspace/tark-vitark/tools/penpot-mcp/server.js"
+            ]
+        }
+    }
+}

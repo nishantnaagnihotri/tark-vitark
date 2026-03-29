@@ -83,4 +83,6 @@ Generic API request:
 ## Notes
 
 - Penpot deployments differ by auth and endpoint exposure. Use `penpot_api_request` to match your environment.
-- If your Penpot requires cookies/session auth instead of bearer token, add custom headers through the tool call.
+- Default auth scheme is `Token` (configured via `PENPOT_AUTH_SCHEME`, defaults to `Token`).
+- Request body keys are normalized to kebab-case automatically (`projectId` -> `project-id`, `fileId` -> `file-id`) for Penpot RPC compatibility.
+- If your Penpot requires cookies/session auth instead of token header auth, add custom headers through the tool call.
