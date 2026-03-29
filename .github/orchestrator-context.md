@@ -134,9 +134,8 @@ Enable the orchestrator to resume work as primary control agent for all activiti
 5. Gate 5 (Build)
 - Gate intent: implement one approved Gate 4 issue at a time using architecture references and produce merge-ready evidence.
 - Input required:
-  - one GitHub Issue number from `06-tasks.md`
-  - `05-architecture.md`
-  - relevant task section in `06-tasks.md`
+  - one GitHub Issue link or number from `06-tasks.md`
+  - issue metadata with acceptance criteria, slice path, and architecture reference
 - Output required from Dev Agent:
   - Build Readiness
   - Implementation Summary
@@ -167,6 +166,7 @@ Enable the orchestrator to resume work as primary control agent for all activiti
 14. Architecture governance is orchestrator-owned and enforced through an explicit Gate 4 checklist (scope, traceability, boundaries, risk, verification, rollback, decomposition, issue linkage, and owner acceptance).
 15. Gate 5 defaults to GitHub Copilot cloud Dev execution. Local execution is permitted only when Product Owner explicitly overrides for a specific Issue. Final build evidence is verified in Local before merge recommendation.
 16. Gate 5 implementation uses BDD discipline: behavior scenarios, test-first workflow, and scenario-to-test evidence are required before merge progression.
+17. Issue-centric handoff is supported for Gate 5: issue link/number is sufficient only when issue metadata includes acceptance criteria, slice path, and architecture reference.
 
 ## Resume Protocol For Orchestrator
 
@@ -283,5 +283,12 @@ Template:
 - Gate status: Gate 5 quality protocol hardened.
 - Artifact changes: Added BDD/test-first policy to shared protocol; updated Dev agent contract with scenario-first testing and BDD evidence output; added Build Gate checklist in orchestrator to enforce BDD evidence before merge progression.
 - Open questions status: Owner requested BDD + test-first implementation discipline.
+- Next micro-goal: Implement Gate 6 (Merge gate) contract.
+- Blockers/owner decisions: None for current slice.
+
+### 2026-03-29
+- Gate status: Gate 5 handoff model refined.
+- Artifact changes: Enabled issue-centric handoff where issue link/number is sufficient when issue metadata includes acceptance criteria, slice path, and architecture reference; added issue metadata validation lock in Build gate checklist.
+- Open questions status: Owner requested issue-link-first handoff model.
 - Next micro-goal: Implement Gate 6 (Merge gate) contract.
 - Blockers/owner decisions: None for current slice.

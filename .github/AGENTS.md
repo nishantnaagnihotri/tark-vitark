@@ -79,7 +79,7 @@ Escalate to Product Owner when:
    - `05-architecture.md` — Architecture Plan (Gate 4)
    - `06-tasks.md` — Task breakdown with GitHub Issue numbers (Gate 4 end)
 4. GitHub Issues for coding tasks are created by the orchestrator at the end of Gate 4, after the architecture plan is approved.
-5. Each Issue references the slice folder path and the relevant architecture section.
+5. Each Issue must include acceptance criteria, slice folder path, and relevant architecture section reference.
 6. Coder agents at Gate 5 read the Issue and linked slice folder files for full context.
 7. A PR that closes the Issue is the unit of completion for each coding task.
 

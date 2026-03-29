@@ -236,7 +236,7 @@ Architecture Gate Checklist (Orchestrator-owned):
 
 ## Build Gate Handoff Trigger
 
-When executing Gate 5, invoke `dev-agent` with one GitHub Issue at a time plus slice references (`05-architecture.md`, `06-tasks.md`) and explicit acceptance criteria.
+When executing Gate 5, invoke `dev-agent` with one GitHub Issue at a time. Minimum handoff input is Issue link/number.
 
 Pre-handoff confirmation rule:
 
@@ -248,7 +248,7 @@ Pre-handoff confirmation rule:
 Execution rule:
 
 1. Gate 5 is implementation-only and works one Issue at a time.
-2. Dev must stay within assigned Issue scope and referenced architecture boundaries.
+2. Issue must contain acceptance criteria, slice path, and architecture reference for issue-only handoff to proceed.
 3. Final merge-readiness evidence must be validated in Local context.
 4. GitHub Copilot cloud coding agent is the default implementation executor for Gate 5 Issues.
 
@@ -271,12 +271,13 @@ Local-validation rule:
 Build Gate Checklist (Orchestrator-owned):
 
 1. Scope lock: verify implementation stayed within assigned Issue scope and architecture boundaries.
-2. BDD lock: verify returned evidence includes behavior scenarios and scenario-to-test mapping.
-3. Test-first lock: verify tests were created or updated before/with implementation intent and are tied to acceptance criteria.
-4. Verification lock: verify required test commands passed and evidence is explicit.
-5. PR lock: verify PR exists and includes explicit issue-closing reference.
-6. Risk lock: verify residual risks and rollback note are documented.
-7. Approval lock: verify unresolved open questions are resolved or explicitly accepted by Product Owner.
+2. Issue metadata lock: verify issue includes acceptance criteria, slice path, and architecture reference before invoking Dev.
+3. BDD lock: verify returned evidence includes behavior scenarios and scenario-to-test mapping.
+4. Test-first lock: verify tests were created or updated before/with implementation intent and are tied to acceptance criteria.
+5. Verification lock: verify required test commands passed and evidence is explicit.
+6. PR lock: verify PR exists and includes explicit issue-closing reference.
+7. Risk lock: verify residual risks and rollback note are documented.
+8. Approval lock: verify unresolved open questions are resolved or explicitly accepted by Product Owner.
 
 ## Example PRD Handoff Message (Copy-Paste)
 
@@ -422,12 +423,10 @@ Implement one approved Gate 4 task using the issue and slice artifacts below.
 Issue:
 <issue-number and task title>
 
-Slice artifact folder:
-docs/slices/<slice-name>/
-
-Required references:
-- 05-architecture.md
-- 06-tasks.md (relevant issue section)
+The issue must contain:
+- acceptance criteria
+- slice artifact folder path
+- architecture section reference
 
 Additional Product Owner updates (optional):
 <new constraints/preferences, if any>
