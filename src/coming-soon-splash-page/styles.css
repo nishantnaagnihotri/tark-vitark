@@ -29,6 +29,29 @@ body {
     sans-serif;
 }
 
+body {
+  background: linear-gradient(120deg, #fff1eb 0%, #ace0f9 60%, #ffecd2 100%);
+  animation: bgPulse 6s ease-in-out infinite alternate;
+  position: relative;
+}
+
+/* Animated accent ring */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 80% 20%, rgba(255, 60, 172, 0.18) 0%, rgba(255, 152, 0, 0.10) 40%, transparent 80%);
+  animation: accentGlow 4s ease-in-out infinite alternate;
+}
+
+@keyframes accentGlow {
+  0% { opacity: 0.7; filter: blur(0.5rem); }
+  100% { opacity: 1; filter: blur(1.5rem); }
+}
+}
+
 /* ----- Layout ----- */
 .splash {
   display: flex;
@@ -56,20 +79,23 @@ body {
   line-height: 1.1;
   letter-spacing: -0.02em;
   font-weight: 900;
-  background: linear-gradient(90deg, #ff3cac 0%, #784ba0 50%, #2b86c5 100%);
+  background: linear-gradient(90deg, #ff3cac 0%, #ff9800 30%, #784ba0 60%, #2b86c5 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   text-fill-color: transparent;
-  text-shadow: 0 2px 16px rgba(255, 60, 172, 0.18), 0 1px 0 #fff;
+  text-shadow: 0 2px 16px rgba(255, 60, 172, 0.18), 0 1px 0 #fff, 0 0 8px #ff9800;
+  z-index: 1;
 }
 
 .splash__tagline {
   font-size: clamp(1.125rem, 3vw, 2.25rem);
   line-height: 1.4;
-  color: #ff9800;
-  font-weight: 600;
-  text-shadow: 0 1px 8px rgba(255, 152, 0, 0.18);
+  color: #2b86c5;
+  font-weight: 700;
+  text-shadow: 0 1px 8px rgba(43, 134, 197, 0.18), 0 0 4px #ff3cac;
+  letter-spacing: 0.01em;
+  z-index: 1;
 }
 
 .splash__status {
@@ -80,13 +106,14 @@ body {
   text-transform: uppercase;
   padding: 0.375rem 1.25rem;
   border-radius: 2rem;
-  background: linear-gradient(90deg, #ff9800 0%, #ff3cac 100%);
+  background: linear-gradient(90deg, #ff9800 0%, #ff3cac 50%, #2b86c5 100%);
   color: #fff;
-  box-shadow: 0 2px 12px 0 rgba(255, 60, 172, 0.12);
+  box-shadow: 0 2px 12px 0 rgba(255, 60, 172, 0.18), 0 0 8px #2b86c5;
   border: 2px solid #fff;
   outline: 2px solid #ff3cac;
   outline-offset: 2px;
   transition: outline-color 0.2s;
+  z-index: 1;
 }
 
 body {
