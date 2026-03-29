@@ -148,6 +148,19 @@ Enable the orchestrator to resume work as primary control agent for all activiti
   - Gate Decision
   - Build Output Package
 
+6. Gate 6 (Merge)
+- Gate intent: verify issue-level PR merge readiness using Build Output Package evidence and recommend merge or loop-back.
+- Input required:
+  - GitHub Issue reference
+  - PR link
+  - Build Output Package
+- Output required from Orchestrator merge review:
+  - Merge Readiness
+  - Merge Review Summary
+  - Outstanding Gaps
+  - Gate Decision
+  - Owner Action
+
 ## Known Rules From User Decisions
 
 1. Requirement Challenger is primary owner of requirement detailing.
@@ -168,6 +181,7 @@ Enable the orchestrator to resume work as primary control agent for all activiti
 16. Gate 5 implementation uses BDD discipline: behavior scenarios, test-first workflow, and scenario-to-test evidence are required before merge progression.
 17. Issue-centric handoff is supported for Gate 5: issue link/number is sufficient only when issue metadata includes acceptance criteria, slice path, and architecture reference.
 18. Gate 5 PR provenance is mandatory: PR body must include issue-closing keyword and `Execution-Agent: dev-agent` marker for attribution and orchestration traceability.
+19. Gate 6 is orchestrator-owned and Local-only. It recommends merge or loop-back based on evidence, but Product Owner alone performs the actual merge.
 
 ## Resume Protocol For Orchestrator
 
@@ -188,12 +202,12 @@ On first response in any new activity:
 2. Gate 3 is fully implemented: UX, Figma, and Design QA substeps are all defined and wired.
 3. Gate 4 is implemented at contract level: Architecture Agent and orchestrator handoff rules are defined.
 4. Gate 5 is implemented at contract level: Dev Agent and orchestrator handoff rules are defined.
-5. Remaining design to implement, in order:
-- Gate 6 (Merge) contract, informed by Gate 5 outputs (Known Rule #10).
+5. Gate 6 is implemented at contract level: merge readiness review is orchestrator-owned.
+6. Current protocol baseline is complete through Merge gate.
 
 ## Default Next Step
 
-1. Implement Gate 6 (Merge gate) contract for issue-level merge readiness verification.
+1. Run one dry-run of the full Gate 4 -> Gate 6 flow on a sample issue/PR path.
 
 ## Context Update Log
 
@@ -299,4 +313,11 @@ Template:
 - Artifact changes: Added mandatory PR provenance convention (`Execution-Agent: dev-agent`) and issue-closing keyword requirement; added Provenance lock in Build gate checklist; updated Dev output schema to include provenance confirmation.
 - Open questions status: Owner requested deterministic PR attribution to Dev executions.
 - Next micro-goal: Implement Gate 6 (Merge gate) contract.
+- Blockers/owner decisions: None for current slice.
+
+### 2026-03-29
+- Gate status: Gate 6 contract is now implemented.
+- Artifact changes: Added Merge gate policy to shared protocol; wired orchestrator-owned Merge Gate trigger, checklist, and output contract; updated context with Gate 6 I/O and Local-only owner-merge rule.
+- Open questions status: None pending for this setup slice.
+- Next micro-goal: Dry-run the end-to-end Issue -> Dev PR -> Merge recommendation flow.
 - Blockers/owner decisions: None for current slice.

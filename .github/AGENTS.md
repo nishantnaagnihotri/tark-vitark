@@ -97,3 +97,10 @@ Escalate to Product Owner when:
 1. Every Gate 5 PR must include an issue-closing keyword in the PR body (for example: `Closes #123`).
 2. Every Gate 5 PR must include a provenance marker in the PR body: `Execution-Agent: dev-agent`.
 3. Orchestrator must verify both linkage and provenance before recommending progression from Build to Merge gate.
+
+## Merge Gate Policy
+
+1. Gate 6 is an orchestrator-owned decision gate for issue-level merge readiness.
+2. Merge recommendation requires: passing tests, PR provenance/linkage, review closure, docs or release-note updates when applicable, and a documented rollback note.
+3. Product Owner remains the only authority who performs the actual merge.
+4. If merge readiness evidence is incomplete, the PR must loop back with explicit remediation items.

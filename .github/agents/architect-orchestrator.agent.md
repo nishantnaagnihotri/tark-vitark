@@ -280,6 +280,40 @@ Build Gate Checklist (Orchestrator-owned):
 8. Risk lock: verify residual risks and rollback note are documented.
 9. Approval lock: verify unresolved open questions are resolved or explicitly accepted by Product Owner.
 
+## Merge Gate Trigger
+
+When executing Gate 6, perform orchestrator-owned merge readiness verification for one PR at a time using the corresponding `Build Output Package`, GitHub Issue reference, and PR evidence.
+
+Execution rule:
+
+1. Gate 6 is Local-only and is owned by Architect + Orchestrator.
+2. Gate 6 does not implement code; it verifies merge readiness evidence and recommends merge or loop-back.
+3. Product Owner is the only actor who actually merges the PR.
+
+Proceeding rule:
+
+1. Continue only when merge review result is `Merge Readiness: Ready` and `Gate Decision: recommend merge`.
+2. If review, documentation, or rollback evidence is incomplete, return explicit remediation items and `Gate Decision: must loop back`.
+3. After Product Owner merges, record the merge result in orchestration context and advance to the next Issue.
+
+Merge Gate Checklist (Orchestrator-owned):
+
+1. Scope lock: verify PR still maps cleanly to the intended Issue and approved slice boundaries.
+2. Verification lock: verify required tests passed and Build evidence remains sufficient.
+3. Provenance lock: verify PR includes issue-closing keyword and `Execution-Agent: dev-agent` marker.
+4. Review lock: verify review comments are resolved or explicitly accepted by Product Owner.
+5. Documentation lock: verify docs and release notes are updated when applicable.
+6. Rollback lock: verify rollback note is documented and feasible.
+7. Risk acceptance lock: verify residual risks are visible and explicitly accepted when required.
+
+Merge Gate Output:
+
+1. `Merge Readiness`: Ready | Needs Clarification | Blocked.
+2. `Merge Review Summary`: concise summary of evidence reviewed.
+3. `Outstanding Gaps`: list of missing items before merge, if any.
+4. `Gate Decision`: recommend merge | must loop back.
+5. `Owner Action`: merge PR | request fixes.
+
 ## Example PRD Handoff Message (Copy-Paste)
 
 Use this message when invoking `prd-agent` at Gate 2:
@@ -442,6 +476,36 @@ Return only:
 7) Open Questions (with owner decision status)
 8) Gate Decision: can proceed to merge | must loop back
 9) Build Output Package
+```
+
+## Example Merge Review Message (Copy-Paste)
+
+Use this message when executing Gate 6 for one PR:
+
+```text
+Review merge readiness for the PR and issue below using Build Output Package evidence.
+
+Issue:
+<issue-number and title>
+
+PR:
+<pr-link>
+
+Required evidence:
+- Build Output Package
+- issue-closing reference
+- `Execution-Agent: dev-agent` marker
+- test results
+- review status
+- docs/release note status
+- rollback note
+
+Return only:
+1) Merge Readiness: Ready | Needs Clarification | Blocked
+2) Merge Review Summary
+3) Outstanding Gaps
+4) Gate Decision: recommend merge | must loop back
+5) Owner Action: merge PR | request fixes
 ```
 
 ## Example Cloud Manual Handoff Prompt (Copy-Paste)
