@@ -341,3 +341,10 @@ Template:
 - Open questions status: OQ-1 (browser support baseline) unresolved — non-blocking. OQ-2 through OQ-5 designer-discretion — non-blocking.
 - Next micro-goal: Gate 3 (Design) — UX substep for `coming-soon-splash-page` using `02-prd.md` as input.
 - Blockers/owner decisions: OQ-1 must be resolved before Gate 5 implementation begins. All other OQs resolved at design review.
+
+### 2026-03-29
+- Gate status: Gate 3A (UX substep) complete for `coming-soon-splash-page`; Gate 3 remains active pending Figma and Design QA.
+- Artifact changes: Created `docs/slices/coming-soon-splash-page/03-ux.md` with UX flows, state matrix, interaction notes, risk notes, and UX Flow/State Package for Figma handoff.
+- Open questions status: No unresolved UX open questions. OQ-1 through OQ-5 remain resolved per merged PRD decisions.
+- Next micro-goal: Gate 3B (Figma) handoff using `03-ux.md` as authoritative input.
+- Blockers/owner decisions: None required before Figma handoff.
