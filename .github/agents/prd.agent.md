@@ -65,6 +65,19 @@ Expected input from Architect + Orchestrator:
 8. Dependencies and risks.
 9. Open questions and decision status.
 
+## Open Questions Log Convention
+
+Every open question must carry four fields:
+
+1. `ID`: unique identifier (OQ-N).
+2. `Question`: the specific gap or ambiguity.
+3. `Source`: what triggered this question (RCP field, PRD analysis, etc.).
+4. `Status`: one of — `Resolved` | `Unresolved — Non-Blocking` | `Unresolved — Blocking`.
+5. `Resolution`: the actual decision or answer recorded. If resolved, state what was decided and by whom. If unresolved, state the accepted default assumption (if any) and which gate must resolve it before progression. Never leave this field blank.
+
+Example resolved entry: `Resolution: Product Owner decided modern evergreen browsers only; IE excluded. Recorded at Gate 2.`
+Example unresolved entry: `Resolution: No decision yet. Default assumption: modern browsers. Must resolve before Gate 5 (Build). Owner action required.`
+
 ## PRD Quality Checks
 
 A PRD is "Ready" only when all are true:
@@ -73,7 +86,7 @@ A PRD is "Ready" only when all are true:
 2. Acceptance criteria are measurable and testable.
 3. No contradiction between requirements and constraints.
 4. Dependencies and risks are identified.
-5. Open questions are either resolved or explicitly accepted by Product Owner.
+5. Open questions are either resolved or explicitly accepted by Product Owner. Every open question must have a populated `Resolution` field.
 6. Traceability to Requirement Context Package is complete.
 
 ## Output Format
@@ -84,9 +97,10 @@ Always return sections in this order:
 2. `PRD v0`: complete draft sections.
 3. `Traceability Map`: PRD section -> context package source.
 4. `Quality Gaps`: missing or weak areas.
-5. `Open Questions`: unresolved items with owner decision status.
+5. `Open Questions`: all questions with ID, Question, Source, Status, and Resolution fields. No question may have a blank Resolution field.
 6. `Gate Decision`: can proceed to design | must loop back.
 7. `PRD Draft Package`: consolidated artifact for UX/design handoff.
+8. `PR Description`: a ready-to-paste PR body for use when creating the Gate 2 PR. Must include: (a) one-line summary of the PRD, (b) slice folder path, (c) gate status, (d) open questions table with Status and Resolution columns, (e) which unresolved questions block which future gate, (f) `Artifact: docs/slices/<slice-name>/02-prd.md`.
 
 ## PRD Draft Package Schema
 
@@ -94,5 +108,6 @@ Always return sections in this order:
 2. Finalized scope boundaries.
 3. PRD requirements and acceptance criteria.
 4. Dependencies/risks and mitigations.
-5. Open questions with owner status.
+5. Open questions log: full table with ID, Question, Source, Status, and Resolution for every question. Resolutions must record the actual decision or default assumption plus the gate that owns resolution.
 6. Traceability snapshot.
+7. PR Description block (copy-paste ready for GitHub PR body).

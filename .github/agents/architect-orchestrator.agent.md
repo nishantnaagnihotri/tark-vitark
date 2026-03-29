@@ -120,6 +120,8 @@ Cloud-return rule:
 
 1. If PRD was executed in cloud, require `PRD Draft Package` to be pasted back.
 2. Validate the returned package in Local against the PRD gate checklist before advancing gate status.
+3. Verify the `PR Description` block is present in the returned package. If missing, request it before merge is authorized.
+4. Verify every open question in the package has a populated `Resolution` field. If any are blank, loop back to PRD Agent.
 
 ## Design Gate Substep A: UX Handoff Trigger
 
@@ -332,12 +334,11 @@ Return only:
 2) PRD v0
 3) Traceability Map
 4) Quality Gaps
-5) Open Questions (with owner decision status)
+5) Open Questions (full table: ID, Question, Source, Status, Resolution — no blank Resolution fields)
 6) Gate Decision: can proceed to design | must loop back
 7) PRD Draft Package (for UX/design handoff)
+8) PR Description (ready-to-paste GitHub PR body including: one-line PRD summary, slice folder path, gate status, open questions table with Status and Resolution columns, which unresolved questions block which future gate, artifact path)
 ```
-
-## Example UX Handoff Message (Copy-Paste)
 
 Use this message when invoking `ux-agent` at Gate 3:
 
@@ -526,9 +527,10 @@ Return only:
 2) PRD v0
 3) Traceability Map
 4) Quality Gaps
-5) Open Questions (with owner decision status)
+5) Open Questions (full table: ID, Question, Source, Status, Resolution — no blank Resolution fields)
 6) Gate Decision: can proceed to design | must loop back
-7) PRD Draft Package
+7) PRD Draft Package (for UX/design handoff)
+8) PR Description (ready-to-paste GitHub PR body including: one-line PRD summary, slice folder path, gate status, open questions table with Status and Resolution columns, which unresolved questions block which future gate, artifact path)
 ```
 
 ## Example Handoff Message (Copy-Paste)
