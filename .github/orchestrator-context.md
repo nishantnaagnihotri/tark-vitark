@@ -155,16 +155,16 @@ Enable the orchestrator to resume work as primary control agent for all activiti
 3. Challenger continues clarification rounds until no open questions remain or Product Owner accepts remaining open questions.
 4. Challenger drafts acceptance criteria detailed enough for PRD writing.
 5. Product Owner manually reviews and merges all PRs.
-6. Builder is cloud-first for coding drafts, with local verification before merge.
+6. Dev is cloud-first for coding drafts, with local verification before merge.
 7. Gate 3 is a full design gate and is local-only.
 8. Gate 1 and Gate 2 stay separate: Gate 1 is Requirement Challenger only, Gate 2 is PRD Agent only.
 9. Orchestrator must challenge major decisions, provide alternatives with tradeoffs, and recommend a balanced option before owner finalization.
-10. Gate 6 structure (compound substeps vs split gates) is deferred until Gate 5 Builder output contract is known. Do not design Gate 6 before Gate 5 is implemented.
+10. Gate 6 structure (compound substeps vs split gates) is deferred until Gate 5 Dev output contract is known. Do not design Gate 6 before Gate 5 is implemented.
 11. Gate 3 never closes on agent decision alone. Figma Agent produces dual output (real Figma design via MCP + text Design Coverage Report). Design QA reads Figma via MCP, loops gaps back to Figma Agent, then escalates to Product Owner. Product Owner explicit approval is required to close Gate 3.
 12. Slice artifacts are stored in `docs/slices/<slice-name>/` as versioned markdown. Orchestrator creates the slice folder when Gate 1 passes and writes gate artifacts after each gate closes.
 13. GitHub Issues (one per atomic coding task) are created by the orchestrator at the end of Gate 4, after the architecture plan is approved. Gate 5 (Build) is purely implementation — no planning overhead.
 14. Architecture governance is orchestrator-owned and enforced through an explicit Gate 4 checklist (scope, traceability, boundaries, risk, verification, rollback, decomposition, issue linkage, and owner acceptance).
-15. Gate 5 is cloud-preferred and requires execution mode confirmation (`local` or `cloud`) before builder handoff. Final build evidence is verified in Local before merge recommendation.
+15. Gate 5 is cloud-preferred and requires execution mode confirmation (`local` or `cloud`) before dev handoff. Final build evidence is verified in Local before merge recommendation.
 
 ## Resume Protocol For Orchestrator
 
@@ -253,14 +253,14 @@ Template:
 - Gate status: Gate 4 contract is now implemented.
 - Artifact changes: Added Architecture Agent (`architecture.agent.md`); wired Architecture Gate handoff trigger, proceeding rules, and completion criteria in orchestrator; added Architecture handoff message template; updated gate context to include Gate 4 I/O and outputs (`05-architecture.md`, `06-tasks.md`).
 - Open questions status: None pending for this setup slice.
-- Next micro-goal: Implement Gate 5 (Builder gate) contract for Issue-driven execution.
+- Next micro-goal: Implement Gate 5 (Dev gate) contract for Issue-driven execution.
 - Blockers/owner decisions: None for current slice.
 
 ### 2026-03-29
 - Gate status: Gate 4 governance hardened.
 - Artifact changes: Added explicit Architecture Gate Checklist to orchestrator, codifying orchestrator-owned responsibilities before Build gate authorization.
 - Open questions status: No open questions for this change.
-- Next micro-goal: Implement Gate 5 (Builder gate) contract for Issue-driven execution.
+- Next micro-goal: Implement Gate 5 (Dev gate) contract for Issue-driven execution.
 - Blockers/owner decisions: None for current slice.
 
 ### 2026-03-29

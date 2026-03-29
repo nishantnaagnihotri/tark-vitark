@@ -26,7 +26,7 @@ This repository follows a human-led, agent-executed workflow.
 ## Environment Routing
 
 1. Draft anywhere, decide and verify in Local.
-2. Local is preferred for requirement challenge and required for all Gate 3 design substeps; cloud is preferred for PRD drafts and Builder first-pass code + PR drafts.
+2. Local is preferred for requirement challenge and required for all Gate 3 design substeps; cloud is preferred for PRD drafts and Dev first-pass code + PR drafts.
 3. Local is mandatory for final integration checks and merge readiness.
 4. Copilot CLI is used for command-heavy scaffolding and repetitive transformations.
 

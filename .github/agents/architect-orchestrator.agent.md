@@ -74,7 +74,7 @@ Proceed only after step 5 is complete.
 2. PRD gate: confirm scope clarity and acceptance criteria quality.
 3. Design gate: complete UX, Figma, and Design QA substeps and confirm design alignment with PRD.
 4. Architecture gate: confirm module impacts, boundaries, and risk plan.
-5. Build gate: authorize Builder to implement.
+5. Build gate: authorize Dev to implement.
 6. Merge gate: verify tests, review closure, docs, and rollback note.
 
 ## Requirement Gate Handoff Trigger
@@ -247,14 +247,14 @@ Pre-handoff confirmation rule:
 Execution rule:
 
 1. Gate 5 is implementation-only and works one Issue at a time.
-2. Builder must stay within assigned Issue scope and referenced architecture boundaries.
+2. Dev must stay within assigned Issue scope and referenced architecture boundaries.
 3. Final merge-readiness evidence must be validated in Local context.
 
 Proceeding rule:
 
 1. Continue only when build result is `Build Readiness: Ready` and `Gate Decision: can proceed to merge`.
 2. If open questions remain, continue only when they are explicitly marked as accepted by Product Owner.
-3. Otherwise, return quality gaps to Product Owner and loop builder clarification.
+3. Otherwise, return quality gaps to Product Owner and loop dev clarification.
 
 Gate 5 completion rule:
 
@@ -400,7 +400,7 @@ Return only:
 10) Architecture Plan Package (for Gate 5 issue creation)
 ```
 
-## Example Builder Handoff Message (Copy-Paste)
+## Example Dev Handoff Message (Copy-Paste)
 
 Use this message when invoking `dev-agent` at Gate 5:
 
