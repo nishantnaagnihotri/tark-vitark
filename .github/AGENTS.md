@@ -65,3 +65,19 @@ Escalate to Product Owner when:
 1. Requirement readiness is blocked.
 2. Scope, security, or architecture tradeoffs need human choice.
 3. Test and review findings conflict with delivery timeline.
+
+## Artifact Storage Model
+
+1. Each approved gate output is persisted as a versioned markdown file under `docs/slices/<slice-name>/`.
+2. Orchestrator is responsible for creating the slice folder and writing gate artifacts after each gate passes.
+3. File naming convention:
+   - `01-requirement.md` — Requirement Context Package (Gate 1)
+   - `02-prd.md` — PRD Draft Package (Gate 2)
+   - `03-ux.md` — UX Flow/State Package (Gate 3A)
+   - `04-design-qa.md` — Design QA Verdict Package (Gate 3C; includes Figma design reference)
+   - `05-architecture.md` — Architecture Plan (Gate 4)
+   - `06-tasks.md` — Task breakdown with GitHub Issue numbers (Gate 4 end)
+4. GitHub Issues for coding tasks are created by the orchestrator at the end of Gate 4, after the architecture plan is approved.
+5. Each Issue references the slice folder path and the relevant architecture section.
+6. Coder agents at Gate 5 read the Issue and linked slice folder files for full context.
+7. A PR that closes the Issue is the unit of completion for each coding task.
