@@ -268,6 +268,16 @@ Local-validation rule:
 
 1. Validate build evidence (tests, issue linkage, rollback note) in Local before merge recommendation.
 
+Build Gate Checklist (Orchestrator-owned):
+
+1. Scope lock: verify implementation stayed within assigned Issue scope and architecture boundaries.
+2. BDD lock: verify returned evidence includes behavior scenarios and scenario-to-test mapping.
+3. Test-first lock: verify tests were created or updated before/with implementation intent and are tied to acceptance criteria.
+4. Verification lock: verify required test commands passed and evidence is explicit.
+5. PR lock: verify PR exists and includes explicit issue-closing reference.
+6. Risk lock: verify residual risks and rollback note are documented.
+7. Approval lock: verify unresolved open questions are resolved or explicitly accepted by Product Owner.
+
 ## Example PRD Handoff Message (Copy-Paste)
 
 Use this message when invoking `prd-agent` at Gate 2:

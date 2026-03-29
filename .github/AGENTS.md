@@ -82,3 +82,12 @@ Escalate to Product Owner when:
 5. Each Issue references the slice folder path and the relevant architecture section.
 6. Coder agents at Gate 5 read the Issue and linked slice folder files for full context.
 7. A PR that closes the Issue is the unit of completion for each coding task.
+
+## Implementation Protocol (BDD)
+
+1. Gate 5 implementation follows Behavior Driven Development (BDD) as the default engineering discipline.
+2. For each issue, define behavior scenarios from acceptance criteria before coding.
+3. Write or update tests first to represent expected behavior; tests should fail before implementation where feasible.
+4. Implement the minimum code needed to satisfy the scenario tests, then refactor while keeping tests green.
+5. PRs must include evidence of scenario-to-test mapping and passing test results.
+6. Orchestrator validates BDD evidence at Gate 5 before allowing progression to Merge gate.

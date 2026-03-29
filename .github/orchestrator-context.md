@@ -142,6 +142,7 @@ Enable the orchestrator to resume work as primary control agent for all activiti
   - Implementation Summary
   - Files Changed
   - Verification Evidence
+  - BDD Evidence
   - PR Package (with issue-closing reference)
   - Quality Gaps
   - Open Questions with owner decision status
@@ -165,6 +166,7 @@ Enable the orchestrator to resume work as primary control agent for all activiti
 13. GitHub Issues (one per atomic coding task) are created by the orchestrator at the end of Gate 4, after the architecture plan is approved. Gate 5 (Build) is purely implementation — no planning overhead.
 14. Architecture governance is orchestrator-owned and enforced through an explicit Gate 4 checklist (scope, traceability, boundaries, risk, verification, rollback, decomposition, issue linkage, and owner acceptance).
 15. Gate 5 defaults to GitHub Copilot cloud Dev execution. Local execution is permitted only when Product Owner explicitly overrides for a specific Issue. Final build evidence is verified in Local before merge recommendation.
+16. Gate 5 implementation uses BDD discipline: behavior scenarios, test-first workflow, and scenario-to-test evidence are required before merge progression.
 
 ## Resume Protocol For Orchestrator
 
@@ -274,5 +276,12 @@ Template:
 - Gate status: Gate 5 execution policy corrected.
 - Artifact changes: Updated Build gate default execution to GitHub Copilot cloud Dev implementation; local execution now explicit owner override only; aligned shared protocol, dev agent environment policy, and context known rules.
 - Open questions status: Owner clarified desired executor as GitHub cloud coding agent that creates PR.
+- Next micro-goal: Implement Gate 6 (Merge gate) contract.
+- Blockers/owner decisions: None for current slice.
+
+### 2026-03-29
+- Gate status: Gate 5 quality protocol hardened.
+- Artifact changes: Added BDD/test-first policy to shared protocol; updated Dev agent contract with scenario-first testing and BDD evidence output; added Build Gate checklist in orchestrator to enforce BDD evidence before merge progression.
+- Open questions status: Owner requested BDD + test-first implementation discipline.
 - Next micro-goal: Implement Gate 6 (Merge gate) contract.
 - Blockers/owner decisions: None for current slice.
