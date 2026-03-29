@@ -32,7 +32,7 @@ Enable the orchestrator to resume work as primary control agent for all activiti
 
 1. Architect + Orchestrator: `.github/agents/architect-orchestrator.agent.md`
 2. Requirement Challenger: `.github/agents/requirement-challenger.agent.md`
-3. PRD Agent: `.github/agents/prd-agent.agent.md`
+3. PRD Agent: `.github/agents/prd.agent.md`
 4. UX Agent: `.github/agents/ux.agent.md`
 5. Figma Agent: `.github/agents/figma.agent.md`
 6. Design QA Agent: `.github/agents/design-qa.agent.md`
