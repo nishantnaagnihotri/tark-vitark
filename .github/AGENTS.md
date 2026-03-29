@@ -91,3 +91,9 @@ Escalate to Product Owner when:
 4. Implement the minimum code needed to satisfy the scenario tests, then refactor while keeping tests green.
 5. PRs must include evidence of scenario-to-test mapping and passing test results.
 6. Orchestrator validates BDD evidence at Gate 5 before allowing progression to Merge gate.
+
+## PR Provenance Convention
+
+1. Every Gate 5 PR must include an issue-closing keyword in the PR body (for example: `Closes #123`).
+2. Every Gate 5 PR must include a provenance marker in the PR body: `Execution-Agent: dev-agent`.
+3. Orchestrator must verify both linkage and provenance before recommending progression from Build to Merge gate.

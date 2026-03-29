@@ -74,8 +74,9 @@ A build output is "Ready" only when all are true:
 3. Tests for changed behavior are added or updated and pass.
 3. No architecture contract violations are introduced.
 4. PR is created and includes issue-closing reference.
-5. Residual risks and rollback note are documented.
-6. Open questions are resolved or explicitly accepted by Product Owner.
+5. PR body includes provenance marker: `Execution-Agent: dev-agent`.
+6. Residual risks and rollback note are documented.
+7. Open questions are resolved or explicitly accepted by Product Owner.
 
 ## Output Format
 
@@ -99,6 +100,7 @@ Always return sections in this order:
 3. Verification evidence summary.
 4. BDD evidence: scenario catalog and scenario-to-test mapping.
 5. PR link and issue-closing statement.
-6. Residual risk and rollback note.
-7. Open questions with owner status.
-8. Traceability snapshot to issue acceptance criteria and architecture sections.
+6. PR provenance marker confirmation (`Execution-Agent: dev-agent`).
+7. Residual risk and rollback note.
+8. Open questions with owner status.
+9. Traceability snapshot to issue acceptance criteria and architecture sections.

@@ -276,8 +276,9 @@ Build Gate Checklist (Orchestrator-owned):
 4. Test-first lock: verify tests were created or updated before/with implementation intent and are tied to acceptance criteria.
 5. Verification lock: verify required test commands passed and evidence is explicit.
 6. PR lock: verify PR exists and includes explicit issue-closing reference.
-7. Risk lock: verify residual risks and rollback note are documented.
-8. Approval lock: verify unresolved open questions are resolved or explicitly accepted by Product Owner.
+7. Provenance lock: verify PR body includes `Execution-Agent: dev-agent` marker.
+8. Risk lock: verify residual risks and rollback note are documented.
+9. Approval lock: verify unresolved open questions are resolved or explicitly accepted by Product Owner.
 
 ## Example PRD Handoff Message (Copy-Paste)
 

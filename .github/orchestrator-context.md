@@ -167,6 +167,7 @@ Enable the orchestrator to resume work as primary control agent for all activiti
 15. Gate 5 defaults to GitHub Copilot cloud Dev execution. Local execution is permitted only when Product Owner explicitly overrides for a specific Issue. Final build evidence is verified in Local before merge recommendation.
 16. Gate 5 implementation uses BDD discipline: behavior scenarios, test-first workflow, and scenario-to-test evidence are required before merge progression.
 17. Issue-centric handoff is supported for Gate 5: issue link/number is sufficient only when issue metadata includes acceptance criteria, slice path, and architecture reference.
+18. Gate 5 PR provenance is mandatory: PR body must include issue-closing keyword and `Execution-Agent: dev-agent` marker for attribution and orchestration traceability.
 
 ## Resume Protocol For Orchestrator
 
@@ -290,5 +291,12 @@ Template:
 - Gate status: Gate 5 handoff model refined.
 - Artifact changes: Enabled issue-centric handoff where issue link/number is sufficient when issue metadata includes acceptance criteria, slice path, and architecture reference; added issue metadata validation lock in Build gate checklist.
 - Open questions status: Owner requested issue-link-first handoff model.
+- Next micro-goal: Implement Gate 6 (Merge gate) contract.
+- Blockers/owner decisions: None for current slice.
+
+### 2026-03-29
+- Gate status: Gate 5 attribution model hardened.
+- Artifact changes: Added mandatory PR provenance convention (`Execution-Agent: dev-agent`) and issue-closing keyword requirement; added Provenance lock in Build gate checklist; updated Dev output schema to include provenance confirmation.
+- Open questions status: Owner requested deterministic PR attribution to Dev executions.
 - Next micro-goal: Implement Gate 6 (Merge gate) contract.
 - Blockers/owner decisions: None for current slice.
