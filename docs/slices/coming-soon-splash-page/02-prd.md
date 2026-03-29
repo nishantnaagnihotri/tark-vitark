@@ -276,17 +276,17 @@ gate progression.
 
 | ID | Question | Source | Status | Owner Decision |
 |---|---|---|---|---|
-| OQ-1 | What is the browser support baseline? (e.g., last 2 versions of Chrome/Firefox/Safari? IE exclusion explicitly stated?) | RCP Open Questions | **Unresolved — Non-Blocking** | Product Owner accepted this as non-blocking for PRD drafting. Recommend resolution before implementation. Assigned to: Product Owner. |
-| OQ-2 | Should all core content be visible above the fold on mobile (375px), or is scrolling acceptable on mobile? | RCP Open Questions | **Unresolved — Non-Blocking** | Product Owner accepted this as non-blocking unless stricter visual constraints are requested. Designer may make a reasonable choice; Product Owner confirms at design review. |
-| OQ-3 | Is there a specific tone preference within the excitement theme? (e.g., playful/fun vs. bold/powerful vs. energetic/sporty) | RCP Open Questions | **Unresolved — Non-Blocking** | Product Owner accepted this as non-blocking because no branding exists yet. Designer has full discretion within colorful/excitement direction. Product Owner confirms at design review. |
-| OQ-4 | Are pure CSS animations (no JavaScript) permitted, or should the page be entirely static with no motion? | PRD Agent addition — QG-4 | **Unresolved — Non-Blocking** | PRD Agent clarification: CSS animations are not excluded by the technology constraint. Product Owner confirmation recommended before design is finalized. Default assumption: permitted. |
-| OQ-5 | Are the two representative viewport test widths (1280px desktop, 375px mobile) sufficient, or are additional breakpoints required? | PRD Agent addition — QG-5 | **Unresolved — Non-Blocking** | PRD Agent operationalization. Product Owner should confirm before design testing. Default assumption: 1280px and 375px are sufficient for this slice. |
+| OQ-1 | What is the browser support baseline? (e.g., last 2 versions of Chrome/Firefox/Safari? IE exclusion explicitly stated?) | RCP Open Questions | **Resolved — PO Confirmed (2026-03-29)** | Product Owner confirmed default assumptions are acceptable. Implementation baseline: last 2 versions of Chrome, Firefox, and Safari; IE excluded. Resolved before Gate 3. |
+| OQ-2 | Should all core content be visible above the fold on mobile (375px), or is scrolling acceptable on mobile? | RCP Open Questions | **Resolved — PO Confirmed (2026-03-29)** | Product Owner confirmed default assumptions are acceptable. Scrolling on mobile is acceptable; above-the-fold placement is designer's discretion. |
+| OQ-3 | Is there a specific tone preference within the excitement theme? (e.g., playful/fun vs. bold/powerful vs. energetic/sporty) | RCP Open Questions | **Resolved — PO Confirmed (2026-03-29)** | Product Owner confirmed default assumptions are acceptable. Designer has full discretion within the colorful/excitement direction. |
+| OQ-4 | Are pure CSS animations (no JavaScript) permitted, or should the page be entirely static with no motion? | PRD Agent addition — QG-4 | **Resolved — PO Confirmed (2026-03-29)** | Product Owner confirmed default assumptions are acceptable. Pure CSS animations are permitted. |
+| OQ-5 | Are the two representative viewport test widths (1280px desktop, 375px mobile) sufficient, or are additional breakpoints required? | PRD Agent addition — QG-5 | **Resolved — PO Confirmed (2026-03-29)** | Product Owner confirmed default assumptions are acceptable. 1280px and 375px are sufficient for this slice. |
 
 ---
 
 ## 6. Gate Decision
 
-### Decision: ✅ CONDITIONAL PASS — Proceed to Design
+### Decision: ✅ FULL PASS — Proceed to Design
 
 **Rationale:**
 
@@ -313,20 +313,17 @@ All six PRD quality checks pass:
    assessment in AC-5.
 
 5. ✅ **Open questions are either resolved or explicitly accepted by
-   Product Owner.** All three RCP open questions carry explicit non-blocking
-   Product Owner acceptance. Two new open questions (OQ-4, OQ-5) added by
-   the PRD Agent are also non-blocking with stated default assumptions.
+   Product Owner.** All three RCP open questions and both PRD Agent
+   additions carry explicit Product Owner confirmation (2026-03-29). All
+   five open questions are now fully resolved.
 
 6. ✅ **Traceability to Requirement Context Package is complete.** Every PRD
    element traces to at least one RCP source field with no untraced additions
    other than the two explicit PRD Agent clarifications (OQ-4, OQ-5), which
    are flagged as such.
 
-**Condition:** The gate is "Conditional Pass" rather than "Full Pass" solely
-because OQ-1 (browser support baseline) remains unresolved. This does not
-block design or Figma work, but must be resolved before implementation begins.
-All other open questions are design-review-confirmable and do not block
-downstream work.
+**Decision:** FULL PASS. All open questions are now resolved with explicit
+Product Owner confirmation. No conditions remain.
 
 **Downstream agents may proceed:** UX Agent, Figma Agent.
 
@@ -406,19 +403,19 @@ AC-9 — No external brand asset references in source
 | DEP-1 | No backend, API, or data dependency — page is fully static | Dependency (none) | N/A — fully self-contained |
 | DEP-2 | No design system or token library to inherit from | Dependency (none/constraint) | Designer creates visual direction from scratch; confirmed acceptable by PO |
 | RISK-1 | "Excitement" visual criterion is subjective | Risk — review ambiguity | Mitigated by structured reviewer assessment in AC-5; PO is designated reviewer |
-| RISK-2 | Browser support baseline undefined | Risk — implementation scope uncertainty | Mitigated by deferring to implementation agent; PO must confirm before build |
+| RISK-2 | Browser support baseline undefined | Risk — implementation scope uncertainty | Resolved: PO confirmed last 2 versions of Chrome/Firefox/Safari; IE excluded (2026-03-29) |
 | RISK-3 | Temporary visual choices may be mistaken for final branding | Risk — stakeholder expectation | Mitigated by NFR-5; designer and any reviewer must be informed of temporary nature |
-| RISK-4 | CSS animation added by PRD Agent clarification is unconfirmed by PO | Risk — scope creep if misused | Mitigated by OQ-4; default permitted but PO confirmation at design review |
+| RISK-4 | CSS animation added by PRD Agent clarification is unconfirmed by PO | Risk — scope creep if misused | Resolved: PO confirmed CSS animations are permitted (2026-03-29) |
 
 ### 7.5 Open Questions with Owner Status
 
-| ID | Question | Status | Blocks |
+| ID | Question | Status | Resolution |
 |---|---|---|---|
-| OQ-1 | Browser support baseline | Unresolved — Non-Blocking | Implementation (not design) |
-| OQ-2 | Mobile above-the-fold vs scroll acceptable | Unresolved — Non-Blocking | Designer discretion; PO confirms at design review |
-| OQ-3 | Tone preference within excitement theme | Unresolved — Non-Blocking | Designer discretion; PO confirms at design review |
-| OQ-4 | CSS animation permitted? | Unresolved — Non-Blocking | Default: permitted; PO confirms at design review |
-| OQ-5 | Are 1280px/375px breakpoints sufficient? | Unresolved — Non-Blocking | Default: sufficient; PO confirms before testing |
+| OQ-1 | Browser support baseline | **Resolved — PO Confirmed (2026-03-29)** | Last 2 versions of Chrome, Firefox, Safari; IE excluded |
+| OQ-2 | Mobile above-the-fold vs scroll acceptable | **Resolved — PO Confirmed (2026-03-29)** | Scrolling acceptable; designer's discretion |
+| OQ-3 | Tone preference within excitement theme | **Resolved — PO Confirmed (2026-03-29)** | Designer's full discretion within colorful/excitement direction |
+| OQ-4 | CSS animation permitted? | **Resolved — PO Confirmed (2026-03-29)** | Permitted |
+| OQ-5 | Are 1280px/375px breakpoints sufficient? | **Resolved — PO Confirmed (2026-03-29)** | Sufficient for this slice |
 
 ### 7.6 Traceability Snapshot
 
@@ -460,9 +457,9 @@ The following points are critical inputs for downstream design work:
    annotations, ARIA notes, or contrast-compliance callouts for this slice.
    This is a Product Owner decision.
 
-7. **Open questions OQ-2 (mobile scroll) and OQ-3 (tone) are designer's
-   discretion** to resolve in the design proposal, subject to Product Owner
-   confirmation at design review.
+7. **Open questions OQ-2 (mobile scroll) and OQ-3 (tone) are confirmed by
+   Product Owner as designer's discretion** (2026-03-29). No further
+   confirmation is needed at design review for these items.
 
 ---
 
