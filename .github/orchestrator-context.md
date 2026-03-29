@@ -23,15 +23,19 @@ Enable the orchestrator to resume work as primary control agent for all activiti
 
 1. Requirement challenge: local-first.
 2. PRD drafting: cloud-preferred, local-allowed.
-3. Cloud-preferred gates require execution mode confirmation (`local` or `cloud`) before handoff.
-4. If cloud mode is chosen, manual handoff is required and return artifact must be pasted back.
-5. Final verification and merge readiness decisions happen in local context.
+3. Gate 3 design work, including the UX substep, is local-only.
+4. Cloud-preferred gates require execution mode confirmation (`local` or `cloud`) before handoff.
+5. If cloud mode is chosen, manual handoff is required and return artifact must be pasted back.
+6. Final verification and merge readiness decisions happen in local context.
 
 ## Implemented Agents (Current)
 
 1. Architect + Orchestrator: `.github/agents/architect-orchestrator.agent.md`
 2. Requirement Challenger: `.github/agents/requirement-challenger.agent.md`
 3. PRD Agent: `.github/agents/prd-agent.agent.md`
+4. UX Agent: `.github/agents/ux.agent.md`
+5. Figma Agent: `.github/agents/figma.agent.md`
+6. Design QA Agent: `.github/agents/design-qa.agent.md`
 
 ## Current Gate Contracts
 
@@ -59,6 +63,49 @@ Enable the orchestrator to resume work as primary control agent for all activiti
   - Gate Decision
   - PRD Draft Package
 
+3. Gate 3 (Design)
+- Gate intent: complete the full design gate before architecture or coding.
+- Current planned substeps:
+  - UX substep
+  - Figma substep
+  - Design QA substep
+- Current implemented substeps:
+  - UX substep
+  - Figma substep
+- UX substep input: PRD Draft Package.
+- UX substep output required from UX Agent:
+  - UX Readiness
+  - UX Flows
+  - State Matrix
+  - Interaction Notes
+  - Quality Gaps
+  - Open Questions with owner decision status
+  - Gate Decision
+  - UX Flow/State Package
+- Figma substep input: UX Flow/State Package.
+- Figma substep output required from Figma Agent:
+  - Figma Readiness
+  - Screen/Flow Mapping
+  - Component and Token Guidance
+  - Interaction and Edge-State Design Notes
+  - Quality Gaps
+  - Open Questions with owner decision status
+  - Gate Decision
+  - Design Draft Package
+- Design QA substep input: Design Draft Package + UX Flow/State Package + PRD Draft Package.
+- Design QA substep output required from Design QA Agent:
+  - Design QA Readiness
+  - PRD Traceability Review
+  - UX Coverage Review
+  - Component and Token Consistency Review
+  - Edge State Coverage Review
+  - Quality Gaps
+  - Open Questions with owner decision status
+  - Gate Decision
+  - Design QA Verdict Package
+- Gate 3 design feedback loop: Design QA reads Figma via MCP, routes gaps back to Figma Agent, iterates until Agent-Ready, then escalates to Product Owner for explicit approval.
+- Gate 3 is closed only when all three substeps pass, Design QA Verdict Package is produced, and Product Owner has explicitly approved the design.
+
 ## Known Rules From User Decisions
 
 1. Requirement Challenger is primary owner of requirement detailing.
@@ -67,6 +114,11 @@ Enable the orchestrator to resume work as primary control agent for all activiti
 4. Challenger drafts acceptance criteria detailed enough for PRD writing.
 5. Product Owner manually reviews and merges all PRs.
 6. Builder is cloud-first for coding drafts, with local verification before merge.
+7. Gate 3 is a full design gate and is local-only.
+8. Gate 1 and Gate 2 stay separate: Gate 1 is Requirement Challenger only, Gate 2 is PRD Agent only.
+9. Orchestrator must challenge major decisions, provide alternatives with tradeoffs, and recommend a balanced option before owner finalization.
+10. Gate 6 structure (compound substeps vs split gates) is deferred until Gate 5 Builder output contract is known. Do not design Gate 6 before Gate 5 is implemented.
+11. Gate 3 never closes on agent decision alone. Figma Agent produces dual output (real Figma design via MCP + text Design Coverage Report). Design QA reads Figma via MCP, loops gaps back to Figma Agent, then escalates to Product Owner. Product Owner explicit approval is required to close Gate 3.
 
 ## Resume Protocol For Orchestrator
 
@@ -83,20 +135,16 @@ On first response in any new activity:
 
 ## Current Program Status
 
-1. Gate 1 and Gate 2 orchestration are implemented.
-2. Remaining agents to implement, in order:
-- UX Agent
-- Figma Agent
-- Design QA Agent
+1. Gate 1 and Gate 2 are implemented.
+2. Gate 3 is fully implemented: UX, Figma, and Design QA substeps are all defined and wired.
+3. Remaining agents to implement, in order:
 - Builder Agent
-- Test + Review Agent
-- Docs + Release Agent
+- Architecture Agent (Gate 4)
+- Gates 5 and 6 design deferred until Gate 4/5 output contracts are known (Known Rule #10).
 
 ## Default Next Step
 
-1. Implement UX Agent.
-2. Wire Gate 3 handoff from PRD Draft Package to UX flow/state package.
-3. Add quality gate for UX output before Figma handoff.
+1. Implement Gate 4 (Architecture gate): create architecture agent and wire orchestrator handoff contract.
 
 ## Context Update Log
 
@@ -110,3 +158,47 @@ Template:
 - Open questions status:
 - Next micro-goal:
 - Blockers/owner decisions:
+
+### 2026-03-29
+- Gate status: Gate 3 is a full design gate; UX substep is implemented, Figma and Design QA substeps remain pending.
+- Artifact changes: Added UX Agent, updated Gate 3 to be described as a full design gate with substeps, and made Gate 3 local-only.
+- Open questions status: No new owner decisions required for this setup slice.
+- Next micro-goal: Implement Figma substep and formalize post-UX design handoff.
+- Blockers/owner decisions: None for current slice.
+
+### 2026-03-29
+- Gate status: Gate 3 remains active; UX and Figma substeps are implemented, Design QA remains pending.
+- Artifact changes: Added Figma Agent and wired Gate 3 Figma handoff from UX Flow/State Package to Design Draft Package.
+- Open questions status: No new owner decisions required for this setup slice.
+- Next micro-goal: Implement Design QA substep and finalize Gate 3 completion checks.
+- Blockers/owner decisions: None for current slice.
+
+### 2026-03-29
+- Gate status: Gate sequencing confirmed; Gate 1 and Gate 2 remain separate before Gate 3 design work.
+- Artifact changes: Updated decision log to lock Gate 1 = Requirement Challenge and Gate 2 = PRD.
+- Open questions status: Owner accepted recommended separation model.
+### 2026-03-29
+- Gate status: Gate 3 is now fully implemented.
+- Artifact changes: Created Design QA Agent; added Substep C trigger, Gate 3 completion criteria, and example Design QA handoff message to orchestrator; added design-qa-agent to allow-list frontmatter; updated context with full Gate 3 contract.
+- Open questions status: None pending.
+- Next micro-goal: Implement Gate 4 (Architecture gate).
+- Blockers/owner decisions: None for current slice.
+
+### 2026-03-29
+- Gate status: Gate 3 design loop model updated.
+- Artifact changes: Figma Agent now produces dual output (real Figma design + Design Coverage Report); Design QA Agent gains Figma MCP read access, feedback loop routing to Figma Agent, and Product Owner escalation; Gate 3 completion rule updated to require explicit Product Owner approval; orchestrator Substep C rules updated with loop and PO approval mechanics.
+- Open questions status: Owner accepted merged A+B+C model; owner explicit approval required to close Gate 3.
+- Next micro-goal: Implement Gate 4 (Architecture gate).
+- Blockers/owner decisions: None for current slice.### 2026-03-29
+- Gate status: Orchestration policy hardened for challenge-first decision support.
+- Artifact changes: Added mandatory decision-challenge and alternatives protocol to shared and orchestrator contracts.
+- Open questions status: Owner requested stronger challenge behavior; accepted.
+- Next micro-goal: Resume Gate 3 with Design QA substep using hardened decision protocol.
+- Blockers/owner decisions: None for current slice.
+
+### 2026-03-29
+- Gate status: Protocol review complete; all three issues addressed.
+- Artifact changes: Fixed "may include" → "includes" in AGENTS.md Gate 3 description; fixed Gate Sequence body in orchestrator to include Design QA; recorded Gate 6 deferral decision.
+- Open questions status: Gate 6 structure decision deferred by owner to post-Gate-5. Options A/B/C were presented; owner accepted Option C (conservative — defer).
+- Next micro-goal: Implement Design QA substep inside Gate 3.
+- Blockers/owner decisions: None for current slice.
