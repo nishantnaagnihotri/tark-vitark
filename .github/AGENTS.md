@@ -20,7 +20,7 @@ This repository follows a human-led, agent-executed workflow.
 1. Requirement challenge gate must pass before PRD freeze.
 2. PRD drafting uses Requirement Context Package and must pass PRD quality gate before PRD freeze.
 3. Design freeze must happen before coding. Gate 3 is the full design gate and includes UX, Figma, and Design QA substeps.
-4. Figma artifact is mandatory for every UX task: each Gate 3A UX output must include a Figma artifact reference (file URL or file key) before progression.
+4. Design artifact is mandatory for every UX task: each Gate 3A UX output must include a Figma or Penpot artifact reference (file URL or file key) before progression.
 5. Architecture signoff must happen before coding.
 6. Merge requires passing tests, review closure, docs update, and rollback note.
 
@@ -75,7 +75,7 @@ Escalate to Product Owner when:
 3. File naming convention:
    - `01-requirement.md` — Requirement Context Package (Gate 1)
    - `02-prd.md` — PRD Draft Package (Gate 2)
-   - `03-ux.md` — UX Flow/State Package (Gate 3A), including mandatory Figma artifact reference (file URL or key)
+   - `03-ux.md` — UX Flow/State Package (Gate 3A), including mandatory design artifact reference (Figma or Penpot file URL or key)
    - `04-design-qa.md` — Design QA Verdict Package (Gate 3C; includes Figma design reference)
    - `05-architecture.md` — Architecture Plan (Gate 4)
    - `06-tasks.md` — Task breakdown with GitHub Issue numbers (Gate 4 end)

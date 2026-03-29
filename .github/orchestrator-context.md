@@ -182,7 +182,7 @@ Enable the orchestrator to resume work as primary control agent for all activiti
 17. Issue-centric handoff is supported for Gate 5: issue link/number is sufficient only when issue metadata includes acceptance criteria, slice path, and architecture reference.
 18. Gate 5 PR provenance is mandatory: PR body must include issue-closing keyword and `Execution-Agent: dev-agent` marker for attribution and orchestration traceability.
 19. Gate 6 is orchestrator-owned and Local-only. It recommends merge or loop-back based on evidence, but Product Owner alone performs the actual merge.
-20. Figma artifact is mandatory for every UX task: Gate 3A must include a valid Figma artifact reference (file URL or key) before progression.
+20. Design artifact is mandatory for every UX task: Gate 3A must include a valid Figma or Penpot artifact reference (file URL or key) before progression.
 
 ## Resume Protocol For Orchestrator
 
@@ -356,3 +356,10 @@ Template:
 - Open questions status: All OQ-1 through OQ-5 remain resolved and owner-confirmed.
 - Next micro-goal: Gate 3B (Figma) retry using the owner-managed TarkVitark project file reference.
 - Blockers/owner decisions: External Figma MCP rate-limit may block automated frame creation; manual frame completion remains fallback.
+
+### 2026-03-29
+- Gate status: Design-tool policy broadened; Gate 3 remains active.
+- Artifact changes: Added custom Penpot MCP bridge scaffold at `tools/penpot-mcp/` and updated workflow contracts so Gate 3A accepts a mandatory design artifact reference from Figma or Penpot.
+- Open questions status: No product-scope open questions added by this change.
+- Next micro-goal: Configure Penpot base URL/token for the bridge and run Gate 3B using the owner-selected design tool.
+- Blockers/owner decisions: Runtime tooling (`node`/`npm`) is unavailable in current local shell, so bridge execution verification must be done where Node.js is available.

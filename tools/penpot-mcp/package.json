@@ -1,0 +1,13 @@
+{
+  "name": "penpot-mcp-bridge",
+  "version": "0.1.0",
+  "description": "Custom MCP bridge for Penpot API interaction",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0"
+  }
+}
