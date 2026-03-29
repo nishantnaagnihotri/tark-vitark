@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Session List — TarkVitark</title>
+  <style>
+    /* ── Reset & base ─────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --brand-orange: #e85d04;
+      --brand-deep:   #1a1a2e;
+      --brand-mid:    #16213e;
+      --brand-accent: #f48c06;
+      --status-active:    #22c55e;
+      --status-upcoming:  #3b82f6;
+      --status-completed: #9ca3af;
+      --text-light: #f5f5f5;
+      --text-muted: #b0b0c0;
+      --card-bg:    #0f3460;
+      --card-border:#1e4d8c;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--brand-deep);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header ───────────────────────────────────── */
+    header {
+      background: linear-gradient(135deg, var(--brand-orange) 0%, var(--brand-accent) 100%);
+      padding: 1.25rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      box-shadow: 0 4px 16px rgba(232, 93, 4, 0.4);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      background: var(--brand-deep);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: var(--brand-orange);
+      letter-spacing: -2px;
+      flex-shrink: 0;
+    }
+
+    .brand-text h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--brand-deep);
+      line-height: 1.1;
+    }
+
+    .brand-text p {
+      font-size: 0.75rem;
+      color: rgba(26, 26, 46, 0.75);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    nav a {
+      color: var(--brand-deep);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9rem;
+      background: rgba(255, 255, 255, 0.25);
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      transition: background 0.2s;
+    }
+
+    nav a:hover { background: rgba(255, 255, 255, 0.45); }
+
+    /* ── Hero strip ───────────────────────────────── */
+    .hero {
+      background: var(--brand-mid);
+      padding: 2.5rem 2rem 2rem;
+      text-align: center;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .hero h2 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 900;
+      color: var(--brand-accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    /* ── Filter bar ───────────────────────────────── */
+    .filter-bar {
+      max-width: 1080px;
+      margin: 2rem auto 0;
+      padding: 0 1.5rem;
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 0.4rem 1.1rem;
+      border-radius: 20px;
+      border: 2px solid var(--card-border);
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: default;
+      transition: 0.2s;
+    }
+
+    .filter-btn.active {
+      background: var(--brand-orange);
+      border-color: var(--brand-orange);
+      color: #fff;
+    }
+
+    /* ── Session grid ─────────────────────────────── */
+    .sessions-grid {
+      max-width: 1080px;
+      margin: 1.5rem auto 3rem;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* ── Session card ─────────────────────────────── */
+    .session-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .session-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .session-number {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.7rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+    }
+
+    .status-active    { background: rgba(34, 197, 94, 0.2);  color: var(--status-active); }
+    .status-upcoming  { background: rgba(59, 130, 246, 0.2); color: var(--status-upcoming); }
+    .status-completed { background: rgba(156, 163, 175, 0.15); color: var(--status-completed); }
+
+    .session-topic {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-light);
+      line-height: 1.4;
+    }
+
+    .participants {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 10px;
+      padding: 0.75rem;
+    }
+
+    .participant {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .participant:last-child { text-align: right; }
+
+    .participant-role {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .role-for  { color: var(--brand-orange); }
+    .role-against { color: var(--status-upcoming); }
+
+    .participant-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-light);
+    }
+
+    .vs-divider {
+      font-size: 0.75rem;
+      font-weight: 900;
+      color: var(--brand-accent);
+      padding: 0.2rem 0.4rem;
+      border: 1px solid var(--brand-accent);
+      border-radius: 6px;
+      text-align: center;
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .card-meta .category {
+      background: rgba(244, 140, 6, 0.15);
+      color: var(--brand-accent);
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    /* ── Footer ───────────────────────────────────── */
+    footer {
+      margin-top: auto;
+      background: var(--brand-mid);
+      border-top: 1px solid var(--card-border);
+      text-align: center;
+      padding: 1.5rem 2rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    footer span { color: var(--brand-orange); font-weight: 700; }
+
+    /* ── Responsive ───────────────────────────────── */
+    @media (max-width: 480px) {
+      header { padding: 1rem; }
+      .hero   { padding: 2rem 1rem 1.5rem; }
+      .filter-bar { padding: 0 1rem; }
+      .sessions-grid { padding: 0 1rem; gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Header ──────────────────────────────────── -->
+  <header>
+    <a class="brand" href="index.html">
+      <div class="brand-icon">TV</div>
+      <div class="brand-text">
+        <h1>TarkVitark</h1>
+        <p>A debate platform</p>
+      </div>
+    </a>
+    <nav>
+      <a href="index.html">← Home</a>
+    </nav>
+  </header>
+
+  <!-- ── Hero ────────────────────────────────────── -->
+  <section class="hero">
+    <h2>🗣 Session List</h2>
+    <p>Browse all active, upcoming and completed debate sessions</p>
+  </section>
+
+  <!-- ── Filter bar ──────────────────────────────── -->
+  <div class="filter-bar">
+    <span class="filter-btn active">All Sessions</span>
+    <span class="filter-btn">Active</span>
+    <span class="filter-btn">Upcoming</span>
+    <span class="filter-btn">Completed</span>
+  </div>
+
+  <!-- ── Session cards ───────────────────────────── -->
+  <main class="sessions-grid">
+
+    <!-- Session 1 -->
+    <article class="session-card">
+      <div class="card-top">
+        <span class="session-number">#001</span>
+        <span class="status-badge status-active">● Active</span>
+      </div>
+      <p class="session-topic">Should AI be regulated by government bodies to ensure ethical use?</p>
+      <div class="participants">
+        <div class="participant">
+          <span class="participant-role role-for">For</span>
+          <span class="participant-name">Arjun Mehta</span>
+        </div>
+        <div class="vs-divider">VS</div>
+        <div class="participant participant:last-child">
+          <span class="participant-role role-against">Against</span>
+          <span class="participant-name">Priya Sharma</span>
+        </div>
+      </div>
+      <div class="card-meta">
+        <span class="category">Technology</span>
+        <span>29 Mar 2026</span>
+      </div>
+    </article>
+
+    <!-- Session 2 -->
+    <article class="session-card">
+      <div class="card-top">
+        <span class="session-number">#002</span>
+        <span class="status-badge status-active">● Active</span>
+      </div>
+      <p class="session-topic">Is remote work more productive than working from the office?</p>
+      <div class="participants">
+        <div class="participant">
+          <span class="participant-role role-for">For</span>
+          <span class="participant-name">Rohan Verma</span>
+        </div>
+        <div class="vs-divider">VS</div>
+        <div class="participant">
+          <span class="participant-role role-against">Against</span>
+          <span class="participant-name">Sneha Gupta</span>
+        </div>
+      </div>
+      <div class="card-meta">
+        <span class="category">Work Culture</span>
+        <span>28 Mar 2026</span>
+      </div>
+    </article>
+
+    <!-- Session 3 -->
+    <article class="session-card">
+      <div class="card-top">
+        <span class="session-number">#003</span>
+        <span class="status-badge status-upcoming">◎ Upcoming</span>
+      </div>
+      <p class="session-topic">Should social media platforms be held responsible for misinformation?</p>
+      <div class="participants">
+        <div class="participant">
+          <span class="participant-role role-for">For</span>
+          <span class="participant-name">Kavita Nair</span>
+        </div>
+        <div class="vs-divider">VS</div>
+        <div class="participant">
+          <span class="participant-role role-against">Against</span>
+          <span class="participant-name">Deepak Joshi</span>
+        </div>
+      </div>
+      <div class="card-meta">
+        <span class="category">Media &amp; Society</span>
+        <span>31 Mar 2026</span>
+      </div>
+    </article>
+
+    <!-- Session 4 -->
+    <article class="session-card">
+      <div class="card-top">
+        <span class="session-number">#004</span>
+        <span class="status-badge status-upcoming">◎ Upcoming</span>
+      </div>
+      <p class="session-topic">Is electric vehicle adoption moving fast enough to combat climate change?</p>
+      <div class="participants">
+        <div class="participant">
+          <span class="participant-role role-for">For</span>
+          <span class="participant-name">Ananya Singh</span>
+        </div>
+        <div class="vs-divider">VS</div>
+        <div class="participant">
+          <span class="participant-role role-against">Against</span>
+          <span class="participant-name">Varun Kapoor</span>
+        </div>
+      </div>
+      <div class="card-meta">
+        <span class="category">Environment</span>
+        <span>1 Apr 2026</span>
+      </div>
+    </article>
+
+    <!-- Session 5 -->
+    <article class="session-card">
+      <div class="card-top">
+        <span class="session-number">#005</span>
+        <span class="status-badge status-completed">✓ Completed</span>
+      </div>
+      <p class="session-topic">Should cryptocurrencies replace traditional banking systems?</p>
+      <div class="participants">
+        <div class="participant">
+          <span class="participant-role role-for">For</span>
+          <span class="participant-name">Nikhil Bose</span>
+        </div>
+        <div class="vs-divider">VS</div>
+        <div class="participant">
+          <span class="participant-role role-against">Against</span>
+          <span class="participant-name">Meera Patel</span>
+        </div>
+      </div>
+      <div class="card-meta">
+        <span class="category">Finance</span>
+        <span>22 Mar 2026</span>
+      </div>
+    </article>
+
+    <!-- Session 6 -->
+    <article class="session-card">
+      <div class="card-top">
+        <span class="session-number">#006</span>
+        <span class="status-badge status-completed">✓ Completed</span>
+      </div>
+      <p class="session-topic">Is mandatory voting the right approach for a healthy democracy?</p>
+      <div class="participants">
+        <div class="participant">
+          <span class="participant-role role-for">For</span>
+          <span class="participant-name">Suresh Rao</span>
+        </div>
+        <div class="vs-divider">VS</div>
+        <div class="participant">
+          <span class="participant-role role-against">Against</span>
+          <span class="participant-name">Lakshmi Iyer</span>
+        </div>
+      </div>
+      <div class="card-meta">
+        <span class="category">Politics</span>
+        <span>15 Mar 2026</span>
+      </div>
+    </article>
+
+  </main>
+
+  <!-- ── Footer ──────────────────────────────────── -->
+  <footer>
+    <p><span>TarkVitark</span> — Where arguments meet arguments. &copy; 2026</p>
+  </footer>
+
+</body>
+</html>
