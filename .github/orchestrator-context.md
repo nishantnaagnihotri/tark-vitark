@@ -349,3 +349,10 @@ Template:
 - Open questions status: No unresolved UX open questions. OQ-1 through OQ-5 remain resolved per merged PRD decisions.
 - Next micro-goal: Gate 3B (Figma) handoff using `03-ux.md` as authoritative input.
 - Blockers/owner decisions: None required before Figma handoff.
+
+### 2026-03-29
+- Gate status: Gate 3A (UX substep) re-run complete under mandatory Figma-artifact policy; Gate 3 remains active pending Figma and Design QA.
+- Artifact changes: Updated `docs/slices/coming-soon-splash-page/03-ux.md` to include required `Figma Artifact` section and file reference.
+- Open questions status: All OQ-1 through OQ-5 remain resolved and owner-confirmed.
+- Next micro-goal: Gate 3B (Figma) retry using mandatory artifact reference `https://www.figma.com/design/KVOfFAmbN9bYfF2NU9qyZX`.
+- Blockers/owner decisions: External Figma MCP rate-limit may block automated frame creation; manual frame completion remains fallback.
