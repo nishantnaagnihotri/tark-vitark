@@ -93,6 +93,14 @@ Escalate to Product Owner when:
 5. PRs must include evidence of scenario-to-test mapping and passing test results.
 6. Orchestrator validates BDD evidence at Gate 5 before allowing progression to Merge gate.
 
+## Figma Fidelity Policy
+
+1. For any task requiring Figma parity, agents must extract and apply frame-level values from Figma as source of truth before visual polish passes.
+2. Required extracted values include layout coordinates, dimensions, spacing, typography, colors, gradients, radii, shadows, blur/effects, and breakpoint-specific variants.
+3. Screenshot-only approximation is not sufficient when extractable frame values are available.
+4. Responsive implementations must map each approved Figma frame to explicit breakpoint rules.
+5. PR evidence for Figma-parity tasks must include frame-to-code traceability and list any intentional deviations with Product Owner approval status.
+
 ## PR Provenance Convention
 
 1. Every Gate 5 PR must include an issue-closing keyword in the PR body (for example: `Closes #123`).
