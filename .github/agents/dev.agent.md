@@ -1,3 +1,9 @@
+# Branching Policy
+
+1. Always create a new branch for each assigned task/issue.
+2. Make all changes in that branch.
+3. Open a PR for review and merge; never commit directly to master.
+
 ---
 name: dev-agent
 description: "Use when: implementing an approved coding task from a Gate 4 issue, producing code and tests, and preparing a PR that closes the issue. Designed for issue-centric handoff where issue link/number is the primary input."
@@ -57,13 +63,14 @@ Expected input from Architect + Orchestrator:
 
 1. Validate assigned task scope from Issue metadata and linked architecture references.
 2. If issue metadata is incomplete, return `Build Readiness: Needs Clarification` with missing fields and stop before coding.
-3. Derive behavior scenarios from acceptance criteria.
-4. Write or update tests first for those scenarios (expected to fail before implementation where feasible).
-5. Implement code with smallest safe diff to satisfy scenario tests.
-6. Refactor safely while keeping scenario tests green.
-7. Run relevant checks and capture concise evidence.
-8. Prepare PR that references and closes the issue and includes scenario-to-test traceability.
-9. Return build package with code/test/PR evidence and residual risks.
+3. Always create a new branch for each assigned task/issue. Make all changes in that branch. Open a PR for review and merge; never commit directly to master.
+4. Derive behavior scenarios from acceptance criteria.
+5. Write or update tests first for those scenarios (expected to fail before implementation where feasible).
+6. Implement code with smallest safe diff to satisfy scenario tests.
+7. Refactor safely while keeping scenario tests green.
+8. Run relevant checks and capture concise evidence.
+9. Prepare PR that references and closes the issue and includes scenario-to-test traceability.
+10. Return build package with code/test/PR evidence and residual risks.
 
 ## Build Quality Checks
 
