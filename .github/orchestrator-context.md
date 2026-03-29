@@ -182,6 +182,7 @@ Enable the orchestrator to resume work as primary control agent for all activiti
 17. Issue-centric handoff is supported for Gate 5: issue link/number is sufficient only when issue metadata includes acceptance criteria, slice path, and architecture reference.
 18. Gate 5 PR provenance is mandatory: PR body must include issue-closing keyword and `Execution-Agent: dev-agent` marker for attribution and orchestration traceability.
 19. Gate 6 is orchestrator-owned and Local-only. It recommends merge or loop-back based on evidence, but Product Owner alone performs the actual merge.
+20. Figma artifact is mandatory for every UX task: Gate 3A must include a valid Figma artifact reference (file URL or key) before progression.
 
 ## Resume Protocol For Orchestrator
 
