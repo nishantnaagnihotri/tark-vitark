@@ -209,6 +209,12 @@ On first response in any new activity:
 
 1. Run one dry-run of the full Gate 4 -> Gate 6 flow on a sample issue/PR path.
 
+## Current Slice Status
+
+| Slice | Gate 1 | Gate 2 | Gate 3 | Gate 4 | Gate 5 | Gate 6 |
+|---|---|---|---|---|---|---|
+| `coming-soon-splash-page` | ✅ Pass | ✅ Conditional Pass | ⬜ Pending | ⬜ Pending | ⬜ Pending | ⬜ Pending |
+
 ## Context Update Log
 
 Append new entries here after each gate transition.
@@ -321,3 +327,10 @@ Template:
 - Open questions status: None pending for this setup slice.
 - Next micro-goal: Dry-run the end-to-end Issue -> Dev PR -> Merge recommendation flow.
 - Blockers/owner decisions: None for current slice.
+
+### 2026-03-29
+- Gate status: Gate 2 (PRD) complete for `coming-soon-splash-page` slice. CONDITIONAL PASS.
+- Artifact changes: Created `docs/slices/coming-soon-splash-page/02-prd.md` (PRD v0 — 9 FRs, 6 NFRs, 6 DCs, 9 ACs, Traceability Map, Quality Gaps, Open Questions, Gate Decision, PRD Draft Package).
+- Open questions status: OQ-1 (browser support baseline) unresolved — non-blocking. OQ-2 through OQ-5 designer-discretion — non-blocking.
+- Next micro-goal: Gate 3 (Design) — UX substep for `coming-soon-splash-page` using `02-prd.md` as input.
+- Blockers/owner decisions: OQ-1 must be resolved before Gate 5 implementation begins. All other OQs resolved at design review.
