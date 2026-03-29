@@ -180,7 +180,7 @@ Enable the orchestrator to resume work as primary control agent for all activiti
 15. Gate 5 defaults to GitHub Copilot cloud Dev execution. Local execution is permitted only when Product Owner explicitly overrides for a specific Issue. Final build evidence is verified in Local before merge recommendation.
 16. Gate 5 implementation uses BDD discipline: behavior scenarios, test-first workflow, and scenario-to-test evidence are required before merge progression.
 17. Issue-centric handoff is supported for Gate 5: issue link/number is sufficient only when issue metadata includes acceptance criteria, slice path, and architecture reference.
-18. Gate 5 PR provenance is mandatory: PR body must include issue-closing keyword and `Execution-Agent: dev-agent` marker for attribution and orchestration traceability.
+18. Gate 5 PR provenance is mandatory: PR body must include issue-closing keyword and `Execution-Agent: dev` marker for attribution and orchestration traceability.
 19. Gate 6 is orchestrator-owned and Local-only. It recommends merge or loop-back based on evidence, but Product Owner alone performs the actual merge.
 20. Design artifact is mandatory for every UX task: Gate 3A must include a valid Figma or Penpot artifact reference (file URL or key) before progression.
 
@@ -317,7 +317,7 @@ Template:
 
 ### 2026-03-29
 - Gate status: Gate 5 attribution model hardened.
-- Artifact changes: Added mandatory PR provenance convention (`Execution-Agent: dev-agent`) and issue-closing keyword requirement; added Provenance lock in Build gate checklist; updated Dev output schema to include provenance confirmation.
+- Artifact changes: Added mandatory PR provenance convention (`Execution-Agent: dev`) and issue-closing keyword requirement; added Provenance lock in Build gate checklist; updated Dev output schema to include provenance confirmation.
 - Open questions status: Owner requested deterministic PR attribution to Dev executions.
 - Next micro-goal: Implement Gate 6 (Merge gate) contract.
 - Blockers/owner decisions: None for current slice.
@@ -366,8 +366,8 @@ Template:
 
 ### 2026-03-29
 - Gate status: Gate 3 ✅ closed (PO approved design 2026-03-29). Gate 4 ✅ closed (architecture plan + task decomposition complete). Gate 5 T1 🟡 in progress — PR #15 open and awaiting PO merge.
-- Artifact changes: Created `04-design-qa.md` (real Figma verification, PO approval recorded), `05-architecture.md` (architecture plan), `06-tasks.md` (T1→#5 … T5→#9), `.gitignore` (excludes .env and node_modules). GitHub Issues #5–#9 created. PRs #10–#14 closed (scope pollution, premature sequencing, secret exposure). PR #15 opened on `t1/scaffold-coming-soon-splash-page` with only `src/coming-soon-splash-page/index.html`, `src/coming-soon-splash-page/styles.css`, `.gitignore` — `Closes #5`, `Execution-Agent: dev-agent` present.
+- Artifact changes: Created `04-design-qa.md` (real Figma verification, PO approval recorded), `05-architecture.md` (architecture plan), `06-tasks.md` (T1→#5 … T5→#9), `.gitignore` (excludes .env and node_modules). GitHub Issues #5–#9 created. PRs #10–#14 closed (scope pollution, premature sequencing, secret exposure). PR #15 opened on `t1/scaffold-coming-soon-splash-page` with only `src/coming-soon-splash-page/index.html`, `src/coming-soon-splash-page/styles.css`, `.gitignore` — `Closes #5`, `Execution-Agent: dev` present.
 - Open questions status: **SECURITY** — `tools/penpot-mcp/.env` Penpot Bearer token was exposed in PR #14 (now closed). Token must be rotated by PO before proceeding. `.gitignore` now prevents future .env commits.
-- Governance note: Orchestrator assembled and pushed PR #15 directly, which is outside orchestrator scope. PO may choose to keep PR #15 (code is valid, dev-agent authored) or close it and re-dispatch dev agent with tighter scope instructions.
+- Governance note: Orchestrator assembled and pushed PR #15 directly, which is outside orchestrator scope. PO may choose to keep PR #15 (code is valid, dev authored) or close it and re-dispatch dev agent with tighter scope instructions.
 - Next micro-goal: PO merges PR #15 (or re-dispatches dev agent for clean T1) → Gate 6 merge review → then dispatch T2 (Issue #6).
 - Blockers/owner decisions: (1) Rotate exposed Penpot token. (2) Decide: keep PR #15 or re-dispatch dev agent for Issue #5.

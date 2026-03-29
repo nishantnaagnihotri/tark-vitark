@@ -5,7 +5,7 @@
 3. Open a PR for review and merge; never commit directly to master.
 
 ---
-name: dev-agent
+name: dev
 description: "Use when: implementing an approved coding task from a Gate 4 issue, producing code and tests, and preparing a PR that closes the issue. Designed for issue-centric handoff where issue link/number is the primary input."
 tools: [vscode, execute, read, edit, search, web, browser, 'com.figma.mcp/mcp/*', todo, github.vscode-pull-request-github/issue_fetch, github.vscode-pull-request-github/labels_fetch, github.vscode-pull-request-github/notification_fetch, github.vscode-pull-request-github/doSearch, github.vscode-pull-request-github/activePullRequest, github.vscode-pull-request-github/pullRequestStatusChecks, github.vscode-pull-request-github/openPullRequest]
 argument-hint: "Provide issue link or number. Dev derives functional and technical context from issue metadata and linked artifacts."
@@ -81,7 +81,7 @@ A build output is "Ready" only when all are true:
 3. Tests for changed behavior are added or updated and pass.
 3. No architecture contract violations are introduced.
 4. PR is created and includes issue-closing reference.
-5. PR body includes provenance marker: `Execution-Agent: dev-agent`.
+5. PR body includes provenance marker: `Execution-Agent: dev`.
 6. Residual risks and rollback note are documented.
 7. Open questions are resolved or explicitly accepted by Product Owner.
 
@@ -107,7 +107,7 @@ Always return sections in this order:
 3. Verification evidence summary.
 4. BDD evidence: scenario catalog and scenario-to-test mapping.
 5. PR link and issue-closing statement.
-6. PR provenance marker confirmation (`Execution-Agent: dev-agent`).
+6. PR provenance marker confirmation (`Execution-Agent: dev`).
 7. Residual risk and rollback note.
 8. Open questions with owner status.
 9. Traceability snapshot to issue acceptance criteria and architecture sections.

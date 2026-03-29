@@ -4,7 +4,7 @@ description: "Use when: planning a new slice, sequencing agent work, enforcing g
 argument-hint: "Provide requirement statement and current checkpoint (done/next/blockers)."
 user-invocable: true
 tools: [vscode, execute, read, agent, edit, search, web, browser, 'com.figma.mcp/mcp/*', ms-azuretools.vscode-containers/containerToolsConfig, vscjava.vscode-java-debug/debugJavaApplication, vscjava.vscode-java-debug/setJavaBreakpoint, vscjava.vscode-java-debug/debugStepOperation, vscjava.vscode-java-debug/getDebugVariables, vscjava.vscode-java-debug/getDebugStackTrace, vscjava.vscode-java-debug/evaluateDebugExpression, vscjava.vscode-java-debug/getDebugThreads, vscjava.vscode-java-debug/removeJavaBreakpoints, vscjava.vscode-java-debug/stopDebugSession, vscjava.vscode-java-debug/getDebugSessionInfo, todo, github.vscode-pull-request-github/issue_fetch, github.vscode-pull-request-github/labels_fetch, github.vscode-pull-request-github/notification_fetch, github.vscode-pull-request-github/doSearch, github.vscode-pull-request-github/activePullRequest, github.vscode-pull-request-github/pullRequestStatusChecks, github.vscode-pull-request-github/openPullRequest]
-agents: [requirement-challenger, prd-agent, ux-agent, figma-agent, design-qa-agent, architecture-agent, dev-agent]
+agents: [requirement-challenger, prd-agent, ux-agent, figma-agent, design-qa-agent, architecture-agent, dev]
 ---
 
 # Architect + Orchestrator Agent
@@ -240,11 +240,11 @@ Architecture Gate Checklist (Orchestrator-owned):
 
 ## Build Gate Handoff Trigger
 
-When executing Gate 5, invoke `dev-agent` with one GitHub Issue at a time. Minimum handoff input is Issue link/number.
+When executing Gate 5, invoke `dev` with one GitHub Issue at a time. Minimum handoff input is Issue link/number.
 
 Pre-handoff confirmation rule:
 
-1. Default Build execution is Cloud via GitHub Copilot coding agent (`dev-agent`).
+1. Default Build execution is Cloud via GitHub Copilot coding agent (`dev`).
 2. Use local execution only if Product Owner explicitly overrides the default for a specific Issue.
 3. If cloud mode is chosen, provide manual handoff prompt and wait for returned `Build Output Package`.
 4. If local override is chosen, continue normal subagent invocation.
@@ -280,7 +280,7 @@ Build Gate Checklist (Orchestrator-owned):
 4. Test-first lock: verify tests were created or updated before/with implementation intent and are tied to acceptance criteria.
 5. Verification lock: verify required test commands passed and evidence is explicit.
 6. PR lock: verify PR exists and includes explicit issue-closing reference.
-7. Provenance lock: verify PR body includes `Execution-Agent: dev-agent` marker.
+7. Provenance lock: verify PR body includes `Execution-Agent: dev` marker.
 8. Risk lock: verify residual risks and rollback note are documented.
 9. Approval lock: verify unresolved open questions are resolved or explicitly accepted by Product Owner.
 
@@ -304,7 +304,7 @@ Merge Gate Checklist (Orchestrator-owned):
 
 1. Scope lock: verify PR still maps cleanly to the intended Issue and approved slice boundaries.
 2. Verification lock: verify required tests passed and Build evidence remains sufficient.
-3. Provenance lock: verify PR includes issue-closing keyword and `Execution-Agent: dev-agent` marker.
+3. Provenance lock: verify PR includes issue-closing keyword and `Execution-Agent: dev` marker.
 4. Review lock: verify review comments are resolved or explicitly accepted by Product Owner.
 5. Documentation lock: verify docs and release notes are updated when applicable.
 6. Rollback lock: verify rollback note is documented and feasible.
@@ -454,7 +454,7 @@ Return only:
 
 ## Example Dev Handoff Message (Copy-Paste)
 
-Use this message when invoking `dev-agent` at Gate 5:
+Use this message when invoking `dev` at Gate 5:
 
 ```text
 Implement one approved Gate 4 task using the issue and slice artifacts below.
@@ -498,7 +498,7 @@ PR:
 Required evidence:
 - Build Output Package
 - issue-closing reference
-- `Execution-Agent: dev-agent` marker
+- `Execution-Agent: dev` marker
 - test results
 - review status
 - docs/release note status
@@ -650,6 +650,6 @@ For first response in a new activity, prepend:
 
 ## Subagent Allow-List Policy
 
-1. `agents: [requirement-challenger, prd-agent, ux-agent, figma-agent, design-qa-agent, architecture-agent, dev-agent]` enables Gate 1 through Gate 5 handoffs.
+1. `agents: [requirement-challenger, prd-agent, ux-agent, figma-agent, design-qa-agent, architecture-agent, dev]` enables Gate 1 through Gate 5 handoffs.
 2. Add more specialists to the frontmatter allow-list as they are created.
 3. Do not hand off to agents outside the explicit allow-list.

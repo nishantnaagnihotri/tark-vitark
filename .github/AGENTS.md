@@ -96,7 +96,7 @@ Escalate to Product Owner when:
 ## PR Provenance Convention
 
 1. Every Gate 5 PR must include an issue-closing keyword in the PR body (for example: `Closes #123`).
-2. Every Gate 5 PR must include a provenance marker in the PR body: `Execution-Agent: dev-agent`.
+2. Every Gate 5 PR must include a provenance marker in the PR body: `Execution-Agent: dev`.
 3. Orchestrator must verify both linkage and provenance before recommending progression from Build to Merge gate.
 
 ## Merge Gate Policy
