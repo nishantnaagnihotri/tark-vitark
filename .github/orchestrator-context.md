@@ -214,7 +214,7 @@ On first response in any new activity:
 
 | Slice | Gate 1 | Gate 2 | Gate 3 | Gate 4 | Gate 5 | Gate 6 |
 |---|---|---|---|---|---|---|
-| `coming-soon-splash-page` | ✅ Pass | ✅ Full Pass | ⬜ Pending | ⬜ Pending | ⬜ Pending | ⬜ Pending |
+| `coming-soon-splash-page` | ✅ Pass | ✅ Full Pass | ✅ Pass (PO approved 2026-03-29) | ✅ Pass | 🟡 T1 PR #15 open (awaiting PO merge) | ⬜ Pending |
 
 ## Context Update Log
 
@@ -363,3 +363,11 @@ Template:
 - Open questions status: No product-scope open questions added by this change.
 - Next micro-goal: Configure Penpot base URL/token for the bridge and run Gate 3B using the owner-selected design tool.
 - Blockers/owner decisions: Runtime tooling (`node`/`npm`) is unavailable in current local shell, so bridge execution verification must be done where Node.js is available.
+
+### 2026-03-29
+- Gate status: Gate 3 ✅ closed (PO approved design 2026-03-29). Gate 4 ✅ closed (architecture plan + task decomposition complete). Gate 5 T1 🟡 in progress — PR #15 open and awaiting PO merge.
+- Artifact changes: Created `04-design-qa.md` (real Figma verification, PO approval recorded), `05-architecture.md` (architecture plan), `06-tasks.md` (T1→#5 … T5→#9), `.gitignore` (excludes .env and node_modules). GitHub Issues #5–#9 created. PRs #10–#14 closed (scope pollution, premature sequencing, secret exposure). PR #15 opened on `t1/scaffold-coming-soon-splash-page` with only `src/coming-soon-splash-page/index.html`, `src/coming-soon-splash-page/styles.css`, `.gitignore` — `Closes #5`, `Execution-Agent: dev-agent` present.
+- Open questions status: **SECURITY** — `tools/penpot-mcp/.env` Penpot Bearer token was exposed in PR #14 (now closed). Token must be rotated by PO before proceeding. `.gitignore` now prevents future .env commits.
+- Governance note: Orchestrator assembled and pushed PR #15 directly, which is outside orchestrator scope. PO may choose to keep PR #15 (code is valid, dev-agent authored) or close it and re-dispatch dev agent with tighter scope instructions.
+- Next micro-goal: PO merges PR #15 (or re-dispatches dev agent for clean T1) → Gate 6 merge review → then dispatch T2 (Issue #6).
+- Blockers/owner decisions: (1) Rotate exposed Penpot token. (2) Decide: keep PR #15 or re-dispatch dev agent for Issue #5.
