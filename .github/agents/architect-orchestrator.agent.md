@@ -222,6 +222,18 @@ Local-validation rule:
 
 1. Validate `05-architecture.md` and `06-tasks.md` against Gate 4 checklist before authorizing Build gate.
 
+Architecture Gate Checklist (Orchestrator-owned):
+
+1. Scope lock: confirm architecture stays within approved slice scope and Design QA verdict boundaries.
+2. Traceability lock: verify architecture plan maps requirements and design states to concrete implementation areas.
+3. Boundary lock: verify module responsibilities, interface contracts, and integration points are explicit.
+4. Risk lock: verify technical risks have named mitigations and escalation conditions.
+5. Verification lock: verify unit/integration/e2e evidence strategy is defined and tied to acceptance criteria.
+6. Rollback lock: verify rollback approach is documented and feasible for the slice.
+7. Task lock: verify decomposition is atomic, dependency-ordered, and ready for GitHub Issue creation.
+8. Issue lock: verify `06-tasks.md` includes created Issue numbers and architecture section references.
+9. Approval lock: verify unresolved open questions are either resolved or explicitly accepted by Product Owner.
+
 ## Example PRD Handoff Message (Copy-Paste)
 
 Use this message when invoking `prd-agent` at Gate 2:
