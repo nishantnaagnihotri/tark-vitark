@@ -37,6 +37,7 @@ Enable the orchestrator to resume work as primary control agent for all activiti
 5. Figma Agent: `.github/agents/figma.agent.md`
 6. Design QA Agent: `.github/agents/design-qa.agent.md`
 7. Architecture Agent: `.github/agents/architecture.agent.md`
+8. Dev Agent: `.github/agents/dev.agent.md`
 
 ## Current Gate Contracts
 
@@ -130,6 +131,23 @@ Enable the orchestrator to resume work as primary control agent for all activiti
   - `05-architecture.md`
   - `06-tasks.md` (includes GitHub Issue numbers created at Gate 4 end)
 
+5. Gate 5 (Build)
+- Gate intent: implement one approved Gate 4 issue at a time using architecture references and produce merge-ready evidence.
+- Input required:
+  - one GitHub Issue number from `06-tasks.md`
+  - `05-architecture.md`
+  - relevant task section in `06-tasks.md`
+- Output required from Dev Agent:
+  - Build Readiness
+  - Implementation Summary
+  - Files Changed
+  - Verification Evidence
+  - PR Package (with issue-closing reference)
+  - Quality Gaps
+  - Open Questions with owner decision status
+  - Gate Decision
+  - Build Output Package
+
 ## Known Rules From User Decisions
 
 1. Requirement Challenger is primary owner of requirement detailing.
@@ -146,6 +164,7 @@ Enable the orchestrator to resume work as primary control agent for all activiti
 12. Slice artifacts are stored in `docs/slices/<slice-name>/` as versioned markdown. Orchestrator creates the slice folder when Gate 1 passes and writes gate artifacts after each gate closes.
 13. GitHub Issues (one per atomic coding task) are created by the orchestrator at the end of Gate 4, after the architecture plan is approved. Gate 5 (Build) is purely implementation — no planning overhead.
 14. Architecture governance is orchestrator-owned and enforced through an explicit Gate 4 checklist (scope, traceability, boundaries, risk, verification, rollback, decomposition, issue linkage, and owner acceptance).
+15. Gate 5 is cloud-preferred and requires execution mode confirmation (`local` or `cloud`) before builder handoff. Final build evidence is verified in Local before merge recommendation.
 
 ## Resume Protocol For Orchestrator
 
@@ -165,13 +184,13 @@ On first response in any new activity:
 1. Gate 1 and Gate 2 are implemented.
 2. Gate 3 is fully implemented: UX, Figma, and Design QA substeps are all defined and wired.
 3. Gate 4 is implemented at contract level: Architecture Agent and orchestrator handoff rules are defined.
-4. Remaining agents to implement, in order:
-- Builder Agent
-- Gates 5 and 6 design deferred until Gate 4/5 output contracts are known (Known Rule #10).
+4. Gate 5 is implemented at contract level: Dev Agent and orchestrator handoff rules are defined.
+5. Remaining design to implement, in order:
+- Gate 6 (Merge) contract, informed by Gate 5 outputs (Known Rule #10).
 
 ## Default Next Step
 
-1. Implement Gate 5 (Build gate): define Builder agent contract for Issue-driven implementation.
+1. Implement Gate 6 (Merge gate) contract for issue-level merge readiness verification.
 
 ## Context Update Log
 
@@ -242,4 +261,11 @@ Template:
 - Artifact changes: Added explicit Architecture Gate Checklist to orchestrator, codifying orchestrator-owned responsibilities before Build gate authorization.
 - Open questions status: No open questions for this change.
 - Next micro-goal: Implement Gate 5 (Builder gate) contract for Issue-driven execution.
+- Blockers/owner decisions: None for current slice.
+
+### 2026-03-29
+- Gate status: Gate 5 contract is now implemented.
+- Artifact changes: Added Dev Agent (`dev.agent.md`); wired Build Gate handoff trigger, execution mode confirmation, and completion rules in orchestrator; added Build handoff message template; updated context with Gate 5 input/output contract.
+- Open questions status: None pending for this setup slice.
+- Next micro-goal: Implement Gate 6 (Merge gate) contract.
 - Blockers/owner decisions: None for current slice.

@@ -4,7 +4,7 @@ description: "Use when: planning a new slice, sequencing agent work, enforcing g
 argument-hint: "Provide requirement statement and current checkpoint (done/next/blockers)."
 user-invocable: true
 tools: [vscode, execute, read, agent, edit, search, web, browser, 'com.figma.mcp/mcp/*', ms-azuretools.vscode-containers/containerToolsConfig, todo]
-agents: [requirement-challenger, prd-agent, ux-agent, figma-agent, design-qa-agent, architecture-agent]
+agents: [requirement-challenger, prd-agent, ux-agent, figma-agent, design-qa-agent, architecture-agent, dev-agent]
 ---
 
 # Architect + Orchestrator Agent
@@ -234,6 +234,38 @@ Architecture Gate Checklist (Orchestrator-owned):
 8. Issue lock: verify `06-tasks.md` includes created Issue numbers and architecture section references.
 9. Approval lock: verify unresolved open questions are either resolved or explicitly accepted by Product Owner.
 
+## Build Gate Handoff Trigger
+
+When executing Gate 5, invoke `dev-agent` with one GitHub Issue at a time plus slice references (`05-architecture.md`, `06-tasks.md`) and explicit acceptance criteria.
+
+Pre-handoff confirmation rule:
+
+1. Ask Product Owner to choose Build execution mode: `local` or `cloud`.
+2. If mode is `cloud`, provide manual handoff prompt and wait for returned `Build Output Package`.
+3. If mode is `local`, continue normal subagent invocation.
+
+Execution rule:
+
+1. Gate 5 is implementation-only and works one Issue at a time.
+2. Builder must stay within assigned Issue scope and referenced architecture boundaries.
+3. Final merge-readiness evidence must be validated in Local context.
+
+Proceeding rule:
+
+1. Continue only when build result is `Build Readiness: Ready` and `Gate Decision: can proceed to merge`.
+2. If open questions remain, continue only when they are explicitly marked as accepted by Product Owner.
+3. Otherwise, return quality gaps to Product Owner and loop builder clarification.
+
+Gate 5 completion rule:
+
+1. Each Issue is complete only when code, tests, and PR package are produced.
+2. PR must include explicit issue-closing reference.
+3. Gate 6 (Merge) may begin for that Issue only after build package passes Gate 5 checks.
+
+Local-validation rule:
+
+1. Validate build evidence (tests, issue linkage, rollback note) in Local before merge recommendation.
+
 ## Example PRD Handoff Message (Copy-Paste)
 
 Use this message when invoking `prd-agent` at Gate 2:
@@ -366,6 +398,38 @@ Return only:
 8) Open Questions (with owner decision status)
 9) Gate Decision: can proceed to build | must loop back
 10) Architecture Plan Package (for Gate 5 issue creation)
+```
+
+## Example Builder Handoff Message (Copy-Paste)
+
+Use this message when invoking `dev-agent` at Gate 5:
+
+```text
+Implement one approved Gate 4 task using the issue and slice artifacts below.
+
+Issue:
+<issue-number and task title>
+
+Slice artifact folder:
+docs/slices/<slice-name>/
+
+Required references:
+- 05-architecture.md
+- 06-tasks.md (relevant issue section)
+
+Additional Product Owner updates (optional):
+<new constraints/preferences, if any>
+
+Return only:
+1) Build Readiness: Ready | Needs Clarification | Blocked
+2) Implementation Summary
+3) Files Changed
+4) Verification Evidence
+5) PR Package (with issue-closing reference)
+6) Quality Gaps
+7) Open Questions (with owner decision status)
+8) Gate Decision: can proceed to merge | must loop back
+9) Build Output Package
 ```
 
 ## Example Cloud Manual Handoff Prompt (Copy-Paste)
@@ -505,6 +569,6 @@ For first response in a new activity, prepend:
 
 ## Subagent Allow-List Policy
 
-1. `agents: [requirement-challenger, prd-agent, ux-agent, figma-agent, design-qa-agent, architecture-agent]` enables Gate 1 through Gate 4 handoffs.
+1. `agents: [requirement-challenger, prd-agent, ux-agent, figma-agent, design-qa-agent, architecture-agent, dev-agent]` enables Gate 1 through Gate 5 handoffs.
 2. Add more specialists to the frontmatter allow-list as they are created.
 3. Do not hand off to agents outside the explicit allow-list.
