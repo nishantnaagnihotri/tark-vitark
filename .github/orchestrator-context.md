@@ -155,7 +155,7 @@ Enable the orchestrator to resume work as primary control agent for all activiti
 3. Challenger continues clarification rounds until no open questions remain or Product Owner accepts remaining open questions.
 4. Challenger drafts acceptance criteria detailed enough for PRD writing.
 5. Product Owner manually reviews and merges all PRs.
-6. Dev is cloud-first for coding drafts, with local verification before merge.
+6. Dev is cloud-first for coding implementation, with local verification before merge.
 7. Gate 3 is a full design gate and is local-only.
 8. Gate 1 and Gate 2 stay separate: Gate 1 is Requirement Challenger only, Gate 2 is PRD Agent only.
 9. Orchestrator must challenge major decisions, provide alternatives with tradeoffs, and recommend a balanced option before owner finalization.
@@ -164,7 +164,7 @@ Enable the orchestrator to resume work as primary control agent for all activiti
 12. Slice artifacts are stored in `docs/slices/<slice-name>/` as versioned markdown. Orchestrator creates the slice folder when Gate 1 passes and writes gate artifacts after each gate closes.
 13. GitHub Issues (one per atomic coding task) are created by the orchestrator at the end of Gate 4, after the architecture plan is approved. Gate 5 (Build) is purely implementation — no planning overhead.
 14. Architecture governance is orchestrator-owned and enforced through an explicit Gate 4 checklist (scope, traceability, boundaries, risk, verification, rollback, decomposition, issue linkage, and owner acceptance).
-15. Gate 5 is cloud-preferred and requires execution mode confirmation (`local` or `cloud`) before dev handoff. Final build evidence is verified in Local before merge recommendation.
+15. Gate 5 defaults to GitHub Copilot cloud Dev execution. Local execution is permitted only when Product Owner explicitly overrides for a specific Issue. Final build evidence is verified in Local before merge recommendation.
 
 ## Resume Protocol For Orchestrator
 
@@ -267,5 +267,12 @@ Template:
 - Gate status: Gate 5 contract is now implemented.
 - Artifact changes: Added Dev Agent (`dev.agent.md`); wired Build Gate handoff trigger, execution mode confirmation, and completion rules in orchestrator; added Build handoff message template; updated context with Gate 5 input/output contract.
 - Open questions status: None pending for this setup slice.
+- Next micro-goal: Implement Gate 6 (Merge gate) contract.
+- Blockers/owner decisions: None for current slice.
+
+### 2026-03-29
+- Gate status: Gate 5 execution policy corrected.
+- Artifact changes: Updated Build gate default execution to GitHub Copilot cloud Dev implementation; local execution now explicit owner override only; aligned shared protocol, dev agent environment policy, and context known rules.
+- Open questions status: Owner clarified desired executor as GitHub cloud coding agent that creates PR.
 - Next micro-goal: Implement Gate 6 (Merge gate) contract.
 - Blockers/owner decisions: None for current slice.

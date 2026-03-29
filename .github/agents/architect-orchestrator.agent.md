@@ -240,15 +240,17 @@ When executing Gate 5, invoke `dev-agent` with one GitHub Issue at a time plus s
 
 Pre-handoff confirmation rule:
 
-1. Ask Product Owner to choose Build execution mode: `local` or `cloud`.
-2. If mode is `cloud`, provide manual handoff prompt and wait for returned `Build Output Package`.
-3. If mode is `local`, continue normal subagent invocation.
+1. Default Build execution is Cloud via GitHub Copilot coding agent (`dev-agent`).
+2. Use local execution only if Product Owner explicitly overrides the default for a specific Issue.
+3. If cloud mode is chosen, provide manual handoff prompt and wait for returned `Build Output Package`.
+4. If local override is chosen, continue normal subagent invocation.
 
 Execution rule:
 
 1. Gate 5 is implementation-only and works one Issue at a time.
 2. Dev must stay within assigned Issue scope and referenced architecture boundaries.
 3. Final merge-readiness evidence must be validated in Local context.
+4. GitHub Copilot cloud coding agent is the default implementation executor for Gate 5 Issues.
 
 Proceeding rule:
 

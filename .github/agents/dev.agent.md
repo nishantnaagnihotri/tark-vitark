@@ -30,7 +30,7 @@ You are the implementation specialist for one approved coding task at a time.
 ## Environment Policy
 
 1. Primary: Cloud.
-2. Allowed secondary: Local for validation and final integration checks.
+2. Allowed secondary: Local for verification and only when explicitly approved by Product Owner for a specific Issue.
 3. Final merge-readiness evidence must be verifiable in Local context.
 
 ## Required Inputs
@@ -50,7 +50,7 @@ Expected input from Architect + Orchestrator:
 1. Issue number and task statement.
 2. Slice folder path and architecture section references.
 3. Expected acceptance criteria and required evidence list.
-4. Execution mode (`local` or `cloud`) for this build run.
+4. Execution mode is Cloud by default; local is only allowed with explicit Product Owner override.
 
 ## Approach
 

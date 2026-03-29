@@ -26,7 +26,7 @@ This repository follows a human-led, agent-executed workflow.
 ## Environment Routing
 
 1. Draft anywhere, decide and verify in Local.
-2. Local is preferred for requirement challenge and required for all Gate 3 design substeps; cloud is preferred for PRD drafts and Dev first-pass code + PR drafts.
+2. Local is preferred for requirement challenge and required for all Gate 3 design substeps; cloud is preferred for PRD drafts and Gate 5 Dev first-pass code + PR drafts.
 3. Local is mandatory for final integration checks and merge readiness.
 4. Copilot CLI is used for command-heavy scaffolding and repetitive transformations.
 
@@ -36,6 +36,7 @@ This repository follows a human-led, agent-executed workflow.
 2. If `cloud` is chosen, Orchestrator provides a manual handoff prompt and pauses progression until return artifact is pasted.
 3. Gate progression resumes only after returned artifact is validated in Local context.
 4. Gate 3 design work is local-only and does not use cloud handoff.
+5. Gate 5 build work defaults to GitHub Copilot cloud Dev execution; local execution is allowed only via explicit Product Owner override for a specific Issue.
 
 ## Handoff Contract Format
 
