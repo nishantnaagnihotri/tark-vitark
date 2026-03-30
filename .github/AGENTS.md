@@ -92,6 +92,29 @@ Escalate to Product Owner when:
 6. Coder agents at Gate 5 read the Issue and linked slice folder files for full context.
 7. A PR that closes the Issue is the unit of completion for each coding task.
 
+## Slice and Story Maintenance Protocol
+
+1. Every slice must exist in both places:
+   - Repo artifacts under `docs/slices/<slice-name>/` with `01` through `06` files.
+   - GitHub slice tracker issue titled `[Slice] <slice-name>`.
+2. Slice tracker issue must use label `slice` and include:
+   - Slice folder path.
+   - Links to `01` through `06` artifacts.
+   - A section listing all user stories (issue links).
+3. Every user story must be one GitHub issue and use labels `user-story` and `slice:<slice-name>`.
+4. Story issues must include:
+   - Story objective and scope boundaries.
+   - Acceptance criteria (mapped to PRD AC IDs).
+   - Slice artifact folder path.
+   - Architecture section reference.
+   - `Slice tracker:` section with issue link.
+5. Bidirectional traceability is mandatory:
+   - Slice tracker lists all story issues.
+   - Each story links back to the slice tracker.
+   - `06-tasks.md` lists all story issues and references architecture sections.
+6. Build/merge progression is blocked if any traceability link above is missing.
+7. Closed slices keep their slice tracker issue (typically closed) as audit history; links must remain intact.
+
 ## Implementation Protocol (BDD)
 
 1. Gate 5 implementation follows Behavior Driven Development (BDD) as the default engineering discipline.
