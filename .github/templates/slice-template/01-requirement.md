@@ -46,6 +46,14 @@
 
 **Note:** Each AC should map to one success criterion and be verifiable without ambiguity.
 
+## Requirement IDs (For PRD Alignment)
+
+- R-1: [Core requirement statement in plain language]
+- R-2: [User/value requirement]
+- R-3: [Scope boundary requirement]
+- R-4: [Constraint/non-goal requirement]
+- R-5: [Quality or success requirement]
+
 ## Open Questions (None / Accepted by Product Owner)
 
 - Q-1: [Question text] → **Status:** Resolved | Accepted as non-blocking | **Resolution:** [owner decision]
@@ -57,4 +65,6 @@
 - [ ] No hidden assumptions
 - [ ] Acceptance criteria are testable
 - [ ] Scope boundaries are clear
+- [ ] Requirement IDs (R-1..R-N) are defined for traceability
+- [ ] No unresolved placeholders remain (except explicitly accepted open questions)
 - [ ] Ready for PRD drafting (Gate 2)

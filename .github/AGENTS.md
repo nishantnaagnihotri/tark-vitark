@@ -19,10 +19,19 @@ This repository follows a human-led, agent-executed workflow.
 
 1. Requirement challenge gate must pass before PRD freeze.
 2. PRD drafting uses Requirement Context Package and must pass PRD quality gate before PRD freeze.
-3. Design freeze must happen before coding. Gate 3 is the full design gate and includes UX, Figma, and Design QA substeps.
-4. Design artifact is mandatory for every UX task: each Gate 3A UX output must include a Figma or Penpot artifact reference (file URL or file key) before progression.
-5. Architecture signoff must happen before coding.
-6. Merge requires passing tests, review closure, docs update, and rollback note.
+3. Gate 2 (PRD) must preserve Gate 1 intent: no silent reinterpretation of requirement statement, scope boundaries, or acceptance criteria.
+4. Design freeze must happen before coding. Gate 3 is the full design gate and includes UX, Figma, and Design QA substeps.
+5. Design artifact is mandatory for every UX task: each Gate 3A UX output must include a Figma or Penpot artifact reference (file URL or file key) before progression.
+6. Architecture signoff must happen before coding.
+7. Merge requires passing tests, review closure, docs update, and rollback note.
+
+## Requirement-To-PRD Alignment Protocol
+
+1. `01-requirement.md` is the source contract for Gate 2 and must be treated as immutable input during PRD drafting.
+2. Requirement statement, in-scope/out-of-scope boundaries, and AC IDs (AC-1..AC-N) must carry forward unchanged unless Product Owner explicitly approves a change.
+3. PRD must include a Requirement-to-PRD Alignment Check section showing one-to-one mapping from requirement IDs to PRD sections and user stories.
+4. If PRD introduces new scope, changed wording, or rewritten AC intent without explicit owner decision, Gate 2 must loop back.
+5. Templates should only be filled after requirement refinement is complete: no unresolved placeholders in Gate 1 output except explicitly accepted open questions.
 
 ## Environment Routing
 

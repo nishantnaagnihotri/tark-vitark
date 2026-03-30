@@ -107,6 +107,7 @@ Context transfer rule:
 1. Require `Requirement Context Package` from challenger when Gate 1 passes.
 2. Persist it as the slice context source of truth for Gate 2.
 3. Use this package as the primary input to PRD drafting handoff.
+4. Freeze the Gate 1 contract for Gate 2: requirement statement, scope boundaries, and AC intent cannot change without explicit Product Owner decision recorded in context.
 
 ## PRD Gate Handoff Trigger
 
@@ -123,7 +124,8 @@ Proceeding rule:
 
 1. Continue only when PRD result is `PRD Readiness: Ready` and `Gate Decision: can proceed to design`.
 2. If open questions remain, continue only when they are explicitly marked as accepted by Product Owner.
-3. Otherwise, return quality gaps to Product Owner and loop PRD clarification.
+3. Continue only when PRD output includes an explicit Requirement-to-PRD Alignment Check with one-to-one mapping from Gate 1 inputs.
+4. Otherwise, return quality gaps to Product Owner and loop PRD clarification.
 
 Cloud-return rule:
 
@@ -131,6 +133,7 @@ Cloud-return rule:
 2. Validate the returned package in Local against the PRD gate checklist before advancing gate status.
 3. Verify the `PR Description` block is present in the returned package. If missing, request it before merge is authorized.
 4. Verify every open question in the package has a populated `Resolution` field. If any are blank, loop back to PRD Agent.
+5. Verify PRD did not alter Gate 1 requirement statement, scope boundaries, or AC intent unless owner-approved and logged.
 
 ## Design Gate Substep A: UX Handoff Trigger
 
@@ -346,12 +349,13 @@ Additional Product Owner updates (optional):
 Return only:
 1) PRD Readiness: Ready | Needs Clarification | Blocked
 2) PRD v0
-3) Traceability Map
-4) Quality Gaps
-5) Open Questions (full table: ID, Question, Source, Status, Resolution — no blank Resolution fields)
-6) Gate Decision: can proceed to design | must loop back
-7) PRD Draft Package (for UX/design handoff)
-8) PR Description (ready-to-paste GitHub PR body including: one-line PRD summary, slice folder path, gate status, open questions table with Status and Resolution columns, which unresolved questions block which future gate, artifact path)
+3) Requirement-to-PRD Alignment Check (explicit one-to-one mapping from Gate 1 inputs to PRD sections; highlight any owner-approved deltas)
+4) Traceability Map
+5) Quality Gaps
+6) Open Questions (full table: ID, Question, Source, Status, Resolution — no blank Resolution fields)
+7) Gate Decision: can proceed to design | must loop back
+8) PRD Draft Package (for UX/design handoff)
+9) PR Description (ready-to-paste GitHub PR body including: one-line PRD summary, slice folder path, gate status, open questions table with Status and Resolution columns, which unresolved questions block which future gate, artifact path)
 ```
 
 Use this message when invoking `ux-agent` at Gate 3:
@@ -540,12 +544,13 @@ Additional Product Owner updates (optional):
 Return only:
 1) PRD Readiness: Ready | Needs Clarification | Blocked
 2) PRD v0
-3) Traceability Map
-4) Quality Gaps
-5) Open Questions (full table: ID, Question, Source, Status, Resolution — no blank Resolution fields)
-6) Gate Decision: can proceed to design | must loop back
-7) PRD Draft Package (for UX/design handoff)
-8) PR Description (ready-to-paste GitHub PR body including: one-line PRD summary, slice folder path, gate status, open questions table with Status and Resolution columns, which unresolved questions block which future gate, artifact path)
+3) Requirement-to-PRD Alignment Check (explicit one-to-one mapping from Gate 1 inputs to PRD sections; highlight any owner-approved deltas)
+4) Traceability Map
+5) Quality Gaps
+6) Open Questions (full table: ID, Question, Source, Status, Resolution — no blank Resolution fields)
+7) Gate Decision: can proceed to design | must loop back
+8) PRD Draft Package (for UX/design handoff)
+9) PR Description (ready-to-paste GitHub PR body including: one-line PRD summary, slice folder path, gate status, open questions table with Status and Resolution columns, which unresolved questions block which future gate, artifact path)
 ```
 
 ## Example Handoff Message (Copy-Paste)

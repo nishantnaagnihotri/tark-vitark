@@ -317,6 +317,13 @@ Template:
 - Next micro-goal: Test protocol on next new slice; verify BDD scenario definitions and test-first execution enforced by Build gate checklist.
 - Blockers/owner decisions: Owner requested three specific hardening requirements: (1) Test-First Development (tests before code), (2) BDD with GWT at acceptance criteria level (not module level), (3) Domain-Oriented Development (code uses domain terminology, not infrastructure terms). All three implemented in protocol and templates. Decision rationale: TFD ensures tests drive design and prevent test-last brittleness. GWT at AC level ensures functional behavior (not module internals) drives development. Domain language ensures code reads as specification for the problem domain, making it maintainable and clear to non-technical stakeholders.
 
+### 2026-03-30 (Gate1-Gate2 Alignment)
+- Gate status: Requirement challenge and PRD drafting alignment hardened.
+- Artifact changes: Added Requirement-To-PRD Alignment Protocol to .github/AGENTS.md. Updated orchestrator Gate 1->2 rules to freeze requirement statement/scope/AC intent unless owner-approved. Added mandatory Requirement-to-PRD Alignment Check output in PRD handoff contracts (local and cloud prompts). Updated slice templates: 01-requirement.md now includes requirement IDs (R-1..R-N) and completeness lock; 02-prd.md now includes mandatory alignment table mapping requirements to PRD sections/user stories/AC IDs.
+- Open questions status: No open questions.
+- Next micro-goal: Enforce new alignment lock on the next slice by rejecting PRD drafts that reinterpret Gate 1 content without explicit owner approval.
+- Blockers/owner decisions: Owner requested that challenger and PRD agents move in the same direction and that templates only be filled after proper requirement gathering/refinement. Selected approach: explicit contract freeze + alignment table + loop-back on unauthorized deltas.
+
 
 ### 2026-03-30
 - Gate status: Slice/story maintenance protocol standardized across repo and GitHub.

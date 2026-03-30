@@ -21,6 +21,17 @@
 - [Confirm all acceptance criteria are testable]
 - [Confirm no ambiguity remains]
 - [Confirm all open questions are resolved or explicitly accepted]
+- [Confirm Gate 1 contract was preserved without silent reinterpretation]
+
+### 1.1 Requirement-to-PRD Alignment Check (Mandatory)
+
+| Requirement ID (from 01) | Requirement Statement | PRD Section | User Story | AC IDs | Delta Status |
+|---|---|---|---|---|---|
+| R-1 | [Copied from 01-requirement.md] | [2.x] | [US-x] | [AC-x] | Unchanged / Owner-approved change |
+| R-2 | [Copied from 01-requirement.md] | [2.x] | [US-x] | [AC-x] | Unchanged / Owner-approved change |
+| R-3 | [Copied from 01-requirement.md] | [2.x] | [US-x] | [AC-x] | Unchanged / Owner-approved change |
+
+**Alignment rule:** If any requirement wording, scope boundary, or AC intent changed, record explicit Product Owner approval and rationale.
 
 ---
 
