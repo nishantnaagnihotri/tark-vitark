@@ -1,36 +1,58 @@
 ---
 name: User Story
-about: Atomic implementation task for a delivery slice
+about: One clear piece of work within a feature slice
 labels: ["user-story"]
 ---
 
-> **Primary source of truth:** [`docs/slices/<slice-name>/06-tasks.md`](https://github.com/nishantnaagnihotri/tark-vitark/blob/master/docs/slices/<slice-name>/06-tasks.md) — Task T#
->
-> **Slice tracker:** #<!-- slice tracker issue number -->
+Primary source of truth: [docs/slices/<slice-name>/06-tasks.md](https://github.com/nishantnaagnihotri/tark-vitark/blob/master/docs/slices/<slice-name>/06-tasks.md) - Task T#
+
+Slice tracker: #<slice tracker issue number>
 
 ---
 
-## Objective
+## Story Objective
 
-<!-- One clear sentence: what does completing this task deliver? -->
+Write one sentence in plain language.
+
+Example: "Show the Coming Soon message on mobile so visitors understand the product is not live yet."
+
+---
+
+## Why This Matters
+
+Describe user or business value in 1-2 lines.
+
+---
+
+## Done Means
+
+Use simple yes/no outcomes that non-technical reviewers can read.
 
 ---
 
 ## Acceptance Criteria
 
-- [ ] AC-<!-- N -->: <!-- exact criterion from PRD, testable and unambiguous -->
-- [ ] AC-<!-- N -->: <!-- exact criterion from PRD, testable and unambiguous -->
-- [ ] AC-<!-- N -->: <!-- exact criterion from PRD, testable and unambiguous -->
+- [ ] AC-<N>: <exact requirement from PRD, written clearly>
+- [ ] AC-<N>: <exact requirement from PRD, written clearly>
+- [ ] AC-<N>: <exact requirement from PRD, written clearly>
 
 ---
 
-## Architecture Reference
+## Build Guidance (For Developer)
 
-[`docs/slices/<slice-name>/05-architecture.md`](https://github.com/nishantnaagnihotri/tark-vitark/blob/master/docs/slices/<slice-name>/05-architecture.md) — Section: <!-- e.g. "Task Decomposition, T1" -->
+Architecture reference: [docs/slices/<slice-name>/05-architecture.md](https://github.com/nishantnaagnihotri/tark-vitark/blob/master/docs/slices/<slice-name>/05-architecture.md) - Section: <for example: Task Decomposition, T1>
 
 ---
 
 ## Dependencies
 
-- **Requires:** #<!-- issue number --> (T#) — or _none_
-- **Blocks:** #<!-- issue number --> (T#) — or _none_
+- Requires: #<issue number> (T#) or none
+- Blocks: #<issue number> (T#) or none
+
+---
+
+## Notes For Non-Technical Reviewers
+
+Add anything reviewers should look for in plain words.
+
+Example: "Please confirm the main message is clearly visible without scrolling on mobile."
