@@ -31,6 +31,14 @@ This repository follows a human-led, agent-executed workflow.
 3. Local is mandatory for final integration checks and merge readiness.
 4. Copilot CLI is used for command-heavy scaffolding and repetitive transformations.
 
+## Terminal Mutation Override Policy
+
+1. Default orchestrator terminal behavior remains diagnostics-first.
+2. If Product Owner explicitly requests mutation (for example `git add`, `git commit`, `git push`, branch creation, or PR creation), orchestrator may execute those commands.
+3. Allowed mutations must stay narrowly scoped to the approved task and referenced files.
+4. Destructive commands (`git reset --hard`, force-push, history rewrite, mass deletion) remain disallowed unless Product Owner gives explicit command-level approval for that exact operation.
+5. Orchestrator must summarize intended commands before execution and record the decision in orchestration context updates.
+
 ## Cloud Handoff Policy
 
 1. Before any cloud-preferred gate handoff, Architect + Orchestrator must ask Product Owner to confirm `local` or `cloud` execution mode.
