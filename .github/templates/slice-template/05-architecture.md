@@ -180,15 +180,53 @@
 
 ---
 
-## 10. Quality Gaps
+## 10. BDD Scenarios (Given-When-Then)
+
+**Implementation Contract:** Each scenario below maps to one acceptance criterion (AC). Developer converts each scenario into an executable test (test-first).
+
+### Scenario 1: AC-1
+- **Given:** [Initial state or precondition in domain language]
+- **When:** [User action or system event in domain language]
+- **Then:** [Expected outcome or assertion in domain language]
+
+### Scenario 2: AC-2
+- **Given:** [Initial state or precondition in domain language]
+- **When:** [User action or system event in domain language]
+- **Then:** [Expected outcome or assertion in domain language]
+
+### Scenario 3: AC-3
+- **Given:** [Initial state or precondition in domain language]
+- **When:** [User action or system event in domain language]
+- **Then:** [Expected outcome or assertion in domain language]
+
+### Scenario 4: AC-4
+- **Given:** [Initial state or precondition in domain language]
+- **When:** [User action or system event in domain language]
+- **Then:** [Expected outcome or assertion in domain language]
+
+### Scenario 5: AC-5
+- **Given:** [Initial state or precondition in domain language]
+- **When:** [User action or system event in domain language]
+- **Then:** [Expected outcome or assertion in domain language]
+
+**Test Implementation Guidance:**
+- Each scenario becomes one test (e.g., `test: SplashPage displays energetic messaging when loaded`).
+- Test names read as domain behavior, not infrastructure (not `testDOMRender()`).
+- Developer implements tests first; code passes tests second.
+- All tests must pass before PR submission.
+
+---
+
+## 11. Quality Gaps
 
 - [Any ambiguities in module responsibilities?]
 - [Any untested integration points?]
 - [Any unmitigated risks?]
+- [Any BDD scenarios needing clarification?]
 
 ---
 
-## 11. Open Questions
+## 12. Open Questions
 
 | ID | Question | Source | Status | Resolution |
 |---|---|---|---|---|
@@ -196,7 +234,7 @@
 
 ---
 
-## 12. Gate Decision
+## 13. Gate Decision
 
 **Gate Decision: can proceed to build | must loop back**
 
@@ -205,4 +243,5 @@
 - All module boundaries are clear.
 - All risks have mitigation plans.
 - Task decomposition is atomic and dependency-ordered.
+- All BDD scenarios are defined in domain language.
 - Gate 5 (Build) is authorized once tasks are created as GitHub Issues.

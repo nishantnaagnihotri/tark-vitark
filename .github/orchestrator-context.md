@@ -310,12 +310,13 @@ Template:
 - Next micro-goal: Implement Gate 6 (Merge gate) contract.
 - Blockers/owner decisions: None for current slice.
 
-### 2026-03-30 (Update)
-- Gate status: Slice/story label model revised based on owner reconsideration.
-- Artifact changes: User story labels updated from `user-story` only to `user-story` AND `slice:<slice-name>`. Updated protocol in .github/AGENTS.md and architect-orchestrator.agent.md to reflect dual-label model. Added label lock verification (item 9) to Architecture Gate Checklist. Applied `slice:coming-soon-splash-page` label retroactively to all story issues (#5-#9).
+### 2026-03-30 (Final)
+- Gate status: Implementation protocol hardened with Test-First Development, BDD with GWT scenarios, and Domain-Oriented Development.
+- Artifact changes: Updated .github/AGENTS.md with new "Implementation Protocol (Test-First BDD + Domain-Oriented Development)" section (7 rules). Updated architect-orchestrator.agent.md Architecture Gate Checklist (added BDD lock, item 10) and Build Gate Checklist (expanded TFD/BDD/domain language locks, items 3-5). Updated slice-template 05-architecture.md to include BDD section (10) with five GWT sentence templates (one per AC), test implementation guidance, and domain language requirements. Updated Gate Decision rationale to reference BDD scenarios.
 - Open questions status: No open questions.
-- Next micro-goal: Enforce updated protocol on next new slice from Gate 4 issue creation onward.
-- Blockers/owner decisions: Owner reconsidered and requested `slice:<slice-name>` labeling to improve queryability and slice discovery. Decision rationale: dual labels (user-story + slice:<slice-name>) enable both "find all story issues" and "find all issues for this slice" queries. Tradeoff: slightly higher metadata overhead, but justified by improved discoverability at scale.
+- Next micro-goal: Test protocol on next new slice; verify BDD scenario definitions and test-first execution enforced by Build gate checklist.
+- Blockers/owner decisions: Owner requested three specific hardening requirements: (1) Test-First Development (tests before code), (2) BDD with GWT at acceptance criteria level (not module level), (3) Domain-Oriented Development (code uses domain terminology, not infrastructure terms). All three implemented in protocol and templates. Decision rationale: TFD ensures tests drive design and prevent test-last brittleness. GWT at AC level ensures functional behavior (not module internals) drives development. Domain language ensures code reads as specification for the problem domain, making it maintainable and clear to non-technical stakeholders.
+
 
 ### 2026-03-30
 - Gate status: Slice/story maintenance protocol standardized across repo and GitHub.
