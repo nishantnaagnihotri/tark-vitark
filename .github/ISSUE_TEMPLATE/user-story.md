@@ -8,6 +8,8 @@ Primary source of truth: [docs/slices/<slice-name>/06-tasks.md](https://github.c
 
 Slice tracker: #<slice tracker issue number>
 
+After creating this issue, apply the `slice:<slice-name>` label (in addition to the `user-story` label).
+
 ---
 
 ## Story Objective

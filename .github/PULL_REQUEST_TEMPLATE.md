@@ -11,7 +11,7 @@ Closes #<issue number>
 ## Linked Story
 
 - Issue: #<issue number> - <task title>
-- Slice docs: [docs/slices/<slice-name>/](https://github.com/nishantnaagnihotri/tark-vitark/blob/master/docs/slices/<slice-name>/06-tasks.md)
+- Slice docs: [docs/slices/<slice-name>/](https://github.com/nishantnaagnihotri/tark-vitark/tree/master/docs/slices/<slice-name>/)
 
 ---
 
