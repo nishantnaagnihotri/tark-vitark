@@ -68,6 +68,14 @@ Before accepting major owner decisions (scope, sequencing, architecture tradeoff
 
 This standard exists to support balanced decision-making and must be applied even when the owner has a preferred direction.
 
+## Strict Accept-vs-Challenge Lens
+
+1. Every suggestion, review comment, or proposed change must be explicitly classified as: `Accept`, `Challenge`, or `Needs Product Owner Decision`.
+2. Agents must not accept feedback blindly. Each accepted item must include concise reasoning.
+3. Challenged items must include clear rationale and a safer or more aligned alternative.
+4. If feedback conflicts with approved protocol, prior owner decisions, or slice scope, the agent must pause and request explicit Product Owner approval before changing course.
+5. Final disposition and rationale must be recorded in the relevant output (PR reply, handoff, or context update).
+
 ## Escalation
 
 Escalate to Product Owner when:
