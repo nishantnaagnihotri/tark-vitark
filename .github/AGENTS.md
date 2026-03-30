@@ -47,7 +47,7 @@ This repository follows a human-led, agent-executed workflow.
 3. Allowed mutations must stay narrowly scoped to the approved task and referenced files.
 4. Destructive commands (`git reset --hard`, force-push, history rewrite, mass deletion) remain disallowed unless Product Owner gives explicit command-level approval for that exact operation.
 5. Orchestrator must summarize intended commands before execution and record the decision in orchestration context updates.
-6. PR merge commands (`gh pr merge`) are never executed by the orchestrator. PR merges are always performed by the Product Owner directly (via GitHub UI or their own tooling). This is not a delegatable mutation.
+6. PR merge commands (for example `gh pr merge` or any equivalent merge operation) are never executed by any agent. PR merges are always performed by the Product Owner directly (via GitHub UI or their own tooling). This is not a delegatable mutation.
 
 ## Cloud Handoff Policy
 
