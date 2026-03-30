@@ -238,7 +238,8 @@ Architecture Gate Checklist (Orchestrator-owned):
 7. Task lock: verify decomposition is atomic, dependency-ordered, and ready for GitHub Issue creation.
 8. Issue lock: verify `06-tasks.md` includes created Issue numbers and architecture section references, and that slice tracker <-> story issue bidirectional links are present.
 9. Label lock: verify slice tracker issue has label `slice` and all story issues have labels `user-story` and `slice:<slice-name>`.
-10. Approval lock: verify unresolved open questions are either resolved or explicitly accepted by Product Owner.
+10. BDD lock: verify `05-architecture.md` includes a BDD section with Given-When-Then scenarios (one per acceptance criterion, written in domain language).
+11. Approval lock: verify unresolved open questions are either resolved or explicitly accepted by Product Owner.
 
 ## Build Gate Handoff Trigger
 
@@ -278,13 +279,14 @@ Build Gate Checklist (Orchestrator-owned):
 
 1. Scope lock: verify implementation stayed within assigned Issue scope and architecture boundaries.
 2. Issue metadata lock: verify issue includes acceptance criteria, slice path, architecture reference, and `Slice tracker:` backlink before invoking Dev.
-3. BDD lock: verify returned evidence includes behavior scenarios and scenario-to-test mapping.
-4. Test-first lock: verify tests were created or updated before/with implementation intent and are tied to acceptance criteria.
-5. Verification lock: verify required test commands passed and evidence is explicit.
-6. PR lock: verify PR exists and includes explicit issue-closing reference.
-7. Provenance lock: verify PR body includes `Execution-Agent: dev` marker.
-8. Risk lock: verify residual risks and rollback note are documented.
-9. Approval lock: verify unresolved open questions are resolved or explicitly accepted by Product Owner.
+3. BDD lock: verify each GWT scenario from `05-architecture.md` has a corresponding test, and all tests are written in domain language (not infrastructure terms).
+4. Test-first lock: verify tests were written before or alongside implementation (not after). Tests must fail before implementation, pass after.
+5. Domain language lock: verify code uses domain terminology and concepts (e.g., `displayBrandMessage()` not `renderDOMElement()`). Variable names, function names, and class names reflect the problem domain.
+6. Verification lock: verify required test commands passed and evidence is explicit. All tests passing is mandatory.
+7. PR lock: verify PR exists and includes explicit issue-closing reference and scenario-to-test mapping evidence.
+8. Provenance lock: verify PR body includes `Execution-Agent: dev` marker.
+9. Risk lock: verify residual risks and rollback note are documented.
+10. Approval lock: verify unresolved open questions are resolved or explicitly accepted by Product Owner.
 
 ## Merge Gate Trigger
 

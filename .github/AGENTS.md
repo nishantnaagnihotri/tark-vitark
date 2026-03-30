@@ -115,14 +115,27 @@ Escalate to Product Owner when:
 6. Build/merge progression is blocked if any traceability link above is missing.
 7. Closed slices keep their slice tracker issue (typically closed) as audit history; links must remain intact.
 
-## Implementation Protocol (BDD)
+## Implementation Protocol (Test-First BDD + Domain-Oriented Development)
 
-1. Gate 5 implementation follows Behavior Driven Development (BDD) as the default engineering discipline.
-2. For each issue, define behavior scenarios from acceptance criteria before coding.
-3. Write or update tests first to represent expected behavior; tests should fail before implementation where feasible.
-4. Implement the minimum code needed to satisfy the scenario tests, then refactor while keeping tests green.
-5. PRs must include evidence of scenario-to-test mapping and passing test results.
-6. Orchestrator validates BDD evidence at Gate 5 before allowing progression to Merge gate.
+1. **Test-First Development (TFD):** Tests are written before implementation code. Tests fail first, implementation makes them pass.
+2. **Behavior Driven Development (BDD):** Each acceptance criterion (AC-N) has exactly one Given-When-Then (GWT) scenario.
+   - **Given:** The precondition (domain state, data, user context)
+   - **When:** The action or event (what the user does, what the system triggers)
+   - **Then:** The expected outcome (assertion that verifies the behavior)
+3. **GWT Scenarios in Architecture:** At Gate 4, `05-architecture.md` includes a BDD section with all GWT scenarios (one per AC). These scenarios become the contract between architecture and developer.
+4. **Domain-Oriented Code:** Implementation uses domain language and concepts, not infrastructure terms.
+   - Names reflect the problem domain, not the tech stack.
+   - Variables, functions, classes use domain vocabulary (e.g., `displayBrandMessage()` not `renderDOMElement()`).
+   - Tests read as domain behavior specifications, not technical implementation details.
+5. **Test Implementation:** Developer converts each GWT scenario into an executable test (unit, integration, or e2e).
+   - Test structure mirrors GWT: given-when-then or arrange-act-assert.
+   - Test names read as domain behavior (e.g., `test: SplashPage displays brand name when loaded`).
+6. **Code Quality Gate:** PR evidence must include:
+   - All GWT scenarios from `05-architecture.md` mapped to tests.
+   - All tests passing (automated test results required).
+   - Code review sign-off confirming domain language clarity.
+   - Rollback note (how to undo if issues arise).
+7. **Orchestrator Validation:** Build gate checklist includes BDD evidence verification (test-to-scenario mapping, passing results, domain clarity).
 
 ## Figma Fidelity Policy
 
