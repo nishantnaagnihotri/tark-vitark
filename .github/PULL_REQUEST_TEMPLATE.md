@@ -4,13 +4,13 @@ One sentence in plain language.
 
 Example: "This change makes the Coming Soon page easier to read on mobile devices."
 
-Closes #123
+Closes #{issue-number}
 
 ---
 
 ## Linked Story
 
-- Issue: #123 - {task title}
+- Issue: #{issue-number} - {task title}
 - Slice docs: [docs/slices/{slice-name}/](https://github.com/nishantnaagnihotri/tark-vitark/tree/master/docs/slices/{slice-name}/)
 
 ---

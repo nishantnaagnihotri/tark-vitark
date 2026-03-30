@@ -46,11 +46,11 @@ These documents hold full details. This issue is a readable summary.
 
 Use this section to track the smaller work items.
 
-- [ ] #123 - T1: {story title}
-- [ ] #124 - T2: {story title}
-- [ ] #125 - T3: {story title}
-- [ ] #126 - T4: {story title}
-- [ ] #127 - T5: {story title}
+- [ ] #{story-issue-1} - T1: {story title}
+- [ ] #{story-issue-2} - T2: {story title}
+- [ ] #{story-issue-3} - T3: {story title}
+- [ ] #{story-issue-4} - T4: {story title}
+- [ ] #{story-issue-5} - T5: {story title}
 
 ---
 
