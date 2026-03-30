@@ -424,3 +424,17 @@ Template:
   - T5 compliance: All 9 acceptance criteria verified with explicit evidence; offline test passed (zero network dependency); code review passed (zero JS, zero external imports); Figma parity 100%; residual risk very low; rollback plan documented (< 5 min deployment).
 - Next micro-goal: **SLICE COMPLETE** — No further work required for `coming-soon-splash-page`. Slice is production-ready and deployed to master. Next orchestrator action: assess readiness for next slice or new feature request (defer to PO).
 - Blockers/owner decisions: None. All gate criteria, acceptance criteria, and quality checks passed. Slice is merge-complete and deployment-ready.
+
+### 2026-03-30
+- Gate status: No active slice. Governance protocol hardened.
+- Artifact changes: PR #29 merged — added rule 6 to AGENTS.md and constraint 8 to architect-orchestrator.agent.md prohibiting all agents from executing PR merge operations. PR merges are now unconditionally reserved for the Product Owner.
+- Open questions status: None.
+- Next micro-goal: Await next slice or issue assignment.
+- Blockers/owner decisions: None.
+
+### 2026-03-30 (Public Portfolio + Proprietary Licensing)
+- Gate status: No active slice. Repository governance/documentation update only.
+- Artifact changes: Added root LICENSE with all-rights-reserved proprietary terms. Added root README clarifying public showcase intent, non-open-source usage restrictions, contribution policy, and permission-request contact path.
+- Open questions status: None.
+- Next micro-goal: Use this baseline for all future public-facing repository onboarding and resume sharing.
+- Blockers/owner decisions: Owner selected public visibility with proprietary licensing model (showcase allowed; reuse requires explicit permission).
