@@ -1,22 +1,29 @@
-## Summary
+## What This Change Delivers
 
-<!-- One sentence: what does this PR deliver? -->
+One sentence in plain language.
 
-Closes #<!-- issue number -->
+Example: "This change makes the Coming Soon page easier to read on mobile devices."
+
+Closes #<issue number>
 
 ---
 
-## Story Reference
+## Linked Story
 
-> **Issue:** #<!-- issue number --> — <!-- task title -->
->
-> **Slice:** [`docs/slices/<slice-name>/`](https://github.com/nishantnaagnihotri/tark-vitark/blob/master/docs/slices/<slice-name>/06-tasks.md)
+- Issue: #<issue number> - <task title>
+- Slice docs: [docs/slices/<slice-name>/](https://github.com/nishantnaagnihotri/tark-vitark/blob/master/docs/slices/<slice-name>/06-tasks.md)
+
+---
+
+## Why This Was Needed
+
+Explain the user or business problem in plain words.
 
 ---
 
 ## What Changed
 
-<!-- Concise description of the implementation. What was built and why this approach. -->
+Short bullet list of changes in plain language.
 
 ---
 
@@ -24,34 +31,42 @@ Closes #<!-- issue number -->
 
 | File | Change |
 |---|---|
-| `src/...` | <!-- Created / Modified / Deleted — why --> |
-| `tests/...` | <!-- New tests — what they verify --> |
+| src/... | <Created / Updated / Removed - short reason> |
+| tests/... | <What behavior these tests verify> |
 
 ---
 
-## Test Evidence
+## Automated Test Result Summary
 
-<!-- Paste test run output or link to CI run. All tests must pass before merge. -->
+- Status: Passed or Failed
+- Total tests run: <number>
+- Key behavior covered: <short sentence>
+
+---
+
+## Test Evidence (Raw Output or CI Link)
+
+All automated tests must pass before merge.
 
 ```
-<!-- test output here -->
+<paste test output or CI link here>
 ```
 
 ---
 
-## Rollback Note
+## Rollback Plan
 
-<!-- How is this change reversed if issues arise after merge? -->
+How can this be safely undone if needed?
 
 ---
 
 ## Checklist
 
-- [ ] Closes the linked issue with `Closes #XX` above
+- [ ] This PR closes the linked issue with Closes #XX
 - [ ] All automated tests pass
-- [ ] No changes outside the scope of the linked issue
-- [ ] Rollback note is documented above
+- [ ] Changes stay within the issue scope
+- [ ] Rollback plan is documented above
 
 ---
 
-`Execution-Agent: dev`
+Execution-Agent: dev

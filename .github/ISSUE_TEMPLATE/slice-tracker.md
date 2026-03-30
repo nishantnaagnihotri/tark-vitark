@@ -1,18 +1,37 @@
 ---
-name: Slice Tracker
-about: Groups all user stories and gate artifacts for a delivery slice
+name: Slice Progress Tracker
+about: A plain-language view of one feature from planning to release
 labels: ["slice"]
 ---
 
-> **Primary source of truth:** [`docs/slices/<slice-name>/`](https://github.com/nishantnaagnihotri/tark-vitark/tree/master/docs/slices/<slice-name>/)
+## What Is This Work About?
 
-## Slice: `<slice-name>`
+- Feature name: <slice-name>
+- Plain summary: <one sentence in non-technical language>
+- Why this matters: <business/user value>
+- Who is impacted: <customers, internal users, or team>
 
 ---
 
-## Gate Artifacts
+## Quick Status
 
-| Gate | Artifact | Link |
+- Current stage: <Gate 1 | Gate 2 | Gate 3 | Gate 4 | Gate 5 | Gate 6>
+- Next milestone: <what happens next>
+- Owner decision needed: <yes/no + short note>
+
+---
+
+## Main Documents (Source Of Truth)
+
+Primary source of truth: [docs/slices/<slice-name>/](https://github.com/nishantnaagnihotri/tark-vitark/tree/master/docs/slices/<slice-name>/)
+
+These documents hold full details. This issue is a readable summary.
+
+---
+
+## Project Documents
+
+| Stage | Document | Link |
 |---|---|---|
 | Gate 1 — Requirement | 01-requirement.md | [View](https://github.com/nishantnaagnihotri/tark-vitark/blob/master/docs/slices/<slice-name>/01-requirement.md) |
 | Gate 2 — PRD | 02-prd.md | [View](https://github.com/nishantnaagnihotri/tark-vitark/blob/master/docs/slices/<slice-name>/02-prd.md) |
@@ -23,23 +42,32 @@ labels: ["slice"]
 
 ---
 
-## User Stories
+## Stories In This Slice
 
-<!-- List each story issue as a task checkbox. Orchestrator fills this in at Gate 4 end. -->
+Use this section to track the smaller work items.
 
-- [ ] #<!-- issue number --> — T1: <!-- task title -->
-- [ ] #<!-- issue number --> — T2: <!-- task title -->
-- [ ] #<!-- issue number --> — T3: <!-- task title -->
-- [ ] #<!-- issue number --> — T4: <!-- task title -->
-- [ ] #<!-- issue number --> — T5: <!-- task title -->
+- [ ] #<issue number> - T1: <story title>
+- [ ] #<issue number> - T2: <story title>
+- [ ] #<issue number> - T3: <story title>
+- [ ] #<issue number> - T4: <story title>
+- [ ] #<issue number> - T5: <story title>
 
 ---
 
-## Gate Status
+## Stage Checklist
 
-- [ ] Gate 1 — Requirement challenge passed
+- [ ] Gate 1 — Requirement is clear
 - [ ] Gate 2 — PRD approved
-- [ ] Gate 3 — Design QA approved by Product Owner
-- [ ] Gate 4 — Architecture approved; issues created
+- [ ] Gate 3 — Design approved by Product Owner
+- [ ] Gate 4 — Architecture approved and story issues created
 - [ ] Gate 5 — All story PRs merged
-- [ ] Gate 6 — Merge review complete; slice closed
+- [ ] Gate 6 — Final merge review complete
+
+---
+
+## Open Questions (Plain Language)
+
+- Question: <short question>
+- Why it matters: <impact if unanswered>
+- Owner: <who decides>
+- Needed by: <date>
