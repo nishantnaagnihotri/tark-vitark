@@ -34,9 +34,9 @@ Use simple yes/no outcomes that non-technical reviewers can read.
 
 ## Acceptance Criteria
 
-- [ ] AC-{N}: {exact requirement from PRD, written clearly}
-- [ ] AC-{N}: {exact requirement from PRD, written clearly}
-- [ ] AC-{N}: {exact requirement from PRD, written clearly}
+- [ ] AC-1: {exact requirement from PRD, written clearly}
+- [ ] AC-2: {exact requirement from PRD, written clearly}
+- [ ] AC-3: {exact requirement from PRD, written clearly}
 
 ---
 
