@@ -47,6 +47,7 @@ This repository follows a human-led, agent-executed workflow.
 3. Allowed mutations must stay narrowly scoped to the approved task and referenced files.
 4. Destructive commands (`git reset --hard`, force-push, history rewrite, mass deletion) remain disallowed unless Product Owner gives explicit command-level approval for that exact operation.
 5. Orchestrator must summarize intended commands before execution and record the decision in orchestration context updates.
+6. PR merge commands (`gh pr merge`) require explicit command-level authorization. Product Owner must name the specific PR number and state merge intent (for example: "merge PR #28" or "please run the merge for #27"). Ambiguous acknowledgments such as "ok", "proceed", or "go ahead" do not count as merge authorization.
 
 ## Cloud Handoff Policy
 
