@@ -6,7 +6,7 @@ labels: ["user-story"]
 
 Primary source of truth: [docs/slices/{slice-name}/06-tasks.md](https://github.com/nishantnaagnihotri/tark-vitark/blob/master/docs/slices/{slice-name}/06-tasks.md) - Task T#
 
-Slice tracker: #123
+Slice tracker: #{slice-tracker-issue}
 
 After creating this issue, apply the `slice:{slice-name}` label (in addition to the `user-story` label).
 
@@ -48,8 +48,8 @@ Architecture reference: [docs/slices/{slice-name}/05-architecture.md](https://gi
 
 ## Dependencies
 
-- Requires: #123 (T#) or none
-- Blocks: #124 (T#) or none
+- Requires: #{issue-number} (T#) or none
+- Blocks: #{issue-number} (T#) or none
 
 ---
 
