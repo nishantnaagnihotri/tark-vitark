@@ -4,14 +4,14 @@ One sentence in plain language.
 
 Example: "This change makes the Coming Soon page easier to read on mobile devices."
 
-Closes #<issue number>
+Closes #123
 
 ---
 
 ## Linked Story
 
-- Issue: #<issue number> - <task title>
-- Slice docs: [docs/slices/<slice-name>/](https://github.com/nishantnaagnihotri/tark-vitark/tree/master/docs/slices/<slice-name>/)
+- Issue: #123 - {task title}
+- Slice docs: [docs/slices/{slice-name}/](https://github.com/nishantnaagnihotri/tark-vitark/tree/master/docs/slices/{slice-name}/)
 
 ---
 
@@ -31,16 +31,16 @@ Short bullet list of changes in plain language.
 
 | File | Change |
 |---|---|
-| src/... | <Created / Updated / Removed - short reason> |
-| tests/... | <What behavior these tests verify> |
+| src/... | {Created / Updated / Removed - short reason} |
+| tests/... | {What behavior these tests verify} |
 
 ---
 
 ## Automated Test Result Summary
 
 - Status: Passed or Failed
-- Total tests run: <number>
-- Key behavior covered: <short sentence>
+- Total tests run: {number}
+- Key behavior covered: {short sentence}
 
 ---
 
@@ -49,7 +49,7 @@ Short bullet list of changes in plain language.
 All automated tests must pass before merge.
 
 ```
-<paste test output or CI link here>
+{paste test output or CI link here}
 ```
 
 ---

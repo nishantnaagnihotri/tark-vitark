@@ -103,7 +103,7 @@ Escalate to Product Owner when:
    - A section listing all user stories (issue links).
 3. Every user story must be one GitHub issue and use labels `user-story` and `slice:<slice-name>`.
 4. Story issues must include:
-   - Story objective and scope boundaries.
+   - Story objective and acceptance criteria that define boundaries clearly.
    - Acceptance criteria (mapped to PRD AC IDs).
    - Slice artifact folder path.
    - Architecture section reference.
