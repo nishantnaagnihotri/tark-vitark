@@ -31,6 +31,14 @@ This repository follows a human-led, agent-executed workflow.
 3. Local is mandatory for final integration checks and merge readiness.
 4. Copilot CLI is used for command-heavy scaffolding and repetitive transformations.
 
+## Terminal Mutation Override Policy
+
+1. Default orchestrator terminal behavior remains diagnostics-first.
+2. If Product Owner explicitly requests mutation (for example `git add`, `git commit`, `git push`, branch creation, or PR creation), orchestrator may execute those commands.
+3. Allowed mutations must stay narrowly scoped to the approved task and referenced files.
+4. Destructive commands (`git reset --hard`, force-push, history rewrite, mass deletion) remain disallowed unless Product Owner gives explicit command-level approval for that exact operation.
+5. Orchestrator must summarize intended commands before execution and record the decision in orchestration context updates.
+
 ## Cloud Handoff Policy
 
 1. Before any cloud-preferred gate handoff, Architect + Orchestrator must ask Product Owner to confirm `local` or `cloud` execution mode.
@@ -83,6 +91,29 @@ Escalate to Product Owner when:
 5. Each Issue must include acceptance criteria, slice folder path, and relevant architecture section reference.
 6. Coder agents at Gate 5 read the Issue and linked slice folder files for full context.
 7. A PR that closes the Issue is the unit of completion for each coding task.
+
+## Slice and Story Maintenance Protocol
+
+1. Every slice must exist in both places:
+   - Repo artifacts under `docs/slices/<slice-name>/` with `01` through `06` files.
+   - GitHub slice tracker issue titled `[Slice] <slice-name>`.
+2. Slice tracker issue must use label `slice` and include:
+   - Slice folder path.
+   - Links to `01` through `06` artifacts.
+   - A section listing all user stories (issue links).
+3. Every user story must be one GitHub issue and use labels `user-story` and `slice:<slice-name>`.
+4. Story issues must include:
+   - Story objective and scope boundaries.
+   - Acceptance criteria (mapped to PRD AC IDs).
+   - Slice artifact folder path.
+   - Architecture section reference.
+   - `Slice tracker:` section with issue link.
+5. Bidirectional traceability is mandatory:
+   - Slice tracker lists all story issues.
+   - Each story links back to the slice tracker.
+   - `06-tasks.md` lists all story issues and references architecture sections.
+6. Build/merge progression is blocked if any traceability link above is missing.
+7. Closed slices keep their slice tracker issue (typically closed) as audit history; links must remain intact.
 
 ## Implementation Protocol (BDD)
 

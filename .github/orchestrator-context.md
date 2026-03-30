@@ -183,6 +183,8 @@ Enable the orchestrator to resume work as primary control agent for all activiti
 18. Gate 5 PR provenance is mandatory: PR body must include issue-closing keyword and `Execution-Agent: dev` marker for attribution and orchestration traceability.
 19. Gate 6 is orchestrator-owned and Local-only. It recommends merge or loop-back based on evidence, but Product Owner alone performs the actual merge.
 20. Design artifact is mandatory for every UX task: Gate 3A must include a valid Figma or Penpot artifact reference (file URL or key) before progression.
+21. Orchestrator terminal policy is diagnostics-first, but explicit Product Owner requests may authorize scoped git mutating commands (including add/commit/push/branch/PR operations); destructive commands still require command-level approval.
+22. Slice/story traceability policy: each slice has a GitHub slice tracker issue labeled `slice`; each story issue is labeled `user-story` only and must contain a `Slice tracker:` backlink; slice tracker must list all story issue links; `06-tasks.md` must mirror story issue links and architecture references.
 
 ## Resume Protocol For Orchestrator
 
@@ -298,8 +300,29 @@ Template:
 - Gate status: Gate 5 execution policy corrected.
 - Artifact changes: Updated Build gate default execution to GitHub Copilot cloud Dev implementation; local execution now explicit owner override only; aligned shared protocol, dev agent environment policy, and context known rules.
 - Open questions status: Owner clarified desired executor as GitHub cloud coding agent that creates PR.
+
+### 2026-03-30
+- Gate status: Policy update applied to orchestrator terminal mutation handling.
+- Artifact changes: Updated shared protocol and orchestrator agent constraints to allow explicit Product Owner authorized git mutations while retaining destructive command safeguards.
+- Open questions status: No open questions; owner choice recorded.
+- Next micro-goal: Use scoped mutation flow when Product Owner explicitly asks for commit/push actions.
+- Blockers/owner decisions: Decision challenged with options and tradeoffs. Option A keep diagnostics-only (safest, slower). Option B allow scoped mutations on explicit owner request (balanced). Option C allow unrestricted mutations (fastest, highest risk). Owner selected Option B.
 - Next micro-goal: Implement Gate 6 (Merge gate) contract.
 - Blockers/owner decisions: None for current slice.
+
+### 2026-03-30 (Update)
+- Gate status: Slice/story label model revised based on owner reconsideration.
+- Artifact changes: User story labels updated from `user-story` only to `user-story` AND `slice:<slice-name>`. Updated protocol in .github/AGENTS.md and architect-orchestrator.agent.md to reflect dual-label model. Added label lock verification (item 9) to Architecture Gate Checklist. Applied `slice:coming-soon-splash-page` label retroactively to all story issues (#5-#9).
+- Open questions status: No open questions.
+- Next micro-goal: Enforce updated protocol on next new slice from Gate 4 issue creation onward.
+- Blockers/owner decisions: Owner reconsidered and requested `slice:<slice-name>` labeling to improve queryability and slice discovery. Decision rationale: dual labels (user-story + slice:<slice-name>) enable both "find all story issues" and "find all issues for this slice" queries. Tradeoff: slightly higher metadata overhead, but justified by improved discoverability at scale.
+
+### 2026-03-30
+- Gate status: Slice/story maintenance protocol standardized across repo and GitHub.
+- Artifact changes: Added explicit rules for slice tracker issue, story issue label policy (`user-story` only), mandatory bidirectional slice <-> story links, and `06-tasks.md` traceability requirements in shared and orchestrator contracts.
+- Open questions status: No open questions.
+- Next micro-goal: Enforce protocol on next new slice from Gate 4 issue creation onward.
+- Blockers/owner decisions: Decision challenged with options and tradeoffs. Option A keep label-heavy model (fast filtering, more metadata overhead). Option B reference-first with minimal labels (`slice` for tracker, `user-story` for stories) and mandatory links (balanced). Option C links-only with no labels (lowest metadata, weakest queryability). Owner selected Option B.
 
 ### 2026-03-29
 - Gate status: Gate 5 quality protocol hardened.
