@@ -185,6 +185,7 @@ Enable the orchestrator to resume work as primary control agent for all activiti
 20. Design artifact is mandatory for every UX task: Gate 3A must include a valid Figma or Penpot artifact reference (file URL or key) before progression.
 21. Orchestrator terminal policy is diagnostics-first, but explicit Product Owner requests may authorize scoped git mutating commands (including add/commit/push/branch/PR operations); destructive commands still require command-level approval.
 22. Slice/story traceability policy: each slice has a GitHub slice tracker issue labeled `slice`; each story issue is labeled `user-story` only and must contain a `Slice tracker:` backlink; slice tracker must list all story issue links; `06-tasks.md` must mirror story issue links and architecture references.
+23. Review-response policy is repo-wide: when an agent fixes a review comment, it must also post a PR reply explaining what was accepted or challenged, what changed (or why no change), and the rationale/tradeoff.
 
 ## Resume Protocol For Orchestrator
 
@@ -260,5 +261,12 @@ Template:
 - Open questions status: None.
 - Next micro-goal: Use this baseline for all future public-facing repository onboarding and resume sharing.
 - Blockers/owner decisions: Owner selected public visibility with proprietary licensing model (showcase allowed; reuse requires explicit permission).
+
+### 2026-03-31
+- Gate status: No active slice. Review-governance policy hardened.
+- Artifact changes: Added repo-wide review-response rule in `.github/AGENTS.md` and `.github/agents/architect-orchestrator.agent.md`; added Known Rule #23 in this file.
+- Open questions status: None.
+- Next micro-goal: Enforce this policy on all future PR review fixes.
+- Blockers/owner decisions: Decision challenged with options and tradeoffs. Option A code-only fixes with no PR reply (fastest, low traceability). Option B mandatory comment replies only for challenged items (moderate consistency). Option C mandatory reply for every fixed review comment with accept/challenge rationale (highest clarity/auditability). Owner selected Option C.
 
 
