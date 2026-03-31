@@ -83,29 +83,17 @@ Archived from `.github/orchestrator-context.md` on 2026-03-31 (Gate 6 ✅ Comple
 - Open questions status: No open questions; owner choice recorded.
 - Next micro-goal: Use scoped mutation flow when Product Owner explicitly asks for commit/push actions.
 - Blockers/owner decisions: Decision challenged with options and tradeoffs. Option A keep diagnostics-only (safest, slower). Option B allow scoped mutations on explicit owner request (balanced). Option C allow unrestricted mutations (fastest, highest risk). Owner selected Option B.
-- Next micro-goal: Implement Gate 6 (Merge gate) contract.
-- Blockers/owner decisions: None for current slice.
 
-### 2026-03-30 (Final)
-- Gate status: Implementation protocol hardened with Test-First Development, BDD with GWT scenarios, and Domain-Oriented Development.
-- Artifact changes: Updated .github/AGENTS.md with new "Implementation Protocol (Test-First BDD + Domain-Oriented Development)" section (7 rules). Updated architect-orchestrator.agent.md Architecture Gate Checklist (added BDD lock, item 10) and Build Gate Checklist (expanded TFD/BDD/domain language locks, items 3-5). Updated slice-template 05-architecture.md to include BDD section (10) with five GWT sentence templates (one per AC), test implementation guidance, and domain language requirements. Updated Gate Decision rationale to reference BDD scenarios.
-- Open questions status: No open questions.
-- Next micro-goal: Test protocol on next new slice; verify BDD scenario definitions and test-first execution enforced by Build gate checklist.
-- Blockers/owner decisions: Owner requested three specific hardening requirements: (1) Test-First Development (tests before code), (2) BDD with GWT at acceptance criteria level (not module level), (3) Domain-Oriented Development (code uses domain terminology, not infrastructure terms). All three implemented in protocol and templates. Decision rationale: TFD ensures tests drive design and prevent test-last brittleness. GWT at AC level ensures functional behavior (not module internals) drives development. Domain language ensures code reads as specification for the problem domain, making it maintainable and clear to non-technical stakeholders.
+---
 
-### 2026-03-30 (Gate1-Gate2 Alignment)
-- Gate status: Requirement challenge and PRD drafting alignment hardened.
-- Artifact changes: Added Requirement-To-PRD Alignment Protocol to .github/AGENTS.md. Updated orchestrator Gate 1->2 rules to freeze requirement statement/scope/AC intent unless owner-approved. Added mandatory Requirement-to-PRD Alignment Check output in PRD handoff contracts (local and cloud prompts). Updated slice templates: 01-requirement.md now includes requirement IDs (R-1..R-N) and completeness lock; 02-prd.md now includes mandatory alignment table mapping requirements to PRD sections/user stories/AC IDs.
-- Open questions status: No open questions.
-- Next micro-goal: Enforce new alignment lock on the next slice by rejecting PRD drafts that reinterpret Gate 1 content without explicit owner approval.
-- Blockers/owner decisions: Owner requested that challenger and PRD agents move in the same direction and that templates only be filled after proper requirement gathering/refinement. Selected approach: explicit contract freeze + alignment table + loop-back on unauthorized deltas.
+## Archived Repo-Wide Governance Entries (Moved to Global Context)
 
-### 2026-03-30
-- Gate status: Slice/story maintenance protocol standardized across repo and GitHub.
-- Artifact changes: Added explicit rules for slice tracker issue, story issue label policy (`user-story` only), mandatory bidirectional slice <-> story links, and `06-tasks.md` traceability requirements in shared and orchestrator contracts.
-- Open questions status: No open questions.
-- Next micro-goal: Enforce protocol on next new slice from Gate 4 issue creation onward.
-- Blockers/owner decisions: Decision challenged with options and tradeoffs. Option A keep label-heavy model (fast filtering, more metadata overhead). Option B reference-first with minimal labels (`slice` for tracker, `user-story` for stories) and mandatory links (balanced). Option C links-only with no labels (lowest metadata, weakest queryability). Owner selected Option B.
+The following entries were moved to `.github/orchestrator-context.md` under "Context Update Log" on 2026-03-31 because they record repo-wide principles, not slice-specific history:
+- 2026-03-30 (Final) — Implementation protocol hardened (Test-First Development, BDD with GWT, Domain-Oriented Development)
+- 2026-03-30 (Gate1-Gate2 Alignment) — Requirement-to-PRD alignment protocol
+- 2026-03-30 (Slice/Story Maintenance) — Slice/story maintenance protocol
+
+For full entries and cross-references to permanent protocol docs, see `.github/orchestrator-context.md` "Context Update Log" section.
 
 ### 2026-03-29
 - Gate status: Gate 5 quality protocol hardened.
