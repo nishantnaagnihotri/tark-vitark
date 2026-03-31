@@ -170,9 +170,3 @@ Archived from `.github/orchestrator-context.md` on 2026-03-31. Gate 6 ✅ was co
 - Next micro-goal: **SLICE COMPLETE** — No further work required for `coming-soon-splash-page`. Slice is production-ready and deployed to master.
 - Blockers/owner decisions: None. All gate criteria, acceptance criteria, and quality checks passed.
 
-### 2026-03-30
-- Gate status: Policy update applied to orchestrator terminal mutation handling.
-- Artifact changes: Updated shared protocol and orchestrator agent constraints to allow explicit Product Owner authorized git mutations while retaining destructive command safeguards.
-- Open questions status: No open questions; owner choice recorded.
-- Next micro-goal: Use scoped mutation flow when Product Owner explicitly asks for commit/push actions.
-- Blockers/owner decisions: Decision challenged with options and tradeoffs. Option A keep diagnostics-only (safest, slower). Option B allow scoped mutations on explicit owner request (balanced). Option C allow unrestricted mutations (fastest, highest risk). Owner selected Option B.
