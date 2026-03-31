@@ -284,7 +284,7 @@ Template:
 
 ### 2026-03-30 (Slice/Story Maintenance)
 - Gate status: Slice/story maintenance protocol standardized across repo and GitHub.
-- Artifact changes: Added explicit rules for slice tracker issue, story issue label policy (`user-story` only), mandatory bidirectional slice <-> story links, and `06-tasks.md` traceability requirements in shared and orchestrator contracts.
+- Artifact changes: Added explicit rules for slice tracker issue, story issue label policy (`user-story` and `slice:<slice-name>`), mandatory bidirectional slice <-> story links, and `06-tasks.md` traceability requirements in shared and orchestrator contracts.
 - Open questions status: No open questions.
 - Blockers/owner decisions: Decision challenged with options and tradeoffs. Option A keep label-heavy model (fast filtering, more metadata overhead). Option B reference-first with minimal labels (`slice` for tracker, `user-story` for stories) and mandatory links (balanced). Option C links-only with no labels (lowest metadata, weakest queryability). Owner selected Option B. Principle persisted in: .github/AGENTS.md (Known Rule #22, Slice and Issue Management section), architect-orchestrator.agent.md (Slice and Issue Management section). See cross-references for full content.
 
