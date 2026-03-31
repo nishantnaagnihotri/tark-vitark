@@ -1,6 +1,6 @@
 # Context Update Log — coming-soon-splash-page
 
-Archived from `.github/orchestrator-context.md` on 2026-03-31 (Gate 6 ✅ Complete). Repo-wide governance updates have been removed from this archive to keep it slice-scoped; see `.github/orchestrator-context.md` for global context.
+Archived from `.github/orchestrator-context.md` on 2026-03-31. Gate 6 ✅ was completed on 2026-03-29; Repo-wide governance updates have been removed from this archive to keep it slice-scoped; see `.github/orchestrator-context.md` for global context.
 
 ---
 
@@ -145,7 +145,7 @@ Archived from `.github/orchestrator-context.md` on 2026-03-31 (Gate 6 ✅ Comple
 - Artifact changes: Created `04-design-qa.md` (real Figma verification, PO approval recorded), `05-architecture.md` (architecture plan), `06-tasks.md` (T1→#5 … T5→#9), `.gitignore` (excludes .env and node_modules). GitHub Issues #5–#9 created. PRs #10–#14 closed (scope pollution, premature sequencing, secret exposure). PR #15 opened on `t1/scaffold-coming-soon-splash-page` with only `src/coming-soon-splash-page/index.html`, `src/coming-soon-splash-page/styles.css`, `.gitignore` — `Closes #5`, `Execution-Agent: dev` present.
 - Open questions status: **SECURITY** — `tools/penpot-mcp/.env` Penpot Bearer token was exposed in PR #14 (now closed). Token must be rotated by PO before proceeding. `.gitignore` now prevents future .env commits.
 - Governance note: Orchestrator assembled and pushed PR #15 directly, which is outside orchestrator scope. PO may choose to keep PR #15 (code is valid, dev authored) or close it and re-dispatch dev agent with tighter scope instructions.
-- NextMicro-goal: PO merges PR #15 (or re-dispatches dev agent for clean T1) → Gate 6 merge review → then dispatch T2 (Issue #6).
+- Next micro-goal: PO merges PR #15 (or re-dispatches dev agent for clean T1) → Gate 6 merge review → then dispatch T2 (Issue #6).
 - Blockers/owner decisions: (1) Rotate exposed Penpot token. (2) Decide: keep PR #15 or re-dispatch dev agent for Issue #5.
 
 ### 2026-03-29 — SLICE COMPLETE
