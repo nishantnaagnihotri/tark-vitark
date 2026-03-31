@@ -186,6 +186,7 @@ Enable the orchestrator to resume work as primary control agent for all activiti
 21. Orchestrator terminal policy is diagnostics-first, but explicit Product Owner requests may authorize scoped git mutating commands (including add/commit/push/branch/PR operations); destructive commands still require command-level approval.
 22. Slice/story traceability policy: each slice has a GitHub slice tracker issue labeled `slice`; each story issue is labeled `user-story` only and must contain a `Slice tracker:` backlink; slice tracker must list all story issue links; `06-tasks.md` must mirror story issue links and architecture references.
 23. Review-response policy is repo-wide: when an agent fixes a review comment, it must also post a PR reply explaining what was accepted or challenged, what changed (or why no change), and the rationale/tradeoff.
+24. Universal principle persistence: repo-wide principles may be stored in either (a) `Known Rules From User Decisions` (this section) or (b) permanent shared protocol docs (.github/AGENTS.md, .github/agents/*.agent.md) with explicit cross-reference. This avoids duplication while ensuring traceability and centralized visibility. Pre-archive checks validate presence in either location before archiving a slice.
 
 ## Resume Protocol For Orchestrator
 
@@ -222,7 +223,7 @@ On first response in any new activity:
 ## Log Archive Protocol
 
 When a slice reaches Gate 6 ✅ Complete:
-1. **Pre-archive: extract universal principles.** Review each log entry being archived. If any entry records a principle or rule that applies to all future slices (not just the current one), verify it is already present in `Known Rules From User Decisions`. If missing, add it there before archiving.
+1. **Pre-archive: extract universal principles.** Review each log entry being archived. If any entry records a principle or rule that applies to all future slices (not just the current one), verify it is already present in either (a) `Known Rules From User Decisions` OR (b) permanent shared protocol docs (.github/AGENTS.md, .github/agents/*.agent.md) with explicit cross-reference (see Known Rule #24). If neither, add it to Known Rules before archiving. Do not archive principles; only archive slice-specific history.
 2. Move only **slice-specific** log entries for that slice from this file to `docs/slices/<slice-name>/context-log.md`.
 3. **Do not move** repo-wide/global context updates (for example: no-active-slice governance updates, baseline policy decisions, cross-slice standards). Keep those in this file, or copy to a dedicated global archive if one is later defined.
 4. Replace the moved slice-specific entries with a single archive summary line in this file (see format below).
@@ -268,5 +269,23 @@ Template:
 - Open questions status: None.
 - Next micro-goal: Enforce this policy on all future PR review fixes.
 - Blockers/owner decisions: Decision challenged with options and tradeoffs. Option A code-only fixes with no PR reply (fastest, low traceability). Option B mandatory comment replies only for challenged items (moderate consistency). Option C mandatory reply for every fixed review comment with accept/challenge rationale (highest clarity/auditability). Owner selected Option C.
+
+### 2026-03-30 (Final)
+- Gate status: Implementation protocol hardened with Test-First Development, BDD with GWT scenarios, and Domain-Oriented Development.
+- Artifact changes: Updated .github/AGENTS.md with new "Implementation Protocol (Test-First BDD + Domain-Oriented Development)" section (7 rules). Updated architect-orchestrator.agent.md Architecture Gate Checklist (added BDD lock, item 10) and Build Gate Checklist (expanded TFD/BDD/domain language locks, items 3-5). Updated slice-template 05-architecture.md to include BDD section (10) with five GWT sentence templates (one per AC), test implementation guidance, and domain language requirements. Updated Gate Decision rationale to reference BDD scenarios.
+- Open questions status: No open questions.
+- Blockers/owner decisions: Owner requested three specific hardening requirements: (1) Test-First Development (tests before code), (2) BDD with GWT at acceptance criteria level (not module level), (3) Domain-Oriented Development (code uses domain terminology, not infrastructure terms). All three implemented in protocol and templates. Decision rationale: TFD ensures tests drive design and prevent test-last brittleness. GWT at AC level ensures functional behavior (not module internals) drives development. Domain language ensures code reads as specification for the problem domain, making it maintainable and clear to non-technical stakeholders. Principle persisted in: .github/AGENTS.md (Implementation Protocol section), architect-orchestrator.agent.md (Architecture/Build checklists), slice-template 05-architecture.md (BDD section). See cross-references for full content.
+
+### 2026-03-30 (Gate1-Gate2 Alignment)
+- Gate status: Requirement challenge and PRD drafting alignment hardened.
+- Artifact changes: Added Requirement-To-PRD Alignment Protocol to .github/AGENTS.md. Updated orchestrator Gate 1->2 rules to freeze requirement statement/scope/AC intent unless owner-approved. Added mandatory Requirement-to-PRD Alignment Check output in PRD handoff contracts (local and cloud prompts). Updated slice templates: 01-requirement.md now includes requirement IDs (R-1..R-N) and completeness lock; 02-prd.md now includes mandatory alignment table mapping requirements to PRD sections/user stories/AC IDs.
+- Open questions status: No open questions.
+- Blockers/owner decisions: Owner requested that challenger and PRD agents move in the same direction and that templates only be filled after proper requirement gathering/refinement. Selected approach: explicit contract freeze + alignment table + loop-back on unauthorized deltas. Principle persisted in: .github/AGENTS.md (Requirement-To-PRD Alignment Protocol section), orchestrator Gate 1->2 freeze rules. See cross-references for full content.
+
+### 2026-03-30 (Slice/Story Maintenance)
+- Gate status: Slice/story maintenance protocol standardized across repo and GitHub.
+- Artifact changes: Added explicit rules for slice tracker issue, story issue label policy (`user-story` only), mandatory bidirectional slice <-> story links, and `06-tasks.md` traceability requirements in shared and orchestrator contracts.
+- Open questions status: No open questions.
+- Blockers/owner decisions: Decision challenged with options and tradeoffs. Option A keep label-heavy model (fast filtering, more metadata overhead). Option B reference-first with minimal labels (`slice` for tracker, `user-story` for stories) and mandatory links (balanced). Option C links-only with no labels (lowest metadata, weakest queryability). Owner selected Option B. Principle persisted in: .github/AGENTS.md (Known Rule #22, Slice and Issue Management section), architect-orchestrator.agent.md (Slice and Issue Management section). See cross-references for full content.
 
 
