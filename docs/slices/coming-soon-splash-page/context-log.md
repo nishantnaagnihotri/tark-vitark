@@ -1,6 +1,6 @@
 # Context Update Log — coming-soon-splash-page
 
-Archived from `.github/orchestrator-context.md` on 2026-03-31 (Gate 6 ✅ Complete).
+Archived from `.github/orchestrator-context.md` on 2026-03-31 (Gate 6 ✅ Complete). Repo-wide governance updates have been removed from this archive to keep it slice-scoped; see `.github/orchestrator-context.md` for global context.
 
 ---
 
@@ -83,17 +83,6 @@ Archived from `.github/orchestrator-context.md` on 2026-03-31 (Gate 6 ✅ Comple
 - Open questions status: No open questions; owner choice recorded.
 - Next micro-goal: Use scoped mutation flow when Product Owner explicitly asks for commit/push actions.
 - Blockers/owner decisions: Decision challenged with options and tradeoffs. Option A keep diagnostics-only (safest, slower). Option B allow scoped mutations on explicit owner request (balanced). Option C allow unrestricted mutations (fastest, highest risk). Owner selected Option B.
-
----
-
-## Archived Repo-Wide Governance Entries (Moved to Global Context)
-
-The following entries were moved to `.github/orchestrator-context.md` under "Context Update Log" on 2026-03-31 because they record repo-wide principles, not slice-specific history:
-- 2026-03-30 (Final) — Implementation protocol hardened (Test-First Development, BDD with GWT, Domain-Oriented Development)
-- 2026-03-30 (Gate1-Gate2 Alignment) — Requirement-to-PRD alignment protocol
-- 2026-03-30 (Slice/Story Maintenance) — Slice/story maintenance protocol
-
-For full entries and cross-references to permanent protocol docs, see `.github/orchestrator-context.md` "Context Update Log" section.
 
 ### 2026-03-29
 - Gate status: Gate 5 quality protocol hardened.
