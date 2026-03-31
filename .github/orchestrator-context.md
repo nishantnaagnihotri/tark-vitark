@@ -221,9 +221,10 @@ On first response in any new activity:
 ## Log Archive Protocol
 
 When a slice reaches Gate 6 ✅ Complete:
-1. Move all log entries for that slice from this file to `docs/slices/<slice-name>/context-log.md`.
-2. Replace them with a single archive summary line in this file (see format below).
-3. This keeps the main context file lean for session loading while preserving full audit history per slice.
+1. **Pre-archive: extract universal principles.** Review each log entry being archived. If any entry records a principle or rule that applies to all future slices (not just the current one), verify it is already present in `Known Rules From User Decisions`. If missing, add it there before archiving.
+2. Move all log entries for that slice from this file to `docs/slices/<slice-name>/context-log.md`.
+3. Replace them with a single archive summary line in this file (see format below).
+4. This keeps the main context file lean for session loading while preserving full audit history per slice.
 
 Archive summary format:
 ```
