@@ -77,13 +77,6 @@ Archived from `.github/orchestrator-context.md` on 2026-03-31 (Gate 6 ✅ Comple
 - Artifact changes: Updated Build gate default execution to GitHub Copilot cloud Dev implementation; local execution now explicit owner override only; aligned shared protocol, dev agent environment policy, and context known rules.
 - Open questions status: Owner clarified desired executor as GitHub cloud coding agent that creates PR.
 
-### 2026-03-30
-- Gate status: Policy update applied to orchestrator terminal mutation handling.
-- Artifact changes: Updated shared protocol and orchestrator agent constraints to allow explicit Product Owner authorized git mutations while retaining destructive command safeguards.
-- Open questions status: No open questions; owner choice recorded.
-- Next micro-goal: Use scoped mutation flow when Product Owner explicitly asks for commit/push actions.
-- Blockers/owner decisions: Decision challenged with options and tradeoffs. Option A keep diagnostics-only (safest, slower). Option B allow scoped mutations on explicit owner request (balanced). Option C allow unrestricted mutations (fastest, highest risk). Owner selected Option B.
-
 ### 2026-03-29
 - Gate status: Gate 5 quality protocol hardened.
 - Artifact changes: Added BDD/test-first policy to shared protocol; updated Dev agent contract with scenario-first testing and BDD evidence output; added Build Gate checklist in orchestrator to enforce BDD evidence before merge progression.
@@ -152,7 +145,7 @@ Archived from `.github/orchestrator-context.md` on 2026-03-31 (Gate 6 ✅ Comple
 - Artifact changes: Created `04-design-qa.md` (real Figma verification, PO approval recorded), `05-architecture.md` (architecture plan), `06-tasks.md` (T1→#5 … T5→#9), `.gitignore` (excludes .env and node_modules). GitHub Issues #5–#9 created. PRs #10–#14 closed (scope pollution, premature sequencing, secret exposure). PR #15 opened on `t1/scaffold-coming-soon-splash-page` with only `src/coming-soon-splash-page/index.html`, `src/coming-soon-splash-page/styles.css`, `.gitignore` — `Closes #5`, `Execution-Agent: dev` present.
 - Open questions status: **SECURITY** — `tools/penpot-mcp/.env` Penpot Bearer token was exposed in PR #14 (now closed). Token must be rotated by PO before proceeding. `.gitignore` now prevents future .env commits.
 - Governance note: Orchestrator assembled and pushed PR #15 directly, which is outside orchestrator scope. PO may choose to keep PR #15 (code is valid, dev authored) or close it and re-dispatch dev agent with tighter scope instructions.
-- Next micro-goal: PO merges PR #15 (or re-dispatches dev agent for clean T1) → Gate 6 merge review → then dispatch T2 (Issue #6).
+- NextMicro-goal: PO merges PR #15 (or re-dispatches dev agent for clean T1) → Gate 6 merge review → then dispatch T2 (Issue #6).
 - Blockers/owner decisions: (1) Rotate exposed Penpot token. (2) Decide: keep PR #15 or re-dispatch dev agent for Issue #5.
 
 ### 2026-03-29 — SLICE COMPLETE
@@ -176,3 +169,10 @@ Archived from `.github/orchestrator-context.md` on 2026-03-31 (Gate 6 ✅ Comple
   - T5 compliance: All 9 acceptance criteria verified with explicit evidence; offline test passed (zero network dependency); code review passed (zero JS, zero external imports); Figma parity 100%; residual risk very low; rollback plan documented (< 5 min deployment).
 - Next micro-goal: **SLICE COMPLETE** — No further work required for `coming-soon-splash-page`. Slice is production-ready and deployed to master.
 - Blockers/owner decisions: None. All gate criteria, acceptance criteria, and quality checks passed.
+
+### 2026-03-30
+- Gate status: Policy update applied to orchestrator terminal mutation handling.
+- Artifact changes: Updated shared protocol and orchestrator agent constraints to allow explicit Product Owner authorized git mutations while retaining destructive command safeguards.
+- Open questions status: No open questions; owner choice recorded.
+- Next micro-goal: Use scoped mutation flow when Product Owner explicitly asks for commit/push actions.
+- Blockers/owner decisions: Decision challenged with options and tradeoffs. Option A keep diagnostics-only (safest, slower). Option B allow scoped mutations on explicit owner request (balanced). Option C allow unrestricted mutations (fastest, highest risk). Owner selected Option B.
