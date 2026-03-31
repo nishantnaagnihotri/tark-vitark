@@ -643,6 +643,8 @@ After any gate transition or major owner decision:
 	Include: major decision challenged, options presented, tradeoff summary, and owner-selected option.
 3. Ask Product Owner to append the block into `.github/orchestrator-context.md`.
 4. Use the updated context file as the next-session baseline.
+5. **Log archiving:** When a slice reaches Gate 6 ✅ Complete, move all its log entries from `.github/orchestrator-context.md` to `docs/slices/<slice-name>/context-log.md` and replace them with a single archive summary line:
+   `### <slice-name> — Gate 6 ✅ Complete (<date>) — Full log: docs/slices/<slice-name>/context-log.md`
 
 ## Merge Recommendation Checklist
 
