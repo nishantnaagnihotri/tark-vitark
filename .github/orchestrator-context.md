@@ -222,9 +222,10 @@ On first response in any new activity:
 
 When a slice reaches Gate 6 ✅ Complete:
 1. **Pre-archive: extract universal principles.** Review each log entry being archived. If any entry records a principle or rule that applies to all future slices (not just the current one), verify it is already present in `Known Rules From User Decisions`. If missing, add it there before archiving.
-2. Move all log entries for that slice from this file to `docs/slices/<slice-name>/context-log.md`.
-3. Replace them with a single archive summary line in this file (see format below).
-4. This keeps the main context file lean for session loading while preserving full audit history per slice.
+2. Move only **slice-specific** log entries for that slice from this file to `docs/slices/<slice-name>/context-log.md`.
+3. **Do not move** repo-wide/global context updates (for example: no-active-slice governance updates, baseline policy decisions, cross-slice standards). Keep those in this file, or copy to a dedicated global archive if one is later defined.
+4. Replace the moved slice-specific entries with a single archive summary line in this file (see format below).
+5. This keeps the main context file lean for session loading while preserving full audit history per slice and keeping global baseline context centrally visible.
 
 Archive summary format:
 ```
@@ -245,5 +246,19 @@ Template:
 - Blockers/owner decisions:
 
 ### coming-soon-splash-page — Gate 6 ✅ Complete (2026-03-29) — Full log: docs/slices/coming-soon-splash-page/context-log.md
+
+### 2026-03-30
+- Gate status: No active slice. Governance protocol hardened.
+- Artifact changes: PR #29 merged — added rule 6 to AGENTS.md and constraint 8 to architect-orchestrator.agent.md prohibiting all agents from executing PR merge operations. PR merges are now unconditionally reserved for the Product Owner.
+- Open questions status: None.
+- Next micro-goal: Await next slice or issue assignment.
+- Blockers/owner decisions: None.
+
+### 2026-03-30 (Public Portfolio + Proprietary Licensing)
+- Gate status: No active slice. Repository governance/documentation update only.
+- Artifact changes: Added root LICENSE with all-rights-reserved proprietary terms. Added root README clarifying public showcase intent, non-open-source usage restrictions, contribution policy, and permission-request contact path.
+- Open questions status: None.
+- Next micro-goal: Use this baseline for all future public-facing repository onboarding and resume sharing.
+- Blockers/owner decisions: Owner selected public visibility with proprietary licensing model (showcase allowed; reuse requires explicit permission).
 
 
