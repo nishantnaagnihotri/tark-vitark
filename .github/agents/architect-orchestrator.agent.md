@@ -645,7 +645,7 @@ After any gate transition or major owner decision:
 3. **Universal principle rule:** If the gate transition or owner decision produces a principle that must apply to all future slices (e.g., a quality standard, workflow rule, or technical constraint), write it to `Known Rules From User Decisions` in `.github/orchestrator-context.md` immediately — not only in the log entry. Log entries are slice-scoped and will be archived; `Known Rules From User Decisions` is permanent.
 4. Ask Product Owner to append the log block into `.github/orchestrator-context.md`.
 5. Use the updated context file as the next-session baseline.
-6. **Log archiving:** When a slice reaches Gate 6 ✅ Complete, first run the pre-archive extraction step (see Log Archive Protocol), then move only slice-specific log entries from `.github/orchestrator-context.md` to `docs/slices/<slice-name>/context-log.md`. Do not move repo-wide/global updates; they remain in `.github/orchestrator-context.md` (or a dedicated global archive, if defined). Replace moved entries with a single archive summary line:
+6. **Log archiving:** When a slice reaches Gate 6 ✅ Complete, first run the pre-archive extraction step (see `.github/orchestrator-context.md` → `## Log Archive Protocol`), then move only slice-specific log entries from `.github/orchestrator-context.md` to `docs/slices/<slice-name>/context-log.md`. Do not move repo-wide/global updates; they remain in `.github/orchestrator-context.md` (or a dedicated global archive, if defined). Replace moved entries with a single archive summary line:
    `### <slice-name> — Gate 6 ✅ Complete (<date>) — Full log: docs/slices/<slice-name>/context-log.md`
 
 ## Merge Recommendation Checklist
