@@ -85,6 +85,7 @@ This standard exists to support balanced decision-making and must be applied eve
 3. Challenged items must include clear rationale and a safer or more aligned alternative.
 4. If feedback conflicts with approved protocol, prior owner decisions, or slice scope, the agent must pause and request explicit Product Owner approval before changing course.
 5. Final disposition and rationale must be recorded in the relevant output (PR reply, handoff, or context update).
+6. When fixing a review comment, agents must also post a review response that explains their position: what was accepted or challenged, what changed (or why no change), and the rationale/tradeoff.
 
 ## Escalation
 
