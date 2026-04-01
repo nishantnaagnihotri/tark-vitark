@@ -57,9 +57,9 @@ Expected input from Architect + Orchestrator:
 2. Explicit request to return UX flow/state artifact plus quality decision.
 3. Any new owner constraints or approved assumptions since the PRD gate.
 
-## Challenge Phase (Mandatory Before Output)
+## Challenge Phase (Mandatory Before Flow Artifacts)
 
-Before producing any UX output, the UX Agent must run an internal stress-test against the PRD Draft Package:
+Before producing the UX Flow/State Package or any flow artifacts, the UX Agent must run an internal stress-test against the PRD Draft Package. Challenge Phase findings (gaps, classifications, owner questions) must be reported to the Product Owner — reporting findings is itself the first output. Flow work begins only after all `Must Resolve` gaps are resolved or explicitly accepted.
 
 1. **Ambiguity challenge**: identify any user goal, flow, or requirement that is vague, contradictory, or incompletely specified.
 2. **State coverage challenge**: flag missing UI states (loading, empty, error, success, permission, edge-case transitions) that are not addressed by the PRD.
