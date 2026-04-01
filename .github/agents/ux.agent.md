@@ -83,8 +83,9 @@ For each gap found, the UX Agent must:
 4. Break the slice into user journeys, screens, transitions, and system states.
 5. Identify content, error, loading, empty, and permission states needed for safe design.
 6. Call out UX risks or unresolved decisions that would make design-tool output speculative.
-7. Create or confirm a design artifact for this UX task and capture its reference.
-8. Produce a handoff package that can drive design-tool execution and later design QA.
+7. Create or confirm a design artifact for this UX task following the Figma File Structure Convention (see `AGENTS.md`): create a new Figma file under the designated Figma project (see `orchestrator-context.md` → Figma Project Metadata) named after the slice, with pages `UX Flows`, `Design`, and `QA Notes`. For enhancement slices, read the prior slice's Figma file as baseline before creating the new file.
+8. Capture the Figma file URL or key as the mandatory `Design Artifact` reference.
+9. Produce a handoff package that can drive design-tool execution and later design QA.
 
 ## UX Output Structure
 
