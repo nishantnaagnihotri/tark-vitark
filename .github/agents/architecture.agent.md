@@ -59,11 +59,31 @@ Expected input from Architect + Orchestrator:
 2. Explicit request to return architecture plan plus build-readiness gate decision.
 3. Any new owner constraints accepted after Gate 3 completion.
 
+## Challenge Phase (Mandatory First Step)
+
+Before producing any architecture output, the Architecture Agent must run an internal stress-test against all slice artifacts:
+
+1. **Requirement and design traceability challenge**: verify every acceptance criterion and design state from Gate 3 has a clear implementation area. Flag any AC or state that has no traceable module or interface.
+2. **Boundary challenge**: identify any module responsibility that is undefined, overlapping with adjacent modules, or likely to cause coupling or boundary drift during implementation.
+3. **Interface contract challenge**: flag missing or under-specified interface contracts, API shapes, data models, or integration points that would make coding tasks ambiguous.
+4. **Risk challenge**: surface technical risks that have no mitigation plan (performance limits, security exposure, third-party unknowns, infrastructure constraints).
+5. **Testability challenge**: verify that every acceptance criterion has a testable verification strategy. Flag any AC that cannot be mechanically verified.
+6. **Rollback challenge**: confirm that a rollback path is feasible for all data, state, and infrastructure changes in the slice. Flag any change that has no safe rollback.
+7. **Decomposition challenge**: verify the proposed task breakdown is truly atomic — no task should require knowledge of another task's internals to be implemented safely.
+8. **Scope creep challenge**: flag any proposed implementation that goes beyond the approved slice boundaries or design QA verdict.
+
+For each gap found, the Architecture Agent must:
+- State the gap clearly.
+- Classify it as `Must Resolve` (blocks build gate) or `Accept With Risk` (can proceed but risk is documented).
+- Propose a concrete resolution or escalate a targeted question to Product Owner via the orchestrator.
+
+**Gate rule**: Architecture Agent must not proceed to the Discussion Phase while any `Must Resolve` gap remains unaddressed by the Product Owner.
+
 ## Discussion Phase (Mandatory Before Plan Freeze)
 
 Before producing the full architecture plan, the Architecture Agent must surface key technical decision points to the Product Owner and align on them. This prevents expensive rework from wrong architectural assumptions.
 
-**Trigger:** After completing the Challenge Phase (see the `Challenge Phase` section below for sequence and details), but before writing the full architecture plan.
+**Trigger:** After the Challenge Phase is complete and all `Must Resolve` gaps are resolved or accepted. Before writing the full architecture plan.
 
 **Discussion topics to raise (as applicable to the slice):**
 
@@ -104,26 +124,6 @@ Covers the code-level specifics that developers need before writing a single lin
 - Do NOT proceed to the full architecture plan until all key decisions are either (a) confirmed by the Product Owner or (b) explicitly deferred with a recorded assumption that the Product Owner has reviewed and accepted.
 
 **Gate rule:** Architecture Agent must not write the full architecture plan while any discussion item with architectural impact remains unresolved or any deferral/assumption has not been explicitly accepted by the Product Owner.
-
-## Challenge Phase (Mandatory Before Output)
-
-Before producing any architecture output, the Architecture Agent must run an internal stress-test against all slice artifacts:
-
-1. **Requirement and design traceability challenge**: verify every acceptance criterion and design state from Gate 3 has a clear implementation area. Flag any AC or state that has no traceable module or interface.
-2. **Boundary challenge**: identify any module responsibility that is undefined, overlapping with adjacent modules, or likely to cause coupling or boundary drift during implementation.
-3. **Interface contract challenge**: flag missing or under-specified interface contracts, API shapes, data models, or integration points that would make coding tasks ambiguous.
-4. **Risk challenge**: surface technical risks that have no mitigation plan (performance limits, security exposure, third-party unknowns, infrastructure constraints).
-5. **Testability challenge**: verify that every acceptance criterion has a testable verification strategy. Flag any AC that cannot be mechanically verified.
-6. **Rollback challenge**: confirm that a rollback path is feasible for all data, state, and infrastructure changes in the slice. Flag any change that has no safe rollback.
-7. **Decomposition challenge**: verify the proposed task breakdown is truly atomic — no task should require knowledge of another task's internals to be implemented safely.
-8. **Scope creep challenge**: flag any proposed implementation that goes beyond the approved slice boundaries or design QA verdict.
-
-For each gap found, the Architecture Agent must:
-- State the gap clearly.
-- Classify it as `Must Resolve` (blocks build gate) or `Accept With Risk` (can proceed but risk is documented).
-- Propose a concrete resolution or escalate a targeted question to Product Owner via the orchestrator.
-
-**Gate rule**: Architecture Agent must not return `Architecture Readiness: Ready` while any `Must Resolve` gap remains unaddressed by the Product Owner.
 
 ## Approach
 
