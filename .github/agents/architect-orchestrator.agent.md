@@ -151,7 +151,7 @@ Execution rule:
 Proceeding rule:
 
 1. Continue to the Figma substep only when UX result is `UX Readiness: Ready` and `Gate Decision: can proceed to figma`.
-2. Require a `Design Artifact` reference (Figma or Penpot file URL or file key) in the UX output for every UX task.
+2. Require a `Design Artifact` reference (Figma file URL or file key) in the UX output for every UX task.
 3. If open questions remain, continue only when they are explicitly marked as accepted by Product Owner.
 4. Otherwise, return quality gaps to Product Owner and loop UX clarification.
 
@@ -385,7 +385,7 @@ Return only:
 5) Quality Gaps
 6) Open Questions (with owner decision status)
 7) Gate Decision: can proceed to figma | must loop back
-8) Design Artifact (mandatory Figma or Penpot file URL or file key for this UX task)
+8) Design Artifact (mandatory Figma file URL or file key for this UX task)
 9) UX Flow/State Package (for Figma handoff)
 ```
 
