@@ -161,7 +161,7 @@ Escalate to Product Owner when:
 
 ## Figma File Structure Convention
 
-1. **One Figma file per slice.** Each slice gets its own Figma file under the designated Figma project (see `orchestrator-context.md` → Figma Project Metadata), named after the slice (e.g., "Coming Soon Splash Page").
+1. **One Figma file per slice.** Each slice gets its own Figma file under the designated Figma project (see `.github/orchestrator-context.md` → Figma Project Metadata), named after the slice (e.g., "Coming Soon Splash Page").
 2. **Standard page structure within each file:**
    - Page 1: `UX Flows` — wireframes and flow diagrams (UX Agent output).
    - Page 2: `Design` — final screens, states, and variants (Figma Agent output).

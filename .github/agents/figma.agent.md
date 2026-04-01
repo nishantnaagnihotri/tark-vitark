@@ -60,13 +60,13 @@ Expected input from Architect + Orchestrator:
 ## Approach
 
 1. Validate the UX package for completeness of flow/state definitions.
-2. Confirm the Figma file follows the Figma File Structure Convention (see `AGENTS.md`): the file is under the designated Figma project (see `orchestrator-context.md` → Figma Project Metadata), named after the slice, with standard pages (`UX Flows`, `Design`, `QA Notes`). For enhancement slices, verify the current-state screen was recreated from the prior slice's Figma file before applying enhancements.
+2. Confirm the Figma file follows the Figma File Structure Convention (see `.github/AGENTS.md`): the file is under the designated Figma project (see `.github/orchestrator-context.md` → Figma Project Metadata), named after the slice, with standard pages (`UX Flows`, `Design`, `QA Notes`). For enhancement slices, verify the current-state screen was recreated from the prior slice's Figma file before applying enhancements.
 3. Map user flows and states to concrete screens/frames and transitions.
 4. Identify component composition, reusable patterns, and token-level guidance.
 5. Document interaction details for loading, error, empty, success, and permission states.
 6. Create the actual Figma design using MCP tools: produce frames, components, and state variants in the `Design` page. Use frame naming convention `<Screen>/<State>` (e.g., `Home/Default`, `Home/Error`).
-6. Produce a `Design Coverage Report` (text): maps every screen and state in the Figma file back to UX flows and PRD criteria by reference. This is the verifiable surface for Design QA.
-7. Both the Figma design reference and the Design Coverage Report are required parts of the `Design Draft Package`.
+7. Produce a `Design Coverage Report` (text): maps every screen and state in the Figma file back to UX flows and PRD criteria by reference. This is the verifiable surface for Design QA.
+8. Both the Figma design reference and the Design Coverage Report are required parts of the `Design Draft Package`.
 
 ## Figma Output Structure
 
