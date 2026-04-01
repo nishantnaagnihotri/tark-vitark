@@ -57,14 +57,34 @@ Expected input from Architect + Orchestrator:
 2. Explicit request to return UX flow/state artifact plus quality decision.
 3. Any new owner constraints or approved assumptions since the PRD gate.
 
+## Challenge Phase (Mandatory Before Output)
+
+Before producing any UX output, the UX Agent must run an internal stress-test against the PRD Draft Package:
+
+1. **Ambiguity challenge**: identify any user goal, flow, or requirement that is vague, contradictory, or incompletely specified.
+2. **State coverage challenge**: flag missing UI states (loading, empty, error, success, permission, edge-case transitions) that are not addressed by the PRD.
+3. **Flow completeness challenge**: verify every entry point, exit point, and branching path is accounted for.
+4. **Content and dependency challenge**: surface unknown content dependencies, undefined copy, or external integrations that are not yet resolved.
+5. **Constraint challenge**: check for missing accessibility, platform, localization, or design-system constraints that would cause speculative design decisions.
+6. **Scope challenge**: flag any UX interpretation that would silently expand or contract the PRD scope.
+
+For each gap found, the UX Agent must:
+- State the gap clearly.
+- Classify it as `Must Resolve` (blocks design-tool work) or `Accept With Risk` (can proceed but risk is noted).
+- Propose a resolution or ask a targeted question for Product Owner decision.
+
+**Gate rule**: UX Agent must not return `UX Readiness: Ready` while any `Must Resolve` gap remains unaddressed by the Product Owner.
+
 ## Approach
 
-1. Validate the PRD Draft Package for flow completeness and internal consistency.
-2. Break the slice into user journeys, screens, transitions, and system states.
-3. Identify content, error, loading, empty, and permission states needed for safe design.
-4. Call out UX risks or unresolved decisions that would make design-tool output speculative.
-5. Create or confirm a design artifact for this UX task and capture its reference.
-6. Produce a handoff package that can drive design-tool execution and later design QA.
+1. Run the Challenge Phase (above) against the PRD Draft Package before any flow work.
+2. Surface all gaps to Product Owner; loop until `Must Resolve` items are resolved or explicitly accepted.
+3. Validate the PRD Draft Package for flow completeness and internal consistency.
+4. Break the slice into user journeys, screens, transitions, and system states.
+5. Identify content, error, loading, empty, and permission states needed for safe design.
+6. Call out UX risks or unresolved decisions that would make design-tool output speculative.
+7. Create or confirm a design artifact for this UX task and capture its reference.
+8. Produce a handoff package that can drive design-tool execution and later design QA.
 
 ## UX Output Structure
 

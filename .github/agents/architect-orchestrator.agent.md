@@ -146,6 +146,7 @@ Execution rule:
 1. Gate 3 is local-only.
 2. Do not offer `cloud` execution mode for the UX substep.
 3. Run the UX substep in Local context.
+4. The UX Agent must run its internal Challenge Phase before producing any UX output. All `Must Resolve` gaps must be addressed or explicitly accepted by Product Owner before `UX Readiness: Ready` is returned.
 
 Proceeding rule:
 
@@ -222,6 +223,7 @@ Execution rule:
 1. Gate 4 signoff decisions are Local-only.
 2. Cloud can be used only for non-binding analysis alternatives.
 3. Final architecture approval and gate progression must be made in Local context.
+4. The Architecture Agent must run its internal Challenge Phase before producing any architecture output. All `Must Resolve` gaps must be addressed or explicitly accepted by Product Owner before `Architecture Readiness: Ready` is returned.
 
 Proceeding rule:
 
@@ -243,16 +245,20 @@ Local-validation rule:
 Architecture Gate Checklist (Orchestrator-owned):
 
 1. Scope lock: confirm architecture stays within approved slice scope and Design QA verdict boundaries.
-2. Traceability lock: verify architecture plan maps requirements and design states to concrete implementation areas.
-3. Boundary lock: verify module responsibilities, interface contracts, and integration points are explicit.
-4. Risk lock: verify technical risks have named mitigations and escalation conditions.
-5. Verification lock: verify unit/integration/e2e evidence strategy is defined and tied to acceptance criteria.
-6. Rollback lock: verify rollback approach is documented and feasible for the slice.
-7. Task lock: verify decomposition is atomic, dependency-ordered, and ready for GitHub Issue creation.
-8. Issue lock: verify `06-tasks.md` includes created Issue numbers and architecture section references, and that slice tracker <-> story issue bidirectional links are present.
-9. Label lock: verify slice tracker issue has label `slice` and all story issues have labels `user-story` and `slice:<slice-name>`.
-10. BDD lock: verify `05-architecture.md` includes a BDD section with Given-When-Then scenarios (one per acceptance criterion, written in domain language).
-11. Approval lock: verify unresolved open questions are either resolved or explicitly accepted by Product Owner.
+2. Traceability lock: verify architecture plan maps each requirement and design state to a specific file, module, or function — not a vague area.
+3. Boundary lock: verify module responsibilities, interface contracts, and integration points are explicit and unambiguous.
+4. Detail lock: verify file/folder structure, data shapes, function signatures, naming conventions, and cross-cutting concerns are all specified concretely — no placeholder or "TBD" items.
+5. Discussion lock: verify the Discussion Phase was completed across all three tiers (System Design, Solution Architecture, Implementation Design) and key architectural decisions were confirmed by Product Owner before plan freeze.
+6. System design lock: verify scalability model, fault-tolerance strategy, data consistency approach, security posture, and observability plan are addressed.
+7. Solution architecture lock: verify architectural pattern is chosen and justified, technology choices are confirmed, integration contracts are defined, and deployment topology is specified.
+8. Risk lock: verify technical risks have named mitigations and escalation conditions — no generic mitigations.
+9. Verification lock: verify unit/integration/e2e evidence strategy is defined and tied to each acceptance criterion individually.
+10. Rollback lock: verify rollback approach is documented and feasible for the slice.
+11. Task lock: verify decomposition is atomic, dependency-ordered, and ready for GitHub Issue creation.
+12. Issue lock: verify `06-tasks.md` includes created Issue numbers and architecture section references, and that slice tracker <-> story issue bidirectional links are present.
+13. Label lock: verify slice tracker issue has label `slice` and all story issues have labels `user-story` and `slice:<slice-name>`.
+14. BDD lock: verify `05-architecture.md` includes a BDD section with Given-When-Then scenarios (one per acceptance criterion, written in domain language).
+15. Approval lock: verify unresolved open questions are either resolved or explicitly accepted by Product Owner.
 
 ## Build Gate Handoff Trigger
 
