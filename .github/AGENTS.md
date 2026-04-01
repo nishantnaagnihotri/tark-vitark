@@ -25,7 +25,7 @@ This repository follows a human-led, agent-executed workflow.
 6. UX Agent must run an internal challenge phase before producing any UX output: all `Must Resolve` UX gaps must be addressed or accepted by Product Owner before Gate 3A can pass.
 7. Architecture signoff must happen before coding.
 8. Architecture Agent must run an internal challenge phase before producing any architecture output: all `Must Resolve` architecture gaps must be addressed or accepted by Product Owner before Gate 4 can pass.
-9. Architecture Agent must run a Discussion Phase before freezing the plan: key technical decision points (file structure, data shapes, interface contracts, cross-cutting concerns) must be surfaced, discussed with Product Owner, and confirmed before the full plan is written. Vague architectural plans are not accepted.
+9. Architecture Agent must run a Discussion Phase before freezing the plan: key technical decision points across System Design, Solution Architecture, and Implementation Design (e.g., system and service boundaries, data flows and contracts, integration patterns, file/module structure, and cross-cutting concerns) must be surfaced, discussed with Product Owner, and confirmed before the full plan is written. Vague architectural plans are not accepted.
 10. Merge requires passing tests, review closure, docs update, and rollback note.
 
 ## Requirement-To-PRD Alignment Protocol
