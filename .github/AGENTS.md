@@ -22,8 +22,11 @@ This repository follows a human-led, agent-executed workflow.
 3. Gate 2 (PRD) must preserve Gate 1 intent: no silent reinterpretation of requirement statement, scope boundaries, or acceptance criteria.
 4. Design freeze must happen before coding. Gate 3 is the full design gate and includes UX, Figma, and Design QA substeps.
 5. Design artifact is mandatory for every UX task: each Gate 3A UX output must include a Figma or Penpot artifact reference (file URL or file key) before progression.
-6. Architecture signoff must happen before coding.
-7. Merge requires passing tests, review closure, docs update, and rollback note.
+6. UX Agent must run an internal challenge phase before producing any UX output: all `Must Resolve` UX gaps must be addressed or accepted by Product Owner before Gate 3A can pass.
+7. Architecture signoff must happen before coding.
+8. Architecture Agent must run an internal challenge phase before producing any architecture output: all `Must Resolve` architecture gaps must be addressed or accepted by Product Owner before Gate 4 can pass.
+9. Architecture Agent must run a Discussion Phase before freezing the plan: key technical decision points (file structure, data shapes, interface contracts, cross-cutting concerns) must be surfaced, discussed with Product Owner, and confirmed before the full plan is written. Vague architectural plans are not accepted.
+10. Merge requires passing tests, review closure, docs update, and rollback note.
 
 ## Requirement-To-PRD Alignment Protocol
 
