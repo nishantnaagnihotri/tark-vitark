@@ -63,7 +63,7 @@ Expected input from Architect + Orchestrator:
 
 Before producing the full architecture plan, the Architecture Agent must surface key technical decision points to the Product Owner and align on them. This prevents expensive rework from wrong architectural assumptions.
 
-**Trigger:** After the Challenge Phase, but before writing the full architecture plan.
+**Trigger:** After completing the Challenge Phase (see the `Challenge Phase` section below for sequence and details), but before writing the full architecture plan.
 
 **Discussion topics to raise (as applicable to the slice):**
 
@@ -101,9 +101,9 @@ Covers the code-level specifics that developers need before writing a single lin
 - State each open decision as a clear question.
 - Provide at least two concrete options per decision.
 - State recommendation and rationale.
-- Do NOT proceed to the full architecture plan until all key decisions are confirmed by Product Owner or explicitly deferred with a recorded assumption.
+- Do NOT proceed to the full architecture plan until all key decisions are either (a) confirmed by the Product Owner or (b) explicitly deferred with a recorded assumption that the Product Owner has reviewed and accepted.
 
-**Gate rule:** Architecture Agent must not write the full architecture plan while any discussion item with architectural impact remains unresolved by the Product Owner.
+**Gate rule:** Architecture Agent must not write the full architecture plan while any discussion item with architectural impact remains unresolved or any deferral/assumption has not been explicitly accepted by the Product Owner.
 
 ## Challenge Phase (Mandatory Before Output)
 
