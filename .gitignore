@@ -3,6 +3,9 @@
 .env.local
 .env.*.local
 
+# Local project config (private identifiers)
+.figma-config.local
+
 # Node dependencies
 node_modules/
 

@@ -14,11 +14,9 @@ Enable the orchestrator to resume work as primary control agent for all activiti
 
 ## Figma Project Metadata
 
-1. **Project name:** TarkVitark
-2. **Team:** Nishant Agnihotri's team
-3. **Plan key:** `team::1302618729378439898`
-4. **Plan tier:** Pro (Full seat, 200 tool calls/day as of 2026-04-01)
-5. **File creation note:** MCP `create_new_file` creates files in drafts; manually move to the TarkVitark project after creation if needed.
+Project-specific Figma identifiers are stored locally in `.figma-config.local` (gitignored). See `.figma-config.local.example` for the required format.
+
+Agents must read `.figma-config.local` at runtime for project name, team, and plan key. If the file is missing, prompt the user to create it from the example template.
 
 ## Delivery Mode
 
@@ -197,7 +195,7 @@ Enable the orchestrator to resume work as primary control agent for all activiti
 24. Universal principle persistence: repo-wide principles may be stored in either (a) `Known Rules From User Decisions` (this section) or (b) permanent shared protocol docs (.github/AGENTS.md, .github/agents/*.agent.md) with explicit cross-reference. This avoids duplication while ensuring traceability and centralized visibility. Pre-archive checks validate presence in either location before archiving a slice.
 25. UX and Architecture agents run a built-in challenge phase before producing any output (Option A: embedded challenger behavior). All `Must Resolve` gaps must be resolved or explicitly accepted by Product Owner before the agent returns a `Ready` status. This mirrors the Gate 1 Requirement Challenger discipline, applied to Gate 3A and Gate 4. Implemented in: `ux.agent.md` (Challenge Phase section), `architecture.agent.md` (Challenge Phase section), `architect-orchestrator.agent.md` (Gate 3A and Gate 4 execution rules), `AGENTS.md` (Required Gates rules 6 and 8).
 26. Architecture Agent operates as an expert architect covering three tiers: (1) System Design — scalability, fault-tolerance, data flow and coordination, data consistency, service boundaries, security, observability; (2) Solution Architecture — architectural patterns, technology choices, integration contracts, deployment topology, state management, migration strategy; (3) Implementation Design — file/folder structure, data shapes, function signatures, naming conventions, cross-cutting concerns. The agent runs a mandatory Discussion Phase covering all three tiers before freezing the plan, and produces deep concrete detail at every level. Vague directional plans are explicitly prohibited. Implemented in: `architecture.agent.md` (Role, Discussion Phase — Tiers 1/2/3, Approach, Architecture Quality Checks, Architecture Plan Package Schema), `architect-orchestrator.agent.md` (Architecture Gate Checklist — items 5, 6, 7 covering discussion, system design, and solution architecture locks), `AGENTS.md` (Required Gates rules 9).
-27. Figma File Structure Convention: one Figma file per slice under the designated Figma project (project-specific metadata stored in `.github/orchestrator-context.md` → Figma Project Metadata, not in agent files). Standard pages: `UX Flows`, `Design`, `QA Notes`. Frame naming: `<Screen>/<State>`. Enhancement slices are self-contained — recreate current-state screen from prior slice's Figma file, apply enhancement, do not modify original file. Agent files reference the convention generically; project name is not hardcoded in reusable agent/AGENTS files. Implemented in: `.github/AGENTS.md` (Figma File Structure Convention section), `ux.agent.md` (Approach section), `figma.agent.md` (Approach section), `.github/orchestrator-context.md` (Figma Project Metadata section).
+27. Figma File Structure Convention: one Figma file per slice under the designated Figma project (project-specific metadata stored in `.figma-config.local`, gitignored — see `.figma-config.local.example` for format). Standard pages: `UX Flows`, `Design`, `QA Notes`. Frame naming: `<Screen>/<State>`. Enhancement slices are self-contained — recreate current-state screen from prior slice's Figma file, apply enhancement, do not modify original file. Agent files reference the convention generically; project name is not hardcoded in reusable agent/AGENTS files. Implemented in: `.github/AGENTS.md` (Figma File Structure Convention section), `ux.agent.md` (Approach section), `figma.agent.md` (Approach section), `.figma-config.local` (runtime metadata).
 
 ## Resume Protocol For Orchestrator
 

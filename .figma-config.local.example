@@ -1,0 +1,8 @@
+# Figma Project Metadata — copy to .figma-config.local and fill in values.
+# .figma-config.local is gitignored; this example is committed as a template.
+
+project_name: <your Figma project name>
+team: <your Figma team name>
+plan_key: <your Figma plan key, e.g. team::123456>
+plan_tier: <plan tier and quota, e.g. Pro (Full seat, 200 tool calls/day as of YYYY-MM-DD)>
+file_creation_note: MCP create_new_file creates files in drafts; manually move to your project after creation if needed.
