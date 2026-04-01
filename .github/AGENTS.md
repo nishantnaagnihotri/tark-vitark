@@ -159,6 +159,18 @@ Escalate to Product Owner when:
    - Rollback note (how to undo if issues arise).
 7. **Orchestrator Validation:** Build gate checklist includes BDD evidence verification (test-to-scenario mapping, passing results, domain clarity).
 
+## Figma File Structure Convention
+
+1. **One Figma file per slice.** Each slice gets its own Figma file under the designated Figma project (see `orchestrator-context.md` → Figma Project Metadata), named after the slice (e.g., "Coming Soon Splash Page").
+2. **Standard page structure within each file:**
+   - Page 1: `UX Flows` — wireframes and flow diagrams (UX Agent output).
+   - Page 2: `Design` — final screens, states, and variants (Figma Agent output).
+   - Page 3: `QA Notes` — annotations for Design QA review.
+3. **Frame naming convention:** `<Screen>/<State>` (e.g., `Home/Default`, `Home/Loading`, `Home/Error`).
+4. **Enhancement slices are self-contained.** When a slice enhances an existing screen, the Figma Agent reads the most recent Figma file for that screen (referenced from the relevant prior slice's `03-ux.md` or `04-design-qa.md`), recreates the current-state screen in the new slice's file, then applies the enhancement. The new file shows the complete post-enhancement screen, not a diff. The previous slice's file is not modified.
+5. **Artifact reference storage:** The Figma file URL or key is recorded in `03-ux.md` and `04-design-qa.md` for each slice. Enhancement slices must also reference the prior slice's Figma file as the baseline source.
+6. **No shared master file required.** If a "current state" reference file becomes needed later, it can be added without restructuring existing slice files.
+
 ## Figma Fidelity Policy
 
 1. For any task requiring Figma parity, agents must extract and apply frame-level values from Figma as source of truth before visual polish passes.
