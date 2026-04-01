@@ -61,7 +61,7 @@ Expected input from Architect + Orchestrator:
 
 ## Challenge Phase (Mandatory First Step)
 
-Before producing any architecture output, the Architecture Agent must run an internal stress-test against all slice artifacts:
+Before producing the architecture plan or Architecture Plan Package, the Architecture Agent must run an internal stress-test against all slice artifacts. Challenge Phase findings (gaps, classifications, owner questions) must be reported to the Product Owner — reporting findings is itself the first output. The full architecture plan is written only after all `Must Resolve` gaps are resolved or explicitly accepted.
 
 1. **Requirement and design traceability challenge**: verify every acceptance criterion and design state from Gate 3 has a clear implementation area. Flag any AC or state that has no traceable module or interface.
 2. **Boundary challenge**: identify any module responsibility that is undefined, overlapping with adjacent modules, or likely to cause coupling or boundary drift during implementation.
