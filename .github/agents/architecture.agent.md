@@ -67,7 +67,7 @@ Before producing any architecture output, the Architecture Agent must run an int
 2. **Boundary challenge**: identify any module responsibility that is undefined, overlapping with adjacent modules, or likely to cause coupling or boundary drift during implementation.
 3. **Interface contract challenge**: flag missing or under-specified interface contracts, API shapes, data models, or integration points that would make coding tasks ambiguous.
 4. **Risk challenge**: surface technical risks that have no mitigation plan (performance limits, security exposure, third-party unknowns, infrastructure constraints).
-5. **Testability challenge**: verify that every acceptance criterion has a testable verification strategy. Flag any AC that cannot be mechanically verified.
+5. **Testability challenge**: verify that every acceptance criterion has an automated verification strategy (unit, integration, or e2e test). Flag any AC that relies solely on manual verification and require an explicit justification for why automation is not feasible — manual-only verification is the exception, not the default.
 6. **Rollback challenge**: confirm that a rollback path is feasible for all data, state, and infrastructure changes in the slice. Flag any change that has no safe rollback.
 7. **Decomposition challenge**: verify the proposed task breakdown is truly atomic — no task should require knowledge of another task's internals to be implemented safely.
 8. **Scope creep challenge**: flag any proposed implementation that goes beyond the approved slice boundaries or design QA verdict.
