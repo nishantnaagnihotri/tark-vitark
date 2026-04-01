@@ -106,7 +106,7 @@ Covers the architectural patterns, technology choices, and structural decisions 
 10. **Integration architecture**: how does this slice integrate with external systems, APIs, or third-party services? Define the integration contract (protocol, payload, error handling, versioning strategy).
 11. **Deployment topology**: what is the deployment shape of this slice (same process, separate service, serverless function, edge worker)? Flag any infrastructure changes needed and their implications.
 12. **State management strategy**: what state is introduced (client, server, shared)? Propose the ownership model and lifecycle for each piece of state.
-13. **Migration and backward compatibility**: does this slice require data migration, API versioning, or feature flagging for safe rollout? Propose a concrete strategy.
+13. **Migration and backward-compatibility**: does this slice require data migration, API versioning, or feature flagging for safe rollout? Propose a concrete strategy.
 
 ### Tier 3 — Implementation Design
 Covers the code-level specifics that developers need before writing a single line.
