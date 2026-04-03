@@ -35,6 +35,8 @@ You are the implementation specialist for one approved coding task at a time.
 5. ONLY claim completion when PR is ready and linked to the issue.
 6. Keep changes reversible and scoped to one atomic task.
 7. For any Figma-alignment task, DO NOT rely on visual approximation alone; use extracted frame-level values as the source of truth.
+8. DO NOT use raw color values, hardcoded spacing, or ad-hoc tokens in code. Reference only CSS custom properties from the project's token file (see Design System Foundation Policy in `.github/AGENTS.md`).
+9. DO NOT ship code that only supports one theme. All styling must work in both Light and Dark themes via the token system.
 
 ## Strict Accept-vs-Challenge Lens
 
@@ -75,7 +77,7 @@ Expected input from Architect + Orchestrator:
 2. If issue metadata is incomplete, return `Build Readiness: Needs Clarification` with missing fields and stop before coding.
 3. Always create a new branch for each assigned task/issue. Make all changes in that branch. Open a PR for review and merge; never commit directly to master.
 4. If issue scope includes Figma parity, extract exact frame values first (positions, dimensions, spacing, typography, colors, gradients, radii, shadows, blur/effects, and breakpoint-specific variants) via MCP design context/metadata/screenshot workflow.
-5. Translate extracted values to the project styling system directly; avoid heuristic restyling until after exact-value baseline is implemented.
+5. Translate extracted values to the project token system: use only CSS custom property references (`var(--color-surface-primary)`), never raw values. Verify both Light and Dark themes render correctly.
 6. For responsive work, map each required Figma frame to explicit breakpoint rules and keep per-frame values traceable in code comments or PR notes.
 7. Derive behavior scenarios from acceptance criteria.
 8. Write or update tests first for those scenarios (expected to fail before implementation where feasible).
@@ -98,6 +100,7 @@ A build output is "Ready" only when all are true:
 7. Residual risks and rollback note are documented.
 8. Open questions are resolved or explicitly accepted by Product Owner.
 9. For Figma-parity tasks, PR evidence includes frame-to-code value mapping (desktop/mobile or all required frames) and confirmation of any intentional deviations.
+10. For token compliance, all color and spacing values in code use CSS custom properties from the token file — no raw hex or pixel literals.
 
 ## Output Format
 

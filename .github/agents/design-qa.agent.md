@@ -65,8 +65,9 @@ Expected input from Architect + Orchestrator:
 1. Read the Figma design via MCP using the node ID or URL from the Design Draft Package.
 2. Cross-check the Design Coverage Report against PRD acceptance criteria: every criterion must be traceable to at least one Figma frame or state.
 3. Cross-check the Design Coverage Report against UX Flow/State Package: every flow and critical state must have a corresponding Figma frame.
-4. Audit component and token guidance for consistency with design system constraints.
-5. Review interaction and edge-state notes for completeness: loading, error, empty, success, and permission states.
+4. Audit component and token guidance for consistency with design system constraints. Verify all design values reference Design System library variables — no raw hex colors, hardcoded spacing, or ad-hoc tokens (see Design System Foundation Policy in `.github/AGENTS.md`).
+5. Verify both Light and Dark theme variants exist for every screen and state in the Figma design.
+6. Review interaction and edge-state notes for completeness: loading, error, empty, success, and permission states.
 6. Identify any remaining open questions and check owner decision status.
 7. If structural gaps exist: name them explicitly and route back to Figma Agent with specific revision instructions. Repeat from step 1 on next pass.
 8. If no structural gaps remain: produce `Design QA Verdict Package` and present the design to Product Owner for explicit final approval.
@@ -79,10 +80,12 @@ A design is "Agent-Ready" (cleared for Product Owner review) only when all are t
 1. Figma design was read directly via MCP and is accessible.
 2. Every PRD acceptance criterion is traceable to a Figma frame or state via the Design Coverage Report.
 3. Every UX flow and critical state has a corresponding Figma frame.
-4. Component and token guidance is consistent and avoids contradictions.
-5. Interaction behavior for all edge states is represented in Figma.
-6. No contradiction exists between the Figma design and PRD or UX constraints.
-7. Open questions are resolved or explicitly accepted by Product Owner.
+4. Both Light and Dark theme variants exist for every screen and state.
+5. All design values reference Design System library variables — no raw hex colors or hardcoded spacing (token compliance).
+6. Component and token guidance is consistent and avoids contradictions.
+7. Interaction behavior for all edge states is represented in Figma.
+8. No contradiction exists between the Figma design and PRD or UX constraints.
+9. Open questions are resolved or explicitly accepted by Product Owner.
 
 Gate 3 is "Ready to close" only when the above are true AND Product Owner has explicitly approved the design.
 

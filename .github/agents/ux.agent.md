@@ -83,9 +83,11 @@ For each gap found, the UX Agent must:
 4. Break the slice into user journeys, screens, transitions, and system states.
 5. Identify content, error, loading, empty, and permission states needed for safe design.
 6. Call out UX risks or unresolved decisions that would make design-tool output speculative.
-7. Create or confirm a design artifact for this UX task following the Figma File Structure Convention (see `.github/AGENTS.md`): create a new Figma file under the designated Figma project (see `.figma-config.local` for project metadata) named after the slice, with pages `UX Flows`, `Design`, and `QA Notes`. For enhancement slices, read the prior slice's Figma file as baseline before creating the new file.
-8. Capture the Figma file URL or key as the mandatory `Design Artifact` reference.
-9. Produce a handoff package that can drive design-tool execution and later design QA.
+7. Create or confirm a design artifact for this UX task following the Figma File Structure Convention (see `.github/AGENTS.md`): create a new Figma file under the designated Figma project (see `.figma-config.local` for project metadata) named after the slice, with pages `UX Flows`, `Design`, and `QA Notes`.
+8. If the shared Design System library does not exist yet, create it first as part of this Gate 3A run, define the initial Light/Dark variable collections and minimum token set required by the slice, and record the library file key/URL in `.figma-config.local`.
+9. The slice file must consume the shared Design System library (see Design System Foundation Policy in `.github/AGENTS.md`) so all downstream design work uses library variables and tokens. For enhancement slices, read the prior slice's Figma file as baseline before creating the new file.
+10. Capture the Figma file URL or key as the mandatory `Design Artifact` reference.
+11. Produce a handoff package that can drive design-tool execution and later design QA.
 
 ## UX Output Structure
 
