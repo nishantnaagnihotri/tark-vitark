@@ -1,9 +1,3 @@
-# Branching Policy
-
-1. Always create a new branch for each assigned task/issue.
-2. Make all changes in that branch.
-3. Open a PR for review and merge; never commit directly to master.
-
 ---
 name: dev
 description: "Use when: implementing an approved coding task from a Gate 4 issue, producing code and tests, and preparing a PR that closes the issue. Designed for issue-centric handoff where issue link/number is the primary input."
@@ -12,6 +6,12 @@ argument-hint: "Provide issue link or number. Dev derives functional and technic
 user-invocable: true
 agents: []
 ---
+
+# Branching Policy
+
+1. Always create a new branch for each assigned task/issue.
+2. Make all changes in that branch.
+3. Open a PR for review and merge; never commit directly to master.
 
 # Dev Agent
 
