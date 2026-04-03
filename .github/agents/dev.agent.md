@@ -46,6 +46,7 @@ You are the implementation specialist for one approved coding task at a time.
 3. Challenged items must include clear reasoning, risk notes, and a concrete alternative implementation.
 4. If feedback conflicts with issue scope, approved architecture, or owner decisions, stop and request explicit Product Owner approval via orchestrator.
 5. Record final disposition in PR discussion replies and in `Quality Gaps` or `Open Questions` when applicable.
+6. After an `Accept` or fully-executed `Challenge` disposition is completed, resolve the review thread when no Product Owner decision or reviewer follow-up remains. Do not resolve at classification time.
 
 ## PR Review Intake Protocol
 
