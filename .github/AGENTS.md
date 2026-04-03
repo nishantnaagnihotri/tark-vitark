@@ -190,7 +190,7 @@ Escalate to Product Owner when:
 ## Design System Foundation Policy
 
 1. **Dedicated Design System Figma library file.** A standalone Figma file ("Design System") exists under the designated Figma project (see `.figma-config.local`) containing all shared variables, tokens, and base components. This file is published as a Figma library and consumed by all slice files.
-2. **Bootstrap rule for first use.** If the Design System library does not exist yet, the first slice entering Gate 3 bootstraps it. UX Agent creates the library file first, records its file key/URL in `.figma-config.local`, and then creates the slice file that consumes it.
+2. **Bootstrap rule for first use.** If the Design System library does not exist yet, the first slice entering Gate 3 bootstraps it. UX Agent creates the library file first, records `design_system_library_file_key` in `.figma-config.local` (and `design_system_library_url` when available for convenience), and then creates the slice file that consumes it.
 3. **Variable categories:** Variables are organized by category: `color/*`, `spacing/*`, `typography/*`, `radius/*`, `shadow/*`, `breakpoint/*`.
 4. **Dual-theme from day one.** A variable collection `Theme` with two modes — Light and Dark — is defined in the Design System library. All semantic color tokens are dual-mode. Spacing, typography, radii, and shadows are mode-independent (same across themes).
 5. **Token-only design rule.** All slice designs must use library variables exclusively. No raw hex colors, hardcoded spacing values, or ad-hoc tokens are permitted in slice Figma files. Figma Agent must verify library variable usage before marking a design as ready.
