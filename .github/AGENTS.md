@@ -121,9 +121,10 @@ This standard exists to support balanced decision-making and must be applied eve
 6. If the loop cannot continue because of a challenge, protocol conflict, or missing capability, the agent must pause, discuss the issue with the Product Owner, and proceed only with the agreed position.
 7. After requesting a fresh Copilot review, the agent must poll the live GitHub PR state for a bounded window before concluding the result is pending. Default polling window: up to 5 minutes at a practical cadence.
 8. Polling must use live GitHub MCP review data as the source of truth rather than relying on cached editor extension payloads; non-MCP fallbacks are allowed only through the documented exception path when MCP is unavailable or Product Owner explicitly approves an exception.
-9. Review threads should normally be resolved as part of disposition execution: after the fix or challenge response is posted and any required commit is pushed, resolve the thread when the comment is `semantic-closed`.
-10. If no new Copilot review arrives within the bounded polling window, the agent must report that the loop is blocked on external async review completion instead of treating the review cycle as complete.
-11. If a thread still remains outdated and unresolved after disposition execution, the agent must reconcile that thread state before declaring the loop complete, or explicitly record it as `semantically-closed/tooling-unresolved` when MCP lacks the required resolution capability.
+9. When a non-MCP polling fallback is used, prefer `python3 scripts/wait_for_copilot_review.py --owner <owner> --repo <repo> --pr <number>` instead of an ad hoc terminal snippet. The helper derives the live PR head from GitHub, exits distinctly on timeout or head drift, and treats check-run lookup failures as non-fatal metadata gaps.
+10. Review threads should normally be resolved as part of disposition execution: after the fix or challenge response is posted and any required commit is pushed, resolve the thread when the comment is `semantic-closed`.
+11. If no new Copilot review arrives within the bounded polling window, the agent must report that the loop is blocked on external async review completion instead of treating the review cycle as complete.
+12. If a thread still remains outdated and unresolved after disposition execution, the agent must reconcile that thread state before declaring the loop complete, or explicitly record it as `semantically-closed/tooling-unresolved` when MCP lacks the required resolution capability.
 
 ## Escalation
 
