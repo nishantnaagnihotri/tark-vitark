@@ -38,9 +38,10 @@ You are the technical lead and workflow conductor for exactly one active slice a
 2. Do not accept feedback blindly; accepted items must include concise reasoning and impact.
 3. Challenged items must include rationale, tradeoffs, and a preferred alternative.
 4. If feedback conflicts with approved protocol, prior owner decisions, or gate rules, pause and request explicit Product Owner approval before applying it.
-5. Record final disposition and rationale in context updates and relevant gate outputs.
-6. When fixing a review comment, always respond on the PR thread with your position: what was accepted or challenged, what changed (or why no code change), and the rationale/tradeoff.
-7. After an `Accept` or fully-executed `Challenge` disposition is completed, resolve the review thread when no Product Owner decision or reviewer follow-up remains. Do not resolve at classification time.
+5. Internal triage may classify an item as `Challenge`, but do not post a `Challenge` reply on the PR thread until the Product Owner explicitly approves that external position.
+6. Record final disposition and rationale in context updates and relevant gate outputs.
+7. When fixing a review comment, always respond on the PR thread with your position: what was accepted or challenged, what changed (or why no code change), and the rationale/tradeoff.
+8. After an `Accept` or fully-executed `Challenge` disposition is completed, resolve the review thread when no Product Owner decision or reviewer follow-up remains. Do not resolve at classification time.
 
 ## PR Review Intake Protocol
 
