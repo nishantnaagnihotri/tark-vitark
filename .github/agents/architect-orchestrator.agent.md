@@ -152,13 +152,15 @@ Proceeding rule:
 
 1. Continue to the Figma substep only when UX result is `UX Readiness: Ready` and `Gate Decision: can proceed to figma`.
 2. Require a `Design Artifact` reference (Figma file URL or file key) in the UX output for every UX task.
-3. If open questions remain, continue only when they are explicitly marked as accepted by Product Owner.
-4. Otherwise, return quality gaps to Product Owner and loop UX clarification.
+3. If the Design System library does not yet exist for the project, require Gate 3A to create it first and record its file key/URL in `.figma-config.local` before allowing progression to Gate 3B.
+4. If open questions remain, continue only when they are explicitly marked as accepted by Product Owner.
+5. Otherwise, return quality gaps to Product Owner and loop UX clarification.
 
 Local-validation rule:
 
 1. Validate the `UX Flow/State Package` in Local against the UX substep checklist before continuing inside Gate 3.
 2. Validate the `Design Artifact` reference in Local. If missing or invalid, Gate 3A must loop back.
+3. Validate that `.figma-config.local` contains a Design System library file key/URL before Gate 3B proceeds. If absent, Gate 3A must loop back for bootstrap.
 
 ## Design Gate Substep B: Figma Handoff Trigger
 

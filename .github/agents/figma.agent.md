@@ -61,12 +61,14 @@ Expected input from Architect + Orchestrator:
 
 1. Validate the UX package for completeness of flow/state definitions.
 2. Confirm the Figma file follows the Figma File Structure Convention (see `.github/AGENTS.md`): the file is under the designated Figma project (see `.figma-config.local` for project metadata), named after the slice, with standard pages (`UX Flows`, `Design`, `QA Notes`). For enhancement slices, verify the current-state screen was recreated from the prior slice's Figma file before applying enhancements.
-3. Map user flows and states to concrete screens/frames and transitions.
-4. Identify component composition, reusable patterns, and token-level guidance.
-5. Document interaction details for loading, error, empty, success, and permission states.
-6. Create the actual Figma design using MCP tools: produce frames, components, and state variants in the `Design` page. Use frame naming convention `<Screen>/<State>` (e.g., `Home/Default`, `Home/Error`).
-7. Produce a `Design Coverage Report` (text): maps every screen and state in the Figma file back to UX flows and PRD criteria by reference. This is the verifiable surface for Design QA.
-8. Both the Figma design reference and the Design Coverage Report are required parts of the `Design Draft Package`.
+3. If the Design System library was bootstrapped by the current slice, populate and stabilize the initial token set in the library before designing slice screens. If the library already exists, extend it first when new shared tokens or components are needed.
+4. Map user flows and states to concrete screens/frames and transitions.
+5. Identify component composition, reusable patterns, and token-level guidance.
+6. Document interaction details for loading, error, empty, success, and permission states.
+7. Create the actual Figma design using MCP tools: produce frames, components, and state variants in the `Design` page. Use frame naming convention `<Screen>/<State>/<Theme>` (e.g., `Home/Default/Light`, `Home/Default/Dark`). Every screen/state must have both Light and Dark theme variants.
+8. Verify all design values reference Design System library variables (see Design System Foundation Policy in `.github/AGENTS.md`). No raw hex colors, hardcoded spacing, or ad-hoc tokens. If new tokens are needed, add them to the library first.
+9. Produce a `Design Coverage Report` (text): maps every screen and state in the Figma file back to UX flows and PRD criteria by reference. This is the verifiable surface for Design QA.
+10. Both the Figma design reference and the Design Coverage Report are required parts of the `Design Draft Package`.
 
 ## Figma Output Structure
 
@@ -84,12 +86,14 @@ A Figma package is "Ready" only when all are true:
 
 1. A real Figma design has been created or updated via MCP with all required frames.
 2. All primary flows and critical states from UX are represented in Figma.
-3. Design Coverage Report traces every Figma frame and state back to a UX flow and PRD criterion.
-4. Component guidance is concrete enough for consistent frame construction.
-5. Interaction behavior for edge states is explicit.
-6. No contradiction exists with PRD or UX constraints.
-7. Open questions are resolved or explicitly accepted by Product Owner.
-8. The package is actionable for automated Design QA and Product Owner visual review.
+3. Both Light and Dark theme variants exist for every screen and state.
+4. All design values reference Design System library variables — no raw hex colors or hardcoded spacing.
+5. Design Coverage Report traces every Figma frame and state back to a UX flow and PRD criterion.
+6. Component guidance is concrete enough for consistent frame construction.
+7. Interaction behavior for edge states is explicit.
+8. No contradiction exists with PRD or UX constraints.
+9. Open questions are resolved or explicitly accepted by Product Owner.
+10. The package is actionable for automated Design QA and Product Owner visual review.
 
 ## Output Format
 

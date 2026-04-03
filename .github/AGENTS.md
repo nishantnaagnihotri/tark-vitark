@@ -166,10 +166,23 @@ Escalate to Product Owner when:
    - Page 1: `UX Flows` — wireframes and flow diagrams (UX Agent output).
    - Page 2: `Design` — final screens, states, and variants (Figma Agent output).
    - Page 3: `QA Notes` — annotations for Design QA review.
-3. **Frame naming convention:** `<Screen>/<State>` (e.g., `Home/Default`, `Home/Loading`, `Home/Error`).
+3. **Frame naming convention:** `<Screen>/<State>/<Theme>` (e.g., `Home/Default/Light`, `Home/Default/Dark`, `Home/Error/Light`, `Home/Error/Dark`). Every screen/state must have both Light and Dark variants.
 4. **Enhancement slices are self-contained.** When a slice enhances an existing screen, the Figma Agent reads the most recent Figma file for that screen (referenced from the relevant prior slice's `03-ux.md` or `04-design-qa.md`), recreates the current-state screen in the new slice's file, then applies the enhancement. The new file shows the complete post-enhancement screen, not a diff. The previous slice's file is not modified.
 5. **Artifact reference storage:** The Figma file URL or key is recorded in `03-ux.md` and `04-design-qa.md` for each slice. Enhancement slices must also reference the prior slice's Figma file as the baseline source.
 6. **No shared master file required.** If a "current state" reference file becomes needed later, it can be added without restructuring existing slice files.
+
+## Design System Foundation Policy
+
+1. **Dedicated Design System Figma library file.** A standalone Figma file ("Design System") exists under the designated Figma project (see `.figma-config.local`) containing all shared variables, tokens, and base components. This file is published as a Figma library and consumed by all slice files.
+2. **Bootstrap rule for first use.** If the Design System library does not exist yet, the first slice entering Gate 3 bootstraps it. UX Agent creates the library file first, records its file key/URL in `.figma-config.local`, and then creates the slice file that consumes it.
+3. **Variable categories:** Variables are organized by category: `color/*`, `spacing/*`, `typography/*`, `radius/*`, `shadow/*`, `breakpoint/*`.
+4. **Dual-theme from day one.** A variable collection `Theme` with two modes — Light and Dark — is defined in the Design System library. All semantic color tokens are dual-mode. Spacing, typography, radii, and shadows are mode-independent (same across themes).
+5. **Token-only design rule.** All slice designs must use library variables exclusively. No raw hex colors, hardcoded spacing values, or ad-hoc tokens are permitted in slice Figma files. Figma Agent must verify library variable usage before marking a design as ready.
+6. **Both theme variants required.** Figma Agent must produce Light and Dark variants for every screen and state in every slice (see frame naming convention in Figma File Structure Convention).
+7. **Code-side token file.** A CSS custom properties file ships both theme definitions using `[data-theme]` selectors and a `prefers-color-scheme` media query fallback. Dev Agent references only CSS variable names — never raw values.
+8. **Token-to-code 1:1 mapping.** Figma variable names map directly to CSS custom property names (e.g., Figma `color/surface/primary` → CSS `--color-surface-primary`). This mapping is the contract between design and code.
+9. **Design QA token compliance check.** Design QA Agent must verify that every design value in the Figma file references a library variable and that both theme variants exist for all screens/states.
+10. **Library-first for new slices.** If a new slice needs a token or component not yet in the Design System library, the token/component is added to the library first, then used in the slice file. Slice files never define local tokens that should be shared.
 
 ## Figma Fidelity Policy
 
