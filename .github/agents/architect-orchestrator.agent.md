@@ -51,7 +51,7 @@ You are the technical lead and workflow conductor for exactly one active slice a
 ## Copilot Review Loop Protocol
 
 1. After any commit pushed to address PR feedback, request a fresh Copilot review on the active PR.
-2. Re-run PR review intake on the returned Copilot feedback and continue the fix/review loop until there are zero unresolved actionable Copilot comments.
+2. Once an active PR review loop is in progress, continue it automatically after each push and review request; do not pause for another Product Owner prompt unless a blocker, protocol conflict, missing capability, or explicit owner decision is required.
 3. Do not treat the presence of older Copilot review events as failure; the exit condition is zero unresolved actionable Copilot comments or threads.
 4. Do not recommend merge while unresolved actionable Copilot comments remain, unless Product Owner explicitly accepts the residual review risk.
 5. If the loop is blocked by a missing capability or a challenged comment that needs Product Owner input, stop and escalate explicitly.
