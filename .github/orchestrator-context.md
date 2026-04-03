@@ -102,7 +102,7 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). A
 33. Once a PR review loop starts, continue it automatically after each push and review request until resolved or blocked.
 34. Thread resolution belongs to disposition execution, not classification.
 35. Review completion uses semantic state: `semantic-open` blocks, `semantic-closed` does not, and `semantically-closed/tooling-unresolved` must be reported explicitly.
-36. Internal review triage may classify an item as `Challenge`, but posting a `Challenge` reply on a PR thread requires explicit Product Owner approval first.
+36. Internal review triage may classify an item as `Challenge`, but posting a `Challenge` reply on a PR thread requires prior discussion with the Product Owner and explicit agreement on the external position.
 
 ## Resume Protocol For Orchestrator
 
@@ -176,6 +176,13 @@ Detailed repo-wide governance history from 2026-03-30 through 2026-04-03 is arch
 - Open questions status: None.
 - Next micro-goal: Apply this stricter approval rule on all future PR review responses.
 - Blockers/owner decisions: Owner clarified that external challenge replies require prior agreement, even when the internal classification is already clear.
+
+### 2026-04-03 (Challenge Discussion Sequence)
+- Gate status: No active slice. PR review governance tightened further.
+- Artifact changes: Updated shared, orchestrator, and dev protocols so a `Challenge` disposition must be discussed with the Product Owner first, then posted externally only using the agreed position. Known Rule #36 updated to reflect discussion-first sequencing.
+- Open questions status: None.
+- Next micro-goal: Apply the discuss -> agree -> post sequence on all future challenged PR comments.
+- Blockers/owner decisions: Owner clarified that approval alone is not the full requirement; the process must explicitly include discussion and agreement before the external challenge reply is posted.
 
 ### 2026-04-03 (PR Creation Review Trigger)
 - Gate status: No active slice. PR review automation workflow tightened.

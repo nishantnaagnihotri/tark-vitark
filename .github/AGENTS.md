@@ -94,7 +94,7 @@ This standard exists to support balanced decision-making and must be applied eve
 2. Agents must not accept feedback blindly. Each accepted item must include concise reasoning.
 3. Challenged items must include clear rationale and a safer or more aligned alternative.
 4. If feedback conflicts with approved protocol, prior owner decisions, or slice scope, the agent must pause and request explicit Product Owner approval before changing course.
-5. Internal triage may classify an item as `Challenge`, but the agent must not post a `Challenge` reply on a PR thread until the Product Owner explicitly approves that external position.
+5. Internal triage may classify an item as `Challenge`, but the agent must first discuss that challenge with the Product Owner, get explicit agreement on the external position, and only then post the agreed `Challenge` reply on the PR thread.
 6. Final disposition and rationale must be recorded in the relevant output (PR reply, handoff, or context update).
 7. When fixing a review comment, agents must also post a review response that explains their position: what was accepted or challenged, what changed (or why no change), and the rationale/tradeoff.
 8. After an `Accept` or fully-executed `Challenge` disposition is completed, the agent must resolve the review thread when no Product Owner decision or reviewer follow-up remains. Do not resolve a thread at classification time.
@@ -118,7 +118,7 @@ This standard exists to support balanced decision-making and must be applied eve
 3. Once an active PR review loop has started, the agent must continue it automatically after each push and review request; it must not pause for another Product Owner prompt unless a blocker, protocol conflict, missing capability, or explicit owner-decision point is reached.
 4. Historical Copilot review records may remain on the PR; success is defined as zero `semantic-open` Copilot comments or threads, not zero total Copilot reviews.
 5. Each new Copilot comment must go through the PR Review Intake Protocol before any additional changes are proposed or made.
-6. If the loop cannot continue because of a challenge, protocol conflict, or missing capability, the agent must escalate to Product Owner with the blocker.
+6. If the loop cannot continue because of a challenge, protocol conflict, or missing capability, the agent must pause, discuss the issue with the Product Owner, and proceed only with the agreed position.
 7. After requesting a fresh Copilot review, the agent must poll the live GitHub PR state for a bounded window before concluding the result is pending. Default polling window: up to 2 minutes at a practical cadence.
 8. Polling must use live GitHub MCP review data as the source of truth rather than relying on cached editor extension payloads; non-MCP fallbacks are allowed only through the documented exception path when MCP is unavailable or Product Owner explicitly approves an exception.
 9. Review threads should normally be resolved as part of disposition execution: after the fix or challenge response is posted and any required commit is pushed, resolve the thread when the comment is `semantic-closed`.
