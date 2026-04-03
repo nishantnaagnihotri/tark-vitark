@@ -96,7 +96,7 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). A
 27. Figma uses one self-contained file per slice with pages `UX Flows`, `Design`, `QA Notes` and frame naming `<Screen>/<State>/<Theme>`.
 28. The Design System lives in a shared Figma library file; the first slice entering Gate 3 bootstraps it if absent. Dual-theme and token-only rules apply from day one.
 29. PR review intake is mandatory before any fix: classify each actionable comment as `Accept`, `Challenge`, or `Needs Product Owner Decision`.
-30. After each review-fix push, rerun the Copilot review loop until there are zero actionable open comments unless the Product Owner accepts residual risk.
+30. Start the Copilot review loop immediately when a PR is created, and rerun it after each review-fix push until there are zero actionable open comments unless the Product Owner accepts residual risk.
 31. After requesting Copilot review, poll live GitHub state for up to 2 minutes before declaring the result pending.
 32. GitHub PR/issue/review operations use GitHub MCP as the default control plane; fallbacks require an explicit capability gap and approval.
 33. Once a PR review loop starts, continue it automatically after each push and review request until resolved or blocked.
@@ -168,3 +168,10 @@ Detailed repo-wide governance history from 2026-03-30 through 2026-04-03 is arch
 - 2026-04-01: embedded challenge phase adopted; architecture expert standard and three-tier discussion model added; Figma file-per-slice convention established.
 - 2026-04-02: design-system-first and dual-theme governance established, with first-slice bootstrap of the shared design-system library.
 - 2026-04-03: PR review intake and Copilot review loop hardened; PR #33 merged after a clean live Copilot review on head `dc19aa1`.
+
+### 2026-04-03 (PR Creation Review Trigger)
+- Gate status: No active slice. PR review automation workflow tightened.
+- Artifact changes: Updated shared, orchestrator, and dev protocols so PR creation itself triggers the initial Copilot review request and bounded polling window instead of waiting for a later follow-up prompt. Updated Known Rule #30 to match.
+- Open questions status: None.
+- Next micro-goal: Apply the tightened rule to newly opened PRs, including PR #34.
+- Blockers/owner decisions: Root cause was a missing loop-entry trigger rather than a missing continuation rule. The prior protocol handled pushes after review feedback but did not explicitly require immediate review-loop startup on PR creation.
