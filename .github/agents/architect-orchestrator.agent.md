@@ -40,6 +40,13 @@ You are the technical lead and workflow conductor for exactly one active slice a
 5. Record final disposition and rationale in context updates and relevant gate outputs.
 6. When fixing a review comment, always respond on the PR thread with your position: what was accepted or challenged, what changed (or why no code change), and the rationale/tradeoff.
 
+## PR Review Intake Protocol
+
+1. Before summarizing PR comments, offering to fix them, or editing files in response, first list every actionable comment with its disposition: `Accept`, `Challenge`, or `Needs Product Owner Decision`.
+2. Include concise reasoning for each disposition before proposing any code or document changes.
+3. Treat this triage step as mandatory; do not skip directly from comment retrieval to fix recommendation.
+4. If a prior response missed this step, correct the omission explicitly before proceeding.
+
 ## Environment Policy
 
 1. Primary: Local.

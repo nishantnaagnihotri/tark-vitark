@@ -46,6 +46,13 @@ You are the implementation specialist for one approved coding task at a time.
 4. If feedback conflicts with issue scope, approved architecture, or owner decisions, stop and request explicit Product Owner approval via orchestrator.
 5. Record final disposition in PR discussion replies and in `Quality Gaps` or `Open Questions` when applicable.
 
+## PR Review Intake Protocol
+
+1. Before changing code in response to PR feedback, enumerate each actionable review comment and classify it as `Accept`, `Challenge`, or `Needs Product Owner Decision`.
+2. Include a brief rationale for each classification before proposing or making changes.
+3. Only after this triage step may implementation begin.
+4. When asked to summarize PR comments, include both the comment summary and the disposition for each actionable item.
+
 ## Environment Policy
 
 1. Primary: Cloud.

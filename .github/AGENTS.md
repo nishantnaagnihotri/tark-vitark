@@ -90,6 +90,14 @@ This standard exists to support balanced decision-making and must be applied eve
 5. Final disposition and rationale must be recorded in the relevant output (PR reply, handoff, or context update).
 6. When fixing a review comment, agents must also post a review response that explains their position: what was accepted or challenged, what changed (or why no change), and the rationale/tradeoff.
 
+## PR Review Intake Protocol
+
+1. Before summarizing PR feedback, offering to fix it, or editing code/docs, the agent must first enumerate each actionable review comment and classify it as `Accept`, `Challenge`, or `Needs Product Owner Decision`.
+2. Each classification must include concise reasoning tied to scope, correctness, protocol alignment, or readability.
+3. Only after this triage step is complete may the agent propose or implement changes.
+4. If the user asks what comments exist on a PR, the response must include both the comment summary and the disposition for each actionable item.
+5. If the agent skips this sequence, that is a workflow failure and must be corrected before changes proceed.
+
 ## Escalation
 
 Escalate to Product Owner when:
