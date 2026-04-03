@@ -107,7 +107,7 @@ A build output is "Ready" only when all are true:
 7. Residual risks and rollback note are documented.
 8. Open questions are resolved or explicitly accepted by Product Owner.
 9. For Figma-parity tasks, PR evidence includes frame-to-code value mapping (desktop/mobile or all required frames) and confirmation of any intentional deviations.
-10. For token compliance, all color and spacing values in code use CSS custom properties from the token file — no raw hex or pixel literals.
+10. For token compliance, color values and spacing values in code must use CSS custom properties from the token file; avoid raw hex values and hardcoded spacing pixel literals, while allowing explicit units for non-token dimensions when needed.
 
 ## Output Format
 
