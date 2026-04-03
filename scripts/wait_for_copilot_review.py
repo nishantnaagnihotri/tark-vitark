@@ -5,47 +5,166 @@ import json
 import subprocess
 import sys
 import time
-from typing import Any
+from typing import Any, Dict, List, NoReturn, Optional, Tuple
 
 
 BOT_LOGIN = "copilot-pull-request-reviewer[bot]"
 
 
+def exit_with_error(
+    status: str,
+    error: str,
+    *,
+    path: Optional[str] = None,
+    stderr: Optional[str] = None,
+    stdout: Optional[str] = None,
+    exit_code: int = 2,
+) -> NoReturn:
+    payload = {
+        "status": status,
+        "error": error,
+        "path": path,
+        "stderr": stderr,
+        "stdout": stdout,
+        "exit_code": exit_code,
+    }
+    print(json.dumps(payload, indent=2))
+    raise SystemExit(exit_code)
+
+
 def gh_api(path: str) -> Any:
-    result = subprocess.run(
-        ["gh", "api", path],
-        check=True,
-        text=True,
-        capture_output=True,
-    )
-    return json.loads(result.stdout)
+    try:
+        result = subprocess.run(
+            ["gh", "api", path],
+            check=True,
+            text=True,
+            capture_output=True,
+        )
+    except FileNotFoundError:
+        exit_with_error(
+            "error",
+            "gh executable not found",
+            path=path,
+            stderr="Install GitHub CLI and ensure `gh` is on PATH.",
+            exit_code=2,
+        )
+    except subprocess.CalledProcessError as error:
+        exit_with_error(
+            "error",
+            "gh api command failed",
+            path=path,
+            stderr=(error.stderr or "").strip() or None,
+            stdout=(error.stdout or "").strip() or None,
+            exit_code=error.returncode or 2,
+        )
+
+    try:
+        return json.loads(result.stdout)
+    except json.JSONDecodeError as error:
+        exit_with_error(
+            "error",
+            f"gh api returned invalid JSON: {error}",
+            path=path,
+            stdout=(result.stdout or "").strip() or None,
+            exit_code=2,
+        )
 
 
-def maybe_gh_api(path: str) -> tuple[Any | None, str | None]:
-    result = subprocess.run(
-        ["gh", "api", path],
-        text=True,
-        capture_output=True,
-    )
+def maybe_gh_api(path: str) -> Tuple[Optional[Any], Optional[str]]:
+    try:
+        result = subprocess.run(
+            ["gh", "api", path],
+            text=True,
+            capture_output=True,
+        )
+    except FileNotFoundError:
+        return None, "gh executable not found"
+
     if result.returncode != 0:
         stderr = (result.stderr or result.stdout).strip()
         return None, stderr or f"gh api failed for {path}"
-    return json.loads(result.stdout), None
+
+    try:
+        return json.loads(result.stdout), None
+    except json.JSONDecodeError as error:
+        stdout = (result.stdout or "").strip() or "empty response"
+        return None, f"gh api returned invalid JSON for {path}: {error}; output: {stdout}"
 
 
-def get_pull_request(owner: str, repo: str, pull_number: int) -> dict[str, Any]:
+def parse_paginated_json_output(output: str) -> List[Dict[str, Any]]:
+    decoder = json.JSONDecoder()
+    items: List[Dict[str, Any]] = []
+    index = 0
+    text = output.strip()
+
+    while index < len(text):
+        while index < len(text) and text[index].isspace():
+            index += 1
+
+        if index >= len(text):
+            break
+
+        page, next_index = decoder.raw_decode(text, index)
+        if isinstance(page, list):
+            items.extend(page)
+        elif isinstance(page, dict):
+            items.append(page)
+        index = next_index
+
+    return items
+
+
+def gh_api_paginated(path: str) -> List[Dict[str, Any]]:
+    try:
+        result = subprocess.run(
+            ["gh", "api", "--paginate", path],
+            check=True,
+            text=True,
+            capture_output=True,
+        )
+    except FileNotFoundError:
+        exit_with_error(
+            "error",
+            "gh executable not found",
+            path=path,
+            stderr="Install GitHub CLI and ensure `gh` is on PATH.",
+            exit_code=2,
+        )
+    except subprocess.CalledProcessError as error:
+        exit_with_error(
+            "error",
+            "gh api pagination command failed",
+            path=path,
+            stderr=(error.stderr or "").strip() or None,
+            stdout=(error.stdout or "").strip() or None,
+            exit_code=error.returncode or 2,
+        )
+
+    try:
+        return parse_paginated_json_output(result.stdout)
+    except json.JSONDecodeError as error:
+        exit_with_error(
+            "error",
+            f"gh api returned invalid paginated JSON: {error}",
+            path=path,
+            stdout=(result.stdout or "").strip() or None,
+            exit_code=2,
+        )
+
+
+def get_pull_request(owner: str, repo: str, pull_number: int) -> Dict[str, Any]:
     return gh_api(f"repos/{owner}/{repo}/pulls/{pull_number}")
 
 
-def get_reviews(owner: str, repo: str, pull_number: int) -> list[dict[str, Any]]:
-    return gh_api(f"repos/{owner}/{repo}/pulls/{pull_number}/reviews?per_page=100")
+def get_reviews(owner: str, repo: str, pull_number: int) -> List[Dict[str, Any]]:
+    return gh_api_paginated(f"repos/{owner}/{repo}/pulls/{pull_number}/reviews?per_page=100")
 
 
-def get_review_comments(owner: str, repo: str, pull_number: int) -> list[dict[str, Any]]:
-    return gh_api(f"repos/{owner}/{repo}/pulls/{pull_number}/comments?per_page=100")
+def get_review_comments(owner: str, repo: str, pull_number: int) -> List[Dict[str, Any]]:
+    return gh_api_paginated(f"repos/{owner}/{repo}/pulls/{pull_number}/comments?per_page=100")
 
 
-def summarize_check_runs(owner: str, repo: str, head_sha: str) -> dict[str, Any]:
+def summarize_check_runs(owner: str, repo: str, head_sha: str) -> Dict[str, Any]:
     data, error = maybe_gh_api(f"repos/{owner}/{repo}/commits/{head_sha}/check-runs")
     if error:
         return {"available": False, "error": error, "runs": []}
@@ -89,18 +208,25 @@ def parse_args() -> argparse.Namespace:
         default=15,
         help="Polling interval in seconds. Default: 15.",
     )
-    return parser.parse_args()
+    args = parser.parse_args()
+    if args.timeout_seconds <= 0:
+        parser.error("--timeout-seconds must be greater than 0")
+    if args.interval_seconds < 1:
+        parser.error("--interval-seconds must be at least 1")
+    if args.interval_seconds > args.timeout_seconds:
+        parser.error("--interval-seconds must be less than or equal to --timeout-seconds")
+    return args
 
 
 def main() -> int:
     args = parse_args()
-    start = time.time()
+    start = time.monotonic()
 
     pull_request = get_pull_request(args.owner, args.repo, args.pr)
     target_head_sha = args.head_sha or pull_request["head"]["sha"]
 
     while True:
-        elapsed = int(time.time() - start)
+        elapsed = int(time.monotonic() - start)
         pull_request = get_pull_request(args.owner, args.repo, args.pr)
         live_head_sha = pull_request["head"]["sha"]
 
