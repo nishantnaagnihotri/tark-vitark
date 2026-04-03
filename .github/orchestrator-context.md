@@ -1,10 +1,6 @@
 # Orchestrator Context Transfer
 
-This file is the canonical handover context for the Architect + Orchestrator agent.
-
-## Purpose
-
-Enable the orchestrator to resume work as primary control agent for all activities without losing prior planning decisions.
+Canonical live handover context for the Architect + Orchestrator agent.
 
 ## Product Owner Model
 
@@ -14,9 +10,7 @@ Enable the orchestrator to resume work as primary control agent for all activiti
 
 ## Figma Project Metadata
 
-Project-specific Figma identifiers are stored locally in `.figma-config.local` (gitignored). See `.figma-config.local.example` for the required format.
-
-Agents must read `.figma-config.local` at runtime for project name, team, and plan key. If the file is missing, prompt the user to create it from the example template.
+Project-specific Figma identifiers live in `.figma-config.local` (gitignored). Agents read it at runtime for project name, team, plan key, and design-system library metadata. If missing, prompt from `.figma-config.local.example`.
 
 ## Delivery Mode
 
@@ -31,7 +25,7 @@ Agents must read `.figma-config.local` at runtime for project name, team, and pl
 2. PRD drafting: cloud-preferred, local-allowed.
 3. Gate 3 design work, including the UX substep, is local-only.
 4. Cloud-preferred gates require execution mode confirmation (`local` or `cloud`) before handoff.
-5. If cloud mode is chosen, manual handoff is required and return artifact must be pasted back.
+5. Cloud mode uses manual handoff and pasted-back artifacts.
 6. Final verification and merge readiness decisions happen in local context.
 
 ## Implemented Agents (Current)
@@ -48,124 +42,28 @@ Agents must read `.figma-config.local` at runtime for project name, team, and pl
 ## Current Gate Contracts
 
 1. Gate 1 (Requirement Challenge)
-- Input minimum: requirement statement.
-- Output required from Challenger:
-  - Readiness
-  - Missing Information
-  - Assumptions
-  - Challenge Questions
-  - Edge Cases
-  - Proposed Acceptance Criteria
-  - Open Questions with owner decision status
-  - Gate Decision
-  - Requirement Context Package
+- Input: requirement statement.
+- Output: readiness, challenge set, acceptance criteria, open questions, gate decision, Requirement Context Package.
 
 2. Gate 2 (PRD)
-- Primary input: Requirement Context Package.
-- Output required from PRD Agent:
-  - PRD Readiness
-  - PRD v0
-  - Traceability Map
-  - Quality Gaps
-  - Open Questions with owner decision status
-  - Gate Decision
-  - PRD Draft Package
+- Input: Requirement Context Package.
+- Output: PRD Draft Package plus readiness, alignment/traceability, quality gaps, open questions, and gate decision.
 
 3. Gate 3 (Design)
-- Gate intent: complete the full design gate before architecture or coding.
-- Current planned substeps:
-  - UX substep
-  - Figma substep
-  - Design QA substep
-- Current implemented substeps:
-  - UX substep
-  - Figma substep
-  - Design QA substep
-- UX substep input: PRD Draft Package.
-- UX substep output required from UX Agent:
-  - UX Readiness
-  - UX Flows
-  - State Matrix
-  - Interaction Notes
-  - Quality Gaps
-  - Open Questions with owner decision status
-  - Gate Decision
-  - UX Flow/State Package
-- Figma substep input: UX Flow/State Package.
-- Figma substep output required from Figma Agent:
-  - Figma Readiness
-  - Screen/Flow Mapping
-  - Component and Token Guidance
-  - Interaction and Edge-State Design Notes
-  - Quality Gaps
-  - Open Questions with owner decision status
-  - Gate Decision
-  - Design Draft Package
-- Design QA substep input: Design Draft Package + UX Flow/State Package + PRD Draft Package.
-- Design QA substep output required from Design QA Agent:
-  - Design QA Readiness
-  - PRD Traceability Review
-  - UX Coverage Review
-  - Component and Token Consistency Review
-  - Edge State Coverage Review
-  - Quality Gaps
-  - Open Questions with owner decision status
-  - Gate Decision
-  - Design QA Verdict Package
-- Gate 3 design feedback loop: Design QA reads Figma via MCP, routes gaps back to Figma Agent, iterates until Agent-Ready, then escalates to Product Owner for explicit approval.
-- Gate 3 is closed only when all three substeps pass, Design QA Verdict Package is produced, and Product Owner has explicitly approved the design.
+- Flow: PRD Draft Package -> UX Flow/State Package -> Design Draft Package -> Design QA Verdict Package.
+- Gate closes only after UX, Figma, and Design QA pass and Product Owner explicitly approves the design.
 
 4. Gate 4 (Architecture)
-- Gate intent: convert approved requirement, PRD, UX, and Design QA artifacts into an implementation-ready architecture and task plan.
-- Input required from slice folder:
-  - `01-requirement.md`
-  - `02-prd.md`
-  - `03-ux.md`
-  - `04-design-qa.md`
-- Output required from Architecture Agent:
-  - Architecture Readiness
-  - Architecture Plan
-  - Impact Analysis
-  - Risk and Mitigation Plan
-  - Verification Strategy
-  - Task Decomposition
-  - Quality Gaps
-  - Open Questions with owner decision status
-  - Gate Decision
-  - Architecture Plan Package
-- Gate 4 completion outputs:
-  - `05-architecture.md`
-  - `06-tasks.md` (includes GitHub Issue numbers created at Gate 4 end)
+- Input: slice artifacts `01-requirement.md` through `04-design-qa.md`.
+- Output: Architecture Plan Package plus `05-architecture.md` and `06-tasks.md`.
 
 5. Gate 5 (Build)
-- Gate intent: implement one approved Gate 4 issue at a time using architecture references and produce merge-ready evidence.
-- Input required:
-  - one GitHub Issue link or number from `06-tasks.md`
-  - issue metadata with acceptance criteria, slice path, and architecture reference
-- Output required from Dev Agent:
-  - Build Readiness
-  - Implementation Summary
-  - Files Changed
-  - Verification Evidence
-  - BDD Evidence
-  - PR Package (with issue-closing reference)
-  - Quality Gaps
-  - Open Questions with owner decision status
-  - Gate Decision
-  - Build Output Package
+- Input: one approved Gate 4 issue with acceptance criteria, slice path, and architecture reference.
+- Output: Build Output Package with implementation summary, verification evidence, BDD evidence, PR package, quality gaps, open questions, and gate decision.
 
 6. Gate 6 (Merge)
-- Gate intent: verify issue-level PR merge readiness using Build Output Package evidence and recommend merge or loop-back.
-- Input required:
-  - GitHub Issue reference
-  - PR link
-  - Build Output Package
-- Output required from Orchestrator merge review:
-  - Merge Readiness
-  - Merge Review Summary
-  - Outstanding Gaps
-  - Gate Decision
-  - Owner Action
+- Input: GitHub Issue reference, PR link, and Build Output Package.
+- Output: merge readiness, review summary, outstanding gaps, gate decision, and owner action.
 
 ## Known Rules From User Decisions
 
@@ -193,17 +91,17 @@ Agents must read `.figma-config.local` at runtime for project name, team, and pl
 22. Slice/story traceability policy: each slice has a GitHub slice tracker issue labeled `slice`; each story issue is labeled `user-story` and `slice:<slice-name>` and must contain a `Slice tracker:` backlink; slice tracker must list all story issue links; `06-tasks.md` must mirror story issue links and architecture references.
 23. Review-response policy is repo-wide: when an agent fixes a review comment, it must also post a PR reply explaining what was accepted or challenged, what changed (or why no change), and the rationale/tradeoff.
 24. Universal principle persistence: repo-wide principles may be stored in either (a) `Known Rules From User Decisions` (this section) or (b) permanent shared protocol docs (.github/AGENTS.md, .github/agents/*.agent.md) with explicit cross-reference. This avoids duplication while ensuring traceability and centralized visibility. Pre-archive checks validate presence in either location before archiving a slice.
-25. UX and Architecture agents run a built-in challenge phase before producing any output (Option A: embedded challenger behavior). All `Must Resolve` gaps must be resolved or explicitly accepted by Product Owner before the agent returns a `Ready` status. This mirrors the Gate 1 Requirement Challenger discipline, applied to Gate 3A and Gate 4. Implemented in: `ux.agent.md` (Challenge Phase section), `architecture.agent.md` (Challenge Phase section), `architect-orchestrator.agent.md` (Gate 3A and Gate 4 execution rules), `AGENTS.md` (Required Gates rules 6 and 8).
-26. Architecture Agent operates as an expert architect covering three tiers: (1) System Design — scalability, fault-tolerance, data flow and coordination, data consistency, service boundaries, security, observability; (2) Solution Architecture — architectural patterns, technology choices, integration contracts, deployment topology, state management, migration strategy; (3) Implementation Design — file/folder structure, data shapes, function signatures, naming conventions, cross-cutting concerns. The agent runs a mandatory Discussion Phase covering all three tiers before freezing the plan, and produces deep concrete detail at every level. Vague directional plans are explicitly prohibited. Implemented in: `architecture.agent.md` (Role, Discussion Phase — Tiers 1/2/3, Approach, Architecture Quality Checks, Architecture Plan Package Schema), `architect-orchestrator.agent.md` (Architecture Gate Checklist — items 5, 6, 7 covering discussion, system design, and solution architecture locks), `AGENTS.md` (Required Gates rules 9).
-27. Figma File Structure Convention: one Figma file per slice under the designated Figma project (project-specific metadata stored in `.figma-config.local`, gitignored — see `.figma-config.local.example` for format). Standard pages: `UX Flows`, `Design`, `QA Notes`. Frame naming: `<Screen>/<State>/<Theme>`. Enhancement slices are self-contained — recreate current-state screen from prior slice's Figma file, apply enhancement, do not modify original file. Agent files reference the convention generically; project name is not hardcoded in reusable agent/AGENTS files. Implemented in: `.github/AGENTS.md` (Figma File Structure Convention section), `ux.agent.md` (Approach section), `figma.agent.md` (Approach section), `.figma-config.local.example` (template for runtime metadata; `.figma-config.local` is runtime-only and gitignored).
-28. Design System Foundation Policy: a standalone Figma file ("Design System") is used as the Design System library under the designated Figma project and contains all shared variables, tokens, and base components, published as a Figma library consumed by all slice files. If the library does not yet exist, the first slice entering Gate 3 bootstraps it in Gate 3A, adds the initial shared variables/tokens/base components there, records a populated `design_system_library_file_key` in `.figma-config.local` (and `design_system_library_url` when available for convenience), publishes and enables the library's variables/components in Figma, and only then uses it for the slice file. Variable categories: `color/*`, `spacing/*`, `typography/*`, `radius/*`, `shadow/*`, `breakpoint/*`. Dual-theme from day one: variable collection `Theme` with Light and Dark modes; all semantic color tokens are dual-mode; spacing/typography/radii/shadows are mode-independent. Token-only design rule: no raw hex, hardcoded spacing, or ad-hoc tokens in slice files. Both Light and Dark theme variants required for every screen/state (frame naming: `<Screen>/<State>/<Theme>`). Code-side: CSS custom properties file with `[data-theme]` selectors + `prefers-color-scheme` fallback; Dev uses variable references for tokenized properties, while non-token dimensions may use explicit units when needed. Design QA verifies token compliance and dual-theme coverage. New tokens needed by a slice are added to the library first. Implemented in: `.github/AGENTS.md` (Design System Foundation Policy section, updated Figma File Structure Convention frame naming), `figma.agent.md` (Approach, Quality Checks), `ux.agent.md` (Approach — library bootstrap and consumption), `design-qa.agent.md` (Approach, QA Checks — token compliance and theme coverage), `dev.agent.md` (Constraints, Approach, Quality Checks — token-only and dual-theme rules), `architect-orchestrator.agent.md` (Gate 3A progression and validation locks).
-29. PR review intake discipline: before summarizing PR comments, offering fixes, or changing files in response to review feedback, agents must first enumerate each actionable comment and classify it as `Accept`, `Challenge`, or `Needs Product Owner Decision`, with concise reasoning. Only after this triage step may changes be proposed or implemented. If the user asks what comments exist, the answer must include both summary and disposition. Implemented in: `.github/AGENTS.md` (PR Review Intake Protocol), `architect-orchestrator.agent.md` (PR Review Intake Protocol), `dev.agent.md` (PR Review Intake Protocol).
-30. Copilot review loop discipline: after each pushed fix commit on a PR, the agent requests a fresh Copilot review and repeats the triage/fix cycle until there are zero unresolved actionable Copilot comments, unless Product Owner explicitly accepts residual review risk. Historical review events may remain; the exit condition is zero unresolved actionable Copilot comments or threads. Implemented in: `.github/AGENTS.md` (Copilot Review Loop Protocol), `architect-orchestrator.agent.md` (Copilot Review Loop Protocol, Merge Gate Checklist).
-31. Copilot review settlement discipline: after requesting a fresh Copilot review, the agent must poll live GitHub PR state for a bounded window (default up to 2 minutes at a practical cadence) before concluding the result is still pending. Live GitHub review data is the source of truth; cached IDE payloads alone are insufficient for final loop status. If addressed threads are outdated but still unresolved, the agent must reconcile them before closing the loop. If no new review arrives within the polling window, the agent reports an explicit external async blocker instead of silently stopping. Implemented in: `.github/AGENTS.md` (Copilot Review Loop Protocol), `architect-orchestrator.agent.md` (Copilot Review Loop Protocol).
-32. GitHub interaction discipline: for GitHub repository, issue, PR, review, comment, label, and status operations, agents must use GitHub MCP as the required interface. `gh`, raw API terminal calls, or cached editor GitHub payloads are not the default control plane when an MCP capability exists. Local git commands remain allowed for repository-local work. If an MCP capability gap blocks the task, the agent must call out the gap explicitly and request Product Owner approval before using a fallback. Implemented in: `.github/AGENTS.md` (GitHub Interaction Policy), `architect-orchestrator.agent.md` (Constraints), `dev.agent.md` (Constraints).
-33. Active PR review-loop continuity: once a PR review loop has started, the agent must continue automatically after each push and review request without waiting for another Product Owner prompt. The loop may pause only for an explicit blocker, protocol conflict, missing capability, or owner-decision point. Implemented in: `.github/AGENTS.md` (Copilot Review Loop Protocol), `architect-orchestrator.agent.md` (Copilot Review Loop Protocol).
-34. Review-thread resolution discipline: thread resolution is part of disposition execution, not classification. After an `Accept` fix or fully-executed `Challenge` response is completed and no Product Owner decision or reviewer follow-up remains, the agent resolves the thread. If a thread still remains outdated and unresolved after execution, the agent must reconcile it before closing the review loop. Implemented in: `.github/AGENTS.md` (Strict Accept-vs-Challenge Lens, Copilot Review Loop Protocol), `architect-orchestrator.agent.md` (Strict Accept-vs-Challenge Lens, Copilot Review Loop Protocol), `dev.agent.md` (Strict Accept-vs-Challenge Lens).
-35. Semantic review-state discipline: PR review handling uses semantic state, not raw thread mechanics, as the source of truth. `semantic-open` comments block review completion. `semantic-closed` comments do not. `semantically-closed/tooling-unresolved` comments must be reported explicitly when MCP cannot perform the required thread-resolution mutation; they do not count as open comments by themselves. Implemented in: `.github/AGENTS.md` (PR Review Intake Protocol, Copilot Review Loop Protocol), `architect-orchestrator.agent.md` (PR Review Intake Protocol, Copilot Review Loop Protocol, Merge Gate Checklist), `dev.agent.md` (PR Review Intake Protocol).
+25. UX and Architecture agents run an embedded challenge phase; unresolved `Must Resolve` gaps must be resolved or explicitly accepted before `Ready`.
+26. Architecture work uses a three-tier discussion model: System Design, Solution Architecture, and Implementation Design.
+27. Figma uses one self-contained file per slice with pages `UX Flows`, `Design`, `QA Notes` and frame naming `<Screen>/<State>/<Theme>`.
+28. The Design System lives in a shared Figma library file; the first slice entering Gate 3 bootstraps it if absent. Dual-theme and token-only rules apply from day one.
+29. PR review intake is mandatory before any fix: classify each actionable comment as `Accept`, `Challenge`, or `Needs Product Owner Decision`.
+30. After each review-fix push, rerun the Copilot review loop until there are zero actionable open comments unless the Product Owner accepts residual risk.
+31. After requesting Copilot review, poll live GitHub state for up to 2 minutes before declaring the result pending.
+32. GitHub PR/issue/review operations use GitHub MCP as the default control plane; fallbacks require an explicit capability gap and approval.
+33. Once a PR review loop starts, continue it automatically after each push and review request until resolved or blocked.
+34. Thread resolution belongs to disposition execution, not classification.
+35. Review completion uses semantic state: `semantic-open` blocks, `semantic-closed` does not, and `semantically-closed/tooling-unresolved` must be reported explicitly.
 
 ## Resume Protocol For Orchestrator
 
@@ -220,16 +118,13 @@ On first response in any new activity:
 
 ## Current Program Status
 
-1. Gate 1 and Gate 2 are implemented.
-2. Gate 3 is fully implemented: UX, Figma, and Design QA substeps are all defined and wired.
-3. Gate 4 is implemented at contract level: Architecture Agent and orchestrator handoff rules are defined.
-4. Gate 5 is implemented at contract level: Dev Agent and orchestrator handoff rules are defined.
-5. Gate 6 is implemented at contract level: merge readiness review is orchestrator-owned.
-6. Current protocol baseline is complete through Merge gate.
+1. Gates 1 through 6 are implemented at protocol level.
+2. Gate 3 is fully wired through UX, Figma, and Design QA.
+3. Current governance baseline is complete through Merge gate.
 
 ## Default Next Step
 
-1. Run one dry-run of the full Gate 4 -> Gate 6 flow on a sample issue/PR path.
+1. Start the next slice or run a fresh Gate 4 -> Gate 6 path on a new issue/PR.
 
 ## Current Slice Status
 
@@ -240,11 +135,11 @@ On first response in any new activity:
 ## Log Archive Protocol
 
 When a slice reaches Gate 6 ✅ Complete:
-1. **Pre-archive: extract universal principles.** Review each log entry being archived. If any entry records a principle or rule that applies to all future slices (not just the current one), verify it is already present in either (a) `Known Rules From User Decisions` OR (b) permanent shared protocol docs (.github/AGENTS.md, .github/agents/*.agent.md) with explicit cross-reference (see Known Rule #24). If neither, add it to Known Rules before archiving. Do not archive principles; only archive slice-specific history.
+1. **Pre-archive: extract universal principles.** If a slice log contains a reusable repo-wide rule, ensure it is preserved in `Known Rules From User Decisions` or permanent shared protocol docs before archiving.
 2. Move only **slice-specific** log entries for that slice from this file to `docs/slices/<slice-name>/context-log.md`.
-3. **Do not move** repo-wide/global context updates (for example: no-active-slice governance updates, baseline policy decisions, cross-slice standards). Keep those in this file, or copy to a dedicated global archive if one is later defined.
-4. Replace the moved slice-specific entries with a single archive summary line in this file (see format below).
-5. This keeps the main context file lean for session loading while preserving full audit history per slice and keeping global baseline context centrally visible.
+3. Move detailed repo-wide governance history that no longer needs to stay hot into `.github/orchestrator-context.archive.md`.
+4. Replace moved history with short summary lines in this file.
+5. Keep this file optimized for session loading; keep deep history in the archive.
 
 Archive summary format:
 ```
@@ -266,98 +161,10 @@ Template:
 
 ### coming-soon-splash-page — Gate 6 ✅ Complete (2026-03-29) — Full log: docs/slices/coming-soon-splash-page/context-log.md
 
-### 2026-03-30
-- Gate status: No active slice. Governance protocol hardened.
-- Artifact changes: PR #29 merged — added rule 6 to AGENTS.md and constraint 8 to architect-orchestrator.agent.md prohibiting all agents from executing PR merge operations. PR merges are now unconditionally reserved for the Product Owner.
-- Open questions status: None.
-- Next micro-goal: Await next slice or issue assignment.
-- Blockers/owner decisions: None.
+Detailed repo-wide governance history from 2026-03-30 through 2026-04-03 is archived in `.github/orchestrator-context.archive.md`.
 
-### 2026-03-30 (Public Portfolio + Proprietary Licensing)
-- Gate status: No active slice. Repository governance/documentation update only.
-- Artifact changes: Added root LICENSE with all-rights-reserved proprietary terms. Added root README clarifying public showcase intent, non-open-source usage restrictions, contribution policy, and permission-request contact path.
-- Open questions status: None.
-- Next micro-goal: Use this baseline for all future public-facing repository onboarding and resume sharing.
-- Blockers/owner decisions: Owner selected public visibility with proprietary licensing model (showcase allowed; reuse requires explicit permission).
-
-### 2026-03-31
-- Gate status: No active slice. Review-governance policy hardened.
-- Artifact changes: Added repo-wide review-response rule in `.github/AGENTS.md` and `.github/agents/architect-orchestrator.agent.md`; added Known Rule #23 in this file.
-- Open questions status: None.
-- Next micro-goal: Enforce this policy on all future PR review fixes.
-- Blockers/owner decisions: Decision challenged with options and tradeoffs. Option A code-only fixes with no PR reply (fastest, low traceability). Option B mandatory comment replies only for challenged items (moderate consistency). Option C mandatory reply for every fixed review comment with accept/challenge rationale (highest clarity/auditability). Owner selected Option C.
-
-### 2026-03-30 (Final)
-- Gate status: Implementation protocol hardened with Test-First Development, BDD with GWT scenarios, and Domain-Oriented Development.
-- Artifact changes: Updated .github/AGENTS.md with new "Implementation Protocol (Test-First BDD + Domain-Oriented Development)" section (7 rules). Updated architect-orchestrator.agent.md Architecture Gate Checklist (added BDD lock, item 10) and Build Gate Checklist (expanded TFD/BDD/domain language locks, items 3-5). Updated slice-template 05-architecture.md to include BDD section (10) with five GWT sentence templates (one per AC), test implementation guidance, and domain language requirements. Updated Gate Decision rationale to reference BDD scenarios.
-- Open questions status: No open questions.
-- Blockers/owner decisions: Owner requested three specific hardening requirements: (1) Test-First Development (tests before code), (2) BDD with GWT at acceptance criteria level (not module level), (3) Domain-Oriented Development (code uses domain terminology, not infrastructure terms). All three implemented in protocol and templates. Decision rationale: TFD ensures tests drive design and prevent test-last brittleness. GWT at AC level ensures functional behavior (not module internals) drives development. Domain language ensures code reads as specification for the problem domain, making it maintainable and clear to non-technical stakeholders. Principle persisted in: .github/AGENTS.md (Implementation Protocol section), architect-orchestrator.agent.md (Architecture/Build checklists), slice-template 05-architecture.md (BDD section). See cross-references for full content.
-
-### 2026-03-30 (Gate1-Gate2 Alignment)
-- Gate status: Requirement challenge and PRD drafting alignment hardened.
-- Artifact changes: Added Requirement-To-PRD Alignment Protocol to .github/AGENTS.md. Updated orchestrator Gate 1->2 rules to freeze requirement statement/scope/AC intent unless owner-approved. Added mandatory Requirement-to-PRD Alignment Check output in PRD handoff contracts (local and cloud prompts). Updated slice templates: 01-requirement.md now includes requirement IDs (R-1..R-N) and completeness lock; 02-prd.md now includes mandatory alignment table mapping requirements to PRD sections/user stories/AC IDs.
-- Open questions status: No open questions.
-- Blockers/owner decisions: Owner requested that challenger and PRD agents move in the same direction and that templates only be filled after proper requirement gathering/refinement. Selected approach: explicit contract freeze + alignment table + loop-back on unauthorized deltas. Principle persisted in: .github/AGENTS.md (Requirement-To-PRD Alignment Protocol section), orchestrator Gate 1->2 freeze rules. See cross-references for full content.
-
-### 2026-03-30 (Slice/Story Maintenance)
-- Gate status: Slice/story maintenance protocol standardized across repo and GitHub.
-- Artifact changes: Added explicit rules for slice tracker issue, story issue label policy (`user-story` and `slice:<slice-name>`), mandatory bidirectional slice <-> story links, and `06-tasks.md` traceability requirements in shared and orchestrator contracts.
-- Open questions status: No open questions.
-- Blockers/owner decisions: Decision challenged with options and tradeoffs. Option A keep label-heavy model (fast filtering, more metadata overhead). Option B reference-first with minimal labels (`slice` for tracker, `user-story` for stories) and mandatory links (balanced). Option C links-only with no labels (lowest metadata, weakest queryability). Owner selected Option B. Principle persisted in: .github/AGENTS.md (Known Rule #22, Slice and Issue Management section), architect-orchestrator.agent.md (Slice and Issue Management section). See cross-references for full content.
-
-### 2026-04-01
-- Gate status: No active slice. Gate 3A and Gate 4 challenge discipline hardened.
-- Artifact changes: Added embedded Challenge Phase sections to `ux.agent.md` and `architecture.agent.md`. Updated Gate 3A and Gate 4 execution rules in `architect-orchestrator.agent.md` to enforce challenge-first behavior. Added rules 6 and 8 to Required Gates in `.github/AGENTS.md`. Added Known Rule #25 in this file.
-- Open questions status: None.
-- Next micro-goal: Await next slice assignment.
-- Blockers/owner decisions: Decision challenged with three options before owner selection. Option A embed challenge phase inside UX and Architecture agents (no new agents, no new gate substeps, specialist-owned quality judgment). Option B create separate UX Challenger and Architecture Challenger agents (symmetric to Gate 1, higher structural overhead). Option C orchestrator-owned challenge checklist per gate (fast, but challenge quality depends on generalist). Owner selected Option A. Rationale: specialists know their domain best; embedded challenge avoids pipeline complexity and keeps quality judgment co-located with expertise. Principle persisted in Known Rule #25 and in `ux.agent.md`, `architecture.agent.md`, `architect-orchestrator.agent.md`, and `AGENTS.md`.
-
-### 2026-04-01 (Architecture Expert Standard)
-- Gate status: No active slice. Architecture Agent standard upgraded to expert architect level.
-- Artifact changes: Updated `architecture.agent.md` (Role upgraded, Discussion Phase section added, Approach expanded, Architecture Quality Checks deepened, Architecture Plan Package Schema expanded). Updated `architect-orchestrator.agent.md` (Architecture Gate Checklist expanded with additional detail and discussion lock items). Added Known Rule #26 in this file.
-- Open questions status: None.
-- Next micro-goal: Await next slice assignment.
-- Blockers/owner decisions: Decision challenged with two options. Option A discussion-first + deep implementation detail (one alignment round before plan freeze, then full concrete spec — highest fidelity, slight upfront cost). Option B deep detail only with no discussion round (faster initial output, higher rework risk if technical assumptions are wrong). Owner selected Option A. Rationale: expert architects align on key bets before writing the full plan; the discussion round prevents expensive downstream rework. Principle persisted in Known Rule #26 and in `architecture.agent.md`, `architect-orchestrator.agent.md`.
-
-### 2026-04-01 (Architecture Three-Tier Discussion Model)
-- Gate status: No active slice. Architecture Agent Discussion Phase expanded to three tiers.
-- Artifact changes: Expanded `architecture.agent.md` Discussion Phase from 7 flat topics to three structured tiers: Tier 1 System Design (7 topics: scalability, fault-tolerance, data consistency, service boundaries, data flow and coordination, security, observability), Tier 2 Solution Architecture (6 topics: architectural patterns, technology choices, integration architecture, deployment topology, state management, migration strategy), Tier 3 Implementation Design (5 topics: file/folder structure, data shapes, interface contracts, cross-cutting concerns, codebase conventions). Architecture Quality Checks expanded to 25 items grouped by tier. Architecture Plan Package Schema expanded to 25 items grouped by tier. Updated `architect-orchestrator.agent.md` Architecture Gate Checklist: added system design lock (item 6) and solution architecture lock (item 7), total 15 items. Updated Known Rule #26 in this file.
-- Open questions status: None.
-- Next micro-goal: Await next slice assignment.
-- Blockers/owner decisions: Owner indicated Architecture Agent should discuss all aspects including System Design and Solution Architecture, not just implementation detail. No options presented — this was a directional refinement within the previously owner-selected Option A (discussion-first + deep implementation detail), not a new gate-critical decision; the Decision Challenge Standard applies to gate-critical choices only. Extended the Discussion Phase tiers accordingly. The three-tier model ensures no architectural concern is skipped regardless of slice size or complexity.
-
-### 2026-04-01 (Figma File Structure Convention)
-- Gate status: No active slice. Figma file organization convention established.
-- Artifact changes: Added `Figma File Structure Convention` section to `.github/AGENTS.md`. Updated `ux.agent.md` (Approach section: create Figma file per slice with standard pages, enhancement baseline). Updated `figma.agent.md` (Approach section: verify convention compliance, frame naming). Added Known Rule #27 in this file.
-- Open questions status: None.
-- Next micro-goal: Await next slice assignment.
-- Blockers/owner decisions: Decision challenged with three options. Option A one Figma file per slice, self-contained (simple, maps to slice folder model, no cross-file dependencies). Option B one shared Figma file for entire project (single source of truth, but grows large and breaks slice isolation). Option C hybrid — shared library + per-slice files (best at scale, overkill for solo builder). Owner selected Option A. For enhancement slices: Option A self-contained enhancement files (recreate base screen in new file, apply enhancement, don't touch original). Option B modify original slice file (breaks isolation). Option C maintain separate current-state master file (extra maintenance). Owner selected Option A. Rationale: matches solo-builder workflow, preserves slice isolation, avoids premature design system overhead. Current-state file can be added later if needed. Owner refinement: project name is metadata, not agent logic — hardcoding project name in agent files prevents reuse across projects. Historical note: this entry originally treated `.github/orchestrator-context.md` as the only storage location for project-specific Figma metadata. That policy has since been superseded: agents now read runtime project metadata from `.figma-config.local`, while `.github/orchestrator-context.md` remains handover and history context only.
-
-### 2026-04-02 (Design System Foundation + Dual-Theme)
-- Gate status: No active slice. Design system foundation and dual-theme policy established.
-- Artifact changes: Added `Design System Foundation Policy` section to `.github/AGENTS.md` (10 rules including first-slice bootstrap). Updated `Figma File Structure Convention` frame naming to `<Screen>/<State>/<Theme>`. Updated `figma.agent.md` (Approach: library bootstrap/extension, variable verification, dual-theme frame production; Quality Checks: theme variants + token compliance). Updated `ux.agent.md` (Approach: library bootstrap and consumption). Updated `design-qa.agent.md` (Approach: token compliance + theme variant verification; QA Checks: 2 new items). Updated `dev.agent.md` (Constraints: token-only + dual-theme rules; Approach: token system translation; Quality Checks: token compliance). Updated `architect-orchestrator.agent.md` (Gate 3A progression + local validation require library bootstrap and `.figma-config.local` persistence before Gate 3B). Added Known Rule #28 in `orchestrator-context.md`.
-- Open questions status: None.
-- Next micro-goal: Await next slice assignment.
-- Blockers/owner decisions: Decision challenged with three options. Option A dedicated Design System Figma library file (standard Figma workflow, single source of truth, clean dev handoff, one shared file to maintain). Option B design system as a formal slice through full gate process (maximum rigor, heavy overhead for infrastructure, delays real slices). Option C inline tokens in first slice, extract later (fastest start, token drift risk, deferred extraction rarely happens). Owner selected Option A. Sub-decision on theming: Option i ship Light-only first, Dark as future slice (foundation defined but activation deferred). Option ii ship both themes from first slice (complete from day one, minimal incremental cost since tokens are already dual-mode). Owner challenged Option i — if tokens are already dual-mode, the incremental cost of shipping both is minimal and deferring creates retroactive verification debt. Owner selected Option ii. Rationale: Figma variables natively support modes for Light/Dark; CSS custom properties with theme selectors map 1:1; defining both from day one prevents token drift, ensures every slice is visually verified in both themes, and avoids catch-up rework.
-- Bootstrap refinement accepted on 2026-04-03: Option A is instantiated by the first slice entering Gate 3. UX Agent creates the Design System library first when absent, records the library reference in `.figma-config.local`, then creates the slice file that consumes it. This avoids speculative standalone setup while still ensuring the library exists before Figma design work proceeds.
-
-### 2026-04-03 (PR Review Intake Hardening)
-- Gate status: No active slice. PR review workflow hardened.
-- Artifact changes: Added explicit `PR Review Intake Protocol` to `.github/AGENTS.md`, `.github/agents/architect-orchestrator.agent.md`, and `.github/agents/dev.agent.md`. Added Known Rule #29 in `.github/orchestrator-context.md`.
-- Open questions status: None.
-- Next micro-goal: Apply this protocol when addressing PR #33 review comments.
-- Blockers/owner decisions: Root-cause review concluded this was not a missing principle but a missing operational sequence. Existing protocol already required accept-vs-challenge classification, but it did not force that triage to happen before comment summary or fix recommendation. Hardening decision: make PR review intake an explicit mandatory step. This removes reliance on memory and reduces the chance of skipping the challenge lens during review handling.
-
-### 2026-04-03 (Copilot Review Loop Hardening)
-- Gate status: No active slice. PR review automation workflow hardened.
-- Artifact changes: Added explicit `Copilot Review Loop Protocol` to `.github/AGENTS.md` and `.github/agents/architect-orchestrator.agent.md`. Expanded Merge Gate Checklist with a Copilot review loop lock. Added Known Rule #30 in `.github/orchestrator-context.md`.
-- Open questions status: None.
-- Next micro-goal: Run the Copilot review loop on PR #33 until no actionable Copilot comments remain or a blocker is reached.
-- Blockers/owner decisions: Owner accepted the recommendation to operationalize the review loop in governance and use it on the active PR. Merge authority remains with Product Owner; the automation target is zero unresolved actionable Copilot comments, not zero total historical Copilot review events.
-
-### 2026-04-03 (PR #33 Merged)
-- Gate status: No active slice. Governance PR #33 merged by Product Owner.
-- Artifact changes: PR #33 `Add design system bootstrap governance` merged to `master` after the live GitHub MCP Copilot review loop completed on head `dc19aa1` with review `4055836354` reporting no new comments. Final merged governance includes design-system bootstrap policy, dual-theme/token foundation rules, PR review intake discipline, Copilot bounded polling, GitHub MCP-first interaction policy, active review-loop continuity, review-thread resolution discipline, and semantic review-state handling.
-- Open questions status: None. No semantic-open Copilot comments remained on the final reviewed head at merge time.
-- Next micro-goal: Refresh local `master` and use the merged governance baseline for the next slice or PR review cycle.
-- Blockers/owner decisions: Product Owner completed the merge. Residual note: thread-resolution mutation capability is still not exposed through the current MCP surface, so semantically closed outdated threads continue to be tracked via the `semantically-closed/tooling-unresolved` model when needed.
+### 2026-03-30 to 2026-04-03 — Archived Summary
+- 2026-03-30: merge authority reserved to Product Owner; public/proprietary repo baseline added; TFD/BDD/domain-language discipline added; Gate 1/2 alignment and slice/story maintenance tightened.
+- 2026-04-01: embedded challenge phase adopted; architecture expert standard and three-tier discussion model added; Figma file-per-slice convention established.
+- 2026-04-02: design-system-first and dual-theme governance established, with first-slice bootstrap of the shared design-system library.
+- 2026-04-03: PR review intake and Copilot review loop hardened; PR #33 merged after a clean live Copilot review on head `dc19aa1`.
