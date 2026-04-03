@@ -137,9 +137,9 @@ On first response in any new activity:
 
 When a slice reaches Gate 6 ✅ Complete:
 1. **Pre-archive: extract universal principles.** If a slice log contains a reusable repo-wide rule, ensure it is preserved in `Known Rules From User Decisions` or permanent shared protocol docs before archiving.
-2. Move only **slice-specific** log entries for that slice from this file to `docs/slices/<slice-name>/context-log.md`.
-3. Move detailed repo-wide governance history that no longer needs to stay hot into `.github/orchestrator-context.archive.md`.
-4. Replace moved history with short summary lines in this file.
+2. For slice closeout, move only **slice-specific** log entries for that slice from this file to `docs/slices/<slice-name>/context-log.md`.
+3. Separately, as repo-wide maintenance, move detailed global governance history that no longer needs to stay hot into `.github/orchestrator-context.archive.md`.
+4. Replace any moved history with short summary lines in this file.
 5. Keep this file optimized for session loading; keep deep history in the archive.
 
 Archive summary format:
