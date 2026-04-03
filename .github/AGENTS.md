@@ -52,6 +52,13 @@ This repository follows a human-led, agent-executed workflow.
 5. Orchestrator must summarize intended commands before execution and record the decision in orchestration context updates.
 6. PR merge commands (for example `gh pr merge` or any equivalent merge operation) are never executed by any agent. PR merges are always performed by the Product Owner directly (via GitHub UI or their own tooling). This is not a delegatable mutation.
 
+## GitHub Interaction Policy
+
+1. For GitHub repository, issue, pull request, review, comment, label, and status interactions, agents must use the GitHub MCP server as the primary and required interface.
+2. Agents must not rely on `gh`, raw GitHub API terminal calls, or editor-cached GitHub payloads when an equivalent GitHub MCP capability exists.
+3. Local git commands remain allowed for repository-local branch, commit, diff, and workspace inspection tasks that are not GitHub API interactions.
+4. If a required GitHub action is not available through the GitHub MCP server, the agent must explicitly state the MCP gap and request Product Owner approval before using any fallback path.
+
 ## Cloud Handoff Policy
 
 1. Before any cloud-preferred gate handoff, Architect + Orchestrator must ask Product Owner to confirm `local` or `cloud` execution mode.
@@ -105,6 +112,11 @@ This standard exists to support balanced decision-making and must be applied eve
 3. Historical Copilot review records may remain on the PR; success is defined as zero unresolved actionable Copilot comments or threads, not zero total Copilot reviews.
 4. Each new Copilot comment must go through the PR Review Intake Protocol before any additional changes are proposed or made.
 5. If the loop cannot continue because of a challenge, protocol conflict, or missing capability, the agent must escalate to Product Owner with the blocker.
+6. After requesting a fresh Copilot review, the agent must poll the live GitHub PR state for a bounded window before concluding the result is pending. Default polling window: up to 2 minutes at a practical cadence.
+7. Polling must use a live GitHub source of truth (for example GitHub API, GraphQL, or `gh`) rather than relying only on cached editor extension payloads.
+7. Polling must use live GitHub MCP review data as the source of truth rather than relying on cached editor extension payloads.
+8. If review threads are outdated but still marked unresolved after a fix commit, the agent must reconcile that thread state before declaring the loop complete.
+9. If no new Copilot review arrives within the bounded polling window, the agent must report that the loop is blocked on external async review completion instead of treating the review cycle as complete.
 
 ## Escalation
 
