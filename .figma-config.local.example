@@ -5,6 +5,8 @@ project_name: <your Figma project name>
 team: <your Figma team name>
 plan_key: <your Figma plan key, e.g. team::123456>
 plan_tier: <plan tier and quota, e.g. Pro (Full seat, 200 tool calls/day as of YYYY-MM-DD)>
-design_system_library_file_key: <file key of the Design System Figma library file; leave blank until first Gate 3 bootstrap if not created yet>
-design_system_library_url: <full URL of the Design System Figma library file; leave blank until first Gate 3 bootstrap if not created yet>
+# Leave these as empty strings until the first Gate 3 bootstrap creates the Design System library.
+# Then replace them with the actual library file key and full Figma URL.
+design_system_library_file_key: ""
+design_system_library_url: ""
 file_creation_note: MCP create_new_file creates files in drafts; manually move to your project after creation if needed.
