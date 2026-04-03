@@ -68,10 +68,11 @@ This section is a dev-agent summary only. `.github/AGENTS.md` is the source of t
 2. After any push that addresses PR feedback, request a fresh Copilot review on that PR.
 3. Once the PR review loop is active, continue it automatically after each push and review request until there are zero `semantic-open` Copilot comments, or an explicit blocker requires escalation.
 4. Polling must use live GitHub MCP review data as the source of truth for up to 5 minutes at a practical cadence before the review is treated as externally pending.
-5. If no new Copilot review arrives within that bounded polling window, report the PR as blocked by an external dependency on Copilot review completion; do not silently treat the loop as complete.
-6. Each new Copilot comment must go through the PR Review Intake Protocol before additional changes are made.
-7. Historical reviews may remain in the PR timeline; success for this loop is specifically zero current Copilot comments in `semantic-open` state, not the absence of prior review records.
-8. Outdated unresolved threads must be reconciled before the loop is treated as complete, or reported explicitly as `semantically-closed/tooling-unresolved` when MCP lacks the required resolution capability.
+5. When a non-MCP polling fallback is justified, prefer `python3 scripts/wait_for_copilot_review.py --owner <owner> --repo <repo> --pr <number>` instead of an ad hoc snippet. The helper derives the live PR head from GitHub and reports `review-found`, `timeout`, or `head-changed` explicitly.
+6. If no new Copilot review arrives within that bounded polling window, report the PR as blocked by an external dependency on Copilot review completion; do not silently treat the loop as complete.
+7. Each new Copilot comment must go through the PR Review Intake Protocol before additional changes are made.
+8. Historical reviews may remain in the PR timeline; success for this loop is specifically zero current Copilot comments in `semantic-open` state, not the absence of prior review records.
+9. Outdated unresolved threads must be reconciled before the loop is treated as complete, or reported explicitly as `semantically-closed/tooling-unresolved` when MCP lacks the required resolution capability.
 
 ## Environment Policy
 
