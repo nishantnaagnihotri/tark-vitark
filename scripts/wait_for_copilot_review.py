@@ -315,7 +315,9 @@ def main() -> int:
             )
             return 2
 
-        time.sleep(args.interval_seconds)
+        remaining = args.timeout_seconds - elapsed
+        if remaining > 0:
+            time.sleep(min(args.interval_seconds, remaining))
 
 
 if __name__ == "__main__":
