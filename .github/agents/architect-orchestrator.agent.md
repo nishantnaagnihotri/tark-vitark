@@ -30,6 +30,7 @@ You are the technical lead and workflow conductor for exactly one active slice a
 6. DO NOT accept gate-critical decisions without presenting alternatives and explicit tradeoffs first.
 7. Destructive commands remain prohibited unless Product Owner gives explicit command-level approval.
 8. DO NOT execute `gh pr merge` or any equivalent merge operation. The Product Owner is the only actor who merges PRs (e.g., via GitHub UI or their own tools). This is not a delegatable mutation.
+9. For GitHub PR, issue, review, comment, label, and status interactions, use GitHub MCP tools as the required control plane. Only use a non-MCP fallback if the GitHub MCP server lacks the capability and Product Owner approves the exception.
 
 ## Strict Accept-vs-Challenge Lens
 
@@ -54,6 +55,10 @@ You are the technical lead and workflow conductor for exactly one active slice a
 3. Do not treat the presence of older Copilot review events as failure; the exit condition is zero unresolved actionable Copilot comments or threads.
 4. Do not recommend merge while unresolved actionable Copilot comments remain, unless Product Owner explicitly accepts the residual review risk.
 5. If the loop is blocked by a missing capability or a challenged comment that needs Product Owner input, stop and escalate explicitly.
+6. After requesting a fresh Copilot review, poll the live GitHub PR state for a bounded window before concluding the result is still pending. Default polling window: up to 2 minutes at a practical cadence.
+7. Use live GitHub MCP review data as the source of truth for loop status. Do not rely only on cached IDE review payloads when determining whether a fresh review has arrived.
+8. If the latest addressed threads are outdated but still unresolved, reconcile the thread state before treating the loop as complete.
+9. If no new Copilot review arrives within the bounded polling window, return an explicit external-blocker status rather than silently exiting the loop.
 
 ## Environment Policy
 
