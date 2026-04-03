@@ -67,7 +67,7 @@ This section is a dev-agent summary only. `.github/AGENTS.md` is the source of t
 1. Immediately after creating a PR, request Copilot review on that PR and start the bounded polling window.
 2. After any push that addresses PR feedback, request a fresh Copilot review on that PR.
 3. Once the PR review loop is active, continue it automatically after each push and review request until there are zero `semantic-open` Copilot comments, or an explicit blocker requires escalation.
-4. Polling must use live GitHub MCP review data as the source of truth for up to 2 minutes at a practical cadence before the review is treated as externally pending.
+4. Polling must use live GitHub MCP review data as the source of truth for up to 5 minutes at a practical cadence before the review is treated as externally pending.
 5. If no new Copilot review arrives within that bounded polling window, report the PR as blocked by an external dependency on Copilot review completion; do not silently treat the loop as complete.
 6. Each new Copilot comment must go through the PR Review Intake Protocol before additional changes are made.
 7. Historical reviews may remain in the PR timeline; success for this loop is specifically zero current Copilot comments in `semantic-open` state, not the absence of prior review records.

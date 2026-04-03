@@ -119,7 +119,7 @@ This standard exists to support balanced decision-making and must be applied eve
 4. Historical Copilot review records may remain on the PR; success is defined as zero `semantic-open` Copilot comments or threads, not zero total Copilot reviews.
 5. Each new Copilot comment must go through the PR Review Intake Protocol before any additional changes are proposed or made.
 6. If the loop cannot continue because of a challenge, protocol conflict, or missing capability, the agent must pause, discuss the issue with the Product Owner, and proceed only with the agreed position.
-7. After requesting a fresh Copilot review, the agent must poll the live GitHub PR state for a bounded window before concluding the result is pending. Default polling window: up to 2 minutes at a practical cadence.
+7. After requesting a fresh Copilot review, the agent must poll the live GitHub PR state for a bounded window before concluding the result is pending. Default polling window: up to 5 minutes at a practical cadence.
 8. Polling must use live GitHub MCP review data as the source of truth rather than relying on cached editor extension payloads; non-MCP fallbacks are allowed only through the documented exception path when MCP is unavailable or Product Owner explicitly approves an exception.
 9. Review threads should normally be resolved as part of disposition execution: after the fix or challenge response is posted and any required commit is pushed, resolve the thread when the comment is `semantic-closed`.
 10. If no new Copilot review arrives within the bounded polling window, the agent must report that the loop is blocked on external async review completion instead of treating the review cycle as complete.
