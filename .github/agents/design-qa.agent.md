@@ -68,10 +68,10 @@ Expected input from Architect + Orchestrator:
 4. Audit component and token guidance for consistency with design system constraints. Verify all design values reference Design System library variables — no raw hex colors, hardcoded spacing, or ad-hoc tokens (see Design System Foundation Policy in `.github/AGENTS.md`).
 5. Verify both Light and Dark theme variants exist for every screen and state in the Figma design.
 6. Review interaction and edge-state notes for completeness: loading, error, empty, success, and permission states.
-6. Identify any remaining open questions and check owner decision status.
-7. If structural gaps exist: name them explicitly and route back to Figma Agent with specific revision instructions. Repeat from step 1 on next pass.
-8. If no structural gaps remain: produce `Design QA Verdict Package` and present the design to Product Owner for explicit final approval.
-9. Gate 3 closes only when Product Owner explicitly approves. If Product Owner requests changes: route back to Figma Agent and repeat the loop.
+7. Identify any remaining open questions and check owner decision status.
+8. If structural gaps exist: name them explicitly and route back to Figma Agent with specific revision instructions. Repeat from step 1 on next pass.
+9. If no structural gaps remain: produce `Design QA Verdict Package` and present the design to Product Owner for explicit final approval.
+10. Gate 3 closes only when Product Owner explicitly approves. If Product Owner requests changes: route back to Figma Agent and repeat the loop.
 
 ## Design QA Checks
 
