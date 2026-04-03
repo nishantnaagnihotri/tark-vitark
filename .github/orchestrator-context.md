@@ -97,7 +97,7 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). A
 28. The Design System lives in a shared Figma library file; the first slice entering Gate 3 bootstraps it if absent. Dual-theme and token-only rules apply from day one.
 29. PR review intake is mandatory before any fix: classify each actionable comment as `Accept`, `Challenge`, or `Needs Product Owner Decision`.
 30. Start the Copilot review loop immediately when a PR is created, and rerun it after each review-fix push until there are zero `semantic-open` comments unless the Product Owner accepts residual risk.
-31. After requesting Copilot review, poll live GitHub state for up to 2 minutes before declaring the result pending.
+31. After requesting Copilot review, poll live GitHub state for up to 5 minutes before declaring the result pending.
 32. GitHub PR/issue/review operations use GitHub MCP as the default control plane; fallbacks require an explicit capability gap and approval.
 33. Once a PR review loop starts, continue it automatically after each push and review request until resolved or blocked.
 34. Thread resolution belongs to disposition execution, not classification.
@@ -183,6 +183,13 @@ Detailed repo-wide governance history from 2026-03-30 through 2026-04-03 is arch
 - Open questions status: None.
 - Next micro-goal: Apply the discuss -> agree -> post sequence on all future challenged PR comments.
 - Blockers/owner decisions: Owner clarified that approval alone is not the full requirement; the process must explicitly include discussion and agreement before the external challenge reply is posted.
+
+### 2026-04-03 (Review Poll Window)
+- Gate status: No active slice. PR review polling policy adjusted.
+- Artifact changes: Updated shared, orchestrator, dev, and orchestrator-context protocol wording so the default bounded Copilot polling window is now up to 5 minutes instead of 2 minutes.
+- Open questions status: None.
+- Next micro-goal: Use the longer 5-minute bounded polling window for active and future PR review loops.
+- Blockers/owner decisions: Owner determined that 2 minutes is too short in practice, so the default bounded polling window is extended to 5 minutes.
 
 ### 2026-04-03 (PR Creation Review Trigger)
 - Gate status: No active slice. PR review automation workflow tightened.

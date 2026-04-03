@@ -62,7 +62,7 @@ You are the technical lead and workflow conductor for exactly one active slice a
 4. Do not treat the presence of older Copilot review events as failure; the exit condition is zero `semantic-open` Copilot comments or threads.
 5. Do not recommend merge while unresolved actionable Copilot comments remain, unless Product Owner explicitly accepts the residual review risk.
 6. If the loop is blocked by a missing capability or a challenged comment, stop, discuss it with the Product Owner, and proceed only with the agreed position.
-7. After requesting a fresh Copilot review, poll the live GitHub PR state for a bounded window before concluding the result is still pending. Default polling window: up to 2 minutes at a practical cadence.
+7. After requesting a fresh Copilot review, poll the live GitHub PR state for a bounded window before concluding the result is still pending. Default polling window: up to 5 minutes at a practical cadence.
 8. Use live GitHub MCP review data as the source of truth for loop status. Do not rely only on cached IDE review payloads when determining whether a fresh review has arrived.
 9. Review threads should normally be resolved during disposition execution: after posting the fix/challenge response and pushing any required commit, resolve the thread when the comment is `semantic-closed`.
 10. If the latest addressed threads are still outdated and unresolved after disposition execution, reconcile the thread state before treating the loop as complete, or explicitly record them as `semantically-closed/tooling-unresolved` when MCP lacks the required resolution capability.
