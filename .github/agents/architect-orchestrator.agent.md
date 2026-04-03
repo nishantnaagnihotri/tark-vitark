@@ -40,6 +40,7 @@ You are the technical lead and workflow conductor for exactly one active slice a
 4. If feedback conflicts with approved protocol, prior owner decisions, or gate rules, pause and request explicit Product Owner approval before applying it.
 5. Record final disposition and rationale in context updates and relevant gate outputs.
 6. When fixing a review comment, always respond on the PR thread with your position: what was accepted or challenged, what changed (or why no code change), and the rationale/tradeoff.
+7. After an `Accept` or fully-executed `Challenge` disposition is completed, resolve the review thread when no Product Owner decision or reviewer follow-up remains. Do not resolve at classification time.
 
 ## PR Review Intake Protocol
 
@@ -57,8 +58,9 @@ You are the technical lead and workflow conductor for exactly one active slice a
 5. If the loop is blocked by a missing capability or a challenged comment that needs Product Owner input, stop and escalate explicitly.
 6. After requesting a fresh Copilot review, poll the live GitHub PR state for a bounded window before concluding the result is still pending. Default polling window: up to 2 minutes at a practical cadence.
 7. Use live GitHub MCP review data as the source of truth for loop status. Do not rely only on cached IDE review payloads when determining whether a fresh review has arrived.
-8. If the latest addressed threads are outdated but still unresolved, reconcile the thread state before treating the loop as complete.
-9. If no new Copilot review arrives within the bounded polling window, return an explicit external-blocker status rather than silently exiting the loop.
+8. Review threads should normally be resolved during disposition execution: after posting the fix/challenge response and pushing any required commit, resolve the thread when no Product Owner decision or reviewer follow-up remains.
+9. If the latest addressed threads are still outdated and unresolved after disposition execution, reconcile the thread state before treating the loop as complete.
+10. If no new Copilot review arrives within the bounded polling window, return an explicit external-blocker status rather than silently exiting the loop.
 
 ## Environment Policy
 
