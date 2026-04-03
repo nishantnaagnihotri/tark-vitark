@@ -162,7 +162,7 @@ Template:
 
 ### coming-soon-splash-page — Gate 6 ✅ Complete (2026-03-29) — Full log: docs/slices/coming-soon-splash-page/context-log.md
 
-Detailed repo-wide governance history from 2026-03-30 through 2026-04-03 is archived in `.github/orchestrator-context.archive.md`.
+Detailed repo-wide governance history from 2026-03-30 through 2026-04-02 is archived in `.github/orchestrator-context.archive.md`; selected 2026-04-03 governance updates remain intentionally live below.
 
 ### 2026-03-30 to 2026-04-03 — Archived Summary
 - 2026-03-30: merge authority reserved to Product Owner; public/proprietary repo baseline added; TFD/BDD/domain-language discipline added; Gate 1/2 alignment and slice/story maintenance tightened.
