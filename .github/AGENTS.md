@@ -105,19 +105,23 @@ This standard exists to support balanced decision-making and must be applied eve
 3. Only after this triage step is complete may the agent propose or implement changes.
 4. If the user asks what comments exist on a PR, the response must include both the comment summary and the disposition for each actionable item.
 5. If the agent skips this sequence, that is a workflow failure and must be corrected before changes proceed.
+6. Review-state definitions:
+   - `semantic-open`: the comment has no executed disposition yet, still needs Product Owner or reviewer follow-up, or the accepted/challenged path is not fully executed.
+   - `semantic-closed`: the `Accept` or fully-executed `Challenge` disposition is complete and no Product Owner or reviewer follow-up remains.
+   - `semantically-closed/tooling-unresolved`: the comment is semantically closed, but the thread cannot be marked resolved because the required MCP mutation capability is unavailable. This state must be reported explicitly.
 
 ## Copilot Review Loop Protocol
 
 1. After pushing a commit that addresses PR feedback, the agent must request a fresh Copilot review on that PR before considering the review cycle complete.
 2. Once an active PR review loop has started, the agent must continue it automatically after each push and review request; it must not pause for another Product Owner prompt unless a blocker, protocol conflict, missing capability, or explicit owner-decision point is reached.
-3. Historical Copilot review records may remain on the PR; success is defined as zero unresolved actionable Copilot comments or threads, not zero total Copilot reviews.
+3. Historical Copilot review records may remain on the PR; success is defined as zero `semantic-open` Copilot comments or threads, not zero total Copilot reviews.
 4. Each new Copilot comment must go through the PR Review Intake Protocol before any additional changes are proposed or made.
 5. If the loop cannot continue because of a challenge, protocol conflict, or missing capability, the agent must escalate to Product Owner with the blocker.
 6. After requesting a fresh Copilot review, the agent must poll the live GitHub PR state for a bounded window before concluding the result is pending. Default polling window: up to 2 minutes at a practical cadence.
 7. Polling must use live GitHub MCP review data as the source of truth rather than relying on cached editor extension payloads; non-MCP fallbacks are allowed only through the documented exception path when MCP is unavailable or Product Owner explicitly approves an exception.
-8. Review threads should normally be resolved as part of disposition execution: after the fix or challenge response is posted and any required commit is pushed, resolve the thread when no Product Owner decision or reviewer follow-up remains.
+8. Review threads should normally be resolved as part of disposition execution: after the fix or challenge response is posted and any required commit is pushed, resolve the thread when the comment is `semantic-closed`.
 9. If no new Copilot review arrives within the bounded polling window, the agent must report that the loop is blocked on external async review completion instead of treating the review cycle as complete.
-10. If a thread still remains outdated and unresolved after disposition execution, the agent must reconcile that thread state before declaring the loop complete.
+10. If a thread still remains outdated and unresolved after disposition execution, the agent must reconcile that thread state before declaring the loop complete, or explicitly record it as `semantically-closed/tooling-unresolved` when MCP lacks the required resolution capability.
 
 ## Escalation
 

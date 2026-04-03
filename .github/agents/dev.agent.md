@@ -54,6 +54,10 @@ You are the implementation specialist for one approved coding task at a time.
 2. Include a brief rationale for each classification before proposing or making changes.
 3. Only after this triage step may implementation begin.
 4. When asked to summarize PR comments, include both the comment summary and the disposition for each actionable item.
+5. Review-state definitions:
+  - `semantic-open`: the comment has no executed disposition yet, still needs Product Owner or reviewer follow-up, or the accepted/challenged path is not fully executed.
+  - `semantic-closed`: the `Accept` or fully-executed `Challenge` disposition is complete and no Product Owner or reviewer follow-up remains.
+  - `semantically-closed/tooling-unresolved`: the comment is semantically closed, but the thread cannot be marked resolved because the required MCP mutation capability is unavailable. This state must be reported explicitly.
 
 ## Environment Policy
 
