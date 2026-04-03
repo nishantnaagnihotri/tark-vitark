@@ -102,6 +102,7 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). A
 33. Once a PR review loop starts, continue it automatically after each push and review request until resolved or blocked.
 34. Thread resolution belongs to disposition execution, not classification.
 35. Review completion uses semantic state: `semantic-open` blocks, `semantic-closed` does not, and `semantically-closed/tooling-unresolved` must be reported explicitly.
+36. Internal review triage may classify an item as `Challenge`, but posting a `Challenge` reply on a PR thread requires explicit Product Owner approval first.
 
 ## Resume Protocol For Orchestrator
 
@@ -168,6 +169,13 @@ Detailed repo-wide governance history from 2026-03-30 through 2026-04-03 is arch
 - 2026-04-01: embedded challenge phase adopted; architecture expert standard and three-tier discussion model added; Figma file-per-slice convention established.
 - 2026-04-02: design-system-first and dual-theme governance established, with first-slice bootstrap of the shared design-system library.
 - 2026-04-03: PR review intake and Copilot review loop hardened; PR #33 merged after a clean live Copilot review on head `dc19aa1`.
+
+### 2026-04-03 (Challenge Reply Approval)
+- Gate status: No active slice. PR review governance tightened.
+- Artifact changes: Updated shared, orchestrator, and dev protocols so internal triage may classify `Challenge`, but posting a `Challenge` reply on a PR thread now requires explicit Product Owner approval first. Added Known Rule #36.
+- Open questions status: None.
+- Next micro-goal: Apply this stricter approval rule on all future PR review responses.
+- Blockers/owner decisions: Owner clarified that external challenge replies require prior agreement, even when the internal classification is already clear.
 
 ### 2026-04-03 (PR Creation Review Trigger)
 - Gate status: No active slice. PR review automation workflow tightened.
