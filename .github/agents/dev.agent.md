@@ -7,7 +7,7 @@
 ---
 name: dev
 description: "Use when: implementing an approved coding task from a Gate 4 issue, producing code and tests, and preparing a PR that closes the issue. Designed for issue-centric handoff where issue link/number is the primary input."
-tools: [vscode, execute, read, edit, search, web, browser, 'com.figma.mcp/mcp/*', todo, github.vscode-pull-request-github/issue_fetch, github.vscode-pull-request-github/labels_fetch, github.vscode-pull-request-github/notification_fetch, github.vscode-pull-request-github/doSearch, github.vscode-pull-request-github/activePullRequest, github.vscode-pull-request-github/pullRequestStatusChecks, github.vscode-pull-request-github/openPullRequest]
+tools: [vscode, execute, read, edit, search, web, browser, 'com.figma.mcp/mcp/*', 'github/*', todo, github.vscode-pull-request-github/issue_fetch, github.vscode-pull-request-github/labels_fetch, github.vscode-pull-request-github/notification_fetch, github.vscode-pull-request-github/doSearch, github.vscode-pull-request-github/activePullRequest, github.vscode-pull-request-github/pullRequestStatusChecks, github.vscode-pull-request-github/openPullRequest]
 argument-hint: "Provide issue link or number. Dev derives functional and technical context from issue metadata and linked artifacts."
 user-invocable: true
 agents: []
@@ -86,7 +86,7 @@ Expected input from Architect + Orchestrator:
 2. If issue metadata is incomplete, return `Build Readiness: Needs Clarification` with missing fields and stop before coding.
 3. Always create a new branch for each assigned task/issue. Make all changes in that branch. Open a PR for review and merge; never commit directly to master.
 4. If issue scope includes Figma parity, extract exact frame values first (positions, dimensions, spacing, typography, colors, gradients, radii, shadows, blur/effects, and breakpoint-specific variants) via MCP design context/metadata/screenshot workflow.
-5. Translate extracted values to the project token system: use only CSS custom property references (`var(--color-surface-primary)`), never raw values. Verify both Light and Dark themes render correctly.
+5. Translate extracted values to the project token system: use CSS custom property references for tokenized properties such as colors, spacing, and other defined design tokens; allow explicit units for non-tokenized dimensions when needed. Verify both Light and Dark themes render correctly.
 6. For responsive work, map each required Figma frame to explicit breakpoint rules and keep per-frame values traceable in code comments or PR notes.
 7. Derive behavior scenarios from acceptance criteria.
 8. Write or update tests first for those scenarios (expected to fail before implementation where feasible).
