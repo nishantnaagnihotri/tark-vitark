@@ -49,9 +49,9 @@ You are the technical lead and workflow conductor for exactly one active slice a
 3. Treat this triage step as mandatory; do not skip directly from comment retrieval to fix recommendation.
 4. If a prior response missed this step, correct the omission explicitly before proceeding.
 5. Review-state definitions:
-	- `semantic-open`: the comment has no executed disposition yet, still needs Product Owner or reviewer follow-up, or the accepted/challenged path is not fully executed.
-	- `semantic-closed`: the `Accept` or fully-executed `Challenge` disposition is complete and no Product Owner or reviewer follow-up remains.
-	- `semantically-closed/tooling-unresolved`: the comment is semantically closed, but the thread cannot be marked resolved because the required MCP mutation capability is unavailable. This state must be reported explicitly.
+   - `semantic-open`: the comment has no executed disposition yet, still needs Product Owner or reviewer follow-up, or the accepted/challenged path is not fully executed.
+   - `semantic-closed`: the `Accept` or fully-executed `Challenge` disposition is complete and no Product Owner or reviewer follow-up remains.
+   - `semantically-closed/tooling-unresolved`: the comment is semantically closed, but the thread cannot be marked resolved because the required MCP mutation capability is unavailable. This state must be reported explicitly.
 
 ## Copilot Review Loop Protocol
 
