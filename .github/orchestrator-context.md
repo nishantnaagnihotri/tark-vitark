@@ -42,28 +42,28 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). A
 ## Current Gate Contracts
 
 1. Gate 1 (Requirement Challenge)
-- Input: requirement statement.
-- Output: readiness, challenge set, acceptance criteria, open questions, gate decision, Requirement Context Package.
+	- Input: requirement statement.
+	- Output: readiness, challenge set, acceptance criteria, open questions, gate decision, Requirement Context Package.
 
 2. Gate 2 (PRD)
-- Input: Requirement Context Package.
-- Output: PRD Draft Package plus readiness, alignment/traceability, quality gaps, open questions, and gate decision.
+	- Input: Requirement Context Package.
+	- Output: PRD Draft Package plus readiness, alignment/traceability, quality gaps, open questions, and gate decision.
 
 3. Gate 3 (Design)
-- Flow: PRD Draft Package -> UX Flow/State Package -> Design Draft Package -> Design QA Verdict Package.
-- Gate closes only after UX, Figma, and Design QA pass and Product Owner explicitly approves the design.
+	- Flow: PRD Draft Package -> UX Flow/State Package -> Design Draft Package -> Design QA Verdict Package.
+	- Gate closes only after UX, Figma, and Design QA pass and Product Owner explicitly approves the design.
 
 4. Gate 4 (Architecture)
-- Input: slice artifacts `01-requirement.md` through `04-design-qa.md`.
-- Output: Architecture Plan Package plus `05-architecture.md` and `06-tasks.md`.
+	- Input: slice artifacts `01-requirement.md` through `04-design-qa.md`.
+	- Output: Architecture Plan Package plus `05-architecture.md` and `06-tasks.md`.
 
 5. Gate 5 (Build)
-- Input: one approved Gate 4 issue with acceptance criteria, slice path, and architecture reference.
-- Output: Build Output Package with implementation summary, verification evidence, BDD evidence, PR package, quality gaps, open questions, and gate decision.
+	- Input: one approved Gate 4 issue with acceptance criteria, slice path, and architecture reference.
+	- Output: Build Output Package with implementation summary, verification evidence, BDD evidence, PR package, quality gaps, open questions, and gate decision.
 
 6. Gate 6 (Merge)
-- Input: GitHub Issue reference, PR link, and Build Output Package.
-- Output: merge readiness, review summary, outstanding gaps, gate decision, and owner action.
+	- Input: GitHub Issue reference, PR link, and Build Output Package.
+	- Output: merge readiness, review summary, outstanding gaps, gate decision, and owner action.
 
 ## Known Rules From User Decisions
 
