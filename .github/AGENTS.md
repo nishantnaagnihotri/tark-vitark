@@ -98,6 +98,14 @@ This standard exists to support balanced decision-making and must be applied eve
 4. If the user asks what comments exist on a PR, the response must include both the comment summary and the disposition for each actionable item.
 5. If the agent skips this sequence, that is a workflow failure and must be corrected before changes proceed.
 
+## Copilot Review Loop Protocol
+
+1. After pushing a commit that addresses PR feedback, the agent must request a fresh Copilot review on that PR before considering the review cycle complete.
+2. The agent repeats this loop until there are zero unresolved actionable Copilot review comments.
+3. Historical Copilot review records may remain on the PR; success is defined as zero unresolved actionable Copilot comments or threads, not zero total Copilot reviews.
+4. Each new Copilot comment must go through the PR Review Intake Protocol before any additional changes are proposed or made.
+5. If the loop cannot continue because of a challenge, protocol conflict, or missing capability, the agent must escalate to Product Owner with the blocker.
+
 ## Escalation
 
 Escalate to Product Owner when:
