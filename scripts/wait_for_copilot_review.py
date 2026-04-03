@@ -251,6 +251,8 @@ def main() -> int:
             for review in reviews
             if review.get("user", {}).get("login") == BOT_LOGIN
             and review.get("commit_id") == target_head_sha
+            and review.get("submitted_at")
+            and review.get("state") != "PENDING"
         ]
 
         if matches:
