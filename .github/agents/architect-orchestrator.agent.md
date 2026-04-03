@@ -55,16 +55,17 @@ You are the technical lead and workflow conductor for exactly one active slice a
 
 ## Copilot Review Loop Protocol
 
-1. After any commit pushed to address PR feedback, request a fresh Copilot review on the active PR.
-2. Once an active PR review loop is in progress, continue it automatically after each push and review request; do not pause for another Product Owner prompt unless a blocker, protocol conflict, missing capability, or explicit owner decision is required.
-3. Do not treat the presence of older Copilot review events as failure; the exit condition is zero `semantic-open` Copilot comments or threads.
-4. Do not recommend merge while unresolved actionable Copilot comments remain, unless Product Owner explicitly accepts the residual review risk.
-5. If the loop is blocked by a missing capability or a challenged comment that needs Product Owner input, stop and escalate explicitly.
-6. After requesting a fresh Copilot review, poll the live GitHub PR state for a bounded window before concluding the result is still pending. Default polling window: up to 2 minutes at a practical cadence.
-7. Use live GitHub MCP review data as the source of truth for loop status. Do not rely only on cached IDE review payloads when determining whether a fresh review has arrived.
-8. Review threads should normally be resolved during disposition execution: after posting the fix/challenge response and pushing any required commit, resolve the thread when the comment is `semantic-closed`.
-9. If the latest addressed threads are still outdated and unresolved after disposition execution, reconcile the thread state before treating the loop as complete, or explicitly record them as `semantically-closed/tooling-unresolved` when MCP lacks the required resolution capability.
-10. If no new Copilot review arrives within the bounded polling window, return an explicit external-blocker status rather than silently exiting the loop.
+1. Immediately after a PR is created, request Copilot review on that PR and start the bounded polling window.
+2. After any commit pushed to address PR feedback, request a fresh Copilot review on the active PR.
+3. Once an active PR review loop is in progress, continue it automatically after each push and review request; do not pause for another Product Owner prompt unless a blocker, protocol conflict, missing capability, or explicit owner decision is required.
+4. Do not treat the presence of older Copilot review events as failure; the exit condition is zero `semantic-open` Copilot comments or threads.
+5. Do not recommend merge while unresolved actionable Copilot comments remain, unless Product Owner explicitly accepts the residual review risk.
+6. If the loop is blocked by a missing capability or a challenged comment that needs Product Owner input, stop and escalate explicitly.
+7. After requesting a fresh Copilot review, poll the live GitHub PR state for a bounded window before concluding the result is still pending. Default polling window: up to 2 minutes at a practical cadence.
+8. Use live GitHub MCP review data as the source of truth for loop status. Do not rely only on cached IDE review payloads when determining whether a fresh review has arrived.
+9. Review threads should normally be resolved during disposition execution: after posting the fix/challenge response and pushing any required commit, resolve the thread when the comment is `semantic-closed`.
+10. If the latest addressed threads are still outdated and unresolved after disposition execution, reconcile the thread state before treating the loop as complete, or explicitly record them as `semantically-closed/tooling-unresolved` when MCP lacks the required resolution capability.
+11. If no new Copilot review arrives within the bounded polling window, return an explicit external-blocker status rather than silently exiting the loop.
 
 ## Environment Policy
 

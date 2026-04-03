@@ -59,6 +59,15 @@ You are the implementation specialist for one approved coding task at a time.
   - `semantic-closed`: the `Accept` or fully-executed `Challenge` disposition is complete and no Product Owner or reviewer follow-up remains.
   - `semantically-closed/tooling-unresolved`: the comment is semantically closed, but the thread cannot be marked resolved because the required MCP mutation capability is unavailable. This state must be reported explicitly.
 
+## Copilot Review Loop Protocol
+
+1. Immediately after creating a PR, request Copilot review on that PR and start the bounded polling window.
+2. After any push that addresses PR feedback, request a fresh Copilot review on that PR.
+3. Once the PR review loop is active, continue it automatically after each push and review request until there are zero `semantic-open` Copilot comments, or an explicit blocker requires escalation.
+4. Polling must use live GitHub MCP review data as the source of truth for up to 2 minutes at a practical cadence before the review is treated as externally pending.
+5. Each new Copilot comment must go through the PR Review Intake Protocol before additional changes are made.
+6. Outdated unresolved threads must be reconciled before the loop is treated as complete, or reported explicitly as `semantically-closed/tooling-unresolved` when MCP lacks the required resolution capability.
+
 ## Environment Policy
 
 1. Primary: Cloud.
