@@ -113,7 +113,7 @@ This standard exists to support balanced decision-making and must be applied eve
 4. Each new Copilot comment must go through the PR Review Intake Protocol before any additional changes are proposed or made.
 5. If the loop cannot continue because of a challenge, protocol conflict, or missing capability, the agent must escalate to Product Owner with the blocker.
 6. After requesting a fresh Copilot review, the agent must poll the live GitHub PR state for a bounded window before concluding the result is pending. Default polling window: up to 2 minutes at a practical cadence.
-7. Polling must use live GitHub MCP review data as the source of truth rather than relying on cached editor extension payloads.
+7. Polling must use live GitHub MCP review data as the source of truth rather than relying on cached editor extension payloads; non-MCP fallbacks are allowed only through the documented exception path when MCP is unavailable or Product Owner explicitly approves an exception.
 8. If review threads are outdated but still marked unresolved after a fix commit, the agent must reconcile that thread state before declaring the loop complete.
 9. If no new Copilot review arrives within the bounded polling window, the agent must report that the loop is blocked on external async review completion instead of treating the review cycle as complete.
 
