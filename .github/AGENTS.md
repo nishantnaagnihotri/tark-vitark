@@ -45,7 +45,7 @@ Product Owner may override classification at any time.
 ## Required Gates
 
 1. Requirement challenge gate must pass before PRD freeze for Standard and Complex slices.
-2. PRD drafting uses Requirement Context Package and must pass PRD quality gate before PRD freeze.
+2. PRD drafting uses Requirement Context Package and must pass PRD quality gate before PRD freeze (Standard and Complex slices; Trivial slices skip Gate 2).
 3. Gate 2 (PRD) must preserve Gate 1 intent: no silent reinterpretation of requirement statement, scope boundaries, or acceptance criteria.
 4. Design freeze must happen before coding for Standard and Complex slices. Gate 3 includes UX, Figma, and Design QA substeps.
 5. Design artifact is mandatory for every UX task: each Gate 3A UX output must include a Figma artifact reference (file URL or file key) before progression.
@@ -180,8 +180,9 @@ Before accepting major owner decisions (scope, sequencing, architecture tradeoff
 On resume, before any Gate 3 or later work:
 
 1. Validate that `.figma-config.local` exists and is parseable as key-value configuration.
-2. Validate required keys: `project_name`, `plan_key`, and `design_system_library_file_key` (required after first Gate 3 bootstrap).
-3. If missing or malformed, report the gap and block Gate 3 progression until resolved.
+2. Before the first Gate 3 bootstrap, require `project_name` and `plan_key`. `design_system_library_file_key` may be absent or empty at this stage and must not block the first Gate 3 bootstrap.
+3. After the first Gate 3 bootstrap, require `design_system_library_file_key` to be present and non-empty.
+4. If any key that is required for the current stage is missing, empty, or malformed, report the gap and block Gate 3 progression until resolved.
 
 ## Escalation
 
