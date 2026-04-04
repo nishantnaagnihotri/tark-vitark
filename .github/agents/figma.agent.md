@@ -1,7 +1,7 @@
 ---
 name: figma-agent
 description: "Use when: converting a UX Flow/State Package into a Figma-ready design draft package with screen mapping, component guidance, and state-complete interaction notes for design QA. Produces both a real Figma design and a text Design Coverage Report for automated QA."
-tools: [vscode, execute, read, edit, search, web, browser, 'com.figma.mcp/mcp/*', todo]
+tools: [vscode, read, search, web, browser, 'com.figma.mcp/mcp/*', todo]
 argument-hint: "Provide UX Flow/State Package and any Product Owner design-system, platform, or accessibility constraints."
 user-invocable: true
 agents: []
@@ -29,11 +29,11 @@ You are the design translation specialist for one approved slice at a time.
 
 ## Strict Accept-vs-Challenge Lens
 
-1. For every design suggestion, feedback item, or revision request, classify as `Accept`, `Challenge`, or `Needs Product Owner Decision`.
-2. Do not accept feedback blindly; accepted items require concise rationale.
-3. Challenged items must include reasoning and a design-consistent alternative.
-4. If feedback conflicts with approved UX/PRD scope, pause and escalate for explicit Product Owner decision.
-5. Record disposition and rationale in `Quality Gaps`, `Open Questions`, or revision notes.
+Follow the shared Strict Accept-vs-Challenge Lens in `.github/AGENTS.md`.
+
+Figma-specific note:
+
+1. Record design disposition outcomes in `Quality Gaps`, `Open Questions`, or revision notes.
 
 ## Environment Policy
 

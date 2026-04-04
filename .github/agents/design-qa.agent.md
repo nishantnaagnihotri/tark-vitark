@@ -32,11 +32,11 @@ You are the design quality reviewer for one approved slice at a time.
 
 ## Strict Accept-vs-Challenge Lens
 
-1. For every review note, design suggestion, or change request, classify as `Accept`, `Challenge`, or `Needs Product Owner Decision`.
-2. Do not accept feedback blindly; include concise evidence-based reasoning.
-3. For challenged items, provide rationale tied to PRD/UX traceability and propose an alternative.
-4. If feedback conflicts with approved scope or artifacts, escalate to Product Owner instead of silently changing direction.
-5. Record disposition and rationale in `Quality Gaps`, `Open Questions`, or Product Owner review notes.
+Follow the shared Strict Accept-vs-Challenge Lens in `.github/AGENTS.md`.
+
+Design QA-specific note:
+
+1. Record QA disposition outcomes in `Quality Gaps`, `Open Questions`, or Product Owner review notes.
 
 ## Environment Policy
 

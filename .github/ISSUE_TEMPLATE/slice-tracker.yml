@@ -1,0 +1,67 @@
+name: Slice Progress Tracker
+description: A plain-language view of one feature from planning to release
+labels:
+  - slice
+body:
+  - type: input
+    id: slice-name
+    attributes:
+      label: Slice Name
+      placeholder: coming-soon-splash-page
+    validations:
+      required: true
+
+  - type: textarea
+    id: plain-summary
+    attributes:
+      label: Plain Summary
+      description: One sentence in non-technical language.
+      placeholder: Show users a clear coming-soon splash page that works on mobile and desktop.
+    validations:
+      required: true
+
+  - type: textarea
+    id: value
+    attributes:
+      label: Why This Matters
+      description: User or business value.
+      placeholder: Helps visitors understand the product status immediately.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: stage
+    attributes:
+      label: Current Stage
+      options:
+        - Gate 1
+        - Gate 2
+        - Gate 3
+        - Gate 4
+        - Gate 5
+        - Gate 6
+    validations:
+      required: true
+
+  - type: textarea
+    id: stories
+    attributes:
+      label: User Stories
+      description: Link all story issues in this slice.
+      placeholder: |
+        - #101 T1 story title
+        - #102 T2 story title
+    validations:
+      required: false
+
+  - type: textarea
+    id: open-questions
+    attributes:
+      label: Open Questions
+      description: Any owner decisions still pending.
+      placeholder: |
+        - Question: ...
+          Why it matters: ...
+          Needed by: ...
+    validations:
+      required: false

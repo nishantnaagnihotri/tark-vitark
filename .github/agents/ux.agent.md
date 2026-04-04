@@ -1,7 +1,7 @@
 ---
 name: ux-agent
 description: "Use when: translating a PRD Draft Package into UX flows, state coverage, interaction notes, and a design-ready UX handoff before Figma design execution."
-tools: [vscode, execute, read, edit, search, web, browser, 'com.figma.mcp/mcp/*', todo]
+tools: [vscode, read, search, web, browser, 'com.figma.mcp/mcp/*', todo]
 argument-hint: "Provide PRD Draft Package and any Product Owner UX, platform, or design-system constraints."
 user-invocable: true
 agents: []
@@ -31,11 +31,11 @@ You are the UX definition specialist for one approved slice at a time.
 
 ## Strict Accept-vs-Challenge Lens
 
-1. For every UX suggestion, flow update request, or interpretation, classify as `Accept`, `Challenge`, or `Needs Product Owner Decision`.
-2. Do not accept feedback blindly; accepted items must include concise rationale.
-3. Challenged items must include reasoning and an alternative UX treatment.
-4. If feedback conflicts with PRD scope, accepted decisions, or constraints, pause and escalate for explicit Product Owner decision.
-5. Record disposition and rationale in `Quality Gaps` or `Open Questions`.
+Follow the shared Strict Accept-vs-Challenge Lens in `.github/AGENTS.md`.
+
+UX-specific note:
+
+1. Record UX disposition outcomes in `Quality Gaps` or `Open Questions`.
 
 ## Environment Policy
 

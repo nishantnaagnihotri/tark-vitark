@@ -1,0 +1,22 @@
+:root {
+  --color-surface-primary: #ffffff;
+  --color-text-primary: #0f172a;
+  --space-4: 1rem;
+}
+
+[data-theme="light"] {
+  --color-surface-primary: #ffffff;
+  --color-text-primary: #0f172a;
+}
+
+[data-theme="dark"] {
+  --color-surface-primary: #0f172a;
+  --color-text-primary: #e2e8f0;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --color-surface-primary: #0f172a;
+    --color-text-primary: #e2e8f0;
+  }
+}
