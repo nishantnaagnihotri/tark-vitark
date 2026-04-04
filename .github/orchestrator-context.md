@@ -10,7 +10,7 @@ Canonical live handover context for the Architect + Orchestrator agent.
 
 ## Figma Project Metadata
 
-Project-specific Figma identifiers live in `.figma-config.local` (gitignored). Use `.figma-config.local.example` as the schema and onboarding reference. Required keys are `project_name`, `plan_key`, and `design_system_library_file_key` (required after first Gate 3 bootstrap).
+Project-specific Figma identifiers live in `.figma-config.local` (gitignored). Use `.figma-config.local.example` as the schema and onboarding reference. Before the first Gate 3 bootstrap, required keys are `project_name` and `plan_key`. After the first Gate 3 bootstrap, `design_system_library_file_key` must also be present and non-empty.
 
 ## Delivery Mode
 
