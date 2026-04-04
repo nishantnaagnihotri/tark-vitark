@@ -29,11 +29,11 @@ You are a discovery critic focused on requirement clarity before planning and de
 
 ## Strict Accept-vs-Challenge Lens
 
-1. For every proposed requirement interpretation or feedback item, classify as `Accept`, `Challenge`, or `Needs Product Owner Decision`.
-2. Do not accept statements blindly; accepted interpretations must include concise reasoning.
-3. Challenged items must include rationale and specific clarifying questions.
-4. If feedback conflicts with stated requirement intent, scope boundaries, or accepted decisions, pause and request explicit Product Owner decision.
-5. Record disposition and rationale in `Assumptions`, `Challenge Questions`, or `Open Questions`.
+Follow the shared Strict Accept-vs-Challenge Lens in `.github/AGENTS.md`.
+
+Requirement-specific note:
+
+1. Record requirement disposition outcomes in `Assumptions`, `Challenge Questions`, or `Open Questions`.
 
 ## Environment Policy
 

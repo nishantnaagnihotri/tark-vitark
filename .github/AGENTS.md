@@ -1,3 +1,6 @@
+<!-- Protocol-Version: 2.0 -->
+<!-- Last-Updated: 2026-04-04 -->
+
 # Shared Agent Protocol
 
 This repository follows a human-led, agent-executed workflow.
@@ -15,18 +18,48 @@ This repository follows a human-led, agent-executed workflow.
 3. Close each session with a short checkpoint: done, next, blockers.
 4. Keep changes small and reversible.
 
+## Protocol Reuse Policy
+
+1. This file is the canonical source for shared cross-agent rules.
+2. Agent files under `.github/agents/` must reference shared sections in this file instead of duplicating full text.
+3. Agent files should only define role-specific constraints, inputs, and outputs.
+
+## Slice Complexity Classification
+
+Applied by orchestrator at Gate 1 intake. Product Owner confirms classification.
+
+| Level | Description | Example | Gate Flow |
+|---|---|---|---|
+| Trivial | Static content, copy change, config-only update | Splash page, copy update, favicon | Gate 1 (lightweight) -> Gate 5 -> Gate 6 |
+| Standard | Single-module UI feature, no API | Form, component, page with logic | Full 6-gate flow. Architecture focuses on Implementation Design first. |
+| Complex | Multi-module, API integration, data/infrastructure changes | Auth flow, checkout, dashboard | Full 6-gate flow with full architecture depth. |
+
+Classification criteria:
+
+1. Trivial: no new module boundaries, no state-management changes, no integration points, and no design-system expansion.
+2. Standard: meaningful UI or module logic in one bounded area.
+3. Complex: cross-module boundaries, APIs, data models, or infrastructure impact.
+
+Product Owner may override classification at any time.
+
 ## Required Gates
 
-1. Requirement challenge gate must pass before PRD freeze.
+1. Requirement challenge gate must pass before PRD freeze for Standard and Complex slices.
 2. PRD drafting uses Requirement Context Package and must pass PRD quality gate before PRD freeze.
 3. Gate 2 (PRD) must preserve Gate 1 intent: no silent reinterpretation of requirement statement, scope boundaries, or acceptance criteria.
-4. Design freeze must happen before coding. Gate 3 is the full design gate and includes UX, Figma, and Design QA substeps.
+4. Design freeze must happen before coding for Standard and Complex slices. Gate 3 includes UX, Figma, and Design QA substeps.
 5. Design artifact is mandatory for every UX task: each Gate 3A UX output must include a Figma artifact reference (file URL or file key) before progression.
 6. UX Agent must run an internal challenge phase before producing UX flow/state artifacts: all `Must Resolve` UX gaps must be addressed or accepted by Product Owner before Gate 3A can pass.
-7. Architecture signoff must happen before coding.
+7. Architecture signoff must happen before coding for Standard and Complex slices.
 8. Architecture Agent must run an internal challenge phase before producing any architecture output: all `Must Resolve` architecture gaps must be addressed or accepted by Product Owner before Gate 4 can pass.
-9. Architecture Agent must run a Discussion Phase before freezing the plan: key technical decision points across System Design, Solution Architecture, and Implementation Design (e.g., system and service boundaries, data flows and contracts, integration patterns, file/module structure, and cross-cutting concerns) must be surfaced, discussed with Product Owner, and confirmed before the full plan is written. Vague architectural plans are not accepted.
-10. Merge requires passing tests, review closure, docs update, and rollback note.
+9. Architecture Agent must run a Discussion Phase before freezing the plan: key technical decisions across System Design, Solution Architecture, and Implementation Design must be surfaced, discussed with Product Owner, and confirmed before the full plan is written.
+10. Merge requires passing tests, review closure, docs update when applicable, and rollback note.
+
+## Architecture Reference Documents
+
+1. Architecture discussion topics are maintained in `.github/references/architecture-discussion-topics.md`.
+2. Architecture quality checks and package schema are maintained in `.github/references/architecture-quality-checks.md`.
+3. Architecture and orchestrator agents reference these documents instead of duplicating large checklists.
 
 ## Requirement-To-PRD Alignment Protocol
 
@@ -38,10 +71,10 @@ This repository follows a human-led, agent-executed workflow.
 
 ## Environment Routing
 
-1. Draft anywhere, decide and verify in Local.
-2. Local is preferred for requirement challenge and required for all Gate 3 design substeps; cloud is preferred for PRD drafts and Gate 5 Dev first-pass code + PR drafts.
-3. Local is mandatory for final integration checks and merge readiness.
-4. Copilot CLI is used for command-heavy scaffolding and repetitive transformations.
+1. Default execution mode is Local for all gates.
+2. Product Owner may opt a specific gate invocation into cloud mode by explicitly requesting cloud execution.
+3. Gate 3 design work is always local-only.
+4. Final verification and merge readiness decisions are always local.
 
 ## Terminal Mutation Override Policy
 
@@ -50,7 +83,7 @@ This repository follows a human-led, agent-executed workflow.
 3. Allowed mutations must stay narrowly scoped to the approved task and referenced files.
 4. Destructive commands (`git reset --hard`, force-push, history rewrite, mass deletion) remain disallowed unless Product Owner gives explicit command-level approval for that exact operation.
 5. Orchestrator must summarize intended commands before execution and record the decision in orchestration context updates.
-6. PR merge commands (for example `gh pr merge` or any equivalent merge operation) are never executed by any agent. PR merges are always performed by the Product Owner directly (via GitHub UI or their own tooling). This is not a delegatable mutation.
+6. PR merge commands (for example `gh pr merge` or any equivalent merge operation) are never executed by any agent. PR merges are always performed by the Product Owner directly.
 
 ## GitHub Interaction Policy
 
@@ -61,11 +94,8 @@ This repository follows a human-led, agent-executed workflow.
 
 ## Cloud Handoff Policy
 
-1. Before any cloud-preferred gate handoff, Architect + Orchestrator must ask Product Owner to confirm `local` or `cloud` execution mode.
-2. If `cloud` is chosen, Orchestrator provides a manual handoff prompt and pauses progression until return artifact is pasted.
-3. Gate progression resumes only after returned artifact is validated in Local context.
-4. Gate 3 design work is local-only and does not use cloud handoff.
-5. Gate 5 build work defaults to GitHub Copilot cloud Dev execution; local execution is allowed only via explicit Product Owner override for a specific Issue.
+1. For any cloud invocation, orchestrator provides a manual handoff prompt and pauses progression until return artifact is pasted.
+2. Gate progression resumes only after returned artifact is validated in local context.
 
 ## Handoff Contract Format
 
@@ -86,8 +116,6 @@ Before accepting major owner decisions (scope, sequencing, architecture tradeoff
 3. Recommend one option with clear rationale.
 4. Confirm final owner choice and record it in orchestration context.
 
-This standard exists to support balanced decision-making and must be applied even when the owner has a preferred direction.
-
 ## Strict Accept-vs-Challenge Lens
 
 1. Every suggestion, review comment, or proposed change must be explicitly classified as: `Accept`, `Challenge`, or `Needs Product Owner Decision`.
@@ -97,7 +125,7 @@ This standard exists to support balanced decision-making and must be applied eve
 5. Internal triage may classify an item as `Challenge`, but the agent must first discuss that challenge with the Product Owner, get explicit agreement on the external position, and only then post the agreed `Challenge` reply on the PR thread.
 6. Final disposition and rationale must be recorded in the relevant output (PR reply, handoff, or context update).
 7. When fixing a review comment, agents must also post a review response that explains their position: what was accepted or challenged, what changed (or why no change), and the rationale/tradeoff.
-8. After an `Accept` or fully-executed `Challenge` disposition is completed, the agent must resolve the review thread when no Product Owner decision or reviewer follow-up remains. Do not resolve a thread at classification time.
+8. After an `Accept` or fully-executed `Challenge` disposition is completed, the agent must resolve the review thread when no Product Owner decision or reviewer follow-up remains.
 
 ## PR Review Intake Protocol
 
@@ -109,7 +137,7 @@ This standard exists to support balanced decision-making and must be applied eve
 6. Review-state definitions:
    - `semantic-open`: the comment has no executed disposition yet, still needs Product Owner or reviewer follow-up, or the accepted/challenged path is not fully executed.
    - `semantic-closed`: the `Accept` or fully-executed `Challenge` disposition is complete and no Product Owner or reviewer follow-up remains.
-   - `semantically-closed/tooling-unresolved`: the comment is semantically closed, but the thread cannot be marked resolved because the required MCP mutation capability is unavailable. This state must be reported explicitly.
+   - `semantically-closed/tooling-unresolved`: the comment is semantically closed, but the thread cannot be marked resolved because the required MCP mutation capability is unavailable.
 
 ## Copilot Review Loop Protocol
 
@@ -120,11 +148,40 @@ This standard exists to support balanced decision-making and must be applied eve
 5. Each new Copilot comment must go through the PR Review Intake Protocol before any additional changes are proposed or made.
 6. If the loop cannot continue because of a challenge, protocol conflict, or missing capability, the agent must pause, discuss the issue with the Product Owner, and proceed only with the agreed position.
 7. After requesting a fresh Copilot review, the agent must poll the live GitHub PR state for a bounded window before concluding the result is pending. Default polling window: up to 5 minutes at a practical cadence.
-8. Polling must use live GitHub MCP review data as the source of truth rather than relying on cached editor extension payloads; non-MCP fallbacks are allowed only through the documented exception path when MCP is unavailable or Product Owner explicitly approves an exception.
-9. When a non-MCP polling fallback is used, prefer `python3 scripts/wait_for_copilot_review.py --owner <owner> --repo <repo> --pr <number>` instead of an ad hoc terminal snippet. The helper derives the live PR head from GitHub, exits distinctly on timeout or head drift, and treats check-run lookup failures as non-fatal metadata gaps.
-10. Review threads should normally be resolved as part of disposition execution: after the fix or challenge response is posted and any required commit is pushed, resolve the thread when the comment is `semantic-closed`.
-11. If no new Copilot review arrives within the bounded polling window, the agent must report that the loop is blocked on external async review completion instead of treating the review cycle as complete.
+8. Polling must use live GitHub MCP review data as the source of truth rather than relying on cached editor extension payloads.
+9. When a non-MCP polling fallback is used, prefer `python3 scripts/wait_for_copilot_review.py --owner <owner> --repo <repo> --pr <number>`.
+10. Review threads should normally be resolved as part of disposition execution.
+11. If no new Copilot review arrives within the bounded polling window, the agent must report that the loop is blocked on external async review completion.
 12. If a thread still remains outdated and unresolved after disposition execution, the agent must reconcile that thread state before declaring the loop complete, or explicitly record it as `semantically-closed/tooling-unresolved` when MCP lacks the required resolution capability.
+
+## Recovery Protocol
+
+### Partial Gate Artifact
+
+1. If an agent fails mid-gate and a partial artifact is written to `docs/slices/<slice-name>/`, do not advance gate status.
+2. Mark the artifact with `STATUS: INCOMPLETE` at the top.
+3. Re-invoke the same agent with the same inputs and overwrite the incomplete artifact.
+4. If re-invocation fails twice, escalate to Product Owner for manual intervention.
+
+### Figma MCP Failure
+
+1. If a Figma MCP call fails, retry once.
+2. If retry fails, report the MCP error to Product Owner and pause gate progression.
+3. Do not fall back to screenshot-only approximation without explicit Product Owner approval.
+
+### Copilot Review Poll Timeout
+
+1. If the bounded polling window times out, report `status: timeout` and pause.
+2. If timeout occurs three consecutive times for the same PR, escalate with options: extend wait, accept current review state, or investigate service status.
+3. Do not silently skip the review loop.
+
+### Config File Validation
+
+On resume, before any Gate 3 or later work:
+
+1. Validate that `.figma-config.local` exists and is parseable as key-value configuration.
+2. Validate required keys: `project_name`, `plan_key`, and `design_system_library_file_key` (required after first Gate 3 bootstrap).
+3. If missing or malformed, report the gap and block Gate 3 progression until resolved.
 
 ## Escalation
 
@@ -134,17 +191,25 @@ Escalate to Product Owner when:
 2. Scope, security, or architecture tradeoffs need human choice.
 3. Test and review findings conflict with delivery timeline.
 
+## Protocol Versioning
+
+1. Keep protocol metadata at top of this file:
+   - `Protocol-Version`
+   - `Last-Updated`
+2. Bump protocol version whenever a shared rule is added, changed, or removed.
+3. Include protocol version in gate-critical output packages where applicable.
+
 ## Artifact Storage Model
 
 1. Each approved gate output is persisted as a versioned markdown file under `docs/slices/<slice-name>/`.
 2. Orchestrator is responsible for creating the slice folder and writing gate artifacts after each gate passes.
 3. File naming convention:
-   - `01-requirement.md` — Requirement Context Package (Gate 1)
-   - `02-prd.md` — PRD Draft Package (Gate 2)
-   - `03-ux.md` — UX Flow/State Package (Gate 3A), including mandatory Figma design artifact reference (file URL or key)
-   - `04-design-qa.md` — Design QA Verdict Package (Gate 3C; includes Figma design reference)
-   - `05-architecture.md` — Architecture Plan (Gate 4)
-   - `06-tasks.md` — Task breakdown with GitHub Issue numbers (Gate 4 end)
+   - `01-requirement.md`
+   - `02-prd.md`
+   - `03-ux.md`
+   - `04-design-qa.md`
+   - `05-architecture.md`
+   - `06-tasks.md`
 4. GitHub Issues for coding tasks are created by the orchestrator at the end of Gate 4, after the architecture plan is approved.
 5. Each Issue must include acceptance criteria, slice folder path, and relevant architecture section reference.
 6. Coder agents at Gate 5 read the Issue and linked slice folder files for full context.
@@ -160,83 +225,56 @@ Escalate to Product Owner when:
    - Links to `01` through `06` artifacts.
    - A section listing all user stories (issue links).
 3. Every user story must be one GitHub issue and use labels `user-story` and `slice:<slice-name>`.
-4. Story issues must include:
-   - Story objective and acceptance criteria that define boundaries clearly.
-   - Acceptance criteria (mapped to PRD AC IDs).
-   - Slice artifact folder path.
-   - Architecture section reference.
-   - `Slice tracker:` section with issue link.
-5. Bidirectional traceability is mandatory:
-   - Slice tracker lists all story issues.
-   - Each story links back to the slice tracker.
-   - `06-tasks.md` lists all story issues and references architecture sections.
-6. Build/merge progression is blocked if any traceability link above is missing.
-7. Closed slices keep their slice tracker issue (typically closed) as audit history; links must remain intact.
+4. Story issues must include objective, acceptance criteria, slice path, architecture section reference, and `Slice tracker:` backlink.
+5. Bidirectional traceability is mandatory.
+6. Build and merge progression is blocked if required traceability links are missing.
 
 ## Implementation Protocol (Test-First BDD + Domain-Oriented Development)
 
-1. **Test-First Development (TFD):** Tests are written before implementation code. Tests fail first, implementation makes them pass.
-2. **Behavior Driven Development (BDD):** Each acceptance criterion (AC-N) has exactly one Given-When-Then (GWT) scenario.
-   - **Given:** The precondition (domain state, data, user context)
-   - **When:** The action or event (what the user does, what the system triggers)
-   - **Then:** The expected outcome (assertion that verifies the behavior)
-3. **GWT Scenarios in Architecture:** At Gate 4, `05-architecture.md` includes a BDD section with all GWT scenarios (one per AC). These scenarios become the contract between architecture and developer.
-4. **Domain-Oriented Code:** Implementation uses domain language and concepts, not infrastructure terms.
-   - Names reflect the problem domain, not the tech stack.
-   - Variables, functions, classes use domain vocabulary (e.g., `displayBrandMessage()` not `renderDOMElement()`).
-   - Tests read as domain behavior specifications, not technical implementation details.
-5. **Test Implementation:** Developer converts each GWT scenario into an executable test (unit, integration, or e2e).
-   - Test structure mirrors GWT: given-when-then or arrange-act-assert.
-   - Test names read as domain behavior (e.g., `test: SplashPage displays brand name when loaded`).
-6. **Code Quality Gate:** PR evidence must include:
-   - All GWT scenarios from `05-architecture.md` mapped to tests.
-   - All tests passing (automated test results required).
-   - Code review sign-off confirming domain language clarity.
-   - Rollback note (how to undo if issues arise).
-7. **Orchestrator Validation:** Build gate checklist includes BDD evidence verification (test-to-scenario mapping, passing results, domain clarity).
+1. Tests are written before implementation code whenever feasible.
+2. Each acceptance criterion (AC-N) has exactly one Given-When-Then scenario.
+3. At Gate 4, `05-architecture.md` includes a BDD section with all GWT scenarios.
+4. Implementation and tests use domain language rather than infrastructure vocabulary.
+5. PR evidence must include scenario-to-test mapping, passing tests, and rollback note.
 
 ## Figma File Structure Convention
 
-1. **One Figma file per slice.** Each slice gets its own Figma file under the designated Figma project (see `.figma-config.local` for project metadata), named after the slice (e.g., "Coming Soon Splash Page").
-2. **Standard page structure within each file:**
-   - Page 1: `UX Flows` — wireframes and flow diagrams (UX Agent output).
-   - Page 2: `Design` — final screens, states, and variants (Figma Agent output).
-   - Page 3: `QA Notes` — annotations for Design QA review.
-3. **Frame naming convention:** `<Screen>/<State>/<Theme>` (e.g., `Home/Default/Light`, `Home/Default/Dark`, `Home/Error/Light`, `Home/Error/Dark`). Every screen/state must have both Light and Dark variants.
-4. **Enhancement slices are self-contained.** When a slice enhances an existing screen, the Figma Agent reads the most recent Figma file for that screen (referenced from the relevant prior slice's `03-ux.md` or `04-design-qa.md`), recreates the current-state screen in the new slice's file, then applies the enhancement. The new file shows the complete post-enhancement screen, not a diff. The previous slice's file is not modified.
-5. **Artifact reference storage:** The Figma file URL or key is recorded in `03-ux.md` and `04-design-qa.md` for each slice. Enhancement slices must also reference the prior slice's Figma file as the baseline source.
-6. **No shared master file required.** If a "current state" reference file becomes needed later, it can be added without restructuring existing slice files.
+1. One Figma file per slice under the designated project in `.figma-config.local`.
+2. Standard page structure: `UX Flows`, `Design`, `QA Notes`.
+3. Frame naming convention: `<Screen>/<State>/<Theme>`.
+4. Enhancement slices are self-contained and reference prior slice files as baseline.
+5. Figma file URL or key is recorded in `03-ux.md` and `04-design-qa.md`.
 
 ## Design System Foundation Policy
 
-1. **Dedicated Design System Figma library file.** A standalone Figma file ("Design System") is used as the Design System library under the designated Figma project (see `.figma-config.local`) and contains all shared variables, tokens, and base components. This file is published as a Figma library and consumed by all slice files.
-2. **Bootstrap rule for first use.** If the Design System library does not exist yet, the first slice entering Gate 3 bootstraps it. UX Agent creates the library file first, adds the initial shared variables, tokens, and base components there, records a populated `design_system_library_file_key` in `.figma-config.local` (and `design_system_library_url` when available for convenience), publishes and enables the library's variables/components in Figma, and only then creates the slice file and enables that published library in the slice file before consuming it.
-3. **Variable categories:** Variables are organized by category: `color/*`, `spacing/*`, `typography/*`, `radius/*`, `shadow/*`, `breakpoint/*`.
-4. **Dual-theme from day one.** A variable collection `Theme` with two modes — Light and Dark — is defined in the Design System library. All semantic color tokens are dual-mode. Spacing, typography, radii, and shadows are mode-independent (same across themes).
-5. **Token-only design rule.** All slice designs must use library variables exclusively. No raw hex colors, hardcoded spacing values, or ad-hoc tokens are permitted in slice Figma files. Figma Agent must verify library variable usage before marking a design as ready.
-6. **Both theme variants required.** Figma Agent must produce Light and Dark variants for every screen and state in every slice (see frame naming convention in Figma File Structure Convention).
-7. **Code-side token file.** A CSS custom properties file ships both theme definitions using `[data-theme]` selectors and a `prefers-color-scheme` media query fallback. Dev Agent references CSS variable names for tokenized properties and may use explicit raw values for non-token dimensions when needed.
-8. **Token-to-code 1:1 mapping.** Figma variable names map directly to CSS custom property names (e.g., Figma `color/surface/primary` → CSS `--color-surface-primary`). This mapping is the contract between design and code.
-9. **Design QA token compliance check.** Design QA Agent must verify that every design value in the Figma file references a library variable and that both theme variants exist for all screens/states.
-10. **Library-first for new slices.** If a new slice needs a token or component not yet in the Design System library, the token/component is added to the library first, then used in the slice file. Slice files never define local tokens that should be shared.
+1. The Design System uses a dedicated Figma library file.
+2. If the library does not exist, first Gate 3 run bootstraps it and records `design_system_library_file_key` in `.figma-config.local`.
+3. Variables use categories: `color/*`, `spacing/*`, `typography/*`, `radius/*`, `shadow/*`, `breakpoint/*`.
+4. Theme collection must provide Light and Dark modes from day one.
+5. Slice designs must use library variables only.
+6. Every screen and state must provide Light and Dark variants.
+7. Canonical code-side token file path is `src/styles/tokens.css`. It must define both theme variants using `[data-theme]` selectors plus `prefers-color-scheme` fallback. Slice CSS files import this token file.
+8. Figma variable names map 1:1 to CSS custom properties.
+9. Design QA must enforce token compliance.
+10. New shared tokens/components are added to the library first.
+11. `.figma-config.local.example` is the committed schema reference for local `.figma-config.local` files.
 
 ## Figma Fidelity Policy
 
-1. For any task requiring Figma parity, agents must extract and apply frame-level values from Figma as source of truth before visual polish passes.
-2. Required extracted values include layout coordinates, dimensions, spacing, typography, colors, gradients, radii, shadows, blur/effects, and breakpoint-specific variants.
-3. Screenshot-only approximation is not sufficient when extractable frame values are available.
-4. Responsive implementations must map each approved Figma frame to explicit breakpoint rules.
-5. PR evidence for Figma-parity tasks must include frame-to-code traceability and list any intentional deviations with Product Owner approval status.
+1. For Figma-parity tasks, extract and apply frame-level values from Figma as source of truth.
+2. Screenshot-only approximation is insufficient when extractable frame values are available.
+3. Responsive implementations map approved Figma frames to explicit breakpoints.
+4. PR evidence must include frame-to-code traceability and intentional deviations.
 
 ## PR Provenance Convention
 
-1. Every Gate 5 PR must include an issue-closing keyword in the PR body (for example: `Closes #123`).
-2. Every Gate 5 PR must include a provenance marker in the PR body: `Execution-Agent: dev`.
-3. Orchestrator must verify both linkage and provenance before recommending progression from Build to Merge gate.
+1. Every Gate 5 PR must include an issue-closing keyword (for example, `Closes #123`).
+2. Every Gate 5 PR must include `Execution-Agent: dev` in the PR body.
+3. Orchestrator verifies linkage and provenance before merge recommendation.
 
 ## Merge Gate Policy
 
 1. Gate 6 is an orchestrator-owned decision gate for issue-level merge readiness.
-2. Merge recommendation requires: passing tests, PR provenance/linkage, review closure, docs or release-note updates when applicable, and a documented rollback note.
+2. Merge recommendation requires tests, provenance/linkage, review closure, docs/release updates when needed, and rollback note.
 3. Product Owner remains the only authority who performs the actual merge.
 4. If merge readiness evidence is incomplete, the PR must loop back with explicit remediation items.

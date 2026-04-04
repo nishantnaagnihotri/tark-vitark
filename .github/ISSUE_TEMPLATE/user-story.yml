@@ -1,0 +1,60 @@
+name: User Story
+description: One clear piece of work within a feature slice
+labels:
+  - user-story
+body:
+  - type: input
+    id: slice-name
+    attributes:
+      label: Slice Name
+      placeholder: coming-soon-splash-page
+    validations:
+      required: true
+
+  - type: input
+    id: slice-tracker
+    attributes:
+      label: Slice Tracker Issue Number
+      placeholder: "#42"
+    validations:
+      required: true
+
+  - type: textarea
+    id: objective
+    attributes:
+      label: Story Objective
+      description: One sentence in plain language.
+      placeholder: Show the Coming Soon message on mobile so visitors understand the product is not live yet.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: Exact requirements from PRD.
+      placeholder: |
+        - [ ] AC-1: ...
+        - [ ] AC-2: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: build-guidance
+    attributes:
+      label: Build Guidance
+      description: Architecture reference and dependencies.
+      placeholder: |
+        Architecture reference: docs/slices/<slice-name>/05-architecture.md
+        Depends on: #...
+    validations:
+      required: false
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Reviewer Notes
+      description: Anything non-technical reviewers should verify.
+      placeholder: Confirm the main message is visible without scrolling on mobile.
+    validations:
+      required: false

@@ -1,0 +1,36 @@
+name: Protocol Compliance Checks
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check PR body for provenance marker
+        run: |
+          if ! echo "${{ github.event.pull_request.body }}" | grep -q "Execution-Agent:"; then
+            echo "::warning::PR body missing Execution-Agent provenance marker"
+          fi
+
+      - name: Check PR body for issue-closing keyword
+        run: |
+          if ! echo "${{ github.event.pull_request.body }}" | grep -qiE "(closes|fixes|resolves) #[0-9]+"; then
+            echo "::warning::PR body missing issue-closing keyword"
+          fi
+
+      - name: Check slice artifact completeness
+        run: |
+          for dir in docs/slices/*/; do
+            slice=$(basename "$dir")
+            for f in 01-requirement.md 02-prd.md 03-ux.md 04-design-qa.md 05-architecture.md 06-tasks.md; do
+              if [ ! -f "$dir$f" ]; then
+                echo "::notice::Slice '$slice' missing $f (may be in-progress)"
+              fi
+            done
+          done

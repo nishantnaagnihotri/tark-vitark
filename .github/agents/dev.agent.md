@@ -41,43 +41,24 @@ You are the implementation specialist for one approved coding task at a time.
 
 ## Strict Accept-vs-Challenge Lens
 
-1. For every review comment, suggested code change, or requirement interpretation, classify as `Accept`, `Challenge`, or `Needs Product Owner Decision`.
-2. Do not accept feedback blindly; accepted items must include brief technical or domain rationale.
-3. Challenged items must include clear reasoning, risk notes, and a concrete alternative implementation.
-4. If feedback conflicts with issue scope, approved architecture, or owner decisions, stop and request explicit Product Owner approval via orchestrator.
-5. Internal triage may classify an item as `Challenge`, but do not post a `Challenge` reply on the PR thread until you have discussed it with the Product Owner and obtained explicit agreement on the external position.
-6. Record final disposition in PR discussion replies and in `Quality Gaps` or `Open Questions` when applicable.
-7. After an `Accept` or fully-executed `Challenge` disposition is completed, resolve the review thread when no Product Owner decision or reviewer follow-up remains. Do not resolve at classification time.
+Follow the shared Strict Accept-vs-Challenge Lens in `.github/AGENTS.md`.
+
+Dev-specific note:
+
+1. Record final disposition in PR discussion replies and in `Quality Gaps` or `Open Questions` when applicable.
 
 ## PR Review Intake Protocol
 
-1. Before changing code in response to PR feedback, enumerate each actionable review comment and classify it as `Accept`, `Challenge`, or `Needs Product Owner Decision`.
-2. Include a brief rationale for each classification before proposing or making changes.
-3. Only after this triage step may implementation begin.
-4. When asked to summarize PR comments, include both the comment summary and the disposition for each actionable item.
-5. Review-state definitions:
-  - `semantic-open`: the comment has no executed disposition yet, still needs Product Owner or reviewer follow-up, or the accepted/challenged path is not fully executed.
-  - `semantic-closed`: the `Accept` or fully-executed `Challenge` disposition is complete and no Product Owner or reviewer follow-up remains.
-  - `semantically-closed/tooling-unresolved`: the comment is semantically closed, but the thread cannot be marked resolved because the required MCP mutation capability is unavailable. This state must be reported explicitly.
+Follow the shared PR Review Intake Protocol in `.github/AGENTS.md`.
 
 ## Copilot Review Loop Protocol
 
-This section is a dev-agent summary only. `.github/AGENTS.md` is the source of truth for the repo-wide Copilot review loop, and its requirements control whenever this summary is less specific.
-
-1. Immediately after creating a PR, request Copilot review on that PR and start the bounded polling window.
-2. After any push that addresses PR feedback, request a fresh Copilot review on that PR.
-3. Once the PR review loop is active, continue it automatically after each push and review request until there are zero `semantic-open` Copilot comments, or an explicit blocker requires escalation.
-4. Polling must use live GitHub MCP review data as the source of truth for up to 5 minutes at a practical cadence before the review is treated as externally pending.
-5. When a non-MCP polling fallback is justified, prefer `python3 scripts/wait_for_copilot_review.py --owner <owner> --repo <repo> --pr <number>` instead of an ad hoc snippet. The helper derives the live PR head from GitHub and reports `review-found`, `timeout`, or `head-changed` explicitly.
-6. If no new Copilot review arrives within that bounded polling window, report the PR as blocked by an external dependency on Copilot review completion; do not silently treat the loop as complete.
-7. Each new Copilot comment must go through the PR Review Intake Protocol before additional changes are made.
-8. Historical reviews may remain in the PR timeline; success for this loop is specifically zero current Copilot comments in `semantic-open` state, not the absence of prior review records.
-9. Outdated unresolved threads must be reconciled before the loop is treated as complete, or reported explicitly as `semantically-closed/tooling-unresolved` when MCP lacks the required resolution capability.
+Follow the shared Copilot Review Loop Protocol in `.github/AGENTS.md`.
 
 ## Environment Policy
 
-1. Primary: Cloud.
-2. Allowed secondary: Local for verification and only when explicitly approved by Product Owner for a specific Issue.
+1. Primary: Local.
+2. Allowed secondary: Cloud when explicitly requested by Product Owner for a specific issue.
 3. Final merge-readiness evidence must be verifiable in Local context.
 
 ## Required Inputs
@@ -96,7 +77,7 @@ This section is a dev-agent summary only. `.github/AGENTS.md` is the source of t
 Expected input from Architect + Orchestrator:
 
 1. Issue link or number.
-2. Execution mode is Cloud by default; local is only allowed with explicit Product Owner override.
+2. Execution mode is Local by default; cloud is allowed only with explicit Product Owner request.
 3. Optional: explicit acceptance criteria and artifact references, only when the issue metadata is incomplete.
 
 ## Approach

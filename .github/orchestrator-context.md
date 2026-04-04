@@ -10,7 +10,7 @@ Canonical live handover context for the Architect + Orchestrator agent.
 
 ## Figma Project Metadata
 
-Project-specific Figma identifiers live in `.figma-config.local` (gitignored). Agents read it at runtime for project name, team, plan key, and design-system library metadata. If missing, prompt from `.figma-config.local.example`.
+Project-specific Figma identifiers live in `.figma-config.local` (gitignored). Use `.figma-config.local.example` as the schema and onboarding reference. Required keys are `project_name`, `plan_key`, and `design_system_library_file_key` (required after first Gate 3 bootstrap).
 
 ## Delivery Mode
 
@@ -21,12 +21,11 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). A
 
 ## Environment Model
 
-1. Requirement challenge: local-first.
-2. PRD drafting: cloud-preferred, local-allowed.
-3. Gate 3 design work, including the UX substep, is local-only.
-4. Cloud-preferred gates require execution mode confirmation (`local` or `cloud`) before handoff.
-5. Cloud mode uses manual handoff and pasted-back artifacts.
-6. Final verification and merge readiness decisions happen in local context.
+1. Default execution mode is local across all gates.
+2. Product Owner may opt a specific gate invocation into cloud mode by explicit request.
+3. Gate 3 design work, including UX, Figma, and Design QA substeps, is local-only.
+4. Cloud mode uses manual handoff and pasted-back artifacts.
+5. Final verification and merge readiness decisions happen in local context.
 
 ## Implemented Agents (Current)
 
@@ -72,7 +71,7 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). A
 3. Challenger continues clarification rounds until no open questions remain or Product Owner accepts remaining open questions.
 4. Challenger drafts acceptance criteria detailed enough for PRD writing.
 5. Product Owner manually reviews and merges all PRs.
-6. Dev is cloud-first for coding implementation, with local verification before merge.
+6. Dev execution is local by default, with optional Product Owner cloud opt-in for a specific task.
 7. Gate 3 is a full design gate and is local-only.
 8. Gate 1 and Gate 2 stay separate: Gate 1 is Requirement Challenger only, Gate 2 is PRD Agent only.
 9. Orchestrator must challenge major decisions, provide alternatives with tradeoffs, and recommend a balanced option before owner finalization.
@@ -81,7 +80,7 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). A
 12. Slice artifacts are stored in `docs/slices/<slice-name>/` as versioned markdown. Orchestrator creates the slice folder when Gate 1 passes and writes gate artifacts after each gate closes.
 13. GitHub Issues (one per atomic coding task) are created by the orchestrator at the end of Gate 4, after the architecture plan is approved. Gate 5 (Build) is purely implementation — no planning overhead.
 14. Architecture governance is orchestrator-owned and enforced through an explicit Gate 4 checklist (scope, traceability, boundaries, risk, verification, rollback, decomposition, issue linkage, and owner acceptance).
-15. Gate 5 defaults to GitHub Copilot cloud Dev execution. Local execution is permitted only when Product Owner explicitly overrides for a specific Issue. Final build evidence is verified in Local before merge recommendation.
+15. Gate 5 default execution is local. Product Owner may opt a specific issue into cloud execution. Final build evidence is verified in local context before merge recommendation.
 16. Gate 5 implementation uses BDD discipline: behavior scenarios, test-first workflow, and scenario-to-test evidence are required before merge progression.
 17. Issue-centric handoff is supported for Gate 5: issue link/number is sufficient only when issue metadata includes acceptance criteria, slice path, and architecture reference.
 18. Gate 5 PR provenance is mandatory: PR body must include issue-closing keyword and `Execution-Agent: dev` marker for attribution and orchestration traceability.
@@ -103,6 +102,8 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). A
 34. Thread resolution belongs to disposition execution, not classification.
 35. Review completion uses semantic state: `semantic-open` blocks, `semantic-closed` does not, and `semantically-closed/tooling-unresolved` must be reported explicitly.
 36. Internal review triage may classify an item as `Challenge`, but posting a `Challenge` reply on a PR thread requires prior discussion with the Product Owner and explicit agreement on the external position.
+37. Orchestrator resume is tiered: read shared protocol + context first, then only gate-relevant agent files.
+38. Resume writes current state into `/memories/session/active-state.md` for follow-up prompts in the same session.
 
 ## Resume Protocol For Orchestrator
 
@@ -110,8 +111,10 @@ On first response in any new activity:
 
 1. Read `.github/AGENTS.md`.
 2. Read this file (`.github/orchestrator-context.md`).
-3. Read implemented agent files under `.github/agents/`.
-4. Return a short resume snapshot:
+3. Identify current gate from this file.
+4. Read only the gate-relevant agent file(s) under `.github/agents/`.
+5. Write `/memories/session/active-state.md` with current slice, gate, blockers, and next micro-goal.
+6. Return a short resume snapshot:
 - current gate
 - known artifacts present or missing
 - immediate next micro-goal
@@ -141,6 +144,10 @@ When a slice reaches Gate 6 ✅ Complete:
 3. Separately, as repo-wide maintenance, move detailed global governance history that no longer needs to stay hot into `.github/orchestrator-context.archive.md`.
 4. Replace any moved history with short summary lines in this file.
 5. Keep this file optimized for session loading; keep deep history in the archive.
+
+Periodic archival rule:
+
+6. If Context Update Log grows beyond 15 entries or 100 lines without a slice completion event, archive oldest governance entries to `.github/orchestrator-context.archive.md` and keep a short summary line here.
 
 Archive summary format:
 ```

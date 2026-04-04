@@ -1,12 +1,19 @@
-# Figma Project Metadata — copy to .figma-config.local and fill in values.
-# .figma-config.local is gitignored; this example is committed as a template.
+# Figma Project Metadata
+#
+# Copy this file to .figma-config.local and replace placeholder values.
+# .figma-config.local is gitignored; this example is committed as schema reference.
 
+# Required keys
 project_name: <your Figma project name>
-team: <your Figma team name>
 plan_key: <your Figma plan key, e.g. team::123456>
-plan_tier: <plan tier and quota, e.g. Pro (Full seat, 200 tool calls/day as of YYYY-MM-DD)>
-# Leave these as empty strings until the first Gate 3 bootstrap creates the Design System library.
-# Then replace them with the actual library file key and full Figma URL.
+
+# Optional convenience keys
+team_name: <your Figma team name>
+project_id: <your Figma project id>
+plan_tier: <plan tier/quota, e.g. Pro full seat>
+
+# Leave as empty strings until Gate 3 bootstrap creates/publishes the Design System library.
 design_system_library_file_key: ""
 design_system_library_url: ""
-file_creation_note: MCP create_new_file creates files in drafts; manually move to your project after creation if needed.
+
+# Note: MCP create_new_file creates files in drafts. Move to your project if required.
