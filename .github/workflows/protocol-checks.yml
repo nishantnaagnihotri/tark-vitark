@@ -5,6 +5,10 @@ on:
     branches:
       - master
 
+permissions:
+  contents: read
+  pull-requests: read
+
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -26,6 +30,7 @@ jobs:
 
       - name: Check slice artifact completeness
         run: |
+          shopt -s nullglob
           for dir in docs/slices/*/; do
             slice=$(basename "$dir")
             for f in 01-requirement.md 02-prd.md 03-ux.md 04-design-qa.md 05-architecture.md 06-tasks.md; do
