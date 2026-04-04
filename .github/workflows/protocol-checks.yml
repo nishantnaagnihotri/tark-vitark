@@ -14,13 +14,13 @@ jobs:
 
       - name: Check PR body for provenance marker
         run: |
-          if ! echo "${{ github.event.pull_request.body }}" | grep -q "Execution-Agent:"; then
+          if ! printf '%s' "${{ github.event.pull_request.body }}" | grep -q "Execution-Agent:"; then
             echo "::warning::PR body missing Execution-Agent provenance marker"
           fi
 
       - name: Check PR body for issue-closing keyword
         run: |
-          if ! echo "${{ github.event.pull_request.body }}" | grep -qiE "(closes|fixes|resolves) #[0-9]+"; then
+          if ! printf '%s' "${{ github.event.pull_request.body }}" | grep -qiE "(closes|fixes|resolves) #[0-9]+"; then
             echo "::warning::PR body missing issue-closing keyword"
           fi
 
