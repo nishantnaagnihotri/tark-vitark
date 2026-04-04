@@ -2,6 +2,11 @@ name: Protocol Compliance Checks
 
 on:
   pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
     branches:
       - master
 
