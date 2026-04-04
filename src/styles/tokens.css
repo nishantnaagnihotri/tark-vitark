@@ -1,12 +1,8 @@
-:root {
-  --color-surface-primary: #ffffff;
-  --color-text-primary: #0f172a;
-  --space-4: 1rem;
-}
-
+:root,
 [data-theme="light"] {
   --color-surface-primary: #ffffff;
   --color-text-primary: #0f172a;
+  --space-4: 1rem;
 }
 
 [data-theme="dark"] {
