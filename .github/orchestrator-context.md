@@ -85,7 +85,7 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). U
 17. Issue-centric handoff is supported for Gate 5: issue link/number is sufficient only when issue metadata includes acceptance criteria, slice path, and architecture reference.
 18. Gate 5 PR provenance is mandatory: PR body must include issue-closing keyword and `Execution-Agent: dev` marker for attribution and orchestration traceability.
 19. Gate 6 is orchestrator-owned and Local-only. It recommends merge or loop-back based on evidence, but Product Owner alone performs the actual merge.
-20. Design artifact is mandatory for every UX task: Gate 3A must include a valid Figma artifact reference (file URL or key) before progression.
+20. Design artifact is mandatory for every UX task: Gate 3A must include a valid Figma file URL before progression. Raw file keys must not appear in git-tracked artifacts — store them only in `.figma-config.local`.
 21. Orchestrator terminal policy is diagnostics-first, but explicit Product Owner requests may authorize scoped git mutating commands (including add/commit/push/branch/PR operations); destructive commands still require command-level approval.
 22. Slice/story traceability policy: each slice has a GitHub slice tracker issue labeled `slice`; each story issue is labeled `user-story` and `slice:<slice-name>` and must contain a `Slice tracker:` backlink; slice tracker must list all story issue links; `06-tasks.md` must mirror story issue links and architecture references.
 23. Review-response policy is repo-wide: when an agent fixes a review comment, it must also post a PR reply explaining what was accepted or challenged, what changed (or why no change), and the rationale/tradeoff.
@@ -111,7 +111,7 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). U
 43. Gate artifact updates route through the owning agent: PRD changes → PRD Agent, UX changes → UX Agent, etc. No agent makes content edits to another agent's gate artifact. Orchestrator may mechanically persist or commit the owning agent's output without changing its content.
 44. Domain Ownership Policy is universal: every agent executes only within its own domain and delegates cross-domain tasks to the owning agent via orchestrator. No threshold exception — even minor tweaks route through the owning agent.
 45. Domain Language Policy: Gate 1 produces a Domain Glossary (5–15 canonical terms). All downstream agents must use glossary terms in artifacts, Figma layer names, architecture identifiers, and code. Non-glossary domain terms are flagged as quality gaps. New terms route through orchestrator for glossary addition.
-46. Never commit raw Figma file keys or IDs to git-tracked files. Reference `.figma-config.local` (gitignored) instead. Context log entries must use indirect references (e.g., "keys in `.figma-config.local`") rather than inline key values.
+46. Never commit raw Figma file keys or IDs to git-tracked files — keys belong only in `.figma-config.local` (gitignored). Figma file URLs are acceptable in git-tracked artifacts and context log entries. Context log entries must use indirect references for keys (e.g., "keys in `.figma-config.local`") rather than inline key values.
 47. Git-tracked artifact references to Figma designs must use Figma file URLs, never raw file keys. File keys belong only in `.figma-config.local`. Dev agent may read keys from `.figma-config.local` at runtime for MCP calls.
 
 ## Resume Protocol For Orchestrator
