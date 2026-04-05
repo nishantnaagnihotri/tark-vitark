@@ -54,6 +54,18 @@
 - R-4: [Constraint/non-goal requirement]
 - R-5: [Quality or success requirement]
 
+## Domain Glossary
+
+Canonical domain terms for this slice. All downstream agents must use these terms in artifacts, designs, and code.
+
+| Term | Definition |
+|---|---|
+| [Term 1] | [Brief definition] |
+| [Term 2] | [Brief definition] |
+| [Term 3] | [Brief definition] |
+
+**Note:** If a new domain concept emerges in a later gate, flag it for glossary addition via orchestrator.
+
 ## Open Questions (None / Accepted by Product Owner)
 
 - Q-1: [Question text] → **Status:** Resolved | Accepted as non-blocking | **Resolution:** [owner decision]

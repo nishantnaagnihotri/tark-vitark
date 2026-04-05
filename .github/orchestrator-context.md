@@ -104,6 +104,13 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). U
 36. Internal review triage may classify an item as `Challenge`, but posting a `Challenge` reply on a PR thread requires prior discussion with the Product Owner and explicit agreement on the external position.
 37. Orchestrator resume is tiered: read shared protocol + context first, then only gate-relevant agent files.
 38. Resume writes current state into `/memories/session/active-state.md` for follow-up prompts in the same session.
+39. Accessibility is a universal default: all screens must meet baseline accessibility (semantic HTML, keyboard navigation, WCAG 2.1 AA contrast, appropriate ARIA attributes). Not a per-slice opt-in.
+40. Argument colors must be semantically neutral: Tark (for) uses blue tones, Vitark (against) uses amber/warm tones. No green/red or other value-laden color pairs that imply positive/negative judgment. This is a universal design rule for all debate-related UI.
+41. ALL Figma MCP operations route through Figma Agent. No agent uses Figma tools directly — no size threshold, no exceptions.
+42. Visual/UX design proposals (layout options, component shapes, interaction patterns, label strategies) are UX Agent-owned. Other agents challenge for clarity and facilitate but do not originate design proposals.
+43. Gate artifact updates route through the owning agent: PRD changes → PRD Agent, UX changes → UX Agent, etc. No agent edits another agent's gate artifact.
+44. Domain Ownership Policy is universal: every agent executes only within its own domain and delegates cross-domain tasks to the owning agent via orchestrator. No threshold exception — even minor tweaks route through the owning agent.
+45. Domain Language Policy: Gate 1 produces a Domain Glossary (5–15 canonical terms). All downstream agents must use glossary terms in artifacts, Figma layer names, architecture identifiers, and code. Non-glossary domain terms are flagged as quality gaps. New terms route through orchestrator for glossary addition.
 
 ## Resume Protocol For Orchestrator
 
@@ -135,6 +142,7 @@ On first response in any new activity:
 | Slice | Gate 1 | Gate 2 | Gate 3 | Gate 4 | Gate 5 | Gate 6 |
 |---|---|---|---|---|---|---|
 | `coming-soon-splash-page` | ✅ Pass | ✅ Full Pass | ✅ Pass (PO approved 2026-03-29) | ✅ Pass | ✅ Complete (T3 PR #18, T4 PR #19, T5 PR #20 all merged) | ✅ Complete (2026-03-29) |
+| `debate-screen` | ✅ Pass | ✅ Full Pass | ✅ Pass (PO approved 2026-04-05) | ⬜ | ⬜ | ⬜ |
 
 ## Log Archive Protocol
 
@@ -218,3 +226,73 @@ Detailed repo-wide governance history from 2026-03-30 through 2026-04-02 is arch
 - Open questions status: None.
 - Next micro-goal: Start the next slice or next governance change from the merged `master` baseline.
 - Blockers/owner decisions: Product Owner completed the merge; local `master` was fast-forwarded to the merged remote state for clean follow-on work.
+
+### 2026-04-04 (PR #35 Merge Closeout)
+- Gate status: No active slice. Agent governance framework hardened on `master`.
+- Artifact changes: PR #35 (`chore: harden agent governance setup`) merged. Key changes: Protocol 2.0 with shared protocol deduplication across all 8 agent files; Slice Complexity Classification (Trivial/Standard/Complex); Recovery Protocol (partial artifact, Figma MCP failure, Copilot poll timeout, config validation with pre/post-bootstrap stages); new CI workflow (`protocol-checks.yml`) with least-privilege permissions, `printf`-safe body checks, `nullglob` guard, and `edited` trigger; YAML issue templates replacing legacy `.md` templates; architecture reference docs (`architecture-discussion-topics.md`, `architecture-quality-checks.md`); canonical `src/styles/tokens.css` with consolidated light/dark theme selectors; `.github/copilot-instructions.md` for IDE context. 6 Copilot review rounds, 24 threads triaged (accepts fixed, challenges rationale-posted with PO agreement).
+- Open questions status: None.
+- Next micro-goal: Start the next feature slice or governance task from the merged `master` baseline.
+- Blockers/owner decisions: Product Owner merged the PR. All review dispositions confirmed.
+
+### 2026-04-04 (debate-screen Gate 1 Pass)
+- Gate status: `debate-screen` Gate 1 ✅ Pass. Complexity: Standard (full 6-gate flow).
+- Artifact changes: Created `docs/slices/debate-screen/01-requirement.md`. Added Known Rule #39 (accessibility universal default) to orchestrator-context.md and Accessibility Baseline section to AGENTS.md.
+- Open questions status: OQ-1 (browser baseline) non-blocking, OQ-2 (overflow strategy) deferred to UX.
+- Major decisions: framework selection deferred to Gate 4; accessibility is universal default (new repo-wide rule); replaces coming-soon splash page; new visual direction; Standard complexity confirmed.
+- Next micro-goal: Gate 2 — invoke PRD Agent with Requirement Context Package.
+- Blockers/owner decisions: None. Ready for Gate 2.
+
+### 2026-04-04 (debate-screen Gate 2 Full Pass)
+- Gate status: `debate-screen` Gate 2 ✅ Full Pass. PRD v0 complete with 10 FRs, 10 ACs, 7 constraints, 5 success metrics.
+- Artifact changes: Created `docs/slices/debate-screen/02-prd.md`.
+- Open questions status: OQ-1 resolved (evergreen browsers). OQ-2 unresolved, non-blocking, deferred to UX Agent at Gate 3.
+- Major decisions: None new — PRD preserved Gate 1 intent with zero unapproved deltas. Alignment check confirmed one-to-one mapping.
+- Next micro-goal: Gate 3A — invoke UX Agent with PRD Draft Package.
+- Blockers/owner decisions: None. Ready for Gate 3.
+
+### 2026-04-04 (debate-screen Gate 3A Pass)
+- Gate status: `debate-screen` Gate 3A ✅ Pass. UX flows, state matrix, interaction notes complete.
+- Artifact changes: Created `docs/slices/debate-screen/03-ux.md`. Updated `.figma-config.local` with design_system_library_file_key. Created slice Figma file (CsPAyUdLSStdmNpmiBMESQ) and Design System Library (onzB8ujyvn6wnhdaS7Hz28).
+- Open questions status: OQ-2 resolved (natural page scroll). All UX OQs resolved.
+- Major decisions: M3 adopted as hybrid base design system (M3 structure with brand color override). Native app ambition recorded as Gate 4 constraint (Flutter strong candidate). Framework selection deferred to Gate 4.
+- Next micro-goal: Gate 3B — invoke Figma Agent for Figma design.
+- Blockers/owner decisions: None. Ready for Gate 3B.
+
+### 2026-04-04 (debate-screen Gate 3B — Palette + Card Colors Confirmed)
+- Gate status: `debate-screen` Gate 3B design finalized. All 6 Figma frames (desktop/tablet/mobile × light/dark) updated.
+- Artifact changes: 6 main design frames updated to Midnight Indigo brand palette with neutral blue+amber argument cards. 4 comparison frames created for palette review (to be cleaned up or archived). Added Known Rule #40 (semantic neutrality) to orchestrator-context.md and Semantic Neutrality section to AGENTS.md.
+- Open questions status: None.
+- Major decisions challenged and confirmed: (1) Red ≠ negative: PO flagged red for "against" arguments implies negative judgment. Orchestrator challenged further — green for "for" also implies positive. PO agreed to symmetric fix. (2) Neutral pair selected: blue (Tark) + amber (Vitark) — no value judgment. (3) Brand palette: Midnight Indigo (#3949AB) chosen from 3 options (Indigo recommended, Teal close to blue Tark cards, Slate too neutral). Both decisions recorded as universal rules.
+- Next micro-goal: Finalize Gate 3B Design Draft Package, proceed to Gate 3C (Design QA).
+- Blockers/owner decisions: None. Ready for Design QA.
+
+### 2026-04-05 (debate-screen Gate 3 ✅ Complete — Design Approved)
+- Gate status: `debate-screen` Gate 3 ✅ Pass. All 3 substeps (UX, Figma, Design QA) complete. Product Owner approved.
+- Artifact changes: Created `docs/slices/debate-screen/04-design-qa.md`. Updated `02-prd.md` (FR-4 legend bar language, owner-approved delta #3). Updated `03-ux.md` (legend bar description, per-card label removal, `aria-label` a11y note, owner-approved deltas #3 and #4).
+- Design QA: 4 passes total. Pass 1 found raw hex (fixed with 11 vars + 306 bindings). Pass 2 Agent-Ready. Pass 3 found legend bar raw hex (fixed with 3 vars + 48 bindings). Pass 4 Agent-Ready. 14 color variables total, all bound.
+- Owner-approved design decisions: (1) Semantic neutrality — blue/amber. (2) Sequential timeline layout. (3) Legend bar replaces per-card labels. (4) Card shape — asymmetric corners + tails. (5) Legend bar 3-column alignment with timeline spine.
+- Open questions status: All resolved.
+- Next micro-goal: Gate 4 — invoke Architecture Agent with slice artifacts.
+- Blockers/owner decisions: None. Ready for Gate 4.
+
+### 2026-04-05 (debate-screen Gate 3B — Sequential Model Cascade + Timeline Redesign)
+- Gate status: `debate-screen` Gate 3B ✅ Complete. All 6 Figma frames redesigned for sequential timeline layout.
+- Artifact changes: PRD (02-prd.md) updated for sequential debate model (FR-3 sequential thread, FR-4 timeline layout, FR-5 ordered data model). UX (03-ux.md) updated for timeline center-spine desktop/tablet layout + WhatsApp-style chat-bubble mobile layout. All 6 Figma frames (desktop/tablet/mobile × light/dark) redesigned: desktop/tablet use center spine with zigzag Tark-left/Vitark-right cards; mobile uses chat-bubble style with Tark left-aligned (x=20) and Vitark right-aligned (x=90), 280px cards (~72% of 390px), 70px horizontal stagger.
+- Open questions status: None.
+- Major decisions challenged and confirmed: (1) Sequential debate model adopted (single ordered timeline replaces two-column parallel display). (2) Timeline center-spine layout for desktop/tablet. (3) WhatsApp-style chat-bubble layout for mobile — conversational feel with left/right stagger. (4) Auto-layout removed from mobile Content frames to enable per-card horizontal positioning.
+- Next micro-goal: Gate 3C — invoke Design QA Agent.
+- Blockers/owner decisions: None. Ready for Design QA.
+
+### 2026-04-05 (Global — Agent Domain Ownership Policy Codified)
+- Gate status: N/A — cross-cutting protocol update.
+- Artifact changes: `.github/AGENTS.md` — added Domain Ownership Policy section (5 rules). `.github/agents/architect-orchestrator.agent.md` — added constraints 10–13 (Figma delegation, design proposal ownership, artifact update routing, domain ownership reference). `.github/orchestrator-context.md` — added Known Rules 41–44.
+- Major decisions challenged and confirmed: (1) ALL Figma MCP operations route through Figma Agent — no size threshold exception. (2) Design proposals are UX Agent-owned — orchestrator challenges but does not originate. (3) Gate artifact updates route through owning agent (Option B: PRD→PRD Agent, UX→UX Agent). (4) Core principle: orchestrator supervises, agents execute domain work — no carrying.
+- Rationale: PO identified orchestrator was directly executing Figma changes, originating design proposals, and editing gate artifacts during Gate 3. Accepted speed tradeoff in favor of hardened domain experts.
+- Next micro-goal: Gate 4 (Architecture) for `debate-screen`.
+
+### 2026-04-05 (Global — Domain Language Policy Codified)
+- Gate status: N/A — cross-cutting protocol update.
+- Artifact changes: `.github/AGENTS.md` — added Domain Language Policy section (6 rules). All 8 agent files — added `## Domain Language Policy` section with role-specific guidance. `requirement-challenger.agent.md` — added Domain Glossary to output format and Requirement Context Package Schema. `01-requirement.md` template — added Domain Glossary table. `architect-orchestrator.agent.md` — added glossary to Gate 1 handoff return contract. `orchestrator-context.md` — added Known Rule 45.
+- Major decisions: PO accepted Option A (Glossary-Driven) over Option B (Convention Rule). Glossary produced at Gate 1, binding all downstream agents. Architecture agent maps glossary → code identifiers. Each gate validates glossary compliance.
+- Rationale: Domain language drift starts before code. A shared glossary from Gate 1 ensures all agents speak the same functional language end-to-end.
+- Next micro-goal: Gate 4 (Architecture) for `debate-screen`.

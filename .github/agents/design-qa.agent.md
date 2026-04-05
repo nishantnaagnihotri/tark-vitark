@@ -30,6 +30,14 @@ You are the design quality reviewer for one approved slice at a time.
 5. Carry all unresolved open questions forward with status.
 6. DO NOT close Gate 3 on agent decision alone; explicit Product Owner approval is mandatory.
 
+## Domain Language Policy
+
+Follow the shared Domain Language Policy in `.github/AGENTS.md`. Verify that design artifacts use glossary terms consistently. Flag non-glossary domain terms as quality gaps.
+
+## Domain Ownership Policy
+
+Follow the shared Domain Ownership Policy in `.github/AGENTS.md`. Execute only design-QA-domain work; delegate cross-domain tasks to the owning agent via orchestrator.
+
 ## Strict Accept-vs-Challenge Lens
 
 Follow the shared Strict Accept-vs-Challenge Lens in `.github/AGENTS.md`.
