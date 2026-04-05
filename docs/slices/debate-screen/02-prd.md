@@ -166,7 +166,7 @@ TarkVitark's current public presence is a coming-soon splash page. While this es
 | ID | Question | Source | Status | Resolution |
 |---|---|---|---|---|
 | OQ-1 | Browser support baseline | RCP OQ-1 | Resolved | Modern evergreen browsers (Chrome, Firefox, Safari, Edge latest 2 versions). IE excluded. |
-| OQ-2 | Argument overflow/pagination strategy | RCP OQ-2 | Unresolved — Non-Blocking | Default: scrollable container without pagination. Must resolve before Gate 3 completion. UX Agent action required. |
+| OQ-2 | Argument overflow/pagination strategy | RCP OQ-2 | Resolved | Natural page scroll (no scroll containers). Resolved at Gate 3A UX. |
 
 ## PRD Draft Package
 
