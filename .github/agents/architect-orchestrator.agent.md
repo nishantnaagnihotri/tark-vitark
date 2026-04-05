@@ -181,7 +181,7 @@ Execution rule:
 Proceeding rule:
 
 1. Continue to the Figma substep only when UX result is `UX Readiness: Ready` and `Gate Decision: can proceed to figma`.
-2. Require a `Design Artifact` reference (Figma file URL or file key) in the UX output for every UX task.
+2. Require a `Design Artifact` reference (Figma file URL) in the UX output for every UX task.
 3. If the Design System library does not yet exist for the project, require Gate 3A to create it first, publish/enable it in Figma, and record a populated `design_system_library_file_key` in `.figma-config.local` before allowing progression to Gate 3B. `design_system_library_url` is recommended for convenience but is not required for progression.
 4. If open questions remain, continue only when they are explicitly marked as accepted by Product Owner.
 5. Otherwise, return quality gaps to Product Owner and loop UX clarification.

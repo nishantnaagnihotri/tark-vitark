@@ -78,7 +78,7 @@ Follow the shared Copilot Review Loop Protocol in `.github/AGENTS.md`.
   - architecture reference (`05-architecture.md` section)
 3. Repository coding standards and test conventions.
 4. Product Owner clarifications for the issue, if any.
-5. For design-parity tasks: Figma file key and target node IDs (or explicit frame references) needed for value extraction.
+5. For design-parity tasks: Figma file key (from `.figma-config.local`) and target node IDs (or explicit frame references) needed for value extraction.
 
 ## Handoff Input Contract
 

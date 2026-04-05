@@ -112,6 +112,7 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). U
 44. Domain Ownership Policy is universal: every agent executes only within its own domain and delegates cross-domain tasks to the owning agent via orchestrator. No threshold exception — even minor tweaks route through the owning agent.
 45. Domain Language Policy: Gate 1 produces a Domain Glossary (5–15 canonical terms). All downstream agents must use glossary terms in artifacts, Figma layer names, architecture identifiers, and code. Non-glossary domain terms are flagged as quality gaps. New terms route through orchestrator for glossary addition.
 46. Never commit raw Figma file keys or IDs to git-tracked files. Reference `.figma-config.local` (gitignored) instead. Context log entries must use indirect references (e.g., "keys in `.figma-config.local`") rather than inline key values.
+47. Git-tracked artifact references to Figma designs must use Figma file URLs, never raw file keys. File keys belong only in `.figma-config.local`. Dev agent may read keys from `.figma-config.local` at runtime for MCP calls.
 
 ## Resume Protocol For Orchestrator
 

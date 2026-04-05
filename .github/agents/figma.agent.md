@@ -52,7 +52,7 @@ Figma-specific note:
 ## Required Inputs
 
 1. `UX Flow/State Package` from UX Agent.
-2. `Figma Artifact` reference from UX output (file URL or file key).
+2. `Figma Artifact` reference from UX output (Figma file URL).
 3. Product Owner clarifications after UX substep, if any.
 4. Design system, accessibility, localization, and platform constraints, if known.
 

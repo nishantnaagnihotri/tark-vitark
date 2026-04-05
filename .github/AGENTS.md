@@ -48,7 +48,7 @@ Product Owner may override classification at any time.
 2. PRD drafting uses Requirement Context Package and must pass PRD quality gate before PRD freeze (Standard and Complex slices; Trivial slices skip Gate 2).
 3. Gate 2 (PRD) must preserve Gate 1 intent: no silent reinterpretation of requirement statement, scope boundaries, or acceptance criteria.
 4. Design freeze must happen before coding for Standard and Complex slices. Gate 3 includes UX, Figma, and Design QA substeps.
-5. Design artifact is mandatory for every UX task: each Gate 3A UX output must include a Figma artifact reference (file URL or file key) before progression.
+5. Design artifact is mandatory for every UX task: each Gate 3A UX output must include a Figma artifact reference (Figma file URL) before progression. Raw file keys must never appear in git-tracked artifacts — store them only in `.figma-config.local`.
 6. UX Agent must run an internal challenge phase before producing UX flow/state artifacts: all `Must Resolve` UX gaps must be addressed or accepted by Product Owner before Gate 3A can pass.
 7. Architecture signoff must happen before coding for Standard and Complex slices.
 8. Architecture Agent must run an internal challenge phase before producing any architecture output: all `Must Resolve` architecture gaps must be addressed or accepted by Product Owner before Gate 4 can pass.
