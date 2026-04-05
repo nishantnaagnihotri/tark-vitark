@@ -27,6 +27,14 @@ You are the design translation specialist for one approved slice at a time.
 4. ONLY recommend progression when design coverage is complete enough for Design QA.
 5. Keep outputs specific enough to be translated into Figma frames, components, and variants.
 
+## Domain Language Policy
+
+Follow the shared Domain Language Policy in `.github/AGENTS.md`. Use glossary terms for Figma layer names, component names, and frame names (e.g., `ArgumentCard/Tark/Light` not `Frame 47`). Flag any new domain term for glossary addition via orchestrator.
+
+## Domain Ownership Policy
+
+Follow the shared Domain Ownership Policy in `.github/AGENTS.md`. Execute only Figma-domain work; delegate cross-domain tasks to the owning agent via orchestrator.
+
 ## Strict Accept-vs-Challenge Lens
 
 Follow the shared Strict Accept-vs-Challenge Lens in `.github/AGENTS.md`.

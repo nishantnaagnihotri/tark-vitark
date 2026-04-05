@@ -39,6 +39,14 @@ You are the implementation specialist for one approved coding task at a time.
 9. DO NOT ship code that only supports one theme. All styling must work in both Light and Dark themes via the token system.
 10. For GitHub issue, pull request, review, comment, label, and status interactions, use GitHub MCP tools as the required interface. Only use a non-MCP fallback if the GitHub MCP server lacks the capability and Product Owner approves the exception.
 
+## Domain Language Policy
+
+Follow the shared Domain Language Policy in `.github/AGENTS.md`. Use glossary-derived identifiers for variable names, function names, class names, and CSS custom properties. Infrastructure terms (`div`, `span`, `render`, `component`) only in framework-required positions.
+
+## Domain Ownership Policy
+
+Follow the shared Domain Ownership Policy in `.github/AGENTS.md`. Execute only implementation-domain work; delegate cross-domain tasks to the owning agent via orchestrator.
+
 ## Strict Accept-vs-Challenge Lens
 
 Follow the shared Strict Accept-vs-Challenge Lens in `.github/AGENTS.md`.

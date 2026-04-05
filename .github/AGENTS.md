@@ -116,6 +116,27 @@ Before accepting major owner decisions (scope, sequencing, architecture tradeoff
 3. Recommend one option with clear rationale.
 4. Confirm final owner choice and record it in orchestration context.
 
+The orchestrator challenges Product Owner decisions with alternatives and tradeoffs. This applies to scope, sequencing, architecture, and risk posture — not to domain-specific design proposals (see Domain Ownership Policy).
+
+## Domain Ownership Policy
+
+No agent may perform work owned by another agent's domain. Each agent executes only within its own domain and delegates cross-domain tasks to the owning agent via the orchestrator.
+
+### Universal Rules (all agents)
+
+1. **Figma execution:** ALL Figma MCP operations (creation, editing, restructuring, alignment — regardless of size) route through Figma Agent. No other agent uses Figma tools directly.
+2. **Design proposals:** Visual and UX alternatives (layout options, component shapes, interaction patterns, label strategies) are UX Agent-owned. Other agents may challenge for clarity but do not originate design proposals.
+3. **Artifact updates:** Each gate artifact is updated only by its owning agent. PRD changes → PRD Agent. UX changes → UX Agent. Design QA changes → Design QA Agent. Architecture changes → Architecture Agent. No agent edits another agent's gate artifact.
+4. **No threshold exception:** There is no "small change" threshold below which cross-domain direct action is acceptable. Even minor tweaks route through the owning agent.
+5. **Escalation path:** If an agent identifies a needed change outside its domain, it reports the gap to the orchestrator, who routes to the owning agent. Agents do not self-serve across boundaries.
+
+### Orchestrator-Specific Rules
+
+6. **Orchestrator scope:** Supervise agents, enforce gates, challenge Product Owner for clarity, decide general direction, facilitate discussion between Product Owner and agent team. Route domain work — don't execute it.
+7. **No Figma tools:** Orchestrator never uses Figma MCP tools directly — all Figma operations route through Figma Agent.
+8. **No design origination:** Orchestrator does not originate visual or UX design proposals. Route design questions to UX Agent.
+9. **No artifact editing:** Orchestrator does not directly edit gate-owned artifacts (`01-requirement.md`, `02-prd.md`, `03-ux.md`, etc.). Route updates through the owning agent.
+
 ## Strict Accept-vs-Challenge Lens
 
 1. Every suggestion, review comment, or proposed change must be explicitly classified as: `Accept`, `Challenge`, or `Needs Product Owner Decision`.
@@ -230,12 +251,23 @@ Escalate to Product Owner when:
 5. Bidirectional traceability is mandatory.
 6. Build and merge progression is blocked if required traceability links are missing.
 
+## Domain Language Policy
+
+All agents use domain language — not framework, infrastructure, or implementation vocabulary — in every artifact, from requirement through code.
+
+1. **Glossary origin:** At Gate 1, the requirement-challenger produces a Domain Glossary (5–15 canonical terms) as part of the Requirement Context Package. Product Owner confirms the glossary before Gate 1 closes.
+2. **Downstream binding:** Every agent from Gate 2 onward must use only glossary terms when referring to domain concepts in artifacts. If a new domain concept emerges, the agent flags it for glossary addition via orchestrator (routed back to requirement-challenger or Product Owner).
+3. **Figma binding:** Figma layer names, component names, and frame names use glossary terms (e.g., `ArgumentCard/Tark/Light` not `Frame 47` or `Card Component`).
+4. **Architecture binding:** At Gate 4, the architecture agent maps each glossary term to its code identifier (function name, class name, CSS class, variable). This mapping lives in `05-architecture.md`.
+5. **Code binding:** Implementation code (variable names, function names, class names, CSS custom properties) uses glossary-derived identifiers. Infrastructure terms (`div`, `span`, `render`, `component`) appear only in framework-required positions, never in domain-facing names.
+6. **Validation:** Each gate checks that the output artifact uses glossary terms consistently. Non-glossary domain terms are flagged as quality gaps.
+
 ## Implementation Protocol (Test-First BDD + Domain-Oriented Development)
 
 1. Tests are written before implementation code whenever feasible.
 2. Each acceptance criterion (AC-N) has exactly one Given-When-Then scenario.
 3. At Gate 4, `05-architecture.md` includes a BDD section with all GWT scenarios.
-4. Implementation and tests use domain language rather than infrastructure vocabulary.
+4. Implementation and tests use domain language (per Domain Language Policy) rather than infrastructure vocabulary.
 5. PR evidence must include scenario-to-test mapping, passing tests, and rollback note.
 
 ## Figma File Structure Convention
@@ -266,6 +298,19 @@ Escalate to Product Owner when:
 2. Screenshot-only approximation is insufficient when extractable frame values are available.
 3. Responsive implementations map approved Figma frames to explicit breakpoints.
 4. PR evidence must include frame-to-code traceability and intentional deviations.
+
+## Accessibility Baseline
+
+1. All screens must meet baseline accessibility by default: semantic HTML, keyboard navigation, sufficient color contrast (WCAG 2.1 AA), and appropriate ARIA attributes.
+2. Accessibility is not a per-slice opt-in — it is a standing requirement for every UI deliverable.
+3. Screen reader announcement order and focus management must be considered during UX and Design QA gates.
+
+## Semantic Neutrality in Debate UI
+
+1. Argument colors must not imply value judgment. "For" is not positive and "against" is not negative — both sides of a debate carry equal weight.
+2. Tark (arguments for) uses blue tones; Vitark (arguments against) uses amber/warm tones.
+3. Do not use green/red or any other color pair with inherent positive/negative connotation for debate argument differentiation.
+4. This rule applies to all debate-related UI across all slices and platforms.
 
 ## PR Provenance Convention
 
