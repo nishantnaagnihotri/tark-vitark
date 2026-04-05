@@ -860,7 +860,6 @@ Parallelizable: T2 + T3 can run in parallel after T1. T5 + T6 can run in paralle
 | D-53: Token architecture | Hand-picked values, M3 3-layer computed | M3 3-layer computed from seed #3949AB | Computed-first ensures M3 compliance; brand overrides only when needed | 2026-04-06 |
 | QG-A2: Deploy | Vercel, Netlify, GitHub Pages | GitHub Pages (existing) | Workflow already exists; update only | 2026-04-05 |
 | QG-A4: Content | Placeholder, Figma extraction | Figma extraction via MCP | Real content, no placeholder needed | 2026-04-05 |
-```
 
 ---
 
