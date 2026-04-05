@@ -195,6 +195,7 @@ Requirement Context Package:
 - Success criteria: Save in under 2 seconds; draft is visible and reopenable.
 - Dependencies/risks: Auth session dependency; duplicate draft on retries.
 - Proposed acceptance criteria: (as listed above)
+- Domain glossary: Draft, Resume, Dashboard, Line item, Autosave (as defined above).
 - Open questions + owner status: Retention period unresolved (owner pending).
 - Accepted assumptions: Drafts are private to creator.
 ```
