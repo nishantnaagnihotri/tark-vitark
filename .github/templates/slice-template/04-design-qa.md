@@ -8,7 +8,7 @@
 ## Version: 0.1.0
 ## Date: [YYYY-MM-DD]
 ## Author: Design QA Agent (Gate 3C)
-## Source: Figma design [link or file key]
+## Source: Figma design [URL]
 
 ---
 
@@ -120,7 +120,7 @@
 
 ## 9. Figma Design Reference
 
-**File:** [Figma link or file key]
+**File:** [Figma file URL]
 
 **Screens and Frame Names:**
 - [Screen 1 name / State S-1]
