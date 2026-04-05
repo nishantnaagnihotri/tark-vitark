@@ -445,7 +445,7 @@ Updated `.github/workflows/deploy-pages.yml`:
 - **Fonts:** System font stack `Inter, "Segoe UI", Arial, sans-serif` — zero external dependencies. Deferred custom font evaluation tracked via GitHub issue.
 - **CSP:** No inline scripts or eval. Vite injects module `<script>` tags. Compatible with strict CSP policies.
 - **Bundle budget:** React 19 + ReactDOM ≈ ~42KB gzip. Monitor in T1. If exceeded, evaluate tree-shaking options.
-- **React 19 note:** React 19 eliminates `forwardRef` — `ref` is a normal prop on function components. DS primitives and feature components use standard props signatures without `forwardRef` wrappers.
+- **React 19 note:** React 19 passes `ref` as a standard prop to function components, making `forwardRef` unnecessary. DS primitives and feature components use standard props signatures without `forwardRef` wrappers.
 
 ---
 
@@ -856,7 +856,7 @@ Parallelizable: T2 + T3 can run in parallel after T1. T5 + T6 can run in paralle
 | D-1b: Native strategy | Flutter, Capacitor, PWA-only | PWA now → Capacitor later | Unified React codebase; Flutter reconsidered | 2026-04-05 |
 | D-2: Test stack | vitest-only, vitest+cucumber | vitest + RTL + Cucumber | BDD for non-technical readability | 2026-04-05 |
 | D-7: Font stack | Web fonts, system stack | System font stack | Zero-cost, fast; reminder issue deferred | 2026-04-05 |
-| D-52: React version | React 18, React 19 | React 19 | Latest stable; eliminates forwardRef; ecosystem ready | 2026-04-06 |
+| D-52: React version | React 18, React 19 | React 19 | Latest stable; makes forwardRef unnecessary; ecosystem ready | 2026-04-06 |
 | D-53: Token architecture | Hand-picked values, M3 3-layer computed | M3 3-layer computed from seed #3949AB | Computed-first ensures M3 compliance; brand overrides only when needed | 2026-04-06 |
 | QG-A2: Deploy | Vercel, Netlify, GitHub Pages | GitHub Pages (existing) | Workflow already exists; update only | 2026-04-05 |
 | QG-A4: Content | Placeholder, Figma extraction | Figma extraction via MCP | Real content, no placeholder needed | 2026-04-05 |
