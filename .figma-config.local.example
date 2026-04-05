@@ -16,4 +16,7 @@ plan_tier: <plan tier/quota, e.g. Pro full seat>
 design_system_library_file_key: ""
 design_system_library_url: ""
 
-# Note: MCP create_new_file creates files in drafts. Move to your project if required.
+# Project-first policy: All Figma files must reside in the designated project.
+# MCP create_new_file lands files in Drafts (API limitation).
+# After MCP creates a new file, manually move it to the project before any
+# further design work proceeds. No design activity on files in Drafts.

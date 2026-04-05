@@ -125,7 +125,7 @@ No agent may perform work owned by another agent's domain. Each agent executes o
 ### Universal Rules (all agents)
 
 1. **Figma write operations:** ALL Figma MCP write operations (creation, editing, restructuring, alignment, variable/binding changes — regardless of size) route through Figma Agent. No other agent uses Figma write tools directly.
-2. **Figma read access:** Agents whose domain requires Figma data (UX Agent, Design QA Agent, Dev Agent) may use Figma MCP only for read-only operations (screenshots, metadata, design context) for their own domain work. Even if the available MCP tool grant is broader, those agents must not invoke write operations or write-capable endpoints directly; any creation, editing, restructuring, alignment, variable/binding change, or other write need must be routed to the Figma Agent. The orchestrator may not use Figma MCP tools at all.
+2. **Figma read access:** Agents whose domain requires Figma data (UX Agent, Design QA Agent, Dev Agent, Orchestrator) may use Figma MCP only for read-only operations (screenshots, metadata, design context) for their own domain work. Even if the available MCP tool grant is broader, those agents must not invoke write operations or write-capable endpoints directly; any creation, editing, restructuring, alignment, variable/binding change, or other write need must be routed to the Figma Agent. The orchestrator uses read-only Figma MCP access for gate validation and agent output spot-checks.
 3. **Design proposals:** Visual and UX alternatives (layout options, component shapes, interaction patterns, label strategies) are UX Agent-owned. Other agents may challenge for clarity but do not originate design proposals.
 4. **Artifact updates:** Each gate artifact's content is authored only by its owning agent. PRD changes → PRD Agent. UX changes → UX Agent. Design QA changes → Design QA Agent. Architecture changes → Architecture Agent. No agent edits another agent's gate artifact content. (The orchestrator may mechanically persist/commit an owning agent's output to the slice folder — this is not a content edit.)
 5. **No threshold exception:** There is no "small change" threshold below which cross-domain direct action is acceptable. Even minor tweaks route through the owning agent.
@@ -278,6 +278,7 @@ All agents use domain language — not framework, infrastructure, or implementat
 3. Frame naming convention: `<Screen>/<State>/<Theme>`.
 4. Enhancement slices are self-contained and reference prior slice files as baseline.
 5. Figma file URL is recorded in `03-ux.md` and `04-design-qa.md`. Raw file keys must not appear in git-tracked artifacts — store them only in `.figma-config.local`.
+6. All Figma files must reside in the designated project (not Drafts). MCP `create_new_file` creates files in Drafts (API limitation); the file must be manually moved to the project before any further design work proceeds. No design activity on files in Drafts.
 
 ## Design System Foundation Policy
 
