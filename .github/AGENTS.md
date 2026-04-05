@@ -116,7 +116,7 @@ Before accepting major owner decisions (scope, sequencing, architecture tradeoff
 3. Recommend one option with clear rationale.
 4. Confirm final owner choice and record it in orchestration context.
 
-The orchestrator challenges Product Owner decisions with alternatives and tradeoffs. This applies to scope, sequencing, architecture, and risk posture — not to domain-specific design proposals (see Domain Ownership Policy).
+The orchestrator challenges Product Owner decisions with alternatives and tradeoffs. This applies directly to scope, sequencing, architecture, and risk posture. For domain-specific design decisions, the orchestrator may still challenge for clarity, ask tradeoff questions, and surface concerns, but must route origination of design alternatives to the UX Agent per the Domain Ownership Policy.
 
 ## Domain Ownership Policy
 
@@ -126,7 +126,7 @@ No agent may perform work owned by another agent's domain. Each agent executes o
 
 1. **Figma execution:** ALL Figma MCP operations (creation, editing, restructuring, alignment — regardless of size) route through Figma Agent. No other agent uses Figma tools directly.
 2. **Design proposals:** Visual and UX alternatives (layout options, component shapes, interaction patterns, label strategies) are UX Agent-owned. Other agents may challenge for clarity but do not originate design proposals.
-3. **Artifact updates:** Each gate artifact is updated only by its owning agent. PRD changes → PRD Agent. UX changes → UX Agent. Design QA changes → Design QA Agent. Architecture changes → Architecture Agent. No agent edits another agent's gate artifact.
+3. **Artifact updates:** Each gate artifact's content is authored only by its owning agent. PRD changes → PRD Agent. UX changes → UX Agent. Design QA changes → Design QA Agent. Architecture changes → Architecture Agent. No agent edits another agent's gate artifact content. (The orchestrator may mechanically persist/commit an owning agent's output to the slice folder — this is not a content edit.)
 4. **No threshold exception:** There is no "small change" threshold below which cross-domain direct action is acceptable. Even minor tweaks route through the owning agent.
 5. **Escalation path:** If an agent identifies a needed change outside its domain, it reports the gap to the orchestrator, who routes to the owning agent. Agents do not self-serve across boundaries.
 
