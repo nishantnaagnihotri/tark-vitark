@@ -106,13 +106,20 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). U
 38. Resume writes current state into `/memories/session/active-state.md` for follow-up prompts in the same session.
 39. Accessibility is a universal default: all screens must meet baseline accessibility (semantic HTML, keyboard navigation, WCAG 2.1 AA contrast, appropriate ARIA attributes). Not a per-slice opt-in.
 40. Argument colors must be semantically neutral: Tark (for) uses blue tones, Vitark (against) uses amber/warm tones. No green/red or other value-laden color pairs that imply positive/negative judgment. This is a universal design rule for all debate-related UI.
-41. Figma MCP write operations route through Figma Agent exclusively. Read-only Figma MCP access is allowed for UX Agent, Design QA Agent, and Dev Agent for their domain work. Orchestrator may not use Figma MCP tools at all.
+41. Figma MCP write operations route through Figma Agent exclusively. Read-only Figma MCP access is allowed for UX Agent, Design QA Agent, Dev Agent, and Orchestrator for gate validation and spot-checks. Orchestrator must not invoke write operations; any write need routes through Figma Agent.
 42. Visual/UX design proposals (layout options, component shapes, interaction patterns, label strategies) are UX Agent-owned. Other agents challenge for clarity and facilitate but do not originate design proposals.
 43. Gate artifact updates route through the owning agent: PRD changes → PRD Agent, UX changes → UX Agent, etc. No agent makes content edits to another agent's gate artifact. Orchestrator may mechanically persist or commit the owning agent's output without changing its content.
 44. Domain Ownership Policy is universal: every agent executes only within its own domain and delegates cross-domain tasks to the owning agent via orchestrator. No threshold exception — even minor tweaks route through the owning agent.
 45. Domain Language Policy: Gate 1 produces a Domain Glossary (5–15 canonical terms). All downstream agents must use glossary terms in artifacts, Figma layer names, architecture identifiers, and code. Non-glossary domain terms are flagged as quality gaps. New terms route through orchestrator for glossary addition.
 46. Never commit raw Figma file keys or IDs to git-tracked files — keys belong only in `.figma-config.local` (gitignored). Figma file URLs are acceptable in git-tracked artifacts and context log entries. Context log entries must use indirect references for keys (e.g., "keys in `.figma-config.local`") rather than inline key values.
 47. Git-tracked artifact references to Figma designs must use Figma file URLs, never raw file keys. File keys belong only in `.figma-config.local`. Dev agent may read keys from `.figma-config.local` at runtime for MCP calls.
+48. Evaluate custom font when brand identity is finalized. System font stack is the current default. Tracked in https://github.com/nishantnaagnihotri/tark-vitark/issues/46. Orchestrator surfaces this at future slice intake when typography or brand identity comes up.
+49. Native app strategy is PWA now → Capacitor later. React web + Capacitor is the unified codebase strategy. The prior Flutter-strong-candidate note (Gate 3A) is reconsidered in favor of Capacitor. No separate native codebase.
+50. BDD uses Cucumber with Gherkin `.feature` files for non-technical stakeholder readability. Test stack: vitest + @testing-library/react + @cucumber/cucumber.
+51. M3 compliance source of truth hierarchy: (1) m3.material.io governing spec, (2) M3 Figma Design Kit visual reference, (3) @material/web source code for exact token values and state math. @material/web is a read-only reference, not a runtime dependency. DS primitives are pure React components that implement M3 spec compliance independently. Design QA verifies against all three sources.
+52. React version for new projects is React 19 (latest stable). The prior "React 18" default in Gate 4 architecture is superseded. React 19 eliminates `forwardRef()` overhead for DS primitives and improves Web Component interop.
+53. M3 token architecture uses a 3-layer model: (1) M3 Baseline — full scheme generated from seed color `#3949AB` via `@material/material-color-utilities`, used as-is without hand-picking; (2) Brand Override — selective overrides only where visual review rejects M3 computed values; (3) Functional Override — domain-specific tokens (tark-surface, vitark-surface, etc.). Default posture: trust M3 computed values first, override only when PO rejects after visual review.
+54. Figma project-first policy: all Figma files must reside in the designated project (from `.figma-config.local`), never in Drafts. MCP `create_new_file` creates in Drafts (API limitation); PO must manually move the file to the project before any further design work proceeds. No design activity on files in Drafts. Cross-ref: AGENTS.md Figma File Structure Convention rule 6.
 
 ## Resume Protocol For Orchestrator
 
@@ -144,7 +151,7 @@ On first response in any new activity:
 | Slice | Gate 1 | Gate 2 | Gate 3 | Gate 4 | Gate 5 | Gate 6 |
 |---|---|---|---|---|---|---|
 | `coming-soon-splash-page` | ✅ Pass | ✅ Full Pass | ✅ Pass (PO approved 2026-03-29) | ✅ Pass | ✅ Complete (T3 PR #18, T4 PR #19, T5 PR #20 all merged) | ✅ Complete (2026-03-29) |
-| `debate-screen` | ✅ Pass | ✅ Full Pass | ✅ Pass (PO approved 2026-04-05) | ⬜ | ⬜ | ⬜ |
+| `debate-screen` | ✅ Pass | ✅ Full Pass | ✅ Pass (PO approved 2026-04-06) | ✅ Pass (Revision 1.1) | ⬜ Ready | ⬜ |
 
 ## Log Archive Protocol
 
@@ -306,3 +313,64 @@ Detailed repo-wide governance history from 2026-03-30 through 2026-04-02 is arch
 - Copilot review: 12 rounds, 34 threads total. 20 Accept (fixed), 14 Challenge (pre-existing content or stylistic). Key fixes: Figma read/write access split, mechanical persistence exception for Constraint 12/Rule 43, design-token taxonomy exception for Domain Language, URL-only standardization for all Figma artifact references (Rule 47), UX Agent Approach steps 7–9 delegated to Figma Agent, Gate 3A bootstrap ownership aligned.
 - Known Rules added: 41 (Figma write routing), 42 (design proposal ownership), 43 (artifact update routing), 44 (Domain Ownership universal), 45 (Domain Language glossary), 46 (no raw Figma keys in git), 47 (URL-only in artifacts).
 - Next micro-goal: Gate 4 (Architecture) for `debate-screen`.
+
+### 2026-04-05 (debate-screen Gate 4 ✅ Pass — now ⏸️ Paused)
+- Gate status: `debate-screen` Gate 4 initially ✅ Pass, now ⏸️ Paused pending Gate 3 rework for DS primitives.
+- Artifact changes: Created `docs/slices/debate-screen/05-architecture.md` and `docs/slices/debate-screen/06-tasks.md`. Updated `03-ux.md` and `04-design-qa.md` to remove raw Figma file keys (QG-A1 remediation, Rule #47 compliance). Updated `orchestrator-context.md` with Known Rules 48–50.
+- GitHub issues created: Slice tracker #37, T1 #38, T2 #39, T3 #40, T4 #41, T5 #42, T6 #43, T7 #44, T8 #45, deferred font evaluation #46. All need revision after Gate 3 rework.
+- PO decisions confirmed: D-1 React+Vite (not Preact), D-1b PWA→Capacitor (Flutter reconsidered), D-2 Cucumber BDD (non-tech colleagues), D-7 system font stack with reminder issue+rule. QG-A1 pragmatic fix (orchestrator executed mechanical Rule #47 compliance). QG-A2 dissolved (existing GitHub Pages workflow). QG-A4 content from Figma (no placeholder).
+- Known Rules added: 48 (font evaluation reminder), 49 (PWA→Capacitor native strategy), 50 (Cucumber BDD for stakeholder readability).
+- Architecture: React 18 + Vite + TypeScript SPA (React version superseded to 19 — see Gate 3 reopen entry). 8 tasks (T1–T8). Critical path: T1→T2→T4→T6→T7→T8. PWA baseline with vite-plugin-pwa.
+- Next micro-goal: Complete Gate 3 rework, then revise architecture and issues.
+- Blockers/owner decisions: Gate 3 reopened for DS primitive components. Gate 4 paused.
+
+### 2026-04-05 (debate-screen Gate 3 🔄 Reopened — DS Primitives + M3 Decisions)
+- Gate status: `debate-screen` Gate 3 🔄 Reopened. UX → Figma → Design QA cascade for Design System primitive components.
+- Artifact changes: Updated `orchestrator-context.md` with Known Rules 51–52. Slice status reverted: Gate 3 🔄 Reopened, Gate 4 ⏸️ Paused.
+- PO decisions confirmed:
+  - @material/web is reference-only (Option A): pure React, @material/web as read-only reference for token values and state math, not a runtime dependency.
+  - Rule #51: M3 compliance SOT hierarchy (spec → Figma Kit → material-web source).
+  - React 19 (Rule #52): supersedes React 18 default. New project, 16 months stable, eliminates forwardRef for DS primitives.
+  - DS layer approach: Option A (slice-scoped, fully M3-compliant per primitive) — `src/design-system/` with Card, Surface, Typography, Badge.
+  - Gate 3 reopen: approved — UX Agent defines DS primitives, Figma Agent builds them in DS Library, Design QA re-verifies.
+  - Gate 4 PR: paused until Gate 3 rework completes.
+  - M3 SOT: Option D (combination hierarchy: m3.material.io spec + M3 Figma Kit + @material/web source).
+- Known Rules added: 51 (M3 compliance SOT hierarchy), 52 (React 19 for new projects).
+- Next micro-goal: Invoke UX Agent for DS primitive specification (Gate 3A addendum).
+- Blockers/owner decisions: None. Ready for UX Agent handoff.
+
+### 2026-04-05 (debate-screen Gate 3B — M3 Computed-First Token Baseline)
+- Gate status: `debate-screen` Gate 3B 🔄 Re-routing to Figma Agent for M3 baseline rebuild.
+- Artifact changes: Added Known Rule 53 (M3 3-layer token architecture: computed-first, override-only-if-rejected). M3 palette generated from #3949AB seed via @material/material-color-utilities@0.3.0 and cached in session memory.
+- PO decisions confirmed:
+  - M3 computed-first: Use ALL M3-generated values as-is (including #4555B7 light primary, #BBC3FF dark primary). Override only if PO rejects after visual review in Figma. Tools first, taste later.
+  - 3-layer architecture: M3 Baseline → Brand Override (empty until PO requests) → Functional Override (tark/vitark domain tokens).
+- Key M3 corrections vs prior hand-picked values: dark primary #1A237E → #BBC3FF (M3 lightens for dark, we incorrectly darkened), dark onPrimary roles were swapped, spine outline #BDBDBD → #767680/#90909A (M3 computed), surface #FFFFFF → #FFFBFF (M3 warm tint).
+- Known Rules added: 53 (M3 3-layer token architecture, computed-first posture).
+- Next micro-goal: Invoke Figma Agent to rebuild DS Library with M3 computed values.
+- Blockers/owner decisions: None. Ready for Figma Agent handoff.
+
+### 2026-04-05 (Figma Project-First Policy — Rule #54)
+- Gate status: `debate-screen` Gate 3B ongoing.
+- Artifact changes: Added Figma File Structure Convention rule 6 to `.github/AGENTS.md`. Updated `.figma-config.local` and `.figma-config.local.example` with project-first notes. Added Known Rule 54 to `orchestrator-context.md`.
+- PO decisions confirmed: All Figma files must live in the TarkVitark project, not Drafts. PO manually moved DS Library file to TarkVitark project. MCP `create_new_file` API limitation acknowledged — manual move required after creation.
+- Known Rules added: 54 (Figma project-first policy).
+- Next micro-goal: Continue Gate 3 — Design QA re-verify (Pass 3).
+- Blockers/owner decisions: None.
+
+### 2026-04-05 (debate-screen Gate 3 ✅ Closed — PO Approved)
+- Gate status: `debate-screen` Gate 3 ✅ Pass. Gate 4 ready to resume.
+- Artifact changes: Updated `04-design-qa.md` with Pass 5 M3 rebuild results (color variables corrected to M3-computed values, history updated). Slice status advanced: Gate 3 ✅ Pass, Gate 4 ⬆️ Ready.
+- PO decisions confirmed: Gate 3 closure approved after Design QA Pass 5 verified M3 rebuild. All 14 color variables confirmed M3-compliant. WCAG contrast, typography, and theme coverage all pass.
+- M3 token corrections in 04-design-qa.md: surface #FFFFFF→#FFFBFF, primary #3949AB→#4555B7, dark primary #1A237E→#BBC3FF, dark onPrimary #BAC3FF→#0E2288, vitark #E65100→#BF360C, spine #BDBDBD→#767680, dark spine #424242→#90909A.
+- Next micro-goal: Resume Gate 4 architecture revision (update React 18→19, add DS layer, update M3 tokens, revise tasks/issues).
+- Blockers/owner decisions: None.
+
+### 2026-04-06 (debate-screen Gate 4 ✅ Pass — Revision 1.1)
+- Gate status: `debate-screen` Gate 4 ✅ Pass (Revision 1.1). Gate 5 ready.
+- Artifact changes: Replaced `05-architecture.md` with Revision 1.1 (866 lines). Updated `06-tasks.md` with T1–T9 (was T1–T8; new T4 for DS primitives). Created Issue #47 (T4: DS primitives). Updated Issues #37 (tracker: React 19 + M3 + DS, T4 added, T5–T9 renumbered), #38 (React 18→19, AC added), #39 (M3 3-layer scope, 15 color + typography + dimension tokens), #41 (T4→T5, DS composition, T4 dependency), #42 (T5→T6, DS composition, T4 dependency), #43 (T6→T7, DS Divider composition, T4+T5+T6 dependencies), #44 (T7→T8, dependency T6→T7), #45 (T8→T9, dependencies T6+T7→T7+T8).
+- Architecture revision scope: (1) React 18→19 (Rule #52), (2) M3 3-layer token architecture with computed values (Rule #53, 35 tokens total), (3) Design System primitive layer `src/design-system/` (Typography, Card, Divider), (4) Task decomposition T1–T9 with updated critical path T1→T2→T4→T5→T7→T8→T9.
+- Architecture Agent challenge phase: 8 items challenged, zero Must Resolve. All confirmed as appropriate or already-addressed.
+- Key changes: 8 color token values corrected to M3-computed, 13 typography tokens added, DS primitive interfaces defined, feature components now compose DS primitives, new R-8 risk (DS abstraction mismatch), 6 QG-DS entries resolved.
+- Next micro-goal: Gate 5 — begin delegating issues to Dev Agent. First issue: T1 (Scaffold, #38).
+- Blockers/owner decisions: None. Ready for Gate 5.

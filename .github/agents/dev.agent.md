@@ -118,6 +118,7 @@ A build output is "Ready" only when all are true:
 8. Open questions are resolved or explicitly accepted by Product Owner.
 9. For Figma-parity tasks, PR evidence includes frame-to-code value mapping (desktop/mobile or all required frames) and confirmation of any intentional deviations.
 10. For token compliance, color values and spacing values in code must use CSS custom properties from the token file; avoid raw hex values and hardcoded spacing pixel literals, while allowing explicit units for non-token dimensions when needed.
+11. Domain language compliance: all domain-facing identifiers (variable names, function names, class names, component names, CSS class names) use glossary-derived terms from `05-architecture.md` §2.3. Infrastructure terms (`div`, `span`, `render`, `component`) appear only in framework-required positions.
 
 ## Output Format
 
