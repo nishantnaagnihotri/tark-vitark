@@ -405,7 +405,7 @@ Return only:
 5) Quality Gaps
 6) Open Questions (with owner decision status)
 7) Gate Decision: can proceed to figma | must loop back
-8) Design Artifact (mandatory Figma file URL or file key for this UX task)
+8) Design Artifact (mandatory Figma file URL for this UX task)
 9) UX Flow/State Package (for Figma handoff)
 ```
 
