@@ -117,7 +117,7 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). U
 49. Native app strategy is PWA now → Capacitor later. React web + Capacitor is the unified codebase strategy. The prior Flutter-strong-candidate note (Gate 3A) is reconsidered in favor of Capacitor. No separate native codebase.
 50. BDD uses Cucumber with Gherkin `.feature` files for non-technical stakeholder readability. Test stack: vitest + @testing-library/react + @cucumber/cucumber.
 51. M3 compliance source of truth hierarchy: (1) m3.material.io governing spec, (2) M3 Figma Design Kit visual reference, (3) @material/web source code for exact token values and state math. @material/web is a read-only reference, not a runtime dependency. DS primitives are pure React components that implement M3 spec compliance independently. Design QA verifies against all three sources.
-52. React version for new projects is React 19 (latest stable). The prior "React 18" default in Gate 4 architecture is superseded. React 19 eliminates `forwardRef()` overhead for DS primitives and improves Web Component interop.
+52. React version for new projects is React 19 (latest stable). The prior "React 18" default in Gate 4 architecture is superseded. React 19 passes `ref` as a standard prop to function components, making `forwardRef` unnecessary for DS primitives. Also improves Web Component interop.
 53. M3 token architecture uses a 3-layer model: (1) M3 Baseline — full scheme generated from seed color `#3949AB` via `@material/material-color-utilities`, used as-is without hand-picking; (2) Brand Override — selective overrides only where visual review rejects M3 computed values; (3) Functional Override — domain-specific tokens (tark-surface, vitark-surface, etc.). Default posture: trust M3 computed values first, override only when PO rejects after visual review.
 54. Figma project-first policy: all Figma files must reside in the designated project (from `.figma-config.local`), never in Drafts. MCP `create_new_file` creates in Drafts (API limitation); PO must manually move the file to the project before any further design work proceeds. No design activity on files in Drafts. Cross-ref: AGENTS.md Figma File Structure Convention rule 6.
 
@@ -330,7 +330,7 @@ Detailed repo-wide governance history from 2026-03-30 through 2026-04-02 is arch
 - PO decisions confirmed:
   - @material/web is reference-only (Option A): pure React, @material/web as read-only reference for token values and state math, not a runtime dependency.
   - Rule #51: M3 compliance SOT hierarchy (spec → Figma Kit → material-web source).
-  - React 19 (Rule #52): supersedes React 18 default. New project, 16 months stable, eliminates forwardRef for DS primitives.
+  - React 19 (Rule #52): supersedes React 18 default. New project, 16 months stable, makes forwardRef unnecessary for DS primitives.
   - DS layer approach: Option A (slice-scoped, fully M3-compliant per primitive) — `src/design-system/` with Typography, Card, Divider.
   - Gate 3 reopen: approved — UX Agent defines DS primitives, Figma Agent builds them in DS Library, Design QA re-verifies.
   - Gate 4 PR: paused until Gate 3 rework completes.
