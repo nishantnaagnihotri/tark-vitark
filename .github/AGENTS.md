@@ -277,7 +277,7 @@ All agents use domain language — not framework, infrastructure, or implementat
 2. Standard page structure: `UX Flows`, `Design`, `QA Notes`.
 3. Frame naming convention: `<Screen>/<State>/<Theme>`.
 4. Enhancement slices are self-contained and reference prior slice files as baseline.
-5. Figma file URL or key is recorded in `03-ux.md` and `04-design-qa.md`.
+5. Figma file URL is recorded in `03-ux.md` and `04-design-qa.md`. Raw file keys must not appear in git-tracked artifacts — store them only in `.figma-config.local`.
 
 ## Design System Foundation Policy
 
