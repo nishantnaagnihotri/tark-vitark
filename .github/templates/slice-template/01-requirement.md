@@ -56,7 +56,7 @@
 
 ## Domain Glossary
 
-Canonical domain terms for this slice. All downstream agents must use these terms in artifacts, designs, and code.
+Canonical domain terms for this slice (5–15 terms). All downstream agents must use these terms in artifacts, designs, and code.
 
 | Term | Definition |
 |---|---|

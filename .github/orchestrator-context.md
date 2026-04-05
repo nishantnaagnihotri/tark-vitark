@@ -106,7 +106,7 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). U
 38. Resume writes current state into `/memories/session/active-state.md` for follow-up prompts in the same session.
 39. Accessibility is a universal default: all screens must meet baseline accessibility (semantic HTML, keyboard navigation, WCAG 2.1 AA contrast, appropriate ARIA attributes). Not a per-slice opt-in.
 40. Argument colors must be semantically neutral: Tark (for) uses blue tones, Vitark (against) uses amber/warm tones. No green/red or other value-laden color pairs that imply positive/negative judgment. This is a universal design rule for all debate-related UI.
-41. ALL Figma MCP operations route through Figma Agent. No agent uses Figma tools directly — no size threshold, no exceptions.
+41. Figma MCP write operations route through Figma Agent exclusively. Read-only Figma MCP access is allowed for UX Agent, Design QA Agent, and Dev Agent for their domain work. Orchestrator may not use Figma MCP tools at all.
 42. Visual/UX design proposals (layout options, component shapes, interaction patterns, label strategies) are UX Agent-owned. Other agents challenge for clarity and facilitate but do not originate design proposals.
 43. Gate artifact updates route through the owning agent: PRD changes → PRD Agent, UX changes → UX Agent, etc. No agent edits another agent's gate artifact.
 44. Domain Ownership Policy is universal: every agent executes only within its own domain and delegates cross-domain tasks to the owning agent via orchestrator. No threshold exception — even minor tweaks route through the owning agent.
