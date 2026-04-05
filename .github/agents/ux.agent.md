@@ -35,7 +35,7 @@ Follow the shared Domain Language Policy in `.github/AGENTS.md`. Use only glossa
 
 ## Domain Ownership Policy
 
-Follow the shared Domain Ownership Policy in `.github/AGENTS.md`. Execute only UX-domain work; delegate cross-domain tasks to the owning agent via orchestrator.
+Follow the shared Domain Ownership Policy in `.github/AGENTS.md`. Execute only UX-domain work; delegate cross-domain tasks to the owning agent via orchestrator. In particular, do not perform Figma MCP write operations directly. Any Figma write action — including creating, bootstrapping, or modifying a slice Figma file or Design System library — must be delegated to the Figma Agent via orchestrator. The UX agent remains responsible for defining required design artifacts and for recording the resulting file URL or file key in its outputs.
 
 ## Strict Accept-vs-Challenge Lens
 
