@@ -172,6 +172,15 @@ Proposed Acceptance Criteria:
 - Saved draft is visible in dashboard draft list for the same user.
 - Opening a draft restores form state and line items.
 
+Domain Glossary:
+| Term | Definition |
+|---|---|
+| Draft | An in-progress invoice that has been saved but not submitted. |
+| Resume | Reopen a previously saved draft and continue editing. |
+| Dashboard | The main user interface listing invoices and drafts. |
+| Line item | A single product/service entry within an invoice. |
+| Autosave | System-initiated periodic save without user action. |
+
 Open Questions:
 - Retention period for stale drafts: unresolved (owner decision pending).
 
