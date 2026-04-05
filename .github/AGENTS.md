@@ -254,14 +254,14 @@ Escalate to Product Owner when:
 
 ## Domain Language Policy
 
-All agents use domain language — not framework, infrastructure, or implementation vocabulary — in every artifact, from requirement through code.
+All agents use domain language — not framework, infrastructure, or implementation vocabulary — for domain-facing concepts in every artifact, from requirement through code. Shared design-system token taxonomies are the exception: global tokens, CSS custom properties in `src/styles/tokens.css`, and Figma variable categories may use standardized infrastructure-oriented token names such as `color/*`, `spacing/*`, `--color-*`, and `--space-*`.
 
 1. **Glossary origin:** At Gate 1, the requirement-challenger produces a Domain Glossary (5–15 canonical terms) as part of the Requirement Context Package. Product Owner confirms the glossary before Gate 1 closes.
 2. **Downstream binding:** Every agent from Gate 2 onward must use only glossary terms when referring to domain concepts in artifacts. If a new domain concept emerges, the agent flags it for glossary addition via orchestrator (routed back to requirement-challenger or Product Owner).
-3. **Figma binding:** Figma layer names, component names, and frame names use glossary terms (e.g., `ArgumentCard/Tark/Light` not `Frame 47` or `Card Component`).
+3. **Figma binding:** Figma layer names, component names, and frame names use glossary terms (e.g., `ArgumentCard/Tark/Light` not `Frame 47` or `Card Component`). Figma variable categories used for shared design tokens follow the token taxonomy rather than the domain glossary.
 4. **Architecture binding:** At Gate 4, the architecture agent maps each glossary term to its code identifier (function name, class name, CSS class, variable). This mapping lives in `05-architecture.md`.
-5. **Code binding:** Implementation code (variable names, function names, class names, CSS custom properties) uses glossary-derived identifiers. Infrastructure terms (`div`, `span`, `render`, `component`) appear only in framework-required positions, never in domain-facing names.
-6. **Validation:** Each gate checks that the output artifact uses glossary terms consistently. Non-glossary domain terms are flagged as quality gaps.
+5. **Code binding:** Implementation code uses glossary-derived identifiers for domain-facing names (variables, functions, classes, selectors, and component-specific custom properties). Global design tokens and their CSS custom properties follow the shared token taxonomy in `src/styles/tokens.css`. Infrastructure terms (`div`, `span`, `render`, `component`) appear only in framework-required positions or in standardized token taxonomy names, never in domain-facing names.
+6. **Validation:** Each gate checks that output artifacts use glossary terms consistently for domain concepts and use the standardized token taxonomy consistently for shared design tokens. Non-glossary domain terms are flagged as quality gaps.
 
 ## Implementation Protocol (Test-First BDD + Domain-Oriented Development)
 
