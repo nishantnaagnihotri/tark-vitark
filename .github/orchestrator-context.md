@@ -111,6 +111,7 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). U
 43. Gate artifact updates route through the owning agent: PRD changes → PRD Agent, UX changes → UX Agent, etc. No agent edits another agent's gate artifact.
 44. Domain Ownership Policy is universal: every agent executes only within its own domain and delegates cross-domain tasks to the owning agent via orchestrator. No threshold exception — even minor tweaks route through the owning agent.
 45. Domain Language Policy: Gate 1 produces a Domain Glossary (5–15 canonical terms). All downstream agents must use glossary terms in artifacts, Figma layer names, architecture identifiers, and code. Non-glossary domain terms are flagged as quality gaps. New terms route through orchestrator for glossary addition.
+46. Never commit raw Figma file keys or IDs to git-tracked files. Reference `.figma-config.local` (gitignored) instead. Context log entries must use indirect references (e.g., "keys in `.figma-config.local`") rather than inline key values.
 
 ## Resume Protocol For Orchestrator
 
@@ -252,7 +253,7 @@ Detailed repo-wide governance history from 2026-03-30 through 2026-04-02 is arch
 
 ### 2026-04-04 (debate-screen Gate 3A Pass)
 - Gate status: `debate-screen` Gate 3A ✅ Pass. UX flows, state matrix, interaction notes complete.
-- Artifact changes: Created `docs/slices/debate-screen/03-ux.md`. Updated `.figma-config.local` with design_system_library_file_key. Created slice Figma file (CsPAyUdLSStdmNpmiBMESQ) and Design System Library (onzB8ujyvn6wnhdaS7Hz28).
+- Artifact changes: Created `docs/slices/debate-screen/03-ux.md`. Updated `.figma-config.local` with design_system_library_file_key. Created slice Figma file and Design System Library (keys in `.figma-config.local`).
 - Open questions status: OQ-2 resolved (natural page scroll). All UX OQs resolved.
 - Major decisions: M3 adopted as hybrid base design system (M3 structure with brand color override). Native app ambition recorded as Gate 4 constraint (Flutter strong candidate). Framework selection deferred to Gate 4.
 - Next micro-goal: Gate 3B — invoke Figma Agent for Figma design.
