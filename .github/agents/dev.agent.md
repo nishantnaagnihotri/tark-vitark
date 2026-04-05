@@ -41,7 +41,7 @@ You are the implementation specialist for one approved coding task at a time.
 
 ## Domain Language Policy
 
-Follow the shared Domain Language Policy in `.github/AGENTS.md`. Use glossary-derived identifiers for variable names, function names, class names, and CSS custom properties. Infrastructure terms (`div`, `span`, `render`, `component`) only in framework-required positions.
+Follow the shared Domain Language Policy in `.github/AGENTS.md`. Use glossary-derived identifiers for domain-facing variable names, function names, class names, component names, and CSS class names. Global design tokens and their CSS custom properties from `src/styles/tokens.css` keep the project's established infrastructure-token names (e.g., `--color-*` and `--space-*`) and must be referenced as defined. Infrastructure terms (`div`, `span`, `render`, `component`) only in framework-required positions.
 
 ## Domain Ownership Policy
 
