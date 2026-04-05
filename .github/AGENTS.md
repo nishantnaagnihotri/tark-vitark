@@ -126,17 +126,17 @@ No agent may perform work owned by another agent's domain. Each agent executes o
 
 1. **Figma write operations:** ALL Figma MCP write operations (creation, editing, restructuring, alignment, variable/binding changes — regardless of size) route through Figma Agent. No other agent uses Figma write tools directly.
 2. **Figma read access:** Agents whose domain requires Figma data (UX Agent, Design QA Agent, Dev Agent) may use Figma MCP read-only operations (screenshots, metadata, design context) for their own domain work. The orchestrator may not use Figma MCP tools at all.
-2. **Design proposals:** Visual and UX alternatives (layout options, component shapes, interaction patterns, label strategies) are UX Agent-owned. Other agents may challenge for clarity but do not originate design proposals.
-3. **Artifact updates:** Each gate artifact's content is authored only by its owning agent. PRD changes → PRD Agent. UX changes → UX Agent. Design QA changes → Design QA Agent. Architecture changes → Architecture Agent. No agent edits another agent's gate artifact content. (The orchestrator may mechanically persist/commit an owning agent's output to the slice folder — this is not a content edit.)
-4. **No threshold exception:** There is no "small change" threshold below which cross-domain direct action is acceptable. Even minor tweaks route through the owning agent.
-5. **Escalation path:** If an agent identifies a needed change outside its domain, it reports the gap to the orchestrator, who routes to the owning agent. Agents do not self-serve across boundaries.
+3. **Design proposals:** Visual and UX alternatives (layout options, component shapes, interaction patterns, label strategies) are UX Agent-owned. Other agents may challenge for clarity but do not originate design proposals.
+4. **Artifact updates:** Each gate artifact's content is authored only by its owning agent. PRD changes → PRD Agent. UX changes → UX Agent. Design QA changes → Design QA Agent. Architecture changes → Architecture Agent. No agent edits another agent's gate artifact content. (The orchestrator may mechanically persist/commit an owning agent's output to the slice folder — this is not a content edit.)
+5. **No threshold exception:** There is no "small change" threshold below which cross-domain direct action is acceptable. Even minor tweaks route through the owning agent.
+6. **Escalation path:** If an agent identifies a needed change outside its domain, it reports the gap to the orchestrator, who routes to the owning agent. Agents do not self-serve across boundaries.
 
 ### Orchestrator-Specific Rules
 
-6. **Orchestrator scope:** Supervise agents, enforce gates, challenge Product Owner for clarity, decide general direction, facilitate discussion between Product Owner and agent team. Route domain work — don't execute it.
-7. **No Figma tools:** Orchestrator never uses Figma MCP tools directly — all Figma operations route through Figma Agent.
-8. **No design origination:** Orchestrator does not originate visual or UX design proposals. Route design questions to UX Agent.
-9. **No artifact editing:** Orchestrator does not directly edit gate-owned artifacts (`01-requirement.md`, `02-prd.md`, `03-ux.md`, etc.). Route updates through the owning agent.
+7. **Orchestrator scope:** Supervise agents, enforce gates, challenge Product Owner for clarity, decide general direction, facilitate discussion between Product Owner and agent team. Route domain work — don't execute it.
+8. **No Figma tools:** Orchestrator never uses Figma MCP tools directly — all Figma operations route through Figma Agent.
+9. **No design origination:** Orchestrator does not originate visual or UX design proposals. Route design questions to UX Agent.
+10. **No artifact editing:** Orchestrator does not directly edit gate-owned artifacts (`01-requirement.md`, `02-prd.md`, `03-ux.md`, etc.). Route updates through the owning agent.
 
 ## Strict Accept-vs-Challenge Lens
 
