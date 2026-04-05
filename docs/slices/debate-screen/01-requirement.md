@@ -8,6 +8,19 @@ Create a debate screen that displays a topic with "for" arguments and "against" 
 
 TarkVitark needs a landing page that demonstrates its core identity as a debate platform. The coming-soon splash page is replaced by an actual debate view that communicates the product's purpose directly.
 
+## Domain Glossary
+
+| Term | Definition |
+|---|---|
+| Debate | The complete screen experience centered on one subject with opposing viewpoints. |
+| Topic | The subject or resolution being debated on the screen. |
+| Argument | A single point presented in support of or opposition to the topic. |
+| Tark | The "for" side of the debate; arguments supporting the topic. |
+| Vitark | The "against" side of the debate; arguments opposing the topic. |
+| Timeline | Visual structure for sequencing arguments over a vertical flow. |
+| Legend Bar | Visual key that helps users distinguish Tark and Vitark content by label and color. |
+| Card | Container primitive that presents one argument with side-specific styling. |
+
 ## Users and Scenarios
 
 Public visitors landing on the site on any device. Primary scenario: reading a debate with arguments presented for and against a topic.
