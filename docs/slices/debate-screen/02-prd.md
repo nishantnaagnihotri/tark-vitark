@@ -207,11 +207,10 @@ TarkVitark's current public presence is a coming-soon splash page. While this es
 | ID | Question | Status | Resolution |
 |---|---|---|---|
 | OQ-1 | Browser support baseline | Resolved | Modern evergreen browsers (Chrome, Firefox, Safari, Edge latest 2 versions). IE excluded. |
-| OQ-2 | Argument overflow/pagination strategy | Unresolved — Non-Blocking | Default: scrollable container. Must resolve before Gate 3 completion. |
+| OQ-2 | Argument overflow/pagination strategy | Resolved | Use natural page scroll; do not introduce a dedicated scrollable arguments container. |
 
 ### Gate Blocking
 
-- OQ-2 must resolve before Gate 3 (UX) completion. UX Agent owns recommendation.
 - No questions block Gate 2 progression.
 
 **Artifact:** `docs/slices/debate-screen/02-prd.md`

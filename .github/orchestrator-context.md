@@ -331,7 +331,7 @@ Detailed repo-wide governance history from 2026-03-30 through 2026-04-02 is arch
   - @material/web is reference-only (Option A): pure React, @material/web as read-only reference for token values and state math, not a runtime dependency.
   - Rule #51: M3 compliance SOT hierarchy (spec → Figma Kit → material-web source).
   - React 19 (Rule #52): supersedes React 18 default. New project, 16 months stable, eliminates forwardRef for DS primitives.
-  - DS layer approach: Option A (slice-scoped, fully M3-compliant per primitive) — `src/design-system/` with Card, Surface, Typography, Badge.
+  - DS layer approach: Option A (slice-scoped, fully M3-compliant per primitive) — `src/design-system/` with Typography, Card, Divider.
   - Gate 3 reopen: approved — UX Agent defines DS primitives, Figma Agent builds them in DS Library, Design QA re-verifies.
   - Gate 4 PR: paused until Gate 3 rework completes.
   - M3 SOT: Option D (combination hierarchy: m3.material.io spec + M3 Figma Kit + @material/web source).
