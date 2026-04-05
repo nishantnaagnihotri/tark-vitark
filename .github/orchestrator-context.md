@@ -298,3 +298,11 @@ Detailed repo-wide governance history from 2026-03-30 through 2026-04-02 is arch
 - Major decisions: PO accepted Option A (Glossary-Driven) over Option B (Convention Rule). Glossary produced at Gate 1, binding all downstream agents. Architecture agent maps glossary → code identifiers. Each gate validates glossary compliance.
 - Rationale: Domain language drift starts before code. A shared glossary from Gate 1 ensures all agents speak the same functional language end-to-end.
 - Next micro-goal: Gate 4 (Architecture) for `debate-screen`.
+
+### 2026-04-05 (Global — PR #36 Merged: Domain Ownership + Language Policy)
+- Gate status: N/A — cross-cutting protocol PR merged to `master`.
+- PR: https://github.com/nishantnaagnihotri/tark-vitark/pull/36
+- Artifact changes: `.github/AGENTS.md` v2.1 — Domain Ownership Policy (10 rules, Figma read/write split), Domain Language Policy (6 rules, design-token exception), Figma File Structure Convention URL-only. All 8 agent files — Domain Ownership + Domain Language sections. `orchestrator-context.md` — Known Rules 41–47. `requirement-challenger.agent.md` — glossary in output format, schema, and example output. Slice templates `03-ux.md` and `04-design-qa.md` — URL-only Figma references. `01-requirement.md` template — Domain Glossary table.
+- Copilot review: 12 rounds, 34 threads total. 20 Accept (fixed), 14 Challenge (pre-existing content or stylistic). Key fixes: Figma read/write access split, mechanical persistence exception for Constraint 12/Rule 43, design-token taxonomy exception for Domain Language, URL-only standardization for all Figma artifact references (Rule 47), UX Agent Approach steps 7–9 delegated to Figma Agent, Gate 3A bootstrap ownership aligned.
+- Known Rules added: 41 (Figma write routing), 42 (design proposal ownership), 43 (artifact update routing), 44 (Domain Ownership universal), 45 (Domain Language glossary), 46 (no raw Figma keys in git), 47 (URL-only in artifacts).
+- Next micro-goal: Gate 4 (Architecture) for `debate-screen`.
