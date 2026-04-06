@@ -183,11 +183,11 @@ describe('tokens.css — M3 3-layer token presence', () => {
     expect(lightBlock).toContain('--typescale-headline-lg-tracking: 0');
   });
 
-  it('body-lg: 1rem / 1.5rem / 400 / tracking 0', () => {
+  it('body-lg: 1rem / 1.5rem / 400 / tracking 0.03125rem', () => {
     expect(lightBlock).toContain('--typescale-body-lg-size: 1rem');
     expect(lightBlock).toContain('--typescale-body-lg-line-height: 1.5rem');
     expect(lightBlock).toContain('--typescale-body-lg-weight: 400');
-    expect(lightBlock).toContain('--typescale-body-lg-tracking: 0;');
+    expect(lightBlock).toContain('--typescale-body-lg-tracking: 0.03125rem;');
   });
 
   it('label-md: 0.75rem / 1rem / 500 / tracking 0.03125rem', () => {
