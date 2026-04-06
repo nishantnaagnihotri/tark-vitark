@@ -163,7 +163,7 @@ No agent may perform work owned by another agent's domain. Each agent executes o
 
 ## Copilot Review Loop Protocol
 
-1. Immediately after creating a PR, the agent must request Copilot review on that PR and begin the bounded polling window.
+1. Immediately after creating a PR, the agent must request Copilot review on that PR and begin the bounded polling window. This is automatic and unconditional — the agent must not pause, ask for confirmation, or wait for PO input before entering the loop. PR creation and review-loop entry are a single atomic sequence.
 2. After pushing a commit that addresses PR feedback, the agent must request a fresh Copilot review on that PR before considering the review cycle complete.
 3. Once an active PR review loop has started, the agent must continue it automatically after each push and review request; it must not pause for another Product Owner prompt unless a blocker, protocol conflict, missing capability, or explicit owner-decision point is reached.
 4. Historical Copilot review records may remain on the PR; success is defined as zero `semantic-open` Copilot comments or threads, not zero total Copilot reviews.
