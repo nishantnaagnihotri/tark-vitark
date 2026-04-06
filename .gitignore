@@ -9,6 +9,9 @@
 # Node dependencies
 node_modules/
 
+# Build output
+dist/
+
 # Python cache artifacts
 __pycache__/
 *.pyc
