@@ -83,6 +83,19 @@ describe('tokens.css — M3 3-layer token presence', () => {
     expect(tokensCss).toContain(token);
   });
 
+  // ── Spacing value-locking ──
+
+  const spacingValues: [string, string][] = [
+    ['--space-4', '1rem'],
+    ['--space-8', '2rem'],
+    ['--space-12', '3rem'],
+    ['--space-card-padding', '1rem'],
+  ];
+
+  it.each(spacingValues)('spacing token %s equals %s', (token, value) => {
+    expect(lightBlock).toContain(`${token}: ${value}`);
+  });
+
   // ── Shape tokens ──
 
   it('defines radius token --radius-sharp', () => {
