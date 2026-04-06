@@ -265,4 +265,17 @@ async function main() {
   }
 }
 
-main();
+main().catch((error) => {
+  console.log(
+    JSON.stringify(
+      {
+        status: "error",
+        error: "unexpected_failure",
+        message: error instanceof Error ? error.message : String(error),
+      },
+      null,
+      2
+    )
+  );
+  process.exit(1);
+});
