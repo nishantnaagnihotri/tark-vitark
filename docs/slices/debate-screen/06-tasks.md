@@ -9,7 +9,7 @@
 |---|---|---|---|---|---|
 | T1 | Scaffold React 19 + Vite project with test stack and PWA baseline | https://github.com/nishantnaagnihotri/tark-vitark/issues/38 | §2.7, §2.8, §2.10, §2.14 | None | ✅ PR #49 merged |
 | T2 | Expand token system with M3 3-layer architecture | https://github.com/nishantnaagnihotri/tark-vitark/issues/39 | §2.6 | T1 (#38) | ✅ PR #51 merged |
-| T3 | Create static debate data module | https://github.com/nishantnaagnihotri/tark-vitark/issues/40 | §2.4 | T1 (#38) | ⬜ |
+| T3 | Create static debate data module | https://github.com/nishantnaagnihotri/tark-vitark/issues/40 | §2.4 | T1 (#38) | ✅ PR #52 merged |
 | T4 | Implement DS primitives (Typography, Card, Divider) | https://github.com/nishantnaagnihotri/tark-vitark/issues/47 | §2.2, §2.5, §2.7 | T2 (#39) | ⬜ |
 | T5 | Implement ArgumentCard component | https://github.com/nishantnaagnihotri/tark-vitark/issues/41 | §2.5, §2.13 | T2 (#39), T3 (#40), T4 | ⬜ |
 | T6 | Implement Topic and LegendBar components | https://github.com/nishantnaagnihotri/tark-vitark/issues/42 | §2.5, §2.11 | T2 (#39), T4 | ⬜ |
