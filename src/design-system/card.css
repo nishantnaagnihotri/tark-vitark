@@ -1,0 +1,15 @@
+.card {
+  padding: var(--space-card-padding);
+}
+
+.card--tark {
+  background-color: var(--color-tark-surface);
+  color: var(--color-tark-on-surface);
+  border-radius: var(--radius-sharp) var(--radius-round) var(--radius-round) var(--radius-round);
+}
+
+.card--vitark {
+  background-color: var(--color-vitark-surface);
+  color: var(--color-vitark-on-surface);
+  border-radius: var(--radius-round) var(--radius-sharp) var(--radius-round) var(--radius-round);
+}
