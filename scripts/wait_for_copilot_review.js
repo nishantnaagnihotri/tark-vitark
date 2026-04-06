@@ -124,8 +124,11 @@ function parseCliArgs() {
   const timeoutSeconds = parseInt(values["timeout-seconds"], 10);
   const intervalSeconds = parseInt(values["interval-seconds"], 10);
 
-  if (!owner || !repo || !pr) {
+  if (!owner || !repo || !values.pr) {
     exitError("Usage: wait_for_copilot_review.js --owner OWNER --repo REPO --pr NUMBER");
+  }
+  if (!Number.isInteger(pr) || pr <= 0) {
+    exitError("--pr must be a positive integer");
   }
 
   if (Number.isNaN(timeoutSeconds) || timeoutSeconds <= 0) {
