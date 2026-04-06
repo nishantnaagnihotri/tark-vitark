@@ -8,10 +8,9 @@ describe('DEBATE data shape', () => {
     expect(DEBATE.topic.length).toBeGreaterThan(0);
   });
 
-  it('has an arguments array with ~8 entries', () => {
+  it('has an arguments array with exactly 8 entries', () => {
     expect(Array.isArray(DEBATE.arguments)).toBe(true);
-    expect(DEBATE.arguments.length).toBeGreaterThanOrEqual(6);
-    expect(DEBATE.arguments.length).toBeLessThanOrEqual(12);
+    expect(DEBATE.arguments.length).toBe(8);
   });
 
   it('argument IDs are sequential starting from 1', () => {
@@ -40,10 +39,12 @@ describe('DEBATE data shape', () => {
     expect(sides).toContain('vitark');
   });
 
-  it('arguments alternate between tark and vitark sides', () => {
-    DEBATE.arguments.forEach((arg, index) => {
-      const expected: Side = index % 2 === 0 ? 'tark' : 'vitark';
-      expect(arg.side).toBe(expected);
-    });
+  it('arguments follow the Figma posting order', () => {
+    const expectedOrder: Side[] = [
+      'tark', 'vitark', 'tark', 'vitark',
+      'tark', 'vitark', 'vitark', 'tark',
+    ];
+    const actualOrder = DEBATE.arguments.map((arg) => arg.side);
+    expect(actualOrder).toEqual(expectedOrder);
   });
 });
