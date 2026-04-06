@@ -16,6 +16,9 @@ dist/
 __pycache__/
 *.pyc
 
+# Editor / IDE
+.vscode/
+
 # OS artifacts
 .DS_Store
 Thumbs.db
