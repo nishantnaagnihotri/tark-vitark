@@ -1,18 +1,118 @@
 :root,
 [data-theme="light"] {
-  --color-surface-primary: #ffffff;
-  --color-text-primary: #0f172a;
+  /* ── Layer 1: M3 Baseline (computed from seed #3949AB) ── */
+
+  /* Surface */
+  --color-surface-default: #FFFBFF;
+  --color-on-surface: #1C1B1F;
+  --color-brand-primary: #4555B7;
+  --color-brand-on-primary: #FFFFFF;
+
+  /* Spine (maps to M3 outline-variant) */
+  --color-spine-line: #767680;
+
+  /* ── Layer 2: Brand Override (empty — no M3 values overridden) ── */
+
+  /* ── Layer 3: Functional Override (domain tokens) ── */
+
+  /* Tark (blue) */
+  --color-tark-surface: #BBDEFB;
+  --color-tark-on-surface: #0D47A1;
+  --color-tark-header: #1565C0;
+
+  /* Vitark (amber) */
+  --color-vitark-surface: #FFECB3;
+  --color-vitark-on-surface: #BF360C;
+  --color-vitark-header: #EF6C00;
+
+  /* Spine (functional) */
+  --color-spine-dot: #9E9E9E;
+
+  /* Legend */
+  --color-legend-surface: #F5F5F5;
+  --color-legend-on-surface: #4D4D4D;
+  --color-legend-separator: #999999;
+
+  /* ── Typography (M3 Type Scale) ── */
+  --font-family-plain: Inter, "Segoe UI", Arial, sans-serif;
+
+  --typescale-headline-lg-size: 2rem;
+  --typescale-headline-lg-line-height: 2.5rem;
+  --typescale-headline-lg-weight: 400;
+  --typescale-headline-lg-tracking: 0;
+
+  --typescale-body-lg-size: 1rem;
+  --typescale-body-lg-line-height: 1.5rem;
+  --typescale-body-lg-weight: 400;
+  --typescale-body-lg-tracking: 0.03125rem;
+
+  --typescale-label-md-size: 0.75rem;
+  --typescale-label-md-line-height: 1rem;
+  --typescale-label-md-weight: 500;
+  --typescale-label-md-tracking: 0.03125rem;
+
+  /* ── Spacing ── */
   --space-4: 1rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-card-padding: 1rem;
+
+  /* ── Shape ── */
+  --radius-sharp: 4px;
+  --radius-round: 12px;
+
+  /* ── Dimension ── */
+  --divider-thickness: 1px;
 }
 
 [data-theme="dark"] {
-  --color-surface-primary: #0f172a;
-  --color-text-primary: #e2e8f0;
+  /* ── Layer 1: M3 Baseline ── */
+  --color-surface-default: #1B1B1F;
+  --color-on-surface: #E6E1E5;
+  --color-brand-primary: #BBC3FF;
+  --color-brand-on-primary: #0E2288;
+
+  --color-spine-line: #90909A;
+
+  /* ── Layer 3: Functional Override ── */
+  --color-tark-surface: #1565C0;
+  --color-tark-on-surface: #E3F2FD;
+  --color-tark-header: #90CAF9;
+
+  --color-vitark-surface: #BF360C;
+  --color-vitark-on-surface: #FFF8E1;
+  --color-vitark-header: #FFB74D;
+
+  --color-spine-dot: #616161;
+
+  --color-legend-surface: #1C1C1C;
+  --color-legend-on-surface: #BFBFBF;
+  --color-legend-separator: #666666;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
-    --color-surface-primary: #0f172a;
-    --color-text-primary: #e2e8f0;
+    /* ── Layer 1: M3 Baseline ── */
+    --color-surface-default: #1B1B1F;
+    --color-on-surface: #E6E1E5;
+    --color-brand-primary: #BBC3FF;
+    --color-brand-on-primary: #0E2288;
+
+    --color-spine-line: #90909A;
+
+    /* ── Layer 3: Functional Override ── */
+    --color-tark-surface: #1565C0;
+    --color-tark-on-surface: #E3F2FD;
+    --color-tark-header: #90CAF9;
+
+    --color-vitark-surface: #BF360C;
+    --color-vitark-on-surface: #FFF8E1;
+    --color-vitark-header: #FFB74D;
+
+    --color-spine-dot: #616161;
+
+    --color-legend-surface: #1C1C1C;
+    --color-legend-on-surface: #BFBFBF;
+    --color-legend-separator: #666666;
   }
 }
