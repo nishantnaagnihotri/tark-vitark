@@ -8,9 +8,10 @@ const tokensCss = readFileSync(
 );
 
 // Split into light and dark sections for per-block assertions
-const darkBlockStart = tokensCss.indexOf('[data-theme="dark"]');
-const lightBlock = tokensCss.slice(0, darkBlockStart);
-const darkBlock = tokensCss.slice(darkBlockStart);
+const darkBlockMatch = tokensCss.match(/\[data-theme="dark"\]\s*\{[\s\S]*?\}/);
+const darkBlockIdx = darkBlockMatch?.index ?? -1;
+const lightBlock = darkBlockIdx >= 0 ? tokensCss.slice(0, darkBlockIdx) : tokensCss;
+const darkBlock = darkBlockMatch?.[0] ?? '';
 
 describe('tokens.css — M3 3-layer token presence', () => {
   // ── Layer 1 + Layer 3: Color tokens (light + dark) ──
