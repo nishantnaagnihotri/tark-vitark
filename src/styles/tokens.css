@@ -62,7 +62,7 @@
   --radius-round: 12px;
 
   /* ── Dimension ── */
-  --divider-thickness: 2px;
+  --divider-thickness: 1px;
 }
 
 [data-theme="dark"] {

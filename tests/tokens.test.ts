@@ -204,9 +204,9 @@ describe('tokens.css — M3 3-layer token presence', () => {
     expect(lightBlock).toContain('--radius-round: 12px');
   });
 
-  // ── Dimension exact value (Figma-verified: spine line w-[2px]) ──
+  // ── Dimension exact value (M3 Divider primitive default; spine 2px at feature layer) ──
 
-  it('divider-thickness is 2px', () => {
-    expect(lightBlock).toContain('--divider-thickness: 2px');
+  it('divider-thickness is 1px', () => {
+    expect(lightBlock).toContain('--divider-thickness: 1px');
   });
 });
