@@ -101,7 +101,7 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). U
 33. Once a PR review loop starts, continue it automatically after each push and review request until resolved or blocked.
 34. Thread resolution belongs to disposition execution, not classification.
 35. Review completion uses semantic state: `semantic-open` blocks, `semantic-closed` does not, and `semantically-closed/tooling-unresolved` must be reported explicitly.
-36. ~~Superseded by Rule #56 for review-loop handling.~~ Previously required prior PO discussion before posting a `Challenge` reply. Under Protocol-Version 2.2, review-loop challenges are posted immediately and batched for PO review after clean pass. Non-review-loop challenges (e.g., gate artifacts) still follow the original rule.
+36. ~~Superseded by Rule #56 for review-loop handling.~~ Previously required prior PO discussion before posting a `Challenge` reply. Under Protocol-Version 2.2, review-loop challenges are posted immediately and batched for PO review after no `semantic-open` review threads remain. Non-review-loop challenges (e.g., gate artifacts) require prior PO discussion and explicit PO agreement on the external position before posting the challenge.
 37. Orchestrator resume is tiered: read shared protocol + context first, then only gate-relevant agent files.
 38. Resume writes current state into `/memories/session/active-state.md` for follow-up prompts in the same session.
 39. Accessibility is a universal default: all screens must meet baseline accessibility (semantic HTML, keyboard navigation, WCAG 2.1 AA contrast, appropriate ARIA attributes). Not a per-slice opt-in.
