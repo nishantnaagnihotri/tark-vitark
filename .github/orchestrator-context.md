@@ -220,7 +220,7 @@ Detailed repo-wide governance history from 2026-03-30 through 2026-04-02 is arch
 
 ### 2026-04-03 (Reusable Copilot Poller)
 - Gate status: No active slice. PR review polling fallback hardened.
-- Artifact changes: Added `scripts/wait_for_copilot_review.py` as the repo-standard fallback for bounded Copilot review waits. Updated shared, orchestrator, dev, and orchestrator-context protocol text to prefer this helper over ad hoc terminal snippets when a non-MCP polling exception is justified.
+- Artifact changes: Added `scripts/wait_for_copilot_review.py` as the repo-standard fallback for bounded Copilot review waits. Updated shared, orchestrator, dev, and orchestrator-context protocol text to prefer this helper over ad hoc terminal snippets when a non-MCP polling exception is justified. *(Superseded: `.py` script replaced by `scripts/wait_for_copilot_review.js` — Node + GraphQL — in PR #51.)*
 - Open questions status: None.
 - Next micro-goal: Reuse the helper for future review loops whenever long waits make repeated manual polling impractical.
 - Blockers/owner decisions: The ad hoc polling snippet failed because it relied on a pasted SHA that drifted from the real PR head. The hardened helper now derives the live head from GitHub, reports `review-found`, `timeout`, and `head-changed` distinctly, and treats check-run lookup failures as non-fatal metadata gaps.
