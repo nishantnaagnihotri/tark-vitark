@@ -13,6 +13,12 @@ const darkBlockIdx = darkBlockMatch?.index ?? -1;
 const lightBlock = darkBlockIdx >= 0 ? tokensCss.slice(0, darkBlockIdx) : tokensCss;
 const darkBlock = darkBlockMatch?.[0] ?? '';
 
+// Extract @media (prefers-color-scheme: dark) fallback block
+const mediaFallbackMatch = tokensCss.match(
+  /@media\s*\(\s*prefers-color-scheme:\s*dark\s*\)\s*\{[\s\S]*?\}\s*\}/
+);
+const mediaFallbackBlock = mediaFallbackMatch?.[0] ?? '';
+
 describe('tokens.css — M3 3-layer token presence', () => {
   // ── Layer 1 + Layer 3: Color tokens (light + dark) ──
 
@@ -116,6 +122,10 @@ describe('tokens.css — M3 3-layer token presence', () => {
   it('defines prefers-color-scheme dark fallback for :root:not([data-theme])', () => {
     expect(tokensCss).toContain('prefers-color-scheme: dark');
     expect(tokensCss).toContain(':root:not([data-theme])');
+  });
+
+  it.each(colorTokens)('media fallback defines color token %s', (token) => {
+    expect(mediaFallbackBlock).toContain(token);
   });
 
   // ── Old tokens removed ──
