@@ -1,0 +1,71 @@
+/* ── LegendBar — sticky legend bar with Tark/Vitark indicators ── */
+/* Mobile-first: centered single row */
+
+.legend-bar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    height: 32px;
+    background-color: var(--color-legend-surface);
+    color: var(--color-legend-on-surface);
+}
+
+.legend-bar__section {
+    display: flex;
+    align-items: center;
+}
+
+.legend-bar__legend {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.legend-bar__dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.legend-bar__dot--tark {
+    background-color: var(--color-tark-header);
+}
+
+.legend-bar__dot--vitark {
+    background-color: var(--color-vitark-header);
+}
+
+.legend-bar__separator {
+    color: var(--color-legend-separator);
+    text-align: center;
+}
+
+/* Tablet and above: 3-column grid matching timeline spine alignment */
+@media (min-width: 481px) {
+    .legend-bar {
+        display: grid;
+        grid-template-columns: 1fr 32px 1fr;
+        gap: 12px;
+        padding-inline: 40px;
+    }
+
+    .legend-bar__section--left {
+        justify-content: flex-end;
+    }
+
+    .legend-bar__section--right {
+        justify-content: flex-start;
+    }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+    .legend-bar {
+        padding-inline: 120px;
+    }
+}
