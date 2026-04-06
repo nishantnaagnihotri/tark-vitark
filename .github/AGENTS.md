@@ -1,5 +1,5 @@
-<!-- Protocol-Version: 2.1 -->
-<!-- Last-Updated: 2026-04-05 -->
+<!-- Protocol-Version: 2.2 -->
+<!-- Last-Updated: 2026-04-06 -->
 
 # Shared Agent Protocol
 
@@ -144,7 +144,7 @@ No agent may perform work owned by another agent's domain. Each agent executes o
 2. Agents must not accept feedback blindly. Each accepted item must include concise reasoning.
 3. Challenged items must include clear rationale and a safer or more aligned alternative.
 4. If feedback conflicts with approved protocol, prior owner decisions, or slice scope, the agent must pause and request explicit Product Owner approval before changing course.
-5. Internal triage may classify an item as `Challenge`, but the agent must first discuss that challenge with the Product Owner, get explicit agreement on the external position, and only then post the agreed `Challenge` reply on the PR thread.
+5. Internal triage may classify an item as `Challenge`. The agent posts the `Challenge` reply on the PR thread immediately — including rationale, the safer alternative, and a citation of the grounding rule/decision — and continues the review loop without pausing. Once the loop reaches a clean pass (zero new comments), the agent presents all open challenges to the Product Owner one by one for final disposition. If the Product Owner overrides any challenge (decides to accept/fix), the agent implements the fix, re-enters the review loop, and repeats until both conditions are met: (1) zero new comments on the latest pass, and (2) all challenges resolved with Product Owner.
 6. Final disposition and rationale must be recorded in the relevant output (PR reply, handoff, or context update).
 7. When fixing a review comment, agents must also post a review response that explains their position: what was accepted or challenged, what changed (or why no change), and the rationale/tradeoff.
 8. After an `Accept` or fully-executed `Challenge` disposition is completed, the agent must resolve the review thread when no Product Owner decision or reviewer follow-up remains.
