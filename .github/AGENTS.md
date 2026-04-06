@@ -168,7 +168,7 @@ No agent may perform work owned by another agent's domain. Each agent executes o
 3. Once an active PR review loop has started, the agent must continue it automatically after each push and review request; it must not pause for another Product Owner prompt unless a blocker, protocol conflict, missing capability, or explicit owner-decision point is reached.
 4. Historical Copilot review records may remain on the PR; success is defined as zero `semantic-open` Copilot comments or threads, not zero total Copilot reviews.
 5. Each new Copilot comment must go through the PR Review Intake Protocol before any additional changes are proposed or made.
-6. If the loop cannot continue because of a challenge, protocol conflict, or missing capability, the agent must pause, discuss the issue with the Product Owner, and proceed only with the agreed position.
+6. If the loop cannot continue because of a protocol conflict or missing capability, the agent must pause, discuss the issue with the Product Owner, and proceed only with the agreed position.
 7. After requesting a fresh Copilot review, the agent must poll the live GitHub PR state for a bounded window before concluding the result is pending. Default polling window: up to 5 minutes at a practical cadence.
 8. Polling must use live GitHub MCP review data as the source of truth rather than relying on cached editor extension payloads.
 9. When a non-MCP polling fallback is used, prefer `python3 scripts/wait_for_copilot_review.py --owner <owner> --repo <repo> --pr <number>`.
