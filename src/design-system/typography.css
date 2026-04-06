@@ -1,25 +1,25 @@
 .typography {
-  font-family: var(--font-family-plain);
-  margin: 0;
+    font-family: var(--font-family-plain);
+    margin: 0;
 }
 
 .typography--headline-large {
-  font-size: var(--typescale-headline-lg-size);
-  line-height: var(--typescale-headline-lg-line-height);
-  font-weight: var(--typescale-headline-lg-weight);
-  letter-spacing: var(--typescale-headline-lg-tracking);
+    font-size: var(--typescale-headline-lg-size);
+    line-height: var(--typescale-headline-lg-line-height);
+    font-weight: var(--typescale-headline-lg-weight);
+    letter-spacing: var(--typescale-headline-lg-tracking);
 }
 
 .typography--body-large {
-  font-size: var(--typescale-body-lg-size);
-  line-height: var(--typescale-body-lg-line-height);
-  font-weight: var(--typescale-body-lg-weight);
-  letter-spacing: var(--typescale-body-lg-tracking);
+    font-size: var(--typescale-body-lg-size);
+    line-height: var(--typescale-body-lg-line-height);
+    font-weight: var(--typescale-body-lg-weight);
+    letter-spacing: var(--typescale-body-lg-tracking);
 }
 
 .typography--label-medium {
-  font-size: var(--typescale-label-md-size);
-  line-height: var(--typescale-label-md-line-height);
-  font-weight: var(--typescale-label-md-weight);
-  letter-spacing: var(--typescale-label-md-tracking);
+    font-size: var(--typescale-label-md-size);
+    line-height: var(--typescale-label-md-line-height);
+    font-weight: var(--typescale-label-md-weight);
+    letter-spacing: var(--typescale-label-md-tracking);
 }

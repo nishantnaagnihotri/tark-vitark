@@ -1,10 +1,10 @@
 .divider {
-  border: none;
+    border: none;
 }
 
 .divider--vertical {
-  width: var(--divider-thickness);
-  height: 100%;
-  background-color: var(--color-spine-line);
-  align-self: stretch;
+    width: var(--divider-thickness);
+    height: 100%;
+    background-color: var(--color-spine-line);
+    align-self: stretch;
 }
