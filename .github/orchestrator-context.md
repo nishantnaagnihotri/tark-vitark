@@ -154,7 +154,7 @@ On first response in any new activity:
 | Slice | Gate 1 | Gate 2 | Gate 3 | Gate 4 | Gate 5 | Gate 6 |
 |---|---|---|---|---|---|---|
 | `coming-soon-splash-page` | ✅ Pass | ✅ Full Pass | ✅ Pass (PO approved 2026-03-29) | ✅ Pass | ✅ Complete (T3 PR #18, T4 PR #19, T5 PR #20 all merged) | ✅ Complete (2026-03-29) |
-| `debate-screen` | ✅ Pass | ✅ Full Pass | ✅ Pass (PO approved 2026-04-06) | ✅ Pass (Revision 1.1) | ⬜ Ready | ⬜ |
+| `debate-screen` | ✅ Pass | ✅ Full Pass | ✅ Pass (PO approved 2026-04-06) | ✅ Pass (Revision 1.1) | 🔄 T1–T4,T6 done; T5 next | ⬜ |
 
 ## Log Archive Protocol
 
@@ -395,4 +395,23 @@ Detailed repo-wide governance history from 2026-03-30 through 2026-04-02 is arch
 - Gate 6 merge verification: All 8 checks pass (scope, verification, provenance, review, Copilot loop, docs, rollback, risk).
 - Open questions status: None.
 - Next micro-goal: Delegate T4 (#47: DS primitives — Typography, Card, Divider) to Dev Agent. T4 is next on critical path (T1→T2→T4→T5→T7→T8→T9). T5 (#41) and T6 (#42) are unblocked after T4.
+- Blockers/owner decisions: None.
+
+### 2026-04-06 (debate-screen Gate 5 — T4 PR #53 Merged)
+- Gate status: `debate-screen` Gate 5 in progress. T1 ✅, T2 ✅, T3 ✅, T4 ✅. Next: T5 (#41) and T6 (#42) can run in parallel.
+- Artifact changes: Updated `06-tasks.md` (T4 status ⬜→✅ PR #53 merged).
+- PR: https://github.com/nishantnaagnihotri/tark-vitark/pull/53
+- PR details: feat(design-system): implement Typography, Card, Divider primitives. Three M3-compliant DS primitives in `src/design-system/` with co-located CSS, barrel export, and component tests.
+- Open questions status: None.
+- Next micro-goal: Delegate T5 (#41: ArgumentCard) and T6 (#42: Topic + LegendBar) to Dev Agent — both unblocked.
+- Blockers/owner decisions: None.
+
+### 2026-04-06 (debate-screen Gate 5 — T6 PR #55 Merged)
+- Gate status: `debate-screen` Gate 5 in progress. T1 ✅, T2 ✅, T3 ✅, T4 ✅, T6 ✅. Next: T5 (#41).
+- Artifact changes: Updated `06-tasks.md` (T6 status ⬜→✅ PR #55 merged).
+- PR: https://github.com/nishantnaagnihotri/tark-vitark/pull/55
+- PR details: feat(t6): Implement Topic and LegendBar components. Topic composes Typography(headline-large, as="h1"). LegendBar renders sticky nav with colored dots, side labels, and accessible separator. Mobile-first responsive: flex (mobile) → 3-column grid (tablet/desktop). 10 tests (3 Topic + 7 LegendBar). Copilot review: 3 comments — 1 accepted (aria-hidden fix: replaced Typography with plain span for separator), 2 challenged (hardcoded layout values — PO accepted challenges, no gate reopen needed). Round 2: clean pass.
+- PO decision: Hardcoded layout values (gap, height, padding) acceptable as component-specific dimensions. No token system change or design gate reopen. Shared tokens to be evaluated when T7 (Timeline) reveals overlapping patterns.
+- Open questions status: None.
+- Next micro-goal: Delegate T5 (#41: ArgumentCard) to Dev Agent. T5 is the last component before T7 (Timeline + DebateScreen). Dependencies satisfied: T2 ✅, T3 ✅, T4 ✅.
 - Blockers/owner decisions: None.
