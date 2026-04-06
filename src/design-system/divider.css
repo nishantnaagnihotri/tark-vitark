@@ -4,6 +4,7 @@
 
 .divider--vertical {
   width: var(--divider-thickness);
+  height: 100%;
   background-color: var(--color-spine-line);
   align-self: stretch;
 }
