@@ -377,3 +377,12 @@ Detailed repo-wide governance history from 2026-03-30 through 2026-04-02 is arch
 - Key changes: 8 color token values corrected to M3-computed, 13 typography tokens added, DS primitive interfaces defined, feature components now compose DS primitives, new R-8 risk (DS abstraction mismatch), 6 QG-DS entries resolved.
 - Next micro-goal: Gate 5 — begin delegating issues to Dev Agent. First issue: T1 (Scaffold, #38).
 - Blockers/owner decisions: None. Ready for Gate 5.
+
+### 2026-04-06 (debate-screen Gate 5 — T2 PR #51 Merged)
+- Gate status: `debate-screen` Gate 5 in progress. T1 ✅, T2 ✅. Next: T3 (#40) and T4 (#47) can run in parallel.
+- Artifact changes: Updated `06-tasks.md` (T2 status ⬜→✅ PR #51 merged).
+- PR: https://github.com/nishantnaagnihotri/tark-vitark/pull/51
+- PR details: feat(tokens): Expand token system to full M3 3-layer architecture. 15 color tokens (light + dark + prefers-color-scheme fallback), 13 typography, 4 spacing, 2 radius, 1 dimension. 112 Vitest assertions. Copilot review loop: 14 rounds (0 semantic-open, 3 tooling-unresolved regex false positives). Script rewrite: `wait_for_copilot_review.py` → `.js` (Node + GraphQL, atomic query, structured JSON errors, PR validation).
+- Open questions status: None.
+- Next micro-goal: Delegate T3 (#40: static debate data module) or T4 (#47: DS primitives) to Dev Agent. Both are unblocked (T1+T2 complete). T3+T4 can run in parallel.
+- Blockers/owner decisions: None.
