@@ -1,0 +1,9 @@
+.divider {
+  border: none;
+}
+
+.divider--vertical {
+  width: var(--divider-thickness);
+  background-color: var(--color-spine-line);
+  align-self: stretch;
+}
