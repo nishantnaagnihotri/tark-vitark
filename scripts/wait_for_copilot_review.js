@@ -11,7 +11,7 @@ query($owner:String!, $repo:String!, $pr:Int!) {
   repository(owner:$owner, name:$repo) {
     pullRequest(number:$pr) {
       headRefOid
-      reviews(last:10) {
+      reviews(last:50) {
         nodes {
           author { login }
           state
@@ -61,11 +61,23 @@ function ghGraphQL(query, variables) {
     const flag = typeof value === "number" ? "-F" : "-f";
     args.push(flag, `${key}=${value}`);
   }
-  const result = execFileSync("gh", args, {
-    encoding: "utf-8",
-    timeout: 30_000,
-  });
-  return JSON.parse(result);
+  try {
+    const result = execFileSync("gh", args, {
+      encoding: "utf-8",
+      timeout: 30_000,
+    });
+    return JSON.parse(result);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.log(
+      JSON.stringify({
+        status: "error",
+        error: "gh_graphql_failed",
+        message,
+      }, null, 2)
+    );
+    process.exit(1);
+  }
 }
 
 function sleep(ms) {
@@ -94,6 +106,19 @@ function parseCliArgs() {
 
   if (!owner || !repo || !pr) {
     console.error("Usage: wait_for_copilot_review.js --owner OWNER --repo REPO --pr NUMBER");
+    process.exit(2);
+  }
+
+  if (Number.isNaN(timeoutSeconds) || timeoutSeconds <= 0) {
+    console.error("--timeout-seconds must be a positive number");
+    process.exit(2);
+  }
+  if (Number.isNaN(intervalSeconds) || intervalSeconds < 1) {
+    console.error("--interval-seconds must be at least 1");
+    process.exit(2);
+  }
+  if (intervalSeconds > timeoutSeconds) {
+    console.error("--interval-seconds must not exceed --timeout-seconds");
     process.exit(2);
   }
 
