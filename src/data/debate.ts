@@ -12,47 +12,47 @@ export interface Debate {
 }
 
 export const DEBATE: Debate = {
-  topic: 'क्या आर्टिफिशियल इंटेलिजेंस मानव रचनात्मकता की जगह ले सकता है?',
+  topic: 'Should artificial intelligence be regulated by international law?',
   arguments: [
     {
       id: 1,
       side: 'tark',
-      text: 'AI उपकरण संगीत, चित्रकारी और कविता रच सकते हैं — रचनात्मकता अब केवल मानव विशेषाधिकार नहीं।',
+      text: 'International regulation would prevent a dangerous race to the bottom where countries compete by loosening AI safety standards. A unified framework ensures minimum safety requirements regardless of where AI is developed.',
     },
     {
       id: 2,
       side: 'vitark',
-      text: 'AI पैटर्न की नकल करता है; असली रचनात्मकता अनुभव, भावना और अर्थ से उपजती है — जो AI में नहीं है।',
+      text: 'International regulation moves at the pace of diplomacy, far too slow for rapid AI advancement. By the time agreements are ratified, they would already be obsolete and potentially stifle beneficial innovation.',
     },
     {
       id: 3,
       side: 'tark',
-      text: 'AlphaCode और GitHub Copilot ने दिखाया है कि AI मौलिक कोड समाधान उत्पन्न कर सकता है जो मनुष्यों ने नहीं सोचे थे।',
+      text: 'AI systems increasingly operate across borders, making decisions that affect people in multiple jurisdictions. Only international law can provide consistent protections for individuals affected by foreign AI systems.',
     },
     {
       id: 4,
       side: 'vitark',
-      text: 'मौलिकता प्रश्न पूछने की क्षमता से आती है; AI केवल दिए गए प्रश्नों के उत्तर देता है — वह प्रश्न नहीं चुनता।',
+      text: 'Nations have fundamentally different values, legal traditions, and economic priorities. A one-size-fits-all framework would reflect dominant powers while failing to account for legitimate cultural differences.',
     },
     {
       id: 5,
       side: 'tark',
-      text: 'AI रचनात्मक बाधाओं को समाप्त कर देता है — लाखों लोग जो आर्थिक या तकनीकी सीमाओं के कारण नहीं बना सकते थे, अब बना सकते हैं।',
+      text: 'Without coordinated regulation, developing nations risk becoming testing grounds for AI systems that would not meet safety standards in wealthier countries. International oversight ensures equitable protection.',
     },
     {
       id: 6,
       side: 'vitark',
-      text: 'जब सब कुछ AI से बन सकता है, तो मानव निर्मित कला का मूल्य और पहचान और अधिक बढ़ जाती है — प्रतिस्थापन नहीं, पुनर्मूल्यांकन होता है।',
+      text: 'Effective AI regulation requires deep technical expertise and rapid iteration. International bodies lack the technical capacity and agility to create meaningful standards, risking toothless or overly restrictive rules.',
     },
     {
       id: 7,
-      side: 'tark',
-      text: 'बड़े कंटेंट उद्योग पहले से AI से उत्पन्न सामग्री को अपना रहे हैं; बाज़ार का निर्णय स्पष्ट है।',
+      side: 'vitark',
+      text: 'Strong domestic regulation by leading AI nations would be more effective than international frameworks. The EU has demonstrated that regional regulation can set global standards through market influence.',
     },
     {
       id: 8,
-      side: 'vitark',
-      text: 'बाज़ार का अपनाना प्रतिस्थापन नहीं है — हमने कैमरा अपनाया, फिर भी चित्रकारी नहीं मरी; AI एक नया माध्यम है, प्रतिस्थापन नहीं।',
+      side: 'tark',
+      text: 'The existential risks posed by advanced AI are global in nature. Just as nuclear nonproliferation required international cooperation, AI governance demands a coordinated international legal framework.',
     },
   ],
 };
