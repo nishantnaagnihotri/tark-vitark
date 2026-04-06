@@ -10,10 +10,10 @@ agents: []
 # Branching Policy
 
 1. Always create a new branch for each assigned task/issue.
-2. Create a **git worktree** for that branch in a sibling directory: `../<repo-name>--<branch-name>/`.
-3. Perform ALL file edits, test runs, and commits inside the worktree directory — never in the main working copy.
+2. Create a **git worktree** for that branch in a sibling directory using a safe folder name such as `../<repo-name>--<branch-dir-name>/`, where `<branch-dir-name>` is a sanitized form of the branch name (for example, replace `/` with `-`).
+3. Perform ALL file edits, test runs, and commits inside that worktree directory — never in the main working copy.
 4. Open a PR for review and merge; never commit directly to master.
-5. After the PR is merged (by Product Owner), the worktree can be removed with `git worktree remove ../<repo-name>--<branch-name>`.
+5. After the PR is merged (by Product Owner), the worktree can be removed with `git worktree remove ../<repo-name>--<branch-dir-name>`.
 
 # Dev Agent
 
@@ -94,11 +94,12 @@ Expected input from Architect + Orchestrator:
 
 1. Validate assigned task scope from Issue metadata and linked architecture references.
 2. If issue metadata is incomplete, return `Build Readiness: Needs Clarification` with missing fields and stop before coding.
-3. Create a new branch and a git worktree for it:
+3. Create a new branch and a git worktree for it from an explicit, up-to-date base:
    ```
-   git worktree add ../<repo-name>--<branch-name> -b <branch-name>
+   git fetch origin master
+   git worktree add ../<repo-name>--<branch-dir-name> -b <branch-name> origin/master
    ```
-   Then `cd` into the worktree directory and perform ALL subsequent work (edits, installs, tests, commits, push) from there. This isolates the task from the main working copy and enables parallel dev agent execution on separate issues.
+   Then `cd` into the worktree directory and perform ALL subsequent work (edits, installs, tests, commits, push) from there. This ensures the task branch starts from the intended `master` baseline instead of the current worktree `HEAD`, while still isolating work from the main working copy and enabling parallel dev agent execution on separate issues.
 4. If issue scope includes Figma parity, extract exact frame values first (positions, dimensions, spacing, typography, colors, gradients, radii, shadows, blur/effects, and breakpoint-specific variants) via MCP design context/metadata/screenshot workflow.
 5. Translate extracted values to the project token system: use CSS custom property references for tokenized properties such as colors, spacing, and other defined design tokens; allow explicit units for non-tokenized dimensions when needed. Verify both Light and Dark themes render correctly.
 6. For responsive work, map each required Figma frame to explicit breakpoint rules and keep per-frame values traceable in code comments or PR notes.
