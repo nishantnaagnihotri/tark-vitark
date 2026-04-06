@@ -99,7 +99,7 @@ Expected input from Architect + Orchestrator:
    git fetch origin master
    git worktree add ../<repo-name>--<branch-dir-name> -b <branch-name> origin/master
    ```
-   Then `cd` into the worktree directory and perform ALL subsequent work (edits, installs, tests, commits, push) from there. This ensures the task branch starts from the intended `master` baseline instead of the current worktree `HEAD`, while still isolating work from the main working copy and enabling parallel dev agent execution on separate issues.
+   Then `cd` into the worktree directory and perform ALL subsequent work (edits, installs, tests, commits) from there. When you are ready to publish the branch for the first time, run `git push -u origin <branch-name>` from the worktree so the upstream remote is set; after that, plain `git push` is fine. This ensures the task branch starts from the intended `master` baseline instead of the current worktree `HEAD`, while still isolating work from the main working copy and enabling parallel dev agent execution on separate issues.
 4. If issue scope includes Figma parity, extract exact frame values first (positions, dimensions, spacing, typography, colors, gradients, radii, shadows, blur/effects, and breakpoint-specific variants) via MCP design context/metadata/screenshot workflow.
 5. Translate extracted values to the project token system: use CSS custom property references for tokenized properties such as colors, spacing, and other defined design tokens; allow explicit units for non-tokenized dimensions when needed. Verify both Light and Dark themes render correctly.
 6. For responsive work, map each required Figma frame to explicit breakpoint rules and keep per-frame values traceable in code comments or PR notes.
