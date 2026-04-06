@@ -3,9 +3,14 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 const tokensCss = readFileSync(
-  resolve(__dirname, '../src/styles/tokens.css'),
+  resolve(process.cwd(), 'src/styles/tokens.css'),
   'utf-8'
 );
+
+// Split into light and dark sections for per-block assertions
+const darkBlockStart = tokensCss.indexOf('[data-theme="dark"]');
+const lightBlock = tokensCss.slice(0, darkBlockStart);
+const darkBlock = tokensCss.slice(darkBlockStart);
 
 describe('tokens.css — M3 3-layer token presence', () => {
   // ── Layer 1 + Layer 3: Color tokens (light + dark) ──
@@ -28,8 +33,12 @@ describe('tokens.css — M3 3-layer token presence', () => {
     '--color-legend-separator',
   ];
 
-  it.each(colorTokens)('defines color token %s', (token) => {
-    expect(tokensCss).toContain(token);
+  it.each(colorTokens)('defines color token %s in light block', (token) => {
+    expect(lightBlock).toContain(token);
+  });
+
+  it.each(colorTokens)('defines color token %s in dark block', (token) => {
+    expect(darkBlock).toContain(token);
   });
 
   // ── Typography tokens (theme-invariant) ──
