@@ -171,7 +171,7 @@ No agent may perform work owned by another agent's domain. Each agent executes o
 6. If the loop cannot continue because of a protocol conflict, missing capability, or explicit owner-decision point, the agent must pause, discuss the issue with the Product Owner, and proceed only with the agreed position.
 7. After requesting a fresh Copilot review, the agent must poll the live GitHub PR state for a bounded window before concluding the result is pending. Default polling window: up to 5 minutes at a practical cadence.
 8. Polling must use live GitHub MCP review data as the source of truth rather than relying on cached editor extension payloads.
-9. When a non-MCP polling fallback is used, prefer `python3 scripts/wait_for_copilot_review.py --owner <owner> --repo <repo> --pr <number>`.
+9. When a non-MCP polling fallback is used, prefer `node scripts/wait_for_copilot_review.js --owner <owner> --repo <repo> --pr <number>`.
 10. Review threads should normally be resolved as part of disposition execution.
 11. If no new Copilot review arrives within the bounded polling window, the agent must report that the loop is blocked on external async review completion.
 12. If a thread still remains outdated and unresolved after disposition execution, the agent must reconcile that thread state before declaring the loop complete, or explicitly record it as `semantically-closed/tooling-unresolved` when MCP lacks the required resolution capability.
