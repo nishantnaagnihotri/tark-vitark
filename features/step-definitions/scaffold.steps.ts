@@ -1,5 +1,5 @@
 import { Given, Then } from '@cucumber/cucumber';
-import assert from 'assert';
+import * as assert from 'assert';
 
 Given('the scaffold is in place', function () {
   // Trivial step: scaffold baseline
