@@ -66,7 +66,17 @@ function ghGraphQL(query, variables) {
       encoding: "utf-8",
       timeout: 30_000,
     });
-    return JSON.parse(result);
+    const parsed = JSON.parse(result);
+    if (parsed.errors || !parsed.data) {
+      const message = parsed.errors
+        ? parsed.errors.map((e) => e.message).join("; ")
+        : "GraphQL response missing data field";
+      console.log(
+        JSON.stringify({ status: "error", error: "graphql_response_error", message }, null, 2)
+      );
+      process.exit(1);
+    }
+    return parsed;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     console.log(
