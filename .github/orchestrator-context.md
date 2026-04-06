@@ -96,7 +96,7 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). U
 28. The Design System lives in a shared Figma library file; the first slice entering Gate 3 bootstraps it if absent. Dual-theme and token-only rules apply from day one.
 29. PR review intake is mandatory before any fix: classify each actionable comment as `Accept`, `Challenge`, or `Needs Product Owner Decision`.
 30. Start the Copilot review loop immediately when a PR is created, and rerun it after each review-fix push until there are zero `semantic-open` comments unless the Product Owner accepts residual risk.
-31. After requesting Copilot review, poll live GitHub state for up to 5 minutes before declaring the result pending; if an approved non-MCP fallback is needed for the wait, use `python3 scripts/wait_for_copilot_review.py --owner <owner> --repo <repo> --pr <number>` so the live PR head is derived from GitHub rather than pasted manually.
+31. After requesting Copilot review, poll live GitHub state for up to 5 minutes before declaring the result pending; if an approved non-MCP fallback is needed for the wait, use `node scripts/wait_for_copilot_review.js --owner <owner> --repo <repo> --pr <number>` so the live PR head is derived from GitHub rather than pasted manually.
 32. GitHub PR/issue/review operations use GitHub MCP as the default control plane; fallbacks require an explicit capability gap and approval.
 33. Once a PR review loop starts, continue it automatically after each push and review request until resolved or blocked.
 34. Thread resolution belongs to disposition execution, not classification.

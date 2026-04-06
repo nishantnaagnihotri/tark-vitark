@@ -84,18 +84,28 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function exitError(message, code = 2) {
+  console.log(JSON.stringify({ status: "error", error: "cli_validation", message }, null, 2));
+  process.exit(code);
+}
+
 function parseCliArgs() {
-  const { values } = parseArgs({
-    options: {
-      owner: { type: "string" },
-      repo: { type: "string" },
-      pr: { type: "string" },
-      "head-sha": { type: "string" },
-      "timeout-seconds": { type: "string", default: "300" },
-      "interval-seconds": { type: "string", default: "15" },
-    },
-    strict: true,
-  });
+  let values;
+  try {
+    ({ values } = parseArgs({
+      options: {
+        owner: { type: "string" },
+        repo: { type: "string" },
+        pr: { type: "string" },
+        "head-sha": { type: "string" },
+        "timeout-seconds": { type: "string", default: "300" },
+        "interval-seconds": { type: "string", default: "15" },
+      },
+      strict: true,
+    }));
+  } catch (err) {
+    exitError(err instanceof Error ? err.message : String(err));
+  }
 
   const owner = values.owner;
   const repo = values.repo;
@@ -105,21 +115,17 @@ function parseCliArgs() {
   const intervalSeconds = parseInt(values["interval-seconds"], 10);
 
   if (!owner || !repo || !pr) {
-    console.error("Usage: wait_for_copilot_review.js --owner OWNER --repo REPO --pr NUMBER");
-    process.exit(2);
+    exitError("Usage: wait_for_copilot_review.js --owner OWNER --repo REPO --pr NUMBER");
   }
 
   if (Number.isNaN(timeoutSeconds) || timeoutSeconds <= 0) {
-    console.error("--timeout-seconds must be a positive number");
-    process.exit(2);
+    exitError("--timeout-seconds must be a positive number");
   }
   if (Number.isNaN(intervalSeconds) || intervalSeconds < 1) {
-    console.error("--interval-seconds must be at least 1");
-    process.exit(2);
+    exitError("--interval-seconds must be at least 1");
   }
   if (intervalSeconds > timeoutSeconds) {
-    console.error("--interval-seconds must not exceed --timeout-seconds");
-    process.exit(2);
+    exitError("--interval-seconds must not exceed --timeout-seconds");
   }
 
   return { owner, repo, pr, headSha, timeoutSeconds, intervalSeconds };
