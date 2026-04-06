@@ -41,6 +41,11 @@
 }
 
 .legend-bar__separator {
+    font-family: var(--font-family-plain);
+    font-size: var(--typescale-label-md-size);
+    line-height: var(--typescale-label-md-line-height);
+    font-weight: var(--typescale-label-md-weight);
+    letter-spacing: var(--typescale-label-md-tracking);
     color: var(--color-legend-separator);
     text-align: center;
 }

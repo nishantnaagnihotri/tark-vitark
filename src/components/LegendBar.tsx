@@ -13,9 +13,9 @@ export function LegendBar() {
                     <Typography role="label-medium">Tark · for</Typography>
                 </span>
             </span>
-            <Typography role="label-medium" className="legend-bar__separator" aria-hidden="true">
+            <span className="legend-bar__separator" aria-hidden="true">
                 •
-            </Typography>
+            </span>
             <span className="legend-bar__section legend-bar__section--right">
                 <span className="legend-bar__legend">
                     <span
