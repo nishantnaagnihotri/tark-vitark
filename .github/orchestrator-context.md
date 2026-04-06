@@ -122,6 +122,7 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). U
 54. Figma project-first policy: all Figma files must reside in the designated project (from `.figma-config.local`), never in Drafts. MCP `create_new_file` creates in Drafts (API limitation); PO must manually move the file to the project before any further design work proceeds. No design activity on files in Drafts. Cross-ref: AGENTS.md Figma File Structure Convention rule 6.
 55. PR #48 merged — Gate 1-4 artifacts now on master.
 56. Review loop post-and-continue: agents post Challenge replies immediately during the review loop (with rationale + rule citation) and continue without pausing. Challenges are batched for PO review after the loop reaches a clean pass. PO may override any challenge, triggering a fix + re-loop cycle. Loop completes when: (1) zero new comments on latest pass, and (2) all challenges resolved with PO. Cross-ref: AGENTS.md Strict Accept-vs-Challenge Lens rule #5 (Protocol-Version 2.2).
+57. Review loop auto-entry: PR creation and Copilot review-loop entry are a single atomic sequence. The agent must never pause, ask confirmation, or wait for PO input between creating a PR and requesting the first Copilot review. Cross-ref: AGENTS.md Copilot Review Loop Protocol rule #1 (Protocol-Version 2.2).
 
 ## Resume Protocol For Orchestrator
 
