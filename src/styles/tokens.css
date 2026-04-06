@@ -44,7 +44,7 @@
   --typescale-body-lg-size: 1rem;
   --typescale-body-lg-line-height: 1.5rem;
   --typescale-body-lg-weight: 400;
-  --typescale-body-lg-tracking: 0.03125rem;
+  --typescale-body-lg-tracking: 0;
 
   --typescale-label-md-size: 0.75rem;
   --typescale-label-md-line-height: 1rem;
@@ -62,7 +62,7 @@
   --radius-round: 12px;
 
   /* ── Dimension ── */
-  --divider-thickness: 1px;
+  --divider-thickness: 2px;
 }
 
 [data-theme="dark"] {
