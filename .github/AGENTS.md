@@ -84,7 +84,7 @@ The full Gate 4 orchestration workflow - architecture handoff trigger, local-onl
 
 ## Build And Merge Gate Orchestration Workflow
 
-The full Gate 5, Gate 5.5 Runtime QA, and Gate 6 orchestration workflow - issue-based Build handoff, runtime QA validation, local merge-review execution, readiness/loop-back rules, and checklist/output validation - is defined in the `build-merge-gate-orchestration` skill (`.github/skills/build-merge-gate-orchestration/SKILL.md`). Orchestrator must follow this skill when running Gate 5 and Gate 6 decisions.
+The full Gate 5, Gate 5.5 Runtime QA, and Gate 6 orchestration workflow - issue-based Build handoff, runtime QA validation, local merge-review execution, readiness/loop-back rules, and checklist/output validation - is defined in the `build-merge-gate-orchestration` skill (`.github/skills/build-merge-gate-orchestration/SKILL.md`). Orchestrator must follow this skill when running Gate 5, Gate 5.5 Runtime QA, and Gate 6 decisions.
 
 ## Environment Routing
 

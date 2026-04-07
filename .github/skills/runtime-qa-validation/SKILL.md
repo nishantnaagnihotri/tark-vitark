@@ -35,7 +35,7 @@ Use this skill to validate runtime behavior in a real browser session when manua
    - No critical layout regression (including horizontal overflow)
    - Primary interactions are functional and map to acceptance criteria
    - Expected content and state transitions appear correctly
-4. Capture concise evidence per journey and per viewport.
+4. Capture concise evidence per journey, per required viewport, and per required theme when the surface is theme-affecting.
 5. If execution fails due to infrastructure/tooling issues, follow `gate-recovery-and-resume` before progression.
 
 ## Verdict Rules
