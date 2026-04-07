@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import axe from 'axe-core';
+import * as axe from 'axe-core';
 import { DebateScreen } from '../../src/components/DebateScreen';
 
 async function runAxe(
@@ -81,7 +81,6 @@ describe('axe-core accessibility audit — DebateScreen', () => {
         const { container } = render(<DebateScreen />);
         const results = await runAxe(container);
 
-        // Log any remaining violations for awareness (non-blocking)
         const remaining = results.violations.filter(
             (v) => !['critical', 'serious'].includes(v.impact ?? ''),
         );
@@ -91,7 +90,9 @@ describe('axe-core accessibility audit — DebateScreen', () => {
                 remaining.map((v) => `[${v.impact}] ${v.id}: ${v.description}`),
             );
         }
-        // This test always passes — informational only
-        expect(true).toBe(true);
+        const unexpectedImpacts = remaining.filter(
+            (v) => !['minor', 'moderate'].includes(v.impact ?? ''),
+        );
+        expect(unexpectedImpacts).toEqual([]);
     });
 });
