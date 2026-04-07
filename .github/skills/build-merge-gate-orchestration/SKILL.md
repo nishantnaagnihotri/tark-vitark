@@ -66,8 +66,8 @@ Execution rule:
 Proceeding rule:
 
 1. Continue to Gate 6 when either:
-	- `Runtime QA Verdict: Pass`, or
-	- `Runtime QA: Not Required` is explicitly recorded for a non-UI issue with rationale; in this case, no runtime QA verdict is required.
+   - `Runtime QA Verdict: Pass`, or
+   - `Runtime QA: Not Required` is explicitly recorded for a non-UI issue with rationale; in this case, no runtime QA verdict is required.
 2. If runtime QA runs and verdict is `Fail`, return findings to Dev and loop implementation.
 3. If runtime QA runs and verdict is `Blocked`, apply `gate-recovery-and-resume` and pause progression.
 4. Product Owner may explicitly accept residual runtime risk to proceed from `Fail` or `Blocked`; this must be recorded in merge evidence.
@@ -75,8 +75,8 @@ Proceeding rule:
 Gate 5.5 completion rule:
 
 1. Attach one of the following to the issue/PR evidence set:
-	- Runtime QA verdict package, when runtime QA was executed, or
-	- explicit `Runtime QA: Not Required` marker with rationale, when the issue is non-UI.
+   - Runtime QA verdict package, when runtime QA was executed, or
+   - explicit `Runtime QA: Not Required` marker with rationale, when the issue is non-UI.
 2. Any runtime defects are either fixed and revalidated, or explicitly accepted by Product Owner.
 
 Runtime QA Checklist (Orchestrator-owned):

@@ -18,7 +18,7 @@ Use this skill to validate runtime behavior in a real browser session when manua
 
 1. Runtime QA is required for UI-impacting issues.
 2. Non-UI issues may skip runtime QA only when orchestrator records `Runtime QA: Not Required` with rationale.
-3. If issue metadata does not clearly indicate UI impact, treat it as UI-impacting until clarified.
+3. If issue metadata does not clearly indicate UI impact, request orchestrator clarification and do not self-classify within this skill.
 
 ## Default Validation Matrix
 
@@ -28,7 +28,7 @@ Use this skill to validate runtime behavior in a real browser session when manua
 
 ## Execution Protocol
 
-1. Start the app from the target branch in local mode and confirm page load.
+1. Start the app from the PR branch or exact head SHA being validated for Gate 5.5 in local mode and confirm page load.
 2. Execute acceptance-criterion journeys in a browser session.
 3. For each required viewport and theme, validate:
    - No blocking console errors or uncaught runtime exceptions
