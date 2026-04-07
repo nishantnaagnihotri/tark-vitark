@@ -16,6 +16,7 @@ export function ArgumentCard({ argument }: ArgumentCardProps) {
         <Card
             side={argument.side}
             className={`argument-card argument-card--${argument.side}`}
+            role="group"
             aria-label={ariaLabels[argument.side]}
         >
             <Typography role="body-large">{argument.text}</Typography>
