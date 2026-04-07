@@ -52,6 +52,9 @@ describe('DebateScreen', () => {
 
     it('has no input controls or forms (read-only except theme toggle)', () => {
         const { container } = render(<DebateScreen />);
+        const buttons = screen.getAllByRole('button');
+        expect(buttons).toHaveLength(1);
+        expect(buttons[0]).toHaveAccessibleName(/switch to/i);
         expect(screen.queryAllByRole('textbox')).toHaveLength(0);
         expect(container.querySelector('form')).not.toBeInTheDocument();
     });
