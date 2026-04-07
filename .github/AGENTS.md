@@ -1,4 +1,4 @@
-<!-- Protocol-Version: 2.5 -->
+<!-- Protocol-Version: 2.6 -->
 <!-- Last-Updated: 2026-04-07 -->
 
 # Shared Agent Protocol
@@ -153,33 +153,15 @@ The full build and merge readiness workflow - Implementation Protocol, PR Proven
 
 ## Figma File Structure Convention
 
-1. One Figma file per slice under the designated project in `.figma-config.local`.
-2. Standard page structure: `UX Flows`, `Design`, `QA Notes`.
-3. Frame naming convention: `<Screen>/<State>/<Theme>`.
-4. Enhancement slices are self-contained and reference prior slice files as baseline.
-5. Figma file URL is recorded in `03-ux.md` and `04-design-qa.md`. Raw file keys must not appear in git-tracked artifacts — store them only in `.figma-config.local`.
-6. All Figma files must reside in the designated project (not Drafts). MCP `create_new_file` creates files in Drafts (API limitation); the file must be manually moved to the project before any further design work proceeds. No design activity on files in Drafts.
+Follow the `figma-governance-and-fidelity` skill (`.github/skills/figma-governance-and-fidelity/SKILL.md`) for the full file structure convention and project-placement rules.
 
 ## Design System Foundation Policy
 
-1. The Design System uses a dedicated Figma library file.
-2. If the library does not exist, first Gate 3 run bootstraps it and records `design_system_library_file_key` in `.figma-config.local`.
-3. Variables use categories: `color/*`, `spacing/*`, `typography/*`, `radius/*`, `shadow/*`, `breakpoint/*`.
-4. Theme collection must provide Light and Dark modes from day one.
-5. Slice designs must use library variables only.
-6. Every screen and state must provide Light and Dark variants.
-7. Canonical code-side token file path is `src/styles/tokens.css`. It must define both theme variants using `[data-theme]` selectors plus `prefers-color-scheme` fallback. Slice CSS files import this token file.
-8. Figma variable names map 1:1 to CSS custom properties.
-9. Design QA must enforce token compliance.
-10. New shared tokens/components are added to the library first.
-11. `.figma-config.local.example` is the committed schema reference for local `.figma-config.local` files.
+Follow the `figma-governance-and-fidelity` skill (`.github/skills/figma-governance-and-fidelity/SKILL.md`) for design system library and token governance requirements.
 
 ## Figma Fidelity Policy
 
-1. For Figma-parity tasks, extract and apply frame-level values from Figma as source of truth.
-2. Screenshot-only approximation is insufficient when extractable frame values are available.
-3. Responsive implementations map approved Figma frames to explicit breakpoints.
-4. PR evidence must include frame-to-code traceability and intentional deviations.
+Follow the `figma-governance-and-fidelity` skill (`.github/skills/figma-governance-and-fidelity/SKILL.md`) for Figma parity and frame-to-code fidelity evidence requirements.
 
 ## Accessibility Baseline
 
