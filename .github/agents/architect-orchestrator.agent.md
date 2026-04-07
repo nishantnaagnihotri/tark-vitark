@@ -163,7 +163,7 @@ Use the skill as the single source of truth for Gate 3A/3B/3C trigger order and 
 
 Follow the `architecture-gate-orchestration` skill (`.github/skills/architecture-gate-orchestration/SKILL.md`) for Gate 4 handoff trigger, execution/proceeding rules, completion criteria, and local validation before Build authorization.
 
-Use this skill as the single source of truth for Gate 4 closure and checklist validation.
+Use the `architecture-gate-orchestration` skill as the single source of truth for Gate 4 closure and checklist validation.
 
 ## Build Gate Handoff Trigger
 
