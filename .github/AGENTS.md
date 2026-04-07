@@ -1,4 +1,4 @@
-<!-- Protocol-Version: 2.4 -->
+<!-- Protocol-Version: 2.5 -->
 <!-- Last-Updated: 2026-04-07 -->
 
 # Shared Agent Protocol
@@ -132,35 +132,9 @@ The full recovery and resume workflow - partial artifact recovery, Figma MCP fai
 2. Bump protocol version whenever a shared rule is added, changed, or removed.
 3. Include protocol version in gate-critical output packages where applicable.
 
-## Artifact Storage Model
+## Slice Traceability And Issue Operations Workflow
 
-1. Each approved gate output is persisted as a versioned markdown file under `docs/slices/<slice-name>/`.
-2. Orchestrator is responsible for creating the slice folder and writing gate artifacts after each gate passes.
-3. File naming convention:
-   - `01-requirement.md`
-   - `02-prd.md`
-   - `03-ux.md`
-   - `04-design-qa.md`
-   - `05-architecture.md`
-   - `06-tasks.md`
-4. GitHub Issues for coding tasks are created by the orchestrator at the end of Gate 4, after the architecture plan is approved.
-5. Each Issue must include acceptance criteria, slice folder path, and relevant architecture section reference.
-6. Coder agents at Gate 5 read the Issue and linked slice folder files for full context.
-7. A PR that closes the Issue is the unit of completion for each coding task.
-
-## Slice and Story Maintenance Protocol
-
-1. Every slice must exist in both places:
-   - Repo artifacts under `docs/slices/<slice-name>/` with `01` through `06` files.
-   - GitHub slice tracker issue titled `[Slice] <slice-name>`.
-2. Slice tracker issue must use label `slice` and include:
-   - Slice folder path.
-   - Links to `01` through `06` artifacts.
-   - A section listing all user stories (issue links).
-3. Every user story must be one GitHub issue and use labels `user-story` and `slice:<slice-name>`.
-4. Story issues must include objective, acceptance criteria, slice path, architecture section reference, and `Slice tracker:` backlink.
-5. Bidirectional traceability is mandatory.
-6. Build and merge progression is blocked if required traceability links are missing.
+The full slice traceability workflow - artifact persistence, slice/story issue linkage, and Gate 4 issue operations - is defined in the `slice-traceability-and-issue-ops` skill (`.github/skills/slice-traceability-and-issue-ops/SKILL.md`). Agents must follow this skill when writing `06-tasks.md`, creating/updating slice and story issues, or validating traceability before Build.
 
 ## Domain Language Policy
 
@@ -173,13 +147,9 @@ All agents use domain language — not framework, infrastructure, or implementat
 5. **Code binding:** Implementation code uses glossary-derived identifiers for domain-facing names (variables, functions, classes, selectors, and component-specific custom properties). Global design tokens and their CSS custom properties follow the shared token taxonomy in `src/styles/tokens.css`. Infrastructure terms (`div`, `span`, `render`, `component`) appear only in framework-required positions or in standardized token taxonomy names, never in domain-facing names.
 6. **Validation:** Each gate checks that output artifacts use glossary terms consistently for domain concepts and use the standardized token taxonomy consistently for shared design tokens. Non-glossary domain terms are flagged as quality gaps.
 
-## Implementation Protocol (Test-First BDD + Domain-Oriented Development)
+## Build Evidence And Merge Readiness Workflow
 
-1. Tests are written before implementation code whenever feasible.
-2. Each acceptance criterion (AC-N) has exactly one Given-When-Then scenario.
-3. At Gate 4, `05-architecture.md` includes a BDD section with all GWT scenarios.
-4. Implementation and tests use domain language (per Domain Language Policy) rather than infrastructure vocabulary.
-5. PR evidence must include scenario-to-test mapping, passing tests, and rollback note.
+The full build and merge readiness workflow - Implementation Protocol, PR Provenance Convention, Build/Merge checklists, and merge recommendation criteria - is defined in the `build-evidence-and-merge-readiness` skill (`.github/skills/build-evidence-and-merge-readiness/SKILL.md`). Agents must follow this skill when validating Gate 5 evidence and Gate 6 merge readiness.
 
 ## Figma File Structure Convention
 
@@ -224,15 +194,3 @@ All agents use domain language — not framework, infrastructure, or implementat
 3. Do not use green/red or any other color pair with inherent positive/negative connotation for debate argument differentiation.
 4. This rule applies to all debate-related UI across all slices and platforms.
 
-## PR Provenance Convention
-
-1. Every Gate 5 PR must include an issue-closing keyword (for example, `Closes #123`).
-2. Every Gate 5 PR must include `Execution-Agent: dev` in the PR body.
-3. Orchestrator verifies linkage and provenance before merge recommendation.
-
-## Merge Gate Policy
-
-1. Gate 6 is an orchestrator-owned decision gate for issue-level merge readiness.
-2. Merge recommendation requires tests, provenance/linkage, review closure, docs/release updates when needed, and rollback note.
-3. Product Owner remains the only authority who performs the actual merge.
-4. If merge readiness evidence is incomplete, the PR must loop back with explicit remediation items.
