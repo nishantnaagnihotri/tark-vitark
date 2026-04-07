@@ -5,7 +5,7 @@ description: "Build evidence and merge readiness workflow: enforce test-first BD
 
 # Build Evidence And Merge Readiness
 
-Use this skill to validate implementation evidence and merge readiness for Gate 5 and Gate 6.
+Use this skill to validate implementation evidence and merge readiness for Gate 5, Gate 5.5 Runtime QA, and Gate 6.
 
 ## When To Use
 

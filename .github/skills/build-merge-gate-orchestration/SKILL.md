@@ -59,7 +59,7 @@ When Gate 5 implementation output is ready, run Runtime QA before Gate 6 for UI-
 
 Execution rule:
 
-1. If issue scope is UI-impacting, invoke `runtime-qa` with PR link, issue reference, acceptance-criterion journey mapping, route list, and test data/setup notes.
+1. If issue scope is UI-impacting, invoke `runtime-qa` with PR link, issue reference, acceptance-criterion journey mapping, route list, expected states, test data/setup notes, and known-risk notes.
 2. If issue scope is non-UI, orchestrator may mark `Runtime QA: Not Required` with explicit rationale.
 3. Runtime QA execution is Local by default.
 
