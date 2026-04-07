@@ -1,4 +1,4 @@
-<!-- Protocol-Version: 3.1 -->
+<!-- Protocol-Version: 3.2 -->
 <!-- Last-Updated: 2026-04-07 -->
 
 # Shared Agent Protocol
@@ -76,6 +76,10 @@ The full Gate 3 orchestration workflow - UX/Figma/Design QA substep triggers, lo
 ## Architecture Gate Orchestration Workflow
 
 The full Gate 4 orchestration workflow - architecture handoff trigger, local-only signoff policy, readiness/loop-back checks, and completion/traceability validation - is defined in the `architecture-gate-orchestration` skill (`.github/skills/architecture-gate-orchestration/SKILL.md`). Orchestrator must follow this skill when running Gate 4 or authorizing Build progression.
+
+## Build And Merge Gate Orchestration Workflow
+
+The full Gate 5 and Gate 6 orchestration workflow - issue-based Build handoff, local merge-review execution, readiness/loop-back rules, and checklist/output validation - is defined in the `build-merge-gate-orchestration` skill (`.github/skills/build-merge-gate-orchestration/SKILL.md`). Orchestrator must follow this skill when running Gate 5 and Gate 6 decisions.
 
 ## Environment Routing
 
