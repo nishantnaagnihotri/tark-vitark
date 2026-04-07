@@ -5,17 +5,17 @@
    Mobile:  single-col flex, chat-bubble stagger ~72% width */
 
 .timeline {
-    padding: 0 20px;
+    padding: 0 var(--space-5);
     position: relative;
 }
 
 .timeline__list {
     list-style: none;
     margin: 0;
-    padding: 24px 0 0;
+    padding: var(--space-6) 0 0;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: var(--space-5);
 }
 
 /* ── Spine line (hidden on mobile, overlaid tablet+) ── */
@@ -44,13 +44,13 @@
 /* ── Tablet (≥481px): CSS Grid with center spine ── */
 @media (min-width: 481px) {
     .timeline {
-        padding: 0 40px;
+        padding: 0 var(--space-10);
     }
 
     .timeline__spine {
         display: block;
         position: absolute;
-        top: 24px;
+        top: var(--space-6);
         bottom: 0;
         left: 50%;
         transform: translateX(-50%);
@@ -68,8 +68,8 @@
     .timeline__list {
         display: grid;
         grid-template-columns: 1fr 32px 1fr;
-        gap: 16px 0;
-        padding-top: 24px;
+        gap: var(--space-4) 0;
+        padding-top: var(--space-6);
     }
 
     /* Each item spans all 3 columns; explicit columns fallback, subgrid when supported */
@@ -124,6 +124,6 @@
 /* ── Desktop (≥1024px): wider padding ── */
 @media (min-width: 1024px) {
     .timeline {
-        padding: 0 120px;
+        padding: 0 var(--space-30);
     }
 }
