@@ -123,7 +123,7 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). U
 55. PR #48 merged — Gate 1-4 artifacts now on master.
 56. Review loop post-and-continue: agents post Challenge replies immediately during the review loop (with rationale + rule citation) and continue without pausing. Supersedes Rule #36 for review-loop handling. Challenges are batched for PO review after all review threads are `semantic-closed` (no `semantic-open` threads remain). PO may override any challenge, triggering a fix + re-loop cycle. Loop completes when: (1) no review threads remain `semantic-open`, and (2) all challenges resolved with PO. Cross-ref: `pr-review-loop` skill, Strict Accept-vs-Challenge Lens rule #5.
 57. Review loop auto-entry is tracked canonically in the `pr-review-loop` skill under Copilot Review Loop Protocol rule #1; this entry is a context pointer only.
-58. Stacked PR chains must run an efficient review pipeline: request Copilot reviews immediately for each newly opened dependent PR, then resolve/fix and merge base-to-tip with retarget/sync between merges. If rebase merge is blocked by merge-commit history, open a linear replacement PR and close the superseded PR.
+58. Stacked PR review and merge handling is tracked canonically in the `stacked-pr-review-loop` skill at `.github/skills/stacked-pr-review-loop/SKILL.md`; this entry is a context pointer only.
 
 ## Resume Protocol For Orchestrator
 
