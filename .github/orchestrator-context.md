@@ -37,6 +37,7 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). U
 6. Design QA Agent: `.github/agents/design-qa.agent.md`
 7. Architecture Agent: `.github/agents/architecture.agent.md`
 8. Dev Agent: `.github/agents/dev.agent.md`
+9. Runtime QA Agent: `.github/agents/runtime-qa.agent.md`
 
 ## Current Gate Contracts
 
@@ -60,9 +61,13 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). U
     - Input: one approved Gate 4 issue with acceptance criteria, slice path, and architecture reference.
     - Output: Build Output Package with implementation summary, verification evidence, BDD evidence, PR package, quality gaps, open questions, and gate decision.
 
+5.5. Gate 5.5 (Runtime QA)
+  - Input: Gate 5 build output, PR link, acceptance-criterion journey map, and runtime setup notes.
+  - Output: Runtime QA Verdict Package (`Pass | Fail | Blocked`) with coverage matrix, findings, and loop-back recommendation.
+
 6. Gate 6 (Merge)
     - Input: GitHub Issue reference, PR link, and Build Output Package.
-    - Output: merge readiness, review summary, outstanding gaps, gate decision, and owner action.
+  - Output: merge readiness, review summary, runtime QA status, outstanding gaps, gate decision, and owner action.
 
 ## Known Rules From User Decisions
 
@@ -125,6 +130,7 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). U
 57. Review loop auto-entry is tracked canonically in the `pr-review-loop` skill under Copilot Review Loop Protocol rule #1; this entry is a context pointer only.
 58. Stacked PR review and merge handling is tracked canonically in the `stacked-pr-review-loop` skill at `.github/skills/stacked-pr-review-loop/SKILL.md`; this entry is a context pointer only.
 59. For orchestrator-managed dependent PR chains, review-loop control is orchestrator-owned: orchestrator requests/polls/triages and sequences base-to-tip progression; dev agents perform code-only changes and hand back unless explicitly delegated a review action.
+60. No-manual-QA policy: UI-impacting issues require Gate 5.5 runtime validation by Runtime QA Agent via Chrome DevTools MCP before Gate 6 progression, unless Product Owner explicitly accepts residual runtime risk.
 
 ## Resume Protocol For Orchestrator
 

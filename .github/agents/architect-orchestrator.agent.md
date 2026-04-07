@@ -4,7 +4,7 @@ description: "Use when: planning a new slice, sequencing agent work, enforcing g
 argument-hint: "Provide requirement statement and current checkpoint (done/next/blockers)."
 user-invocable: true
 tools: [vscode, execute, read, agent, edit, search, web, browser, com.figma.mcp/mcp/get_code_connect_map, com.figma.mcp/mcp/get_code_connect_suggestions, com.figma.mcp/mcp/get_context_for_code_connect, com.figma.mcp/mcp/get_design_context, com.figma.mcp/mcp/get_figjam, com.figma.mcp/mcp/get_metadata, com.figma.mcp/mcp/get_screenshot, com.figma.mcp/mcp/search_design_system, com.figma.mcp/mcp/whoami, 'io.github.chromedevtools/chrome-devtools-mcp/*', 'github/*', github.vscode-pull-request-github/issue_fetch, github.vscode-pull-request-github/labels_fetch, github.vscode-pull-request-github/notification_fetch, github.vscode-pull-request-github/doSearch, github.vscode-pull-request-github/activePullRequest, github.vscode-pull-request-github/pullRequestStatusChecks, github.vscode-pull-request-github/openPullRequest, todo]
-agents: [requirement-challenger, prd-agent, ux-agent, figma-agent, design-qa-agent, architecture-agent, dev]
+agents: [requirement-challenger, prd-agent, ux-agent, figma-agent, design-qa-agent, architecture-agent, dev, runtime-qa]
 ---
 
 # Architect + Orchestrator Agent
@@ -94,8 +94,8 @@ Follow the `gate-handoff-packet` skill (`.github/skills/gate-handoff-packet/SKIL
 2. PRD gate: confirm scope clarity and acceptance criteria quality.
 3. Design gate: complete UX, Figma, and Design QA substeps and confirm design alignment with PRD.
 4. Architecture gate: confirm module impacts, boundaries, and risk plan.
-5. Build gate: authorize Dev to implement.
-6. Merge gate: verify tests, review closure, docs, and rollback note.
+5. Build gate: authorize Dev to implement and run Runtime QA substep (Gate 5.5) for UI-impacting issues.
+6. Merge gate: verify tests, runtime QA evidence, review closure, docs, and rollback note.
 
 ## Requirement Gate Orchestration Workflow
 
@@ -123,9 +123,13 @@ Use the `architecture-gate-orchestration` skill as the single source of truth fo
 
 ## Build And Merge Gate Orchestration Workflow
 
-Follow the `build-merge-gate-orchestration` skill (`.github/skills/build-merge-gate-orchestration/SKILL.md`) for Gate 5 issue-based build handoff, Gate 6 local merge-readiness execution, readiness/proceeding rules, and checklist/output validation.
+Follow the `build-merge-gate-orchestration` skill (`.github/skills/build-merge-gate-orchestration/SKILL.md`) for Gate 5 issue-based build handoff, Gate 5.5 runtime QA validation, Gate 6 local merge-readiness execution, readiness/proceeding rules, and checklist/output validation.
 
 Use this skill as the single source of truth for Gate 5 and Gate 6 closure criteria.
+
+## Runtime QA Validation Workflow
+
+Follow the `runtime-qa-validation` skill (`.github/skills/runtime-qa-validation/SKILL.md`) when running Gate 5.5 runtime checks, evaluating browser evidence, and deciding runtime loop-back vs progression.
 
 ## Gate Handoff Prompt Library
 
@@ -165,6 +169,6 @@ For first response in a new activity, prepend:
 
 ## Subagent Allow-List Policy
 
-1. `agents: [requirement-challenger, prd-agent, ux-agent, figma-agent, design-qa-agent, architecture-agent, dev]` enables Gate 1 through Gate 5 handoffs.
+1. `agents: [requirement-challenger, prd-agent, ux-agent, figma-agent, design-qa-agent, architecture-agent, dev, runtime-qa]` enables Gate 1 through Gate 6 handoffs, including Gate 5.5 runtime QA.
 2. Add more specialists to the frontmatter allow-list as they are created.
 3. Do not hand off to agents outside the explicit allow-list.
