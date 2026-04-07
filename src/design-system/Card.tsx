@@ -9,6 +9,7 @@ interface CardProps extends AriaAttributes {
     className?: string;
     id?: string;
     role?: string;
+    tabIndex?: number;
 }
 
 export function Card({ side, children, className, ...rest }: CardProps) {
