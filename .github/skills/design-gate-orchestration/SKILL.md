@@ -26,11 +26,12 @@ When executing Gate 3A, invoke `ux-agent` with `PRD Draft Package` and any expli
 
 Proceeding rule:
 
-1. Continue to Gate 3B only when UX result is `UX Readiness: Ready` and `Gate Decision: can proceed to figma`.
-2. Require a `Design Artifact` reference (Figma file URL) in UX output for every UX task.
-3. If Design System library is missing, route bootstrap to Figma Agent (Gate 3A -> 3B fast-path), publish/enable it in Figma, and require populated `design_system_library_file_key` in `.figma-config.local` before Gate 3B progression.
-4. If open questions remain, continue only when explicitly accepted by Product Owner.
-5. Otherwise, loop back to UX clarification.
+1. Continue to Gate 3B only when UX result is `UX Readiness: Ready`, `Gate Decision: can proceed to figma`, and UX has completed its internal Challenge Phase.
+2. Before returning `UX Readiness: Ready`, UX must have all `Must Resolve` items from its internal Challenge Phase either resolved or explicitly accepted by Product Owner.
+3. Require a `Design Artifact` reference (Figma file URL) in UX output for every UX task.
+4. If Design System library is missing, route bootstrap to Figma Agent (Gate 3A -> 3B fast-path), publish/enable it in Figma, and require populated `design_system_library_file_key` in `.figma-config.local` before Gate 3B progression.
+5. If open questions remain, continue only when explicitly accepted by Product Owner.
+6. Otherwise, loop back to UX clarification.
 
 Local-validation rule:
 
