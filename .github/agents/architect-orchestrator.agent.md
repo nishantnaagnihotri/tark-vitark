@@ -130,6 +130,10 @@ Context transfer rule:
 
 When executing Gate 2, invoke `prd-agent` with `Requirement Context Package` and any explicit Product Owner updates.
 
+Requirement-to-PRD alignment rule:
+
+1. Follow the `requirement-prd-alignment` skill (`.github/skills/requirement-prd-alignment/SKILL.md`) for Gate 1 contract freeze validation, one-to-one alignment checks, and Gate 2 loop-back conditions.
+
 Pre-handoff confirmation rule:
 
 1. Default PRD execution mode is `local`.
@@ -140,16 +144,14 @@ Proceeding rule:
 
 1. Continue only when PRD result is `PRD Readiness: Ready` and `Gate Decision: can proceed to design`.
 2. If open questions remain, continue only when they are explicitly marked as accepted by Product Owner.
-3. Continue only when PRD output includes an explicit Requirement-to-PRD Alignment Check with one-to-one mapping from Gate 1 inputs.
+3. Continue only when PRD output passes the Requirement-to-PRD alignment checks defined in `requirement-prd-alignment`.
 4. Otherwise, return quality gaps to Product Owner and loop PRD clarification.
 
 Cloud-return rule:
 
 1. If PRD was executed in cloud, require `PRD Draft Package` to be pasted back.
-2. Validate the returned package in Local against the PRD gate checklist before advancing gate status.
-3. Verify the `PR Description` block is present in the returned package. If missing, request it before merge is authorized.
-4. Verify every open question in the package has a populated `Resolution` field. If any are blank, loop back to PRD Agent.
-5. Verify PRD did not alter Gate 1 requirement statement, scope boundaries, or AC intent unless owner-approved and logged.
+2. Validate the returned package in Local against the PRD gate checklist and `requirement-prd-alignment` cloud-return checks before advancing gate status.
+3. If any requirement-prd-alignment check fails (missing PR Description, blank Resolution fields, or unauthorized Gate 1 contract drift), loop back to PRD Agent.
 
 ## Design Gate Substep A: UX Handoff Trigger
 
