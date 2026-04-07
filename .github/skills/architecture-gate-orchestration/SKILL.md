@@ -23,7 +23,7 @@ When executing Gate 4, invoke `architecture-agent` with slice artifacts (`01-req
 1. Gate 4 signoff decisions are Local-only.
 2. Cloud may be used only for non-binding analysis alternatives.
 3. Final architecture approval and gate progression must be made in Local context.
-4. Architecture Agent must run its internal Challenge Phase before returning architecture outputs; all `Must Resolve` gaps must be resolved or explicitly accepted by Product Owner before `Architecture Readiness: Ready`.
+4. Architecture Agent must run its internal Challenge Phase before returning architecture outputs; all `Must Resolve` gaps must be resolved or explicitly accepted by Product Owner before `Architecture Readiness: Ready` is returned.
 
 ## Proceeding Rule
 
