@@ -348,7 +348,7 @@ Merge Gate Checklist (Orchestrator-owned):
 2. Verification lock: verify required tests passed and Build evidence remains sufficient.
 3. Provenance lock: verify PR includes issue-closing keyword and `Execution-Agent: dev` marker.
 4. Review lock: verify review comments are resolved or explicitly accepted by Product Owner.
-5. Copilot review loop lock: verify the latest Copilot review on the latest commit states **"generated 0 comments"** in its review body. This is the only exit condition. Historical outdated threads do not count. If the latest review still reports >0 comments, the loop must continue. `semantically-closed/tooling-unresolved` items must be reported explicitly and do not block merge unless Product Owner decides otherwise.
+5. Copilot review loop lock: verify the latest Copilot review on the latest commit reports zero comments in its review body, including known phrasings such as **"generated 0 comments"**, **"0 new comments"**, or **"generated no new comments"**. This is the only exit condition. Historical outdated threads do not count. If the latest review still reports >0 comments, the loop must continue. `semantically-closed/tooling-unresolved` items must be reported explicitly and do not block merge unless Product Owner decides otherwise.
 6. Documentation lock: verify docs and release notes are updated when applicable.
 7. Rollback lock: verify rollback note is documented and feasible.
 8. Risk acceptance lock: verify residual risks are visible and explicitly accepted when required.
