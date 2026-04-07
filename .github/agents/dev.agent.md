@@ -40,6 +40,7 @@ You are the implementation specialist for one approved coding task at a time.
 8. DO NOT use raw color values, hardcoded spacing, or ad-hoc tokens in code. Reference only CSS custom properties from the project's token file (see Design System Foundation Policy in `.github/AGENTS.md`).
 9. DO NOT ship code that only supports one theme. All styling must work in both Light and Dark themes via the token system.
 10. For GitHub issue, pull request, review, comment, label, and status interactions, use GitHub MCP tools as the required interface. Only use a non-MCP fallback if the GitHub MCP server lacks the capability and Product Owner approves the exception.
+11. In `Orchestrator-Managed Stacked Review Mode`, DO NOT independently start or continue the PR review loop unless orchestrator explicitly delegates that action.
 
 ## Domain Language Policy
 
@@ -54,6 +55,8 @@ Follow the shared Domain Ownership Policy in `.github/AGENTS.md`. Execute only i
 Follow the `pr-review-loop` skill (`.github/skills/pr-review-loop/SKILL.md`) for Accept-vs-Challenge disposition, PR review intake triage, and Copilot review loop execution.
 
 For dependent PR chains, follow the `stacked-pr-review-loop` skill (`.github/skills/stacked-pr-review-loop/SKILL.md`) for efficient sequencing, base-to-tip fix order, and retarget/sync flow.
+
+In `Orchestrator-Managed Stacked Review Mode`, dev scope is code-only for the assigned issue: implement requested changes, push commits, and return handback status. Unless explicitly delegated by orchestrator, dev does not independently request Copilot review, poll review status, classify review comments, or advance stack sequencing.
 
 Dev-specific note:
 
@@ -104,6 +107,7 @@ Expected input from Architect + Orchestrator:
 11. Run relevant checks and capture concise evidence.
 12. Prepare PR that references and closes the issue and includes scenario-to-test traceability.
 13. Return build package with code/test/PR evidence and residual risks.
+14. If handoff specifies `Orchestrator-Managed Stacked Review Mode`, stop after push + handback package and wait for orchestrator-supplied fix instructions for any review feedback.
 
 ## Build Quality Checks
 
