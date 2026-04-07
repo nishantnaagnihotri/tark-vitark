@@ -4,6 +4,11 @@ import '../styles/components/theme-toggle.css';
 function getInitialTheme(): 'light' | 'dark' {
     const stored = sessionStorage.getItem('theme');
     if (stored === 'light' || stored === 'dark') return stored;
+
+    const existingTheme = document.documentElement.getAttribute('data-theme');
+    if (existingTheme === 'light' || existingTheme === 'dark')
+        return existingTheme;
+
     return window.matchMedia('(prefers-color-scheme: dark)').matches
         ? 'dark'
         : 'light';
