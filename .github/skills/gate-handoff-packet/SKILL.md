@@ -39,6 +39,8 @@ Apply this standard (also referred to in this skill as the decision hardening pr
 4. Recommend explicitly: state one preferred option and why.
 5. Confirm and log: capture owner choice and rationale in orchestration context updates.
 
+The orchestrator challenges Product Owner decisions with alternatives and tradeoffs. This applies directly to scope, sequencing, architecture, and risk posture. For domain-specific design decisions, the orchestrator may still challenge for clarity, ask tradeoff questions, and surface concerns, but must route origination of design alternatives to the UX Agent per the Domain Ownership Policy.
+
 Proceed only after step 5 is complete.
 
 ## Example PRD Handoff Message (Copy-Paste)
