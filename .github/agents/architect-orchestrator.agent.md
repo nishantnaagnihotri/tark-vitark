@@ -3,7 +3,7 @@ name: architect-orchestrator
 description: "Use when: planning a new slice, sequencing agent work, enforcing gates, architecture signoff, and preparing merge-readiness decisions."
 argument-hint: "Provide requirement statement and current checkpoint (done/next/blockers)."
 user-invocable: true
-tools: [vscode, execute, read, agent, edit, search, web, browser, com.figma.mcp/mcp/get_code_connect_map, com.figma.mcp/mcp/get_code_connect_suggestions, com.figma.mcp/mcp/get_context_for_code_connect, com.figma.mcp/mcp/get_design_context, com.figma.mcp/mcp/get_figjam, com.figma.mcp/mcp/get_metadata, com.figma.mcp/mcp/get_screenshot, com.figma.mcp/mcp/search_design_system, com.figma.mcp/mcp/whoami, 'github/*', github.vscode-pull-request-github/issue_fetch, github.vscode-pull-request-github/labels_fetch, github.vscode-pull-request-github/notification_fetch, github.vscode-pull-request-github/doSearch, github.vscode-pull-request-github/activePullRequest, github.vscode-pull-request-github/pullRequestStatusChecks, github.vscode-pull-request-github/openPullRequest, todo]
+tools: [vscode, execute, read, agent, edit, search, web, browser, com.figma.mcp/mcp/get_code_connect_map, com.figma.mcp/mcp/get_code_connect_suggestions, com.figma.mcp/mcp/get_context_for_code_connect, com.figma.mcp/mcp/get_design_context, com.figma.mcp/mcp/get_figjam, com.figma.mcp/mcp/get_metadata, com.figma.mcp/mcp/get_screenshot, com.figma.mcp/mcp/search_design_system, com.figma.mcp/mcp/whoami, 'io.github.chromedevtools/chrome-devtools-mcp/*', 'github/*', github.vscode-pull-request-github/issue_fetch, github.vscode-pull-request-github/labels_fetch, github.vscode-pull-request-github/notification_fetch, github.vscode-pull-request-github/doSearch, github.vscode-pull-request-github/activePullRequest, github.vscode-pull-request-github/pullRequestStatusChecks, github.vscode-pull-request-github/openPullRequest, todo]
 agents: [requirement-challenger, prd-agent, ux-agent, figma-agent, design-qa-agent, architecture-agent, dev]
 ---
 
@@ -348,7 +348,7 @@ Merge Gate Checklist (Orchestrator-owned):
 2. Verification lock: verify required tests passed and Build evidence remains sufficient.
 3. Provenance lock: verify PR includes issue-closing keyword and `Execution-Agent: dev` marker.
 4. Review lock: verify review comments are resolved or explicitly accepted by Product Owner.
-5. Copilot review loop lock: verify the latest Copilot review cycle has been run after the latest fix commit and there are zero `semantic-open` Copilot comments. `semantically-closed/tooling-unresolved` items must be reported explicitly and do not block merge unless Product Owner decides otherwise.
+5. Copilot review loop lock: verify the latest Copilot review on the latest commit states **"generated 0 comments"** in its review body. This is the only exit condition. Historical outdated threads do not count. If the latest review still reports >0 comments, the loop must continue. `semantically-closed/tooling-unresolved` items must be reported explicitly and do not block merge unless Product Owner decides otherwise.
 6. Documentation lock: verify docs and release notes are updated when applicable.
 7. Rollback lock: verify rollback note is documented and feasible.
 8. Risk acceptance lock: verify residual risks are visible and explicitly accepted when required.

@@ -11,11 +11,17 @@
 | T2 | Expand token system with M3 3-layer architecture | https://github.com/nishantnaagnihotri/tark-vitark/issues/39 | §2.6 | T1 (#38) | ✅ PR #51 merged |
 | T3 | Create static debate data module | https://github.com/nishantnaagnihotri/tark-vitark/issues/40 | §2.4 | T1 (#38) | ✅ PR #52 merged |
 | T4 | Implement DS primitives (Typography, Card, Divider) | https://github.com/nishantnaagnihotri/tark-vitark/issues/47 | §2.2, §2.5, §2.7 | T2 (#39) | ✅ PR #53 merged |
-| T5 | Implement ArgumentCard component | https://github.com/nishantnaagnihotri/tark-vitark/issues/41 | §2.5, §2.13 | T2 (#39), T3 (#40), T4 | ⬜ |
+| T5 | Implement ArgumentCard component | https://github.com/nishantnaagnihotri/tark-vitark/issues/41 | §2.5, §2.13 | T2 (#39), T3 (#40), T4 | ✅ PR #56 merged |
 | T6 | Implement Topic and LegendBar components | https://github.com/nishantnaagnihotri/tark-vitark/issues/42 | §2.5, §2.11 | T2 (#39), T4 | ✅ PR #55 merged |
-| T7 | Implement Timeline and DebateScreen components | https://github.com/nishantnaagnihotri/tark-vitark/issues/43 | §2.5, §2.11, §2.12 | T3 (#40), T4, T5 (#41), T6 (#42) | ⬜ |
-| T8 | Accessibility and theme verification | https://github.com/nishantnaagnihotri/tark-vitark/issues/44 | §5.1 | T7 (#43) | ⬜ |
-| T9 | Deployment cutover — update GitHub Pages workflow | https://github.com/nishantnaagnihotri/tark-vitark/issues/45 | §2.15 | T7 (#43), T8 (#44) | ⬜ |
+| T7 | Implement Timeline and DebateScreen components | https://github.com/nishantnaagnihotri/tark-vitark/issues/43 | §2.5, §2.11, §2.12 | T3 (#40), T4, T5 (#41), T6 (#42) | ✅ PR #57 merged |
+| T8 | Accessibility and theme verification | https://github.com/nishantnaagnihotri/tark-vitark/issues/44 | §5.1 | T7 (#43) | ✅ PR #58 merged |
+| T9 | Deployment cutover — update GitHub Pages workflow | https://github.com/nishantnaagnihotri/tark-vitark/issues/45 | §2.15 | T7 (#43), T8 (#44) | ✅ PR #59 merged |
+
+## Post-Build QA
+
+| Task | Title | Issue | Status |
+|---|---|---|---|
+| Visual polish | Legend dot colors, topic header, body margin, theme toggle | https://github.com/nishantnaagnihotri/tark-vitark/issues/60 | ✅ PR #61 merged |
 
 ## Dependency Graph
 

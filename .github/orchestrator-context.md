@@ -154,7 +154,7 @@ On first response in any new activity:
 | Slice | Gate 1 | Gate 2 | Gate 3 | Gate 4 | Gate 5 | Gate 6 |
 |---|---|---|---|---|---|---|
 | `coming-soon-splash-page` | ✅ Pass | ✅ Full Pass | ✅ Pass (PO approved 2026-03-29) | ✅ Pass | ✅ Complete (T3 PR #18, T4 PR #19, T5 PR #20 all merged) | ✅ Complete (2026-03-29) |
-| `debate-screen` | ✅ Pass | ✅ Full Pass | ✅ Pass (PO approved 2026-04-06) | ✅ Pass (Revision 1.1) | 🔄 T1–T4,T6 done; T5 next | ⬜ |
+| `debate-screen` | ✅ Pass | ✅ Full Pass | ✅ Pass (PO approved 2026-04-06) | ✅ Pass (Revision 1.1) | ✅ Complete (T1–T9 + visual polish PR #61) | ✅ Complete (2026-04-07) |
 
 ## Log Archive Protocol
 
@@ -415,3 +415,17 @@ Detailed repo-wide governance history from 2026-03-30 through 2026-04-02 is arch
 - Open questions status: None.
 - Next micro-goal: Delegate T5 (#41: ArgumentCard) to Dev Agent. T5 is the last component before T7 (Timeline + DebateScreen). Dependencies satisfied: T2 ✅, T3 ✅, T4 ✅.
 - Blockers/owner decisions: None.
+
+### 2026-04-07 (debate-screen Gate 5 ✅ Complete + Gate 6 ✅ Complete)
+- Gate status: `debate-screen` Gate 5 ✅ Complete. Gate 6 ✅ Complete. Slice fully delivered.
+- Artifact changes: Updated `06-tasks.md` (T5→✅ PR #56, T7→✅ PR #57, T8→✅ PR #58, T9→✅ PR #59; added Post-Build QA section with Issue #60 / PR #61). Updated slice status table.
+- PRs merged (cumulative since last log entry):
+  - PR #56: feat(argument-card): ArgumentCard with tail and a11y (closes #41)
+  - PR #57: feat(t7): Timeline and DebateScreen components (closes #43)
+  - PR #58: feat(t8): accessibility and theme verification (closes #44)
+  - PR #59: feat(t9): deployment cutover to Vite React app (closes #45)
+  - PR #61: fix: visual polish — legend dots, topic header, body margin, theme toggle (closes #60). 10 Copilot review rounds. Round 10: "generated no new comments" exit condition met.
+- PO decisions confirmed: PR #61 merged by PO after Gate 6 merge readiness verified.
+- Open questions status: None.
+- Next micro-goal: Commit protocol file changes on master (.github/AGENTS.md, .github/agents/architect-orchestrator.agent.md, .github/agents/dev.agent.md) via branch/PR. Then: start next slice or maintenance tasks.
+- Blockers/owner decisions: 3 uncommitted protocol files on master need branch/PR.
