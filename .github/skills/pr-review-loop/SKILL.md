@@ -11,7 +11,7 @@ On-demand workflow for handling PR reviews end-to-end: intake triage, dispositio
 
 - After creating a PR (review loop auto-entry)
 - When addressing Copilot or human review comments on a PR
-- When classifying review feedback as Accept / Challenge / Needs PO Decision
+- When classifying review feedback as Accept / Challenge / Needs Product Owner Decision
 - When polling for Copilot review completion
 - When resolving or reconciling review threads
 
