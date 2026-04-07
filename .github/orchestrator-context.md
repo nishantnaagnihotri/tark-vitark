@@ -67,7 +67,7 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). U
 
 7. Gate 6 (Merge)
     - Input: GitHub Issue reference, PR link, and Build Output Package.
-  - Output: merge readiness, review summary, runtime QA status, outstanding gaps, gate decision, and owner action.
+    - Output: merge readiness, review summary, runtime QA status, outstanding gaps, gate decision, and owner action.
 
 ## Known Rules From User Decisions
 
