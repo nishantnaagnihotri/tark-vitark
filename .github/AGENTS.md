@@ -1,4 +1,4 @@
-<!-- Protocol-Version: 3.0 -->
+<!-- Protocol-Version: 3.1 -->
 <!-- Last-Updated: 2026-04-07 -->
 
 # Shared Agent Protocol
@@ -60,6 +60,10 @@ Product Owner may override classification at any time.
 1. Architecture discussion topics are maintained in `.github/references/architecture-discussion-topics.md`.
 2. Architecture quality checks and package schema are maintained in `.github/references/architecture-quality-checks.md`.
 3. Architecture and orchestrator agents reference these documents instead of duplicating large checklists.
+
+## Requirement Gate Orchestration Workflow
+
+The full Gate 1 orchestration workflow - slice complexity classification, requirement-challenger handoff, readiness/open-question checks, and Requirement Context Package transfer - is defined in the `requirement-gate-orchestration` skill (`.github/skills/requirement-gate-orchestration/SKILL.md`). Orchestrator must follow this skill when running Gate 1 or deciding progression to PRD.
 
 ## Requirement-To-PRD Alignment Workflow
 
