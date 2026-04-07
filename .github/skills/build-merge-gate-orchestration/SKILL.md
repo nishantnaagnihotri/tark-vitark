@@ -47,7 +47,7 @@ Gate 5 completion rule:
 
 Local-validation rule:
 
-1. Validate build and runtime evidence (tests, issue linkage, runtime QA verdict, rollback note) in Local before merge recommendation.
+1. Validate build and runtime evidence (tests, issue linkage, runtime QA status/evidence (verdict package or `Runtime QA: Not Required` marker), rollback note) in Local before merge recommendation.
 
 Build Gate Checklist (Orchestrator-owned):
 
