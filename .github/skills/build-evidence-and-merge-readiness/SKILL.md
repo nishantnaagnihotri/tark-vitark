@@ -11,6 +11,7 @@ Use this skill to validate implementation evidence and merge readiness for Gate 
 
 - Reviewing Build Output Package completeness
 - Running Gate 5 and Gate 6 checklists
+- Validating Gate 5.5 runtime QA verdict evidence for UI-impacting issues
 - Validating scenario-to-test evidence and provenance markers
 - Determining merge recommendation or loop-back
 
@@ -21,6 +22,7 @@ Use this skill to validate implementation evidence and merge readiness for Gate 
 3. At Gate 4, `05-architecture.md` includes a BDD section with all GWT scenarios.
 4. Implementation and tests use domain language (per Domain Language Policy) rather than infrastructure vocabulary.
 5. PR evidence must include scenario-to-test mapping, passing tests, and rollback note.
+6. For UI-impacting issues, runtime QA evidence must include acceptance-criterion journey coverage in a live browser session with required viewport/theme matrix.
 
 ## PR Provenance Convention
 
@@ -47,6 +49,8 @@ Use this skill to validate implementation evidence and merge readiness for Gate 
 8. Provenance lock: verify PR body includes `Execution-Agent: dev` marker.
 9. Risk lock: verify residual risks and rollback note are documented.
 10. Approval lock: verify unresolved open questions are resolved or explicitly accepted by Product Owner.
+11. Runtime QA scope lock: verify issue is classified as `UI-impacting` or `Runtime QA: Not Required` with explicit rationale.
+12. Runtime QA evidence lock: for `UI-impacting` issues, verify Runtime QA Verdict Package is present with coverage matrix and findings disposition.
 
 ## Merge Gate Checklist (Orchestrator-owned)
 
@@ -55,9 +59,10 @@ Use this skill to validate implementation evidence and merge readiness for Gate 
 3. Provenance lock: verify PR includes issue-closing keyword and `Execution-Agent: dev` marker.
 4. Review lock: verify review comments are resolved or explicitly accepted by Product Owner.
 5. Copilot review loop lock: verify the latest Copilot review on the latest commit reports zero comments in its review body, including known phrasings such as **"generated 0 comments"**, **"0 new comments"**, or **"generated no new comments"**. This is the only exit condition. Historical outdated threads do not count. If the latest review still reports >0 comments, the loop must continue. `semantically-closed/tooling-unresolved` items must be reported explicitly and do not block merge unless Product Owner decides otherwise.
-6. Documentation lock: verify docs and release notes are updated when applicable.
-7. Rollback lock: verify rollback note is documented and feasible.
-8. Risk acceptance lock: verify residual risks are visible and explicitly accepted when required.
+6. Runtime QA lock: for `UI-impacting` issues, verify latest Runtime QA verdict is `Pass`, or explicit Product Owner risk acceptance is documented.
+7. Documentation lock: verify docs and release notes are updated when applicable.
+8. Rollback lock: verify rollback note is documented and feasible.
+9. Risk acceptance lock: verify residual risks are visible and explicitly accepted when required.
 
 ## Merge Gate Output Contract
 
@@ -76,3 +81,4 @@ Recommend merge only if all are true:
 3. Review issues are resolved or explicitly accepted by Product Owner.
 4. Documentation and release notes are updated.
 5. Rollback approach is documented.
+6. For UI-impacting issues, runtime QA verdict is `Pass` or Product Owner has explicitly accepted residual runtime risk.

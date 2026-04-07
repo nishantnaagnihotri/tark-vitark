@@ -1,15 +1,16 @@
 ---
 name: build-merge-gate-orchestration
-description: "Build and merge gate orchestration workflow: execute Gate 5 issue-based handoff and Gate 6 local merge-readiness review, enforce readiness/loop-back checks, and apply checklist contracts for build and merge progression. Use when: running Gate 5 or Gate 6, validating build evidence, or deciding merge recommendation."
+description: "Build and merge gate orchestration workflow: execute Gate 5 issue-based handoff, Gate 5.5 runtime QA validation, and Gate 6 local merge-readiness review; enforce readiness/loop-back checks and apply checklist contracts for progression. Use when: running Gate 5, Gate 5.5, or Gate 6, validating build/runtime evidence, or deciding merge recommendation."
 ---
 
 # Build And Merge Gate Orchestration Workflow
 
-Use this skill to run Gate 5 and Gate 6 consistently from build handoff through merge recommendation.
+Use this skill to run Gate 5, Gate 5.5 Runtime QA, and Gate 6 consistently from build handoff through merge recommendation.
 
 ## When To Use
 
 - Running Gate 5 implementation handoff from orchestrator
+- Running Gate 5.5 runtime QA validation for UI-impacting issues
 - Validating Build Output Package readiness and progression decisions
 - Running Gate 6 merge-readiness review in local context
 - Applying build and merge checklist contracts before recommendation
@@ -41,15 +42,42 @@ Gate 5 completion rule:
 
 1. Each Issue is complete only when code, tests, and PR package are produced.
 2. PR must include explicit issue-closing reference.
-3. Gate 6 (Merge) may begin for that Issue only after build package passes Gate 5 checks.
+3. For UI-impacting issues, Gate 5.5 Runtime QA must pass before Gate 6 progression (or Product Owner must explicitly accept residual runtime risk).
+4. Gate 6 (Merge) may begin for that Issue only after required Gate 5 and Gate 5.5 checks pass.
 
 Local-validation rule:
 
-1. Validate build evidence (tests, issue linkage, rollback note) in Local before merge recommendation.
+1. Validate build and runtime evidence (tests, issue linkage, runtime QA verdict, rollback note) in Local before merge recommendation.
 
 Build Gate Checklist (Orchestrator-owned):
 
 1. Run the canonical checklist in `build-evidence-and-merge-readiness` (`.github/skills/build-evidence-and-merge-readiness/SKILL.md`).
+
+## Runtime QA Substep Trigger (Gate 5.5)
+
+When Gate 5 implementation output is ready, run Runtime QA before Gate 6 for UI-impacting issues.
+
+Execution rule:
+
+1. If issue scope is UI-impacting, invoke `runtime-qa` with PR link, issue reference, acceptance-criterion journey mapping, route list, and test data/setup notes.
+2. If issue scope is non-UI, orchestrator may mark `Runtime QA: Not Required` with explicit rationale.
+3. Runtime QA execution is Local by default.
+
+Proceeding rule:
+
+1. Continue to Gate 6 when `Runtime QA Verdict: Pass`.
+2. If verdict is `Fail`, return findings to Dev and loop implementation.
+3. If verdict is `Blocked`, apply `gate-recovery-and-resume` and pause progression.
+4. Product Owner may explicitly accept residual runtime risk to proceed from `Fail` or `Blocked`; this must be recorded in merge evidence.
+
+Gate 5.5 completion rule:
+
+1. Runtime QA verdict package is attached to the issue/PR evidence set.
+2. Any runtime defects are either fixed and revalidated, or explicitly accepted by Product Owner.
+
+Runtime QA Checklist (Orchestrator-owned):
+
+1. Run the canonical runtime QA workflow in `runtime-qa-validation` (`.github/skills/runtime-qa-validation/SKILL.md`).
 
 ## Merge Gate Trigger
 

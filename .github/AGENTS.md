@@ -1,4 +1,4 @@
-<!-- Protocol-Version: 3.6 -->
+<!-- Protocol-Version: 3.7 -->
 <!-- Last-Updated: 2026-04-07 -->
 
 # Shared Agent Protocol
@@ -53,7 +53,8 @@ Product Owner may override classification at any time.
 7. Architecture signoff must happen before coding for Standard and Complex slices.
 8. Architecture Agent must run an internal challenge phase before producing any architecture output: all `Must Resolve` architecture gaps must be addressed or accepted by Product Owner before Gate 4 can pass.
 9. Architecture Agent must run a Discussion Phase before freezing the plan: key technical decisions across System Design, Solution Architecture, and Implementation Design must be surfaced, discussed with Product Owner, and confirmed before the full plan is written.
-10. Merge requires passing tests, review closure, docs update when applicable, and rollback note.
+10. UI-impacting implementation issues must pass the Gate 5.5 Runtime QA substep before Gate 6 progression, unless Product Owner explicitly accepts residual runtime risk.
+11. Merge requires passing tests, review closure, docs update when applicable, and rollback note.
 
 ## Architecture Reference Documents
 
@@ -83,7 +84,7 @@ The full Gate 4 orchestration workflow - architecture handoff trigger, local-onl
 
 ## Build And Merge Gate Orchestration Workflow
 
-The full Gate 5 and Gate 6 orchestration workflow - issue-based Build handoff, local merge-review execution, readiness/loop-back rules, and checklist/output validation - is defined in the `build-merge-gate-orchestration` skill (`.github/skills/build-merge-gate-orchestration/SKILL.md`). Orchestrator must follow this skill when running Gate 5 and Gate 6 decisions.
+The full Gate 5, Gate 5.5 Runtime QA, and Gate 6 orchestration workflow - issue-based Build handoff, runtime QA validation, local merge-review execution, readiness/loop-back rules, and checklist/output validation - is defined in the `build-merge-gate-orchestration` skill (`.github/skills/build-merge-gate-orchestration/SKILL.md`). Orchestrator must follow this skill when running Gate 5 and Gate 6 decisions.
 
 ## Environment Routing
 
@@ -160,6 +161,10 @@ All agents use domain language — not framework, infrastructure, or implementat
 ## Build Evidence And Merge Readiness Workflow
 
 The full build and merge readiness workflow - Implementation Protocol, PR Provenance Convention, Build/Merge checklists, and merge recommendation criteria - is defined in the `build-evidence-and-merge-readiness` skill (`.github/skills/build-evidence-and-merge-readiness/SKILL.md`). Agents must follow this skill when validating Gate 5 evidence and Gate 6 merge readiness.
+
+## Runtime QA Validation Workflow
+
+The runtime QA validation workflow - acceptance-criterion journey checks in a live browser session, viewport/theme coverage, runtime verdict packaging, and loop-back gating - is defined in the `runtime-qa-validation` skill (`.github/skills/runtime-qa-validation/SKILL.md`). For UI-impacting issues, this Gate 5.5 substep is required before Gate 6 progression unless Product Owner explicitly accepts residual runtime risk.
 
 ## Figma File Structure Convention
 
