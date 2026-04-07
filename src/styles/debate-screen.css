@@ -1,10 +1,6 @@
 /* DebateScreen — screen-level layout
    Figma reference: CsPAyUdLSStdmNpmiBMESQ */
 
-body {
-    margin: 0;
-}
-
 .debate-screen {
     min-height: 100vh;
     min-height: 100dvh;
