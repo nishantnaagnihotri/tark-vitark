@@ -1,0 +1,27 @@
+/* DebateScreen — screen-level layout
+   Figma reference: CsPAyUdLSStdmNpmiBMESQ */
+
+.debate-screen {
+    min-height: 100vh;
+    background-color: var(--color-surface-default);
+    color: var(--color-on-surface);
+}
+
+.debate-header {
+    padding: 48px 20px 0;
+    text-align: center;
+}
+
+/* ── Tablet ── */
+@media (min-width: 481px) {
+    .debate-header {
+        padding: 48px 40px 0;
+    }
+}
+
+/* ── Desktop ── */
+@media (min-width: 1024px) {
+    .debate-header {
+        padding: 48px 120px 0;
+    }
+}

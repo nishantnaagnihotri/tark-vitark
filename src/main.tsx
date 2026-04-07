@@ -1,9 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-
-function App() {
-  return <div id="debate-app">TarkVitark</div>;
-}
+import { DebateScreen } from './components/DebateScreen';
+import './styles/tokens.css';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -12,6 +10,6 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
   <StrictMode>
-    <App />
+    <DebateScreen />
   </StrictMode>
 );
