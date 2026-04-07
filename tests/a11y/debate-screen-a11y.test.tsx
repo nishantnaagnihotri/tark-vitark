@@ -41,15 +41,6 @@ describe('axe-core accessibility audit — DebateScreen', () => {
             );
         }
 
-        const remaining = results.violations.filter(
-            (v) => !['critical', 'serious'].includes(v.impact ?? ''),
-        );
-        if (remaining.length > 0) {
-            console.info(
-                'axe-core minor/moderate findings (light):',
-                remaining.map((v) => `[${v.impact}] ${v.id}: ${v.description}`),
-            );
-        }
     });
 
     it('dark theme: zero critical/serious violations', async () => {
@@ -69,15 +60,6 @@ describe('axe-core accessibility audit — DebateScreen', () => {
                 );
             }
 
-            const remaining = results.violations.filter(
-                (v) => !['critical', 'serious'].includes(v.impact ?? ''),
-            );
-            if (remaining.length > 0) {
-                console.info(
-                    'axe-core minor/moderate findings (dark):',
-                    remaining.map((v) => `[${v.impact}] ${v.id}: ${v.description}`),
-                );
-            }
         } finally {
             unmount();
             document.documentElement.removeAttribute('data-theme');
