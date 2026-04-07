@@ -24,7 +24,7 @@ Use this skill to prevent Gate 1 to Gate 2 drift and to standardize PRD validati
 
 1. Every Gate 2 PRD output must include a `Requirement-to-PRD Alignment Check` section.
 2. Alignment check must show one-to-one mapping from Gate 1 requirement IDs and acceptance-criteria IDs to PRD sections and user stories.
-3. Every requirement ID must be mapped exactly once or marked with explicit Product Owner-approved rationale.
+3. Every requirement ID and acceptance-criteria ID must be mapped exactly once or marked with explicit Product Owner-approved rationale.
 4. The `Traceability Map` must be consistent with the alignment check and the final PRD content.
 
 ## Template Completeness Rule
