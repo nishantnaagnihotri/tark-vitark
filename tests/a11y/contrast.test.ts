@@ -1,4 +1,6 @@
 import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 /**
  * WCAG 2.1 AA contrast ratio verification for all token color pairs.
@@ -46,6 +48,51 @@ function contrastRatio(fg: string, bg: string): number {
 const AA_NORMAL = 4.5;
 const AA_LARGE = 3.0;
 
+// ── Parse token values from tokens.css (single source of truth) ──
+
+const tokensCss = readFileSync(
+    resolve(process.cwd(), 'src/styles/tokens.css'),
+    'utf-8',
+);
+
+function parseTokensForTheme(css: string, theme: 'light' | 'dark'): Map<string, string> {
+    const tokens = new Map<string, string>();
+    const selectorPattern =
+        theme === 'light'
+            ? /(?::root|data-theme="light")\s*\{([^}]+)\}/g
+            : /\[data-theme="dark"\]\s*\{([^}]+)\}/;
+    let match: RegExpExecArray | null;
+    const regex = new RegExp(selectorPattern);
+    const blocks: string[] = [];
+
+    if (theme === 'light') {
+        // Capture :root and [data-theme="light"] blocks (first top-level rule)
+        const m = css.match(/:root[\s\S]*?\{([^}]+)\}/);
+        if (m) blocks.push(m[1]);
+    } else {
+        const m = css.match(/\[data-theme="dark"\]\s*\{([^}]+)\}/);
+        if (m) blocks.push(m[1]);
+    }
+
+    for (const block of blocks) {
+        const propRegex = /(--[\w-]+)\s*:\s*([^;]+);/g;
+        while ((match = propRegex.exec(block)) !== null) {
+            tokens.set(match[1], match[2].trim());
+        }
+    }
+    return tokens;
+}
+
+const lightTokens = parseTokensForTheme(tokensCss, 'light');
+const darkTokens = parseTokensForTheme(tokensCss, 'dark');
+
+function token(theme: 'Light' | 'Dark', name: string): string {
+    const map = theme === 'Light' ? lightTokens : darkTokens;
+    const value = map.get(name);
+    if (!value) throw new Error(`Token ${name} not found in ${theme} theme`);
+    return value;
+}
+
 interface ColorPair {
     theme: 'Light' | 'Dark';
     fgToken: string;
@@ -55,74 +102,23 @@ interface ColorPair {
     textSize: 'normal' | 'large';
 }
 
-const colorPairs: ColorPair[] = [
-    // Light theme
-    {
-        theme: 'Light',
-        fgToken: '--color-tark-on-surface',
-        bgToken: '--color-tark-surface',
-        fg: '#0D47A1',
-        bg: '#BBDEFB',
-        textSize: 'normal',
-    },
-    {
-        theme: 'Light',
-        fgToken: '--color-vitark-on-surface',
-        bgToken: '--color-vitark-surface',
-        fg: '#BF360C',
-        bg: '#FFECB3',
-        textSize: 'normal',
-    },
-    {
-        theme: 'Light',
-        fgToken: '--color-on-surface',
-        bgToken: '--color-surface-default',
-        fg: '#1C1B1F',
-        bg: '#FFFBFF',
-        textSize: 'normal',
-    },
-    {
-        theme: 'Light',
-        fgToken: '--color-legend-on-surface',
-        bgToken: '--color-legend-surface',
-        fg: '#4D4D4D',
-        bg: '#F5F5F5',
-        textSize: 'normal',
-    },
-    // Dark theme
-    {
-        theme: 'Dark',
-        fgToken: '--color-tark-on-surface',
-        bgToken: '--color-tark-surface',
-        fg: '#E3F2FD',
-        bg: '#1565C0',
-        textSize: 'normal',
-    },
-    {
-        theme: 'Dark',
-        fgToken: '--color-vitark-on-surface',
-        bgToken: '--color-vitark-surface',
-        fg: '#FFF8E1',
-        bg: '#BF360C',
-        textSize: 'normal',
-    },
-    {
-        theme: 'Dark',
-        fgToken: '--color-on-surface',
-        bgToken: '--color-surface-default',
-        fg: '#E6E1E5',
-        bg: '#1B1B1F',
-        textSize: 'normal',
-    },
-    {
-        theme: 'Dark',
-        fgToken: '--color-legend-on-surface',
-        bgToken: '--color-legend-surface',
-        fg: '#BFBFBF',
-        bg: '#1C1C1C',
-        textSize: 'normal',
-    },
+const pairDefs: { fgToken: string; bgToken: string; textSize: 'normal' | 'large' }[] = [
+    { fgToken: '--color-tark-on-surface', bgToken: '--color-tark-surface', textSize: 'normal' },
+    { fgToken: '--color-vitark-on-surface', bgToken: '--color-vitark-surface', textSize: 'normal' },
+    { fgToken: '--color-on-surface', bgToken: '--color-surface-default', textSize: 'normal' },
+    { fgToken: '--color-legend-on-surface', bgToken: '--color-legend-surface', textSize: 'normal' },
 ];
+
+const colorPairs: ColorPair[] = (['Light', 'Dark'] as const).flatMap((theme) =>
+    pairDefs.map((def) => ({
+        theme,
+        fgToken: def.fgToken,
+        bgToken: def.bgToken,
+        fg: token(theme, def.fgToken),
+        bg: token(theme, def.bgToken),
+        textSize: def.textSize,
+    })),
+);
 
 describe('WCAG AA contrast ratio verification', () => {
     it.each(colorPairs)(
