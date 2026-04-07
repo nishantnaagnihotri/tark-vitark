@@ -1,4 +1,4 @@
-<!-- Protocol-Version: 3.2 -->
+<!-- Protocol-Version: 3.3 -->
 <!-- Last-Updated: 2026-04-07 -->
 
 # Shared Agent Protocol
@@ -64,6 +64,10 @@ Product Owner may override classification at any time.
 ## Requirement Gate Orchestration Workflow
 
 The full Gate 1 orchestration workflow - slice complexity classification, requirement-challenger handoff, readiness/open-question checks, and Requirement Context Package transfer - is defined in the `requirement-gate-orchestration` skill (`.github/skills/requirement-gate-orchestration/SKILL.md`). Orchestrator must follow this skill when running Gate 1 or deciding progression to PRD.
+
+## PRD Gate Orchestration Workflow
+
+The full Gate 2 orchestration workflow - PRD handoff trigger, local/cloud execution checks, readiness/open-question progression rules, and cloud-return validation - is defined in the `prd-gate-orchestration` skill (`.github/skills/prd-gate-orchestration/SKILL.md`). Orchestrator must follow this skill when running Gate 2 or deciding progression to Design.
 
 ## Requirement-To-PRD Alignment Workflow
 

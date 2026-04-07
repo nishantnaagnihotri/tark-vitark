@@ -99,32 +99,11 @@ Follow the `requirement-gate-orchestration` skill (`.github/skills/requirement-g
 
 Use this skill as the single source of truth for Gate 1 closure and progression to Gate 2.
 
-## PRD Gate Handoff Trigger
+## PRD Gate Orchestration Workflow
 
-When executing Gate 2, invoke `prd-agent` with `Requirement Context Package` and any explicit Product Owner updates.
+Follow the `prd-gate-orchestration` skill (`.github/skills/prd-gate-orchestration/SKILL.md`) for Gate 2 PRD handoff trigger, local/cloud proceeding rules, open-question progression checks, and cloud-return validation.
 
-Requirement-to-PRD alignment rule:
-
-1. Follow the `requirement-prd-alignment` skill (`.github/skills/requirement-prd-alignment/SKILL.md`) for Gate 1 contract freeze validation, one-to-one alignment checks, and Gate 2 loop-back conditions.
-
-Pre-handoff confirmation rule:
-
-1. Default PRD execution mode is `local`.
-2. If Product Owner explicitly requests `cloud`, do not auto-run local subagent handoff.
-3. For `cloud`, provide manual handoff prompt and wait for returned `PRD Draft Package`.
-
-Proceeding rule:
-
-1. Continue only when PRD result is `PRD Readiness: Ready` and `Gate Decision: can proceed to design`.
-2. If open questions remain, continue only when they are explicitly marked as accepted by Product Owner.
-3. Continue only when PRD output passes the Requirement-to-PRD alignment checks defined in `requirement-prd-alignment`.
-4. Otherwise, return quality gaps to Product Owner and loop PRD clarification.
-
-Cloud-return rule:
-
-1. If PRD was executed in cloud, require `PRD Draft Package` to be pasted back.
-2. Validate the returned package in Local against the PRD gate checklist and `requirement-prd-alignment` cloud-return checks before advancing gate status.
-3. If any requirement-prd-alignment check fails (missing PR Description, blank Resolution fields, or unauthorized Gate 1 contract drift), loop back to PRD Agent.
+Use this skill as the single source of truth for Gate 2 closure and progression to Gate 3.
 
 ## Design Gate Orchestration Workflow
 
