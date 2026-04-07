@@ -59,7 +59,7 @@ describe('DebateScreen', () => {
         const { container } = render(<DebateScreen />);
         const buttons = screen.getAllByRole('button');
         expect(buttons).toHaveLength(1);
-        expect(buttons[0]).toHaveAccessibleName(/toggle theme/i);
+        expect(buttons[0]).toHaveAccessibleName(/dark theme/i);
         expect(screen.queryAllByRole('textbox')).toHaveLength(0);
         expect(container.querySelector('form')).not.toBeInTheDocument();
     });
