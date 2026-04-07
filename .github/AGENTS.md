@@ -1,4 +1,4 @@
-<!-- Protocol-Version: 2.7 -->
+<!-- Protocol-Version: 2.8 -->
 <!-- Last-Updated: 2026-04-07 -->
 
 # Shared Agent Protocol
@@ -64,6 +64,10 @@ Product Owner may override classification at any time.
 ## Requirement-To-PRD Alignment Workflow
 
 The full Requirement-to-PRD alignment workflow - Gate 1 contract freeze, one-to-one alignment evidence, template completeness rules, and Gate 2 loop-back checks - is defined in the `requirement-prd-alignment` skill (`.github/skills/requirement-prd-alignment/SKILL.md`). Agents must follow this skill when drafting PRD artifacts, validating Gate 2 readiness, or reviewing cloud-returned PRD packages.
+
+## Design Gate Orchestration Workflow
+
+The full Gate 3 orchestration workflow - UX/Figma/Design QA substep triggers, local-only execution constraints, validation checks, Design QA revision loop, and Product Owner approval closure - is defined in the `design-gate-orchestration` skill (`.github/skills/design-gate-orchestration/SKILL.md`). Agents must follow this skill when running Gate 3 or deciding Gate 3 progression.
 
 ## Environment Routing
 

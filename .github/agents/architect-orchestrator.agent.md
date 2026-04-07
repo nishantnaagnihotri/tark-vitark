@@ -153,84 +153,16 @@ Cloud-return rule:
 2. Validate the returned package in Local against the PRD gate checklist and `requirement-prd-alignment` cloud-return checks before advancing gate status.
 3. If any requirement-prd-alignment check fails (missing PR Description, blank Resolution fields, or unauthorized Gate 1 contract drift), loop back to PRD Agent.
 
-## Design Gate Substep A: UX Handoff Trigger
+## Design Gate Orchestration Workflow
 
-When executing Gate 3, start with the UX substep by invoking `ux-agent` with `PRD Draft Package` and any explicit Product Owner UX or platform constraints.
+Follow the `design-gate-orchestration` skill (`.github/skills/design-gate-orchestration/SKILL.md`) for full Gate 3 orchestration, including UX/Figma/Design QA substep triggers, local-only execution rules, validation checks, revision loops, and Product Owner approval closure criteria.
 
-Execution rule:
+Substep trigger order:
 
-1. Gate 3 is local-only.
-2. Do not offer `cloud` execution mode for the UX substep.
-3. Run the UX substep in Local context.
-4. The UX Agent must run its internal Challenge Phase before producing UX flow/state artifacts (e.g., flows, wireframes, UI state specs). Challenge Phase findings must be output to the Product Owner, and all `Must Resolve` gaps must be addressed or explicitly accepted by Product Owner before `UX Readiness: Ready` is returned.
-
-Proceeding rule:
-
-1. Continue to the Figma substep only when UX result is `UX Readiness: Ready` and `Gate Decision: can proceed to figma`.
-2. Require a `Design Artifact` reference (Figma file URL) in the UX output for every UX task.
-3. If the Design System library does not yet exist for the project, require the orchestrator to route a bootstrap request to the Figma Agent (via Gate 3A → 3B fast-path) to create it, publish/enable it in Figma, and record a populated `design_system_library_file_key` in `.figma-config.local` before allowing progression to Gate 3B. `design_system_library_url` is recommended for convenience but is not required for progression.
-4. If open questions remain, continue only when they are explicitly marked as accepted by Product Owner.
-5. Otherwise, return quality gaps to Product Owner and loop UX clarification.
-
-Local-validation rule:
-
-1. Validate the `UX Flow/State Package` in Local against the UX substep checklist before continuing inside Gate 3.
-2. Validate the `Design Artifact` reference in Local. If missing or invalid, Gate 3A must loop back.
-3. Validate that `.figma-config.local` includes a populated, non-empty `design_system_library_file_key` value before Gate 3B proceeds. Treat a blank value or empty string as missing. `design_system_library_url` may be blank. If the file key is missing or blank, Gate 3A must loop back for bootstrap.
-
-## Design Gate Substep B: Figma Handoff Trigger
-
-When executing Gate 3 Substep B, invoke `figma-agent` with `UX Flow/State Package` and any explicit Product Owner design-system or platform constraints.
-
-Execution rule:
-
-1. Gate 3 is local-only.
-2. Do not offer `cloud` execution mode for the Figma substep.
-3. Run the Figma substep in Local context.
-
-Proceeding rule:
-
-1. Continue to the Design QA substep only when Figma result is `Figma Readiness: Ready` and `Gate Decision: can proceed to design-qa`.
-2. If open questions remain, continue only when they are explicitly marked as accepted by Product Owner.
-3. Otherwise, return quality gaps to Product Owner and loop Figma clarification.
-
-Local-validation rule:
-
-1. Validate the `Design Draft Package` in Local against the Figma substep checklist before continuing inside Gate 3.
-
-## Design Gate Substep C: Design QA Handoff Trigger
-
-When executing Gate 3 Substep C, invoke `design-qa-agent` with `Design Draft Package`, `UX Flow/State Package`, and `PRD Draft Package`.
-
-Execution rule:
-
-1. Gate 3 is local-only.
-2. Do not offer `cloud` execution mode for the Design QA substep.
-3. Run the Design QA substep in Local context.
-
-Design feedback loop rule:
-
-1. Design QA agent reads the Figma design directly via MCP on every pass.
-2. If structural gaps exist, Design QA routes back to Figma Agent with specific revision instructions.
-3. Figma Agent revises the design and re-submits a new `Design Draft Package`.
-4. Design QA repeats its review. Loop continues until no structural gaps remain.
-
-Product Owner approval rule:
-
-1. Once Design QA reaches `Agent-Ready`, present the `Design QA Verdict Package` to Product Owner.
-2. Product Owner reviews the Figma design directly and gives explicit approval or requests changes.
-3. If changes are requested, route back to Figma Agent and restart the loop.
-4. Gate 3 closes ONLY when Product Owner explicitly approves.
-
-Gate 3 completion rule:
-
-1. All three substeps (UX, Figma, Design QA) must pass before Gate 3 is closed.
-2. Closing Gate 3 requires a `Design QA Verdict Package` in hand AND explicit Product Owner approval on record.
-3. Gate 4 (Architecture) may not begin until Gate 3 is formally closed by Product Owner.
-
-Local-validation rule:
-
-1. Validate the `Design QA Verdict Package` in Local against the Design QA checklist before closing Gate 3.
+1. Gate 3A: invoke `ux-agent` with `PRD Draft Package` and explicit Product Owner UX/platform constraints.
+2. Gate 3B: invoke `figma-agent` with `UX Flow/State Package` and explicit Product Owner design-system/platform constraints.
+3. Gate 3C: invoke `design-qa-agent` with `Design Draft Package`, `UX Flow/State Package`, and `PRD Draft Package`.
+4. Do not close Gate 3 or begin Gate 4 unless Gate 3 completion conditions in `design-gate-orchestration` are satisfied.
 
 ## Architecture Gate Handoff Trigger
 
