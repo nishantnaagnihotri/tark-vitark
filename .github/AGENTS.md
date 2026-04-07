@@ -1,4 +1,4 @@
-<!-- Protocol-Version: 2.8 -->
+<!-- Protocol-Version: 2.9 -->
 <!-- Last-Updated: 2026-04-07 -->
 
 # Shared Agent Protocol
@@ -123,6 +123,10 @@ The full PR review workflow — Strict Accept-vs-Challenge Lens, PR Review Intak
 ## Gate Recovery And Resume Workflow
 
 The full recovery and resume workflow - partial artifact recovery, Figma MCP failure handling, Copilot poll timeout handling, config validation on resume, and escalation - is defined in the `gate-recovery-and-resume` skill (`.github/skills/gate-recovery-and-resume/SKILL.md`). All agents must follow this skill when a gate run fails, is resumed, or is blocked by external tooling.
+
+## Orchestrator Session And Context Lifecycle Workflow
+
+The full orchestrator session and context lifecycle workflow - activity resume protocol, part-time session checkpoints, context update requirements, universal principle persistence, and Gate 6 log archiving - is defined in the `orchestrator-session-context-lifecycle` skill (`.github/skills/orchestrator-session-context-lifecycle/SKILL.md`). Orchestrator must follow this skill when starting/resuming sessions or maintaining `.github/orchestrator-context.md`.
 
 ## Protocol Versioning
 
