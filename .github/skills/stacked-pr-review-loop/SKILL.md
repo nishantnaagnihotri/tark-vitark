@@ -27,15 +27,15 @@ Use this skill to run stacked pull requests efficiently without sacrificing revi
 1. Classify each comment using `Accept | Challenge | Needs Product Owner Decision` per `pr-review-loop`.
 2. Start fixes on the lowest open PR in the stack first.
 3. After each fix push, request a fresh Copilot review immediately on that PR.
-4. Consider that PR review-clean only when the latest Copilot review body indicates zero comments.
+4. Consider that PR review-clean only when the latest Copilot review body indicates zero new comments.
 5. Move to the next PR in the stack only after the lower PR reaches review-clean state.
 
 ## Merge And Retarget Sequence (Base To Tip)
 
 1. Merge the lowest PR first.
 2. Retarget the next PR base to `master`.
-3. Sync the next PR branch with current `master` and resolve conflicts.
-4. Request a fresh Copilot review on the updated head.
+3. Rebase the next PR branch onto current `master`, resolve conflicts during rebase, and avoid merge commits in PR head history.
+4. Request a fresh Copilot review on the rebased head.
 5. Repeat until the top PR is merged.
 
 ## Rebase-Compatibility Guard
@@ -46,6 +46,7 @@ Use this skill to run stacked pull requests efficiently without sacrificing revi
 
 ## Completion Criteria
 
-1. Latest Copilot review on each active PR reports zero comments.
+1. Latest Copilot review on each active PR semantically indicates zero new comments (for example, `generated 0 comments`, `0 new comments`, or `generated no new comments`).
 2. No `semantic-open` comments remain for the latest review pass.
-3. Stack is merged base-to-tip, or superseded PRs are explicitly closed with replacement links.
+3. All `Challenge` items are resolved with the Product Owner.
+4. Stack is merged base-to-tip, or superseded PRs are explicitly closed with replacement links.
