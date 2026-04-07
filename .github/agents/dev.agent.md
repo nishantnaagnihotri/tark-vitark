@@ -53,6 +53,8 @@ Follow the shared Domain Ownership Policy in `.github/AGENTS.md`. Execute only i
 
 Follow the `pr-review-loop` skill (`.github/skills/pr-review-loop/SKILL.md`) for Accept-vs-Challenge disposition, PR review intake triage, and Copilot review loop execution.
 
+For dependent PR chains, follow the `stacked-pr-review-loop` skill (`.github/skills/stacked-pr-review-loop/SKILL.md`) for efficient sequencing, base-to-tip fix order, and retarget/sync flow.
+
 Dev-specific note:
 
 1. Record final disposition in PR discussion replies and in `Quality Gaps` or `Open Questions` when applicable.

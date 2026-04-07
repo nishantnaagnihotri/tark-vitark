@@ -48,6 +48,8 @@ Follow the `domain-ownership-governance` skill (`.github/skills/domain-ownership
 
 Follow the `pr-review-loop` skill (`.github/skills/pr-review-loop/SKILL.md`) for Accept-vs-Challenge disposition, PR review intake triage, and Copilot review loop execution.
 
+For dependent PR chains, follow the `stacked-pr-review-loop` skill (`.github/skills/stacked-pr-review-loop/SKILL.md`) for efficient pipeline sequencing, base-to-tip fix order, and retarget/sync flow.
+
 Orchestrator-specific rule:
 
 1. Record final disposition and rationale in context updates and gate artifacts.
