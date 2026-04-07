@@ -1,4 +1,4 @@
-<!-- Protocol-Version: 2.9 -->
+<!-- Protocol-Version: 3.0 -->
 <!-- Last-Updated: 2026-04-07 -->
 
 # Shared Agent Protocol
@@ -68,6 +68,10 @@ The full Requirement-to-PRD alignment workflow - Gate 1 contract freeze, one-to-
 ## Design Gate Orchestration Workflow
 
 The full Gate 3 orchestration workflow - UX/Figma/Design QA substep triggers, local-only execution constraints, validation checks, Design QA revision loop, and Product Owner approval closure - is defined in the `design-gate-orchestration` skill (`.github/skills/design-gate-orchestration/SKILL.md`). Agents must follow this skill when running Gate 3 or deciding Gate 3 progression.
+
+## Architecture Gate Orchestration Workflow
+
+The full Gate 4 orchestration workflow - architecture handoff trigger, local-only signoff policy, readiness/loop-back checks, and completion/traceability validation - is defined in the `architecture-gate-orchestration` skill (`.github/skills/architecture-gate-orchestration/SKILL.md`). Orchestrator must follow this skill when running Gate 4 or authorizing Build progression.
 
 ## Environment Routing
 

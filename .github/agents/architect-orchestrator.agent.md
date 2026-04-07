@@ -161,37 +161,9 @@ Use the skill as the single source of truth for Gate 3A/3B/3C trigger order and 
 
 ## Architecture Gate Handoff Trigger
 
-When executing Gate 4, invoke `architecture-agent` with the slice artifacts (`01-requirement.md`, `02-prd.md`, `03-ux.md`, `04-design-qa.md`) and any explicit Product Owner technical constraints.
+Follow the `architecture-gate-orchestration` skill (`.github/skills/architecture-gate-orchestration/SKILL.md`) for Gate 4 handoff trigger, execution/proceeding rules, completion criteria, and local validation before Build authorization.
 
-Execution rule:
-
-1. Gate 4 signoff decisions are Local-only.
-2. Cloud can be used only for non-binding analysis alternatives.
-3. Final architecture approval and gate progression must be made in Local context.
-4. The Architecture Agent must run its internal Challenge Phase before producing the architecture plan / plan package. Challenge Phase findings must be output to the Product Owner, and all `Must Resolve` gaps must be addressed or explicitly accepted by Product Owner before `Architecture Readiness: Ready` is returned.
-
-Proceeding rule:
-
-1. Continue only when architecture result is `Architecture Readiness: Ready` and `Gate Decision: can proceed to build`.
-2. If open questions remain, continue only when they are explicitly marked as accepted by Product Owner.
-3. Otherwise, return quality gaps to Product Owner and loop architecture clarification.
-
-Gate 4 completion rule:
-
-1. Gate 4 is closed only when `05-architecture.md` is produced and approved.
-2. At Gate 4 end, orchestrator decomposes the architecture plan into GitHub Issues (one per atomic task).
-3. Orchestrator records created Issue numbers in `06-tasks.md`.
-4. Gate 5 (Build) may begin only after `06-tasks.md` and related Issues are in place.
-
-Local-validation rule:
-
-1. Validate `05-architecture.md` and `06-tasks.md` against Gate 4 checklist before authorizing Build gate.
-
-Architecture Gate Checklist (Orchestrator-owned):
-
-1. Run the canonical checklist in `.github/references/architecture-quality-checks.md`.
-2. Verify `06-tasks.md` includes created issue numbers and architecture section references.
-3. Verify slice tracker <-> story issue bidirectional links and required labels.
+Use this skill as the single source of truth for Gate 4 closure and checklist validation.
 
 ## Build Gate Handoff Trigger
 
