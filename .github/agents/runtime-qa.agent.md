@@ -1,7 +1,7 @@
 ---
 name: runtime-qa
-description: "Use when: validating runtime behavior for a completed implementation issue, executing acceptance-criterion browser journeys across required viewport and theme matrix, and returning a Runtime QA Verdict Package before merge readiness."
-argument-hint: "Provide PR link, issue reference, acceptance criteria mapping, route list, and test data/setup notes."
+description: "Use when: validating runtime behavior for a completed implementation issue, executing acceptance-criterion browser journeys across required viewport and theme matrix, and returning a Runtime QA response package before merge readiness."
+argument-hint: "Provide PR link, issue reference, acceptance criteria mapping, route list, expected states, test data/setup notes, and known-risk notes."
 user-invocable: true
 tools: [vscode, execute, read, search, browser, 'io.github.chromedevtools/chrome-devtools-mcp/*', 'github/*', todo]
 agents: []
@@ -32,7 +32,8 @@ You are the runtime quality validator for one completed implementation issue at 
 2. Acceptance criteria with journey mapping.
 3. Route list and expected states.
 4. Environment/start command and any required test data notes.
-5. UI-impact classification from orchestrator.
+5. Known-risk notes from dev handoff.
+6. UI-impact classification from orchestrator.
 
 ## Approach
 
@@ -57,7 +58,7 @@ Return sections in one of the following formats:
 
 ### If orchestrator classification is `UI-impacting`
 
-1. `Runtime QA Verdict`: Pass | Fail | Blocked.
+1. `Runtime QA Verdict: Pass | Fail | Blocked`.
 2. `Coverage Matrix`: journey x viewport x theme status.
 3. `Findings`: defects and severity.
 4. `Evidence`: execution commands, routes covered, and runtime observations.

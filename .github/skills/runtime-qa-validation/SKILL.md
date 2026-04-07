@@ -47,7 +47,7 @@ Use this skill to validate runtime behavior in a real browser session when manua
 
 ## Runtime QA Output Contract
 
-1. `Runtime QA Verdict`: Pass | Fail | Blocked.
+1. `Runtime QA Verdict: Pass | Fail | Blocked`.
 2. `Coverage Matrix`: journey x viewport x theme status table.
 3. `Findings`: defects, severity, and reproducibility notes.
 4. `Evidence`: command list, route list, and captured runtime observations.
