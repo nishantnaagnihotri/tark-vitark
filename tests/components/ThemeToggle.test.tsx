@@ -8,9 +8,9 @@ describe('ThemeToggle', () => {
         sessionStorage.clear();
     });
 
-    it('renders a button with accessible label', () => {
+    it('renders a switch with accessible label', () => {
         render(<ThemeToggle />);
-        expect(screen.getByRole('button', { name: /dark theme/i })).toBeInTheDocument();
+        expect(screen.getByRole('switch', { name: /dark mode/i })).toBeInTheDocument();
     });
 
     it('does not set data-theme on first render without stored value', () => {
@@ -26,7 +26,7 @@ describe('ThemeToggle', () => {
 
     it('toggles theme on click', () => {
         render(<ThemeToggle />);
-        const button = screen.getByRole('button');
+        const button = screen.getByRole('switch');
         const initial = document.documentElement.getAttribute('data-theme');
 
         fireEvent.click(button);
@@ -38,7 +38,7 @@ describe('ThemeToggle', () => {
 
     it('persists theme choice in sessionStorage', () => {
         render(<ThemeToggle />);
-        const button = screen.getByRole('button');
+        const button = screen.getByRole('switch');
 
         fireEvent.click(button);
 
@@ -70,8 +70,8 @@ describe('ThemeToggle', () => {
 
         render(<ThemeToggle />);
         expect(document.documentElement.getAttribute('data-theme')).toBeNull();
-        const button = screen.getByRole('button');
-        expect(button).toHaveAttribute('aria-pressed', 'true');
+        const button = screen.getByRole('switch');
+        expect(button).toHaveAttribute('aria-checked', 'true');
         expect(button).toHaveTextContent('☀️');
 
         matchMediaSpy.mockRestore();

@@ -57,10 +57,11 @@ export function ThemeToggle() {
     return (
         <button
             type="button"
+            role="switch"
             className="theme-toggle"
             onClick={toggle}
-            aria-label="Dark theme"
-            aria-pressed={theme === 'dark'}
+            aria-label="Dark mode"
+            aria-checked={theme === 'dark'}
         >
             {theme === 'light' ? '🌙' : '☀️'}
         </button>
