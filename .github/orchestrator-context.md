@@ -437,3 +437,12 @@ Detailed repo-wide governance history from 2026-03-30 through 2026-04-02 is arch
 - Open questions status: None.
 - Next micro-goal: Commit protocol file changes on master (.github/AGENTS.md, .github/agents/architect-orchestrator.agent.md, .github/agents/dev.agent.md) via branch/PR. Then: start next slice or maintenance tasks.
 - Blockers/owner decisions: 3 uncommitted protocol files on master need branch/PR.
+
+### 2026-04-07 (Global — PR #78 Merged: Runtime QA Gate 5.5 Workflow)
+- Gate status: No active slice. Governance baseline advanced after merge.
+- PR: https://github.com/nishantnaagnihotri/tark-vitark/pull/78
+- Artifact changes: Runtime QA governance package merged to `master` (`runtime-qa.agent.md`, `runtime-qa-validation` skill, Gate 5.5 and merge-evidence wiring across shared/orchestrator/dev protocols). Local `master` fast-forwarded to `origin/master` at `f8a3330`.
+- Open questions status: None.
+- Major decision challenged: runtime-confidence model options were previously challenged (`tests-only` vs `tests + runtime QA`). Product Owner-selected path is now merged: coded tests remain mandatory and UI-impacting issues additionally require Gate 5.5 runtime validation (or explicit residual-risk acceptance).
+- Next micro-goal: Select the next active slice (or governance task) and run Gate 1 intake with a fresh Requirement Context Package.
+- Blockers/owner decisions: None.
