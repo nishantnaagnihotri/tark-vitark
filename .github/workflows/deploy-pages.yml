@@ -6,9 +6,12 @@ on:
             - master
         paths:
             - "src/**"
+            - "public/**"
             - "index.html"
             - "vite.config.ts"
             - "package.json"
+            - "package-lock.json"
+            - "tsconfig.json"
     workflow_dispatch:
 
 permissions:
@@ -39,7 +42,17 @@ jobs:
               run: npm ci
 
             - name: Build
-              run: npm run build
+              run: |
+                  REPO_NAME="${GITHUB_REPOSITORY#*/}"
+                  OWNER_NAME="${GITHUB_REPOSITORY_OWNER}"
+
+                  if [ "$REPO_NAME" = "${OWNER_NAME}.github.io" ]; then
+                      BASE_PATH="/"
+                  else
+                      BASE_PATH="/${REPO_NAME}/"
+                  fi
+
+                  npm run build -- --base "$BASE_PATH"
 
             - name: Setup Pages
               uses: actions/configure-pages@v5
