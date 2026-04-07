@@ -42,7 +42,7 @@ Follow the shared Domain Language Policy in `.github/AGENTS.md`. At Gate 1, veri
 
 ## Domain Ownership Policy
 
-Follow the shared Domain Ownership Policy in `.github/AGENTS.md`. Execute only orchestration-domain work (supervision, gate enforcement, routing, facilitation); delegate all domain execution to the owning agent.
+Follow the `domain-ownership-governance` skill (`.github/skills/domain-ownership-governance/SKILL.md`) for ownership boundaries and cross-domain routing rules. Execute only orchestration-domain work (supervision, gate enforcement, routing, facilitation); delegate all domain execution to the owning agent.
 
 ## PR Review Workflow
 
