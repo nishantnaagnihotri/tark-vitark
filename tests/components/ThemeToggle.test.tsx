@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { ThemeToggle } from '../../src/components/ThemeToggle';
 
 describe('ThemeToggle', () => {
@@ -47,5 +47,26 @@ describe('ThemeToggle', () => {
         sessionStorage.setItem('theme', 'dark');
         render(<ThemeToggle />);
         expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
+    });
+
+    it('falls back to prefers-color-scheme: dark when no sessionStorage value', () => {
+        const matchMediaSpy = vi.spyOn(window, 'matchMedia').mockImplementation(
+            (query: string) =>
+                ({
+                    matches: query === '(prefers-color-scheme: dark)',
+                    media: query,
+                    addEventListener: vi.fn(),
+                    removeEventListener: vi.fn(),
+                    addListener: vi.fn(),
+                    removeListener: vi.fn(),
+                    onchange: null,
+                    dispatchEvent: vi.fn(),
+                }) as MediaQueryList
+        );
+
+        render(<ThemeToggle />);
+        expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
+
+        matchMediaSpy.mockRestore();
     });
 });
