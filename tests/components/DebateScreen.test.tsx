@@ -51,9 +51,9 @@ describe('DebateScreen', () => {
     });
 
     it('has no input controls, forms, or buttons (read-only)', () => {
-        render(<DebateScreen />);
+        const { container } = render(<DebateScreen />);
         expect(screen.queryAllByRole('button')).toHaveLength(0);
         expect(screen.queryAllByRole('textbox')).toHaveLength(0);
-        expect(screen.queryByRole('form')).not.toBeInTheDocument();
+        expect(container.querySelector('form')).not.toBeInTheDocument();
     });
 });

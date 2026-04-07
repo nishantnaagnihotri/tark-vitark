@@ -10,17 +10,19 @@ interface TimelineProps {
 export function Timeline({ arguments: args }: TimelineProps) {
     return (
         <section className="timeline" aria-label="Debate arguments">
+            <div className="timeline__spine" aria-hidden="true">
+                <Divider orientation="vertical" />
+            </div>
             <ol className="timeline__list">
-                <li className="timeline__spine" aria-hidden="true">
-                    <Divider orientation="vertical" />
-                </li>
                 {args.map((arg) => (
                     <li
                         key={arg.id}
                         className={`timeline__item timeline__item--${arg.side}`}
                     >
-                        <span className="timeline__dot" aria-hidden="true" />
                         <ArgumentCard argument={arg} />
+                        <div className="timeline__spine-cell" aria-hidden="true">
+                            <span className="timeline__dot" />
+                        </div>
                     </li>
                 ))}
             </ol>
