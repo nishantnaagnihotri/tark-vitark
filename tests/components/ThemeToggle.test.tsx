@@ -10,7 +10,7 @@ describe('ThemeToggle', () => {
 
     it('renders a button with accessible label', () => {
         render(<ThemeToggle />);
-        expect(screen.getByRole('button', { name: /switch to/i })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /toggle theme/i })).toBeInTheDocument();
     });
 
     it('sets data-theme on html element after render', () => {
