@@ -10,7 +10,7 @@ Use this skill to validate implementation evidence and merge readiness for Gate 
 ## When To Use
 
 - Reviewing Build Output Package completeness
-- Running Gate 5 and Gate 6 checklists
+- Running Gate 5, Gate 5.5 Runtime QA, and Gate 6 checklists
 - Validating Gate 5.5 runtime QA verdict evidence for UI-impacting issues
 - Validating scenario-to-test evidence and provenance markers
 - Determining merge recommendation or loop-back

@@ -47,8 +47,16 @@ Use this skill to validate runtime behavior in a real browser session when manua
 
 ## Runtime QA Output Contract
 
-1. `Runtime QA Verdict: Pass | Fail | Blocked`.
-2. `Coverage Matrix`: journey x viewport x theme status table.
-3. `Findings`: defects, severity, and reproducibility notes.
-4. `Evidence`: command list, route list, and captured runtime observations.
-5. `Gate Recommendation`: proceed to Gate 6 | loop back to Dev | blocked pending owner action.
+1. Output must use exactly one of these forms:
+   - Executed runtime QA package for UI-impacting issues.
+   - Non-UI skip package when orchestrator has recorded `Runtime QA: Not Required` with rationale.
+2. Executed runtime QA package:
+   - `Runtime QA Verdict: Pass | Fail | Blocked`.
+   - `Coverage Matrix`: journey x viewport x theme status table.
+   - `Findings`: defects, severity, and reproducibility notes.
+   - `Evidence`: command list, route list, and captured runtime observations.
+   - `Gate Recommendation`: proceed to Gate 6 | loop back to Dev | blocked pending owner action.
+3. Non-UI skip package:
+   - `Runtime QA: Not Required`.
+   - `Rationale`: concise explanation of why the issue is non-UI and does not require live browser validation.
+   - `Gate Recommendation`: proceed according to orchestrator flow for non-UI work.
