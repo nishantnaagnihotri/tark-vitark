@@ -52,7 +52,9 @@ For dependent PR chains, follow the `stacked-pr-review-loop` skill (`.github/ski
 
 Orchestrator-specific rule:
 
-1. Record final disposition and rationale in context updates and gate artifacts.
+1. For multi-task dependent PR chains, run `Orchestrator-Managed Stacked Review Mode`: orchestrator owns review requests, polling, disposition triage, and base-to-tip progression.
+2. In `Orchestrator-Managed Stacked Review Mode`, dev handoffs are code-only by default; dev agents do not run independent review loops unless orchestrator explicitly delegates a specific review action.
+3. Record final disposition and rationale in context updates and gate artifacts.
 
 ## Environment Policy
 

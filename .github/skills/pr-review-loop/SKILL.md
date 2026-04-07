@@ -17,11 +17,17 @@ On-demand workflow for handling PR reviews end-to-end: intake triage, dispositio
 
 ## Procedure Overview
 
-1. **Create PR** → immediately request Copilot review → enter polling loop
+1. **Create PR** → review-loop owner immediately requests Copilot review → enter polling loop
 2. **Review arrives** → enumerate comments → classify each (Intake Protocol)
 3. **Execute dispositions** → fix accepted items, post challenge replies, escalate PO items
 4. **Push fixes** → request fresh Copilot review → poll again
 5. **Exit Copilot polling loop** when the latest Copilot review body says "generated 0 comments" (or equivalent). **Complete the overall PR review workflow** only when both conditions are met: no `semantic-open` review threads remain from the latest pass, and all challenges are resolved with Product Owner.
+
+## Review Loop Ownership
+
+1. By default, the implementing agent for a PR is the review-loop owner and runs this workflow.
+2. For dependent PR chains explicitly declared as `Orchestrator-Managed Stacked Review Mode`, the orchestrator is the review-loop owner for those PRs.
+3. In `Orchestrator-Managed Stacked Review Mode`, dev agents execute assigned code changes and push handback commits only; they do not independently request Copilot review, poll review state, or advance stack sequencing unless explicitly delegated by orchestrator.
 
 ---
 
@@ -50,9 +56,9 @@ On-demand workflow for handling PR reviews end-to-end: intake triage, dispositio
 
 ## 3. Copilot Review Loop Protocol
 
-1. Immediately after creating a PR, the agent must request Copilot review on that PR and begin the bounded polling window. This is automatic and unconditional — the agent must not pause, ask for confirmation, or wait for PO input before entering the loop. PR creation and review-loop entry are a single atomic sequence.
-2. After pushing a commit that addresses PR feedback, the agent must request a fresh Copilot review on that PR before considering the review cycle complete.
-3. Once an active PR review loop has started, the agent must continue it automatically after each push and review request; it must not pause for another Product Owner prompt unless a blocker, protocol conflict, missing capability, or explicit owner-decision point is reached.
+1. Immediately after creating a PR, the review-loop owner must request Copilot review on that PR and begin the bounded polling window. This is automatic and unconditional — the review-loop owner must not pause, ask for confirmation, or wait for PO input before entering the loop. PR creation and review-loop entry are a single atomic sequence.
+2. After pushing a commit that addresses PR feedback, the review-loop owner must request a fresh Copilot review on that PR before considering the review cycle complete.
+3. Once an active PR review loop has started, the review-loop owner must continue it automatically after each push and review request; it must not pause for another Product Owner prompt unless a blocker, protocol conflict, missing capability, or explicit owner-decision point is reached.
 4. The **only exit condition** from the review loop is when the latest Copilot review body semantically indicates **zero new comments**, including known variants such as **"generated 0 comments"**, **"0 new comments"**, or **"generated no new comments"**. Historical review records may remain on the PR; outdated or resolved threads do not count. The agent must not declare the loop complete based on thread-level analysis alone — the zero-comments result in the newest review is the sole pass criterion.
 5. Each new Copilot comment must go through the PR Review Intake Protocol (section 2 above) before any additional changes are proposed or made.
 6. If the loop cannot continue because of a protocol conflict, missing capability, or explicit owner-decision point, the agent must pause, discuss the issue with the Product Owner, and proceed only with the agreed position.
