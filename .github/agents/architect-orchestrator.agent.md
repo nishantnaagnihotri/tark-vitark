@@ -299,16 +299,7 @@ Local-validation rule:
 
 Build Gate Checklist (Orchestrator-owned):
 
-1. Scope lock: verify implementation stayed within assigned Issue scope and architecture boundaries.
-2. Issue metadata lock: verify issue includes acceptance criteria, slice path, architecture reference, and `Slice tracker:` backlink before invoking Dev.
-3. BDD lock: verify each GWT scenario from `05-architecture.md` has a corresponding test, and all tests are written in domain language (not infrastructure terms).
-4. Test-first lock: verify tests were written before or alongside implementation (not after). Tests must fail before implementation, pass after.
-5. Domain language lock: verify code uses domain terminology and concepts (e.g., `displayBrandMessage()` not `renderDOMElement()`). Variable names, function names, and class names reflect the problem domain.
-6. Verification lock: verify required test commands passed and evidence is explicit. All tests passing is mandatory.
-7. PR lock: verify PR exists and includes explicit issue-closing reference and scenario-to-test mapping evidence.
-8. Provenance lock: verify PR body includes `Execution-Agent: dev` marker.
-9. Risk lock: verify residual risks and rollback note are documented.
-10. Approval lock: verify unresolved open questions are resolved or explicitly accepted by Product Owner.
+1. Run the canonical checklist in `build-evidence-and-merge-readiness` (`.github/skills/build-evidence-and-merge-readiness/SKILL.md`).
 
 ## Merge Gate Trigger
 
@@ -328,22 +319,11 @@ Proceeding rule:
 
 Merge Gate Checklist (Orchestrator-owned):
 
-1. Scope lock: verify PR still maps cleanly to the intended Issue and approved slice boundaries.
-2. Verification lock: verify required tests passed and Build evidence remains sufficient.
-3. Provenance lock: verify PR includes issue-closing keyword and `Execution-Agent: dev` marker.
-4. Review lock: verify review comments are resolved or explicitly accepted by Product Owner.
-5. Copilot review loop lock: verify the latest Copilot review on the latest commit reports zero comments in its review body, including known phrasings such as **"generated 0 comments"**, **"0 new comments"**, or **"generated no new comments"**. This is the only exit condition. Historical outdated threads do not count. If the latest review still reports >0 comments, the loop must continue. `semantically-closed/tooling-unresolved` items must be reported explicitly and do not block merge unless Product Owner decides otherwise.
-6. Documentation lock: verify docs and release notes are updated when applicable.
-7. Rollback lock: verify rollback note is documented and feasible.
-8. Risk acceptance lock: verify residual risks are visible and explicitly accepted when required.
+1. Run the canonical checklist in `build-evidence-and-merge-readiness` (`.github/skills/build-evidence-and-merge-readiness/SKILL.md`).
 
 Merge Gate Output:
 
-1. `Merge Readiness`: Ready | Needs Clarification | Blocked.
-2. `Merge Review Summary`: concise summary of evidence reviewed.
-3. `Outstanding Gaps`: list of missing items before merge, if any.
-4. `Gate Decision`: recommend merge | must loop back.
-5. `Owner Action`: merge PR | request fixes.
+1. Follow the output contract in `build-evidence-and-merge-readiness` (`.github/skills/build-evidence-and-merge-readiness/SKILL.md`).
 
 ## Gate Handoff Prompt Library
 
@@ -351,33 +331,7 @@ Use the `gate-handoff-packet` skill (`.github/skills/gate-handoff-packet/SKILL.m
 
 ## Slice and Issue Management
 
-### Slice Folder
-
-Create a slice folder at `docs/slices/<slice-name>/` when Gate 1 passes. Use lowercase kebab-case for `<slice-name>`. Write the approved artifact to the folder after each gate passes:
-
-| File | Gate | Content |
-|---|---|---|
-| `01-requirement.md` | Gate 1 | Requirement Context Package |
-| `02-prd.md` | Gate 2 | PRD Draft Package |
-| `03-ux.md` | Gate 3A | UX Flow/State Package |
-| `04-design-qa.md` | Gate 3C | Design QA Verdict Package (includes Figma design reference) |
-| `05-architecture.md` | Gate 4 | Architecture Plan |
-| `06-tasks.md` | Gate 4 end | Task breakdown with GitHub Issue numbers |
-
-Downstream agents receive the slice folder path in their handoff packet and read artifacts directly from it instead of requiring full pasted context.
-
-### GitHub Issues
-
-At the end of Gate 4, after the architecture plan is approved:
-
-1. Create or update one slice tracker issue titled `[Slice] <slice-name>` with label `slice`.
-2. Decompose the architecture plan into atomic coding tasks.
-3. Create one GitHub Issue per task with labels `user-story` and `slice:<slice-name>`, and required fields: task description, acceptance criteria, slice folder path, relevant `05-architecture.md` section reference, and a `Slice tracker:` link back to the slice issue.
-4. Update the slice tracker issue with a `User stories` section containing links to all created story issues.
-5. Record Issue numbers in `06-tasks.md`.
-6. Gate 5 (Build) is authorized only after Issues are created and recorded.
-7. Coder agents at Gate 5 receive an Issue number and slice folder path as their primary input.
-8. Each coder agent opens a PR that closes its Issue. PR merge is the unit of completion.
+Follow `slice-traceability-and-issue-ops` (`.github/skills/slice-traceability-and-issue-ops/SKILL.md`) for slice artifact persistence, slice tracker/story issue creation, and `06-tasks.md` traceability requirements.
 
 ## Handoff Packet Format
 
@@ -412,13 +366,7 @@ After any gate transition or major owner decision:
 
 ## Merge Recommendation Checklist
 
-Recommend merge only if all are true:
-
-1. Scope stayed within approved slice.
-2. Required tests passed.
-3. Review issues are resolved or explicitly accepted by Product Owner.
-4. Documentation and release notes are updated.
-5. Rollback approach is documented.
+Follow the merge recommendation checklist in `build-evidence-and-merge-readiness` (`.github/skills/build-evidence-and-merge-readiness/SKILL.md`).
 
 ## Output Format
 
