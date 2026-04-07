@@ -21,7 +21,7 @@ On-demand workflow for handling PR reviews end-to-end: intake triage, dispositio
 2. **Review arrives** → enumerate comments → classify each (Intake Protocol)
 3. **Execute dispositions** → fix accepted items, post challenge replies, escalate PO items
 4. **Push fixes** → request fresh Copilot review → poll again
-5. **Exit** when latest review body says "generated 0 comments" (or equivalent) AND all challenges resolved with PO
+5. **Exit Copilot polling loop** when the latest Copilot review body says "generated 0 comments" (or equivalent). **Complete the overall PR review workflow** only when both conditions are met: no `semantic-open` review threads remain from the latest pass, and all challenges are resolved with Product Owner.
 
 ---
 
