@@ -57,27 +57,19 @@ const tokensCss = readFileSync(
 
 function parseTokensForTheme(css: string, theme: 'light' | 'dark'): Map<string, string> {
     const tokens = new Map<string, string>();
-    const selectorPattern =
+    const blockRegex =
         theme === 'light'
-            ? /(?::root|data-theme="light")\s*\{([^}]+)\}/g
-            : /\[data-theme="dark"\]\s*\{([^}]+)\}/;
-    let match: RegExpExecArray | null;
-    const regex = new RegExp(selectorPattern);
-    const blocks: string[] = [];
+            ? /(?::root|\[data-theme="light"\])\s*\{([^}]+)\}/g
+            : /\[data-theme="dark"\]\s*\{([^}]+)\}/g;
+    let blockMatch: RegExpExecArray | null;
 
-    if (theme === 'light') {
-        // Capture :root and [data-theme="light"] blocks (first top-level rule)
-        const m = css.match(/:root[\s\S]*?\{([^}]+)\}/);
-        if (m) blocks.push(m[1]);
-    } else {
-        const m = css.match(/\[data-theme="dark"\]\s*\{([^}]+)\}/);
-        if (m) blocks.push(m[1]);
-    }
-
-    for (const block of blocks) {
+    while ((blockMatch = blockRegex.exec(css)) !== null) {
+        const block = blockMatch[1];
         const propRegex = /(--[\w-]+)\s*:\s*([^;]+);/g;
-        while ((match = propRegex.exec(block)) !== null) {
-            tokens.set(match[1], match[2].trim());
+        let propMatch: RegExpExecArray | null;
+
+        while ((propMatch = propRegex.exec(block)) !== null) {
+            tokens.set(propMatch[1], propMatch[2].trim());
         }
     }
     return tokens;
