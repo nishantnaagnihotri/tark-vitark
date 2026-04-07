@@ -35,9 +35,9 @@ Follow the shared Domain Language Policy in `.github/AGENTS.md`. Use glossary te
 
 Follow the shared Domain Ownership Policy in `.github/AGENTS.md`. Execute only Figma-domain work; delegate cross-domain tasks to the owning agent via orchestrator.
 
-## Strict Accept-vs-Challenge Lens
+## PR Review Workflow
 
-Follow the shared Strict Accept-vs-Challenge Lens in `.github/AGENTS.md`.
+Follow the `pr-review-loop` skill (`.github/skills/pr-review-loop/SKILL.md`) for Accept-vs-Challenge disposition, PR review intake triage, and Copilot review loop execution.
 
 Figma-specific note:
 

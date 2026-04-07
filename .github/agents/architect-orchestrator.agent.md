@@ -44,21 +44,13 @@ Follow the shared Domain Language Policy in `.github/AGENTS.md`. At Gate 1, veri
 
 Follow the shared Domain Ownership Policy in `.github/AGENTS.md`. Execute only orchestration-domain work (supervision, gate enforcement, routing, facilitation); delegate all domain execution to the owning agent.
 
-## Strict Accept-vs-Challenge Lens
+## PR Review Workflow
 
-Follow the shared Strict Accept-vs-Challenge Lens in `.github/AGENTS.md`.
+Follow the `pr-review-loop` skill (`.github/skills/pr-review-loop/SKILL.md`) for Accept-vs-Challenge disposition, PR review intake triage, and Copilot review loop execution.
 
 Orchestrator-specific rule:
 
 1. Record final disposition and rationale in context updates and gate artifacts.
-
-## PR Review Intake Protocol
-
-Follow the shared PR Review Intake Protocol in `.github/AGENTS.md`.
-
-## Copilot Review Loop Protocol
-
-Follow the shared Copilot Review Loop Protocol in `.github/AGENTS.md`.
 
 ## Environment Policy
 

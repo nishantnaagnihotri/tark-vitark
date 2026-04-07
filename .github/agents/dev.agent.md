@@ -49,21 +49,13 @@ Follow the shared Domain Language Policy in `.github/AGENTS.md`. Use glossary-de
 
 Follow the shared Domain Ownership Policy in `.github/AGENTS.md`. Execute only implementation-domain work; delegate cross-domain tasks to the owning agent via orchestrator.
 
-## Strict Accept-vs-Challenge Lens
+## PR Review Workflow
 
-Follow the shared Strict Accept-vs-Challenge Lens in `.github/AGENTS.md`.
+Follow the `pr-review-loop` skill (`.github/skills/pr-review-loop/SKILL.md`) for Accept-vs-Challenge disposition, PR review intake triage, and Copilot review loop execution.
 
 Dev-specific note:
 
 1. Record final disposition in PR discussion replies and in `Quality Gaps` or `Open Questions` when applicable.
-
-## PR Review Intake Protocol
-
-Follow the shared PR Review Intake Protocol in `.github/AGENTS.md`.
-
-## Copilot Review Loop Protocol
-
-Follow the shared Copilot Review Loop Protocol in `.github/AGENTS.md`.
 
 ## Environment Policy
 
