@@ -3,6 +3,7 @@
 
 .debate-screen {
     min-height: 100vh;
+    min-height: 100dvh;
     background-color: var(--color-surface-default);
     color: var(--color-on-surface);
 }
