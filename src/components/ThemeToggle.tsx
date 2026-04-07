@@ -1,6 +1,8 @@
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import '../styles/components/theme-toggle.css';
 
+const THEME_STORAGE_KEY = 'tark-vitark:theme';
+
 function safeStorageGet(key: string): string | null {
     try {
         return sessionStorage.getItem(key);
@@ -24,7 +26,7 @@ function getSystemTheme(): 'light' | 'dark' {
 }
 
 function getInitialTheme(): { theme: 'light' | 'dark'; explicit: boolean } {
-    const stored = safeStorageGet('theme');
+    const stored = safeStorageGet(THEME_STORAGE_KEY);
     if (stored === 'light' || stored === 'dark')
         return { theme: stored, explicit: true };
 
@@ -43,7 +45,7 @@ export function ThemeToggle() {
     useLayoutEffect(() => {
         if (hasExplicitChoice.current) {
             document.documentElement.setAttribute('data-theme', theme);
-            safeStorageSet('theme', theme);
+            safeStorageSet(THEME_STORAGE_KEY, theme);
         }
     }, [theme]);
 
@@ -57,7 +59,7 @@ export function ThemeToggle() {
             type="button"
             className="theme-toggle"
             onClick={toggle}
-            aria-label="Toggle theme"
+            aria-label="Dark theme"
             aria-pressed={theme === 'dark'}
         >
             {theme === 'light' ? '🌙' : '☀️'}

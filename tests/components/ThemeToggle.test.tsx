@@ -10,7 +10,7 @@ describe('ThemeToggle', () => {
 
     it('renders a button with accessible label', () => {
         render(<ThemeToggle />);
-        expect(screen.getByRole('button', { name: /toggle theme/i })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /dark theme/i })).toBeInTheDocument();
     });
 
     it('does not set data-theme on first render without stored value', () => {
@@ -19,7 +19,7 @@ describe('ThemeToggle', () => {
     });
 
     it('sets data-theme on first render when sessionStorage has a value', () => {
-        sessionStorage.setItem('theme', 'light');
+        sessionStorage.setItem('tark-vitark:theme', 'light');
         render(<ThemeToggle />);
         expect(document.documentElement.getAttribute('data-theme')).toBe('light');
     });
@@ -42,13 +42,13 @@ describe('ThemeToggle', () => {
 
         fireEvent.click(button);
 
-        const stored = sessionStorage.getItem('theme');
+        const stored = sessionStorage.getItem('tark-vitark:theme');
         expect(stored).toMatch(/^(light|dark)$/);
         expect(stored).toBe(document.documentElement.getAttribute('data-theme'));
     });
 
     it('restores theme from sessionStorage', () => {
-        sessionStorage.setItem('theme', 'dark');
+        sessionStorage.setItem('tark-vitark:theme', 'dark');
         render(<ThemeToggle />);
         expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
     });
