@@ -125,7 +125,7 @@ Use the `architecture-gate-orchestration` skill as the single source of truth fo
 
 Follow the `build-merge-gate-orchestration` skill (`.github/skills/build-merge-gate-orchestration/SKILL.md`) for Gate 5 issue-based build handoff, Gate 5.5 runtime QA validation, Gate 6 local merge-readiness execution, readiness/proceeding rules, and checklist/output validation.
 
-Use this skill as the single source of truth for Gate 5 and Gate 6 closure criteria.
+Use this skill as the single source of truth for Gate 5, Gate 5.5, and Gate 6 closure criteria.
 
 ## Runtime QA Validation Workflow
 

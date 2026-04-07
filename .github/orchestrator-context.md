@@ -61,11 +61,11 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). U
     - Input: one approved Gate 4 issue with acceptance criteria, slice path, and architecture reference.
     - Output: Build Output Package with implementation summary, verification evidence, BDD evidence, PR package, quality gaps, open questions, and gate decision.
 
-5.5. Gate 5.5 (Runtime QA)
+6. Gate 5.5 (Runtime QA)
   - Input: Gate 5 build output, PR link, acceptance-criterion journey map, and runtime setup notes.
   - Output: Runtime QA Verdict Package (`Pass | Fail | Blocked`) with coverage matrix, findings, and loop-back recommendation.
 
-6. Gate 6 (Merge)
+7. Gate 6 (Merge)
     - Input: GitHub Issue reference, PR link, and Build Output Package.
   - Output: merge readiness, review summary, runtime QA status, outstanding gaps, gate decision, and owner action.
 
