@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { DebateScreen } from '../../src/components/DebateScreen';
 import { DEBATE } from '../../src/data/debate';
 
@@ -85,12 +85,15 @@ describe('aria-label verification on argument cards', () => {
 });
 
 describe('Theme switching', () => {
+    afterEach(() => {
+        document.documentElement.removeAttribute('data-theme');
+    });
+
     it('data-theme="dark" can be set on document root', () => {
         document.documentElement.setAttribute('data-theme', 'dark');
         expect(document.documentElement.getAttribute('data-theme')).toBe(
             'dark',
         );
-        document.documentElement.removeAttribute('data-theme');
     });
 
     it('data-theme="light" can be set on document root', () => {
@@ -98,7 +101,6 @@ describe('Theme switching', () => {
         expect(document.documentElement.getAttribute('data-theme')).toBe(
             'light',
         );
-        document.documentElement.removeAttribute('data-theme');
     });
 
     it('tokens.css includes [data-theme="dark"] selector', async () => {
@@ -136,6 +138,5 @@ describe('Theme switching', () => {
         const { unmount } = render(<DebateScreen />);
         expect(screen.getByRole('main')).toBeInTheDocument();
         unmount();
-        document.documentElement.removeAttribute('data-theme');
     });
 });

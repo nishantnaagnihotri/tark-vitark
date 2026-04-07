@@ -58,22 +58,25 @@ describe('axe-core accessibility audit — DebateScreen', () => {
     it('renders under dark theme with zero critical/serious violations', async () => {
         document.documentElement.setAttribute('data-theme', 'dark');
         const { container, unmount } = render(<DebateScreen />);
-        const results = await runAxe(container);
-        const criticalSerious = filterViolations(results, [
-            'critical',
-            'serious',
-        ]);
-        unmount();
-        document.documentElement.removeAttribute('data-theme');
+        try {
+            const results = await runAxe(container);
+            const criticalSerious = filterViolations(results, [
+                'critical',
+                'serious',
+            ]);
 
-        if (criticalSerious.length > 0) {
-            const summary = criticalSerious.map(
-                (v) =>
-                    `[${v.impact}] ${v.id}: ${v.description} (${v.nodes.length} instance(s))`,
-            );
-            expect.fail(
-                `axe-core (dark theme) found ${criticalSerious.length} critical/serious violation(s):\n${summary.join('\n')}`,
-            );
+            if (criticalSerious.length > 0) {
+                const summary = criticalSerious.map(
+                    (v) =>
+                        `[${v.impact}] ${v.id}: ${v.description} (${v.nodes.length} instance(s))`,
+                );
+                expect.fail(
+                    `axe-core (dark theme) found ${criticalSerious.length} critical/serious violation(s):\n${summary.join('\n')}`,
+                );
+            }
+        } finally {
+            unmount();
+            document.documentElement.removeAttribute('data-theme');
         }
     });
 
