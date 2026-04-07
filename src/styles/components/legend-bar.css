@@ -33,11 +33,11 @@
 }
 
 .legend-bar__dot--tark {
-    background-color: var(--color-tark-header);
+    background-color: var(--color-tark-surface);
 }
 
 .legend-bar__dot--vitark {
-    background-color: var(--color-vitark-header);
+    background-color: var(--color-vitark-surface);
 }
 
 .legend-bar__separator {

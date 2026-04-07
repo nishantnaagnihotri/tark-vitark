@@ -50,10 +50,14 @@ describe('DebateScreen', () => {
         expect(main).toHaveClass('debate-screen');
     });
 
-    it('has no input controls, forms, or buttons (read-only)', () => {
+    it('has no input controls or forms (read-only except theme toggle)', () => {
         const { container } = render(<DebateScreen />);
-        expect(screen.queryAllByRole('button')).toHaveLength(0);
         expect(screen.queryAllByRole('textbox')).toHaveLength(0);
         expect(container.querySelector('form')).not.toBeInTheDocument();
+    });
+
+    it('composes ThemeToggle component', () => {
+        render(<DebateScreen />);
+        expect(screen.getByRole('button', { name: /switch to/i })).toBeInTheDocument();
     });
 });
