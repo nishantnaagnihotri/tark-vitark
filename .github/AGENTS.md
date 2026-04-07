@@ -30,9 +30,9 @@ Applied by orchestrator at Gate 1 intake. Product Owner confirms classification.
 
 | Level | Description | Example | Gate Flow |
 |---|---|---|---|
-| Trivial | Static content, copy change, config-only update | Splash page, copy update, favicon | Gate 1 (lightweight) -> Gate 5 -> Gate 6 |
-| Standard | Single-module UI feature, no API | Form, component, page with logic | Full 6-gate flow. Architecture focuses on Implementation Design first. |
-| Complex | Multi-module, API integration, data/infrastructure changes | Auth flow, checkout, dashboard | Full 6-gate flow with full architecture depth. |
+| Trivial | Static content, copy change, config-only update | Splash page, copy update, favicon | Gate 1 (lightweight) -> Gate 5 -> Gate 5.5 (if UI-impacting) -> Gate 6 |
+| Standard | Single-module UI feature, no API | Form, component, page with logic | Full 6-gate flow with Gate 5.5 runtime QA for UI-impacting issues. Architecture focuses on Implementation Design first. |
+| Complex | Multi-module, API integration, data/infrastructure changes | Auth flow, checkout, dashboard | Full 6-gate flow with Gate 5.5 runtime QA for UI-impacting issues and full architecture depth. |
 
 Classification criteria:
 
