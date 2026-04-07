@@ -13,11 +13,15 @@ describe('ThemeToggle', () => {
         expect(screen.getByRole('button', { name: /toggle theme/i })).toBeInTheDocument();
     });
 
-    it('sets data-theme on html element after render', () => {
+    it('does not set data-theme on first render without stored value', () => {
         render(<ThemeToggle />);
-        expect(document.documentElement.getAttribute('data-theme')).toMatch(
-            /^(light|dark)$/
-        );
+        expect(document.documentElement.getAttribute('data-theme')).toBeNull();
+    });
+
+    it('sets data-theme on first render when sessionStorage has a value', () => {
+        sessionStorage.setItem('theme', 'light');
+        render(<ThemeToggle />);
+        expect(document.documentElement.getAttribute('data-theme')).toBe('light');
     });
 
     it('toggles theme on click', () => {
@@ -49,7 +53,7 @@ describe('ThemeToggle', () => {
         expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
     });
 
-    it('falls back to prefers-color-scheme: dark when no sessionStorage value', () => {
+    it('reflects system dark preference in button without setting data-theme', () => {
         const matchMediaSpy = vi.spyOn(window, 'matchMedia').mockImplementation(
             (query: string) =>
                 ({
@@ -65,7 +69,10 @@ describe('ThemeToggle', () => {
         );
 
         render(<ThemeToggle />);
-        expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
+        expect(document.documentElement.getAttribute('data-theme')).toBeNull();
+        const button = screen.getByRole('button');
+        expect(button).toHaveAttribute('aria-pressed', 'true');
+        expect(button).toHaveTextContent('☀️');
 
         matchMediaSpy.mockRestore();
     });
