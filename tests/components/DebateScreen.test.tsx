@@ -1,9 +1,14 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { DebateScreen } from '../../src/components/DebateScreen';
 import { DEBATE } from '../../src/data/debate';
 
 describe('DebateScreen', () => {
+    afterEach(() => {
+        document.documentElement.removeAttribute('data-theme');
+        sessionStorage.clear();
+    });
+
     it('renders a <main> landmark with role="main"', () => {
         render(<DebateScreen />);
         const main = screen.getByRole('main');
