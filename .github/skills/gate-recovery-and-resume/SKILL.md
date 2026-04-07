@@ -12,7 +12,7 @@ Use this skill for failure handling and safe recovery before continuing gate pro
 - An agent fails mid-gate and a partial artifact exists
 - Figma MCP calls fail during gate work
 - Copilot review polling times out
-- You are resuming before Gate 3 or later
+- You are resuming before any Gate 3 or later work
 - You need explicit escalation criteria
 
 ## Recovery Protocol
