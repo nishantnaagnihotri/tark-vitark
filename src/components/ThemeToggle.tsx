@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useLayoutEffect, useState } from 'react';
 import '../styles/components/theme-toggle.css';
 
 function getInitialTheme(): 'light' | 'dark' {
@@ -12,7 +12,7 @@ function getInitialTheme(): 'light' | 'dark' {
 export function ThemeToggle() {
     const [theme, setTheme] = useState<'light' | 'dark'>(getInitialTheme);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         document.documentElement.setAttribute('data-theme', theme);
         sessionStorage.setItem('theme', theme);
     }, [theme]);

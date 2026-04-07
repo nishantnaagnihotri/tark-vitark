@@ -1,3 +1,7 @@
+body {
+    margin: 0;
+}
+
 :root,
 [data-theme="light"] {
   /* ── Layer 1: M3 Baseline (computed from seed #3949AB) ── */
