@@ -157,12 +157,7 @@ Cloud-return rule:
 
 Follow the `design-gate-orchestration` skill (`.github/skills/design-gate-orchestration/SKILL.md`) for full Gate 3 orchestration, including UX/Figma/Design QA substep triggers, local-only execution rules, validation checks, revision loops, and Product Owner approval closure criteria.
 
-Substep trigger order:
-
-1. Gate 3A: invoke `ux-agent` with `PRD Draft Package` and explicit Product Owner UX/platform constraints.
-2. Gate 3B: invoke `figma-agent` with `UX Flow/State Package` and explicit Product Owner design-system/platform constraints.
-3. Gate 3C: invoke `design-qa-agent` with `Design Draft Package`, `UX Flow/State Package`, and `PRD Draft Package`.
-4. Do not close Gate 3 or begin Gate 4 unless Gate 3 completion conditions in `design-gate-orchestration` are satisfied.
+Use the skill as the single source of truth for Gate 3A/3B/3C trigger order and Gate 3 closure criteria before Gate 4 progression.
 
 ## Architecture Gate Handoff Trigger
 
