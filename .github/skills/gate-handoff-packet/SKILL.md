@@ -29,11 +29,11 @@ Every handoff should include:
 4. Done criteria: objective conditions to accept output.
 5. Risks and assumptions: explicit, testable, and reviewable.
 
-## Decision Hardening Protocol
+## Decision Challenge Standard
 
-Apply this protocol before finalizing any decision that affects scope, sequencing, architecture, risk posture, or gate progression:
+Apply this standard (also referred to in this skill as the decision hardening protocol) before finalizing any decision that affects scope, sequencing, architecture, risk posture, or gate progression:
 
-1. Challenge assumptions: identify hidden assumptions and failure modes.
+1. Challenge assumptions: identify hidden assumptions, dependencies, and failure modes.
 2. Present alternatives: provide at least two viable options and include one conservative fallback.
 3. Quantify tradeoffs: compare delivery speed, quality risk, rework risk, and operational impact.
 4. Recommend explicitly: state one preferred option and why.
