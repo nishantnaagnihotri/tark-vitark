@@ -1,0 +1,114 @@
+/* Timeline + spine layout — Feature-specific styles
+   Figma reference: CsPAyUdLSStdmNpmiBMESQ
+   Desktop: 3-col grid (572 | 32 spine | 572) within 1200px content
+   Tablet:  3-col grid (316 | 32 spine | 316) within 688px content
+   Mobile:  single-col flex, chat-bubble stagger ~72% width */
+
+.timeline {
+    padding: 0 20px;
+}
+
+.timeline__list {
+    list-style: none;
+    margin: 0;
+    padding: 24px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: relative;
+}
+
+/* ── Spine (hidden on mobile, shown tablet+) ── */
+.timeline__spine {
+    display: none;
+}
+
+/* ── Spine dot markers (hidden on mobile) ── */
+.timeline__dot {
+    display: none;
+}
+
+/* ── List items: mobile-first single column ── */
+.timeline__item {
+    width: 72%;
+}
+
+.timeline__item--tark {
+    align-self: flex-start;
+}
+
+.timeline__item--vitark {
+    align-self: flex-end;
+}
+
+/* ── Tablet (≥481px): CSS Grid with center spine ── */
+@media (min-width: 481px) {
+    .timeline {
+        padding: 0 40px;
+    }
+
+    .timeline__list {
+        display: grid;
+        grid-template-columns: 1fr 32px 1fr;
+        gap: 16px 0;
+        padding-top: 24px;
+    }
+
+    .timeline__spine {
+        display: block;
+        grid-column: 2;
+        grid-row: 1 / -1;
+        position: relative;
+    }
+
+    .timeline__spine .divider {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .timeline__dot {
+        display: block;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: var(--color-spine-dot);
+        z-index: 1;
+    }
+
+    .timeline__item {
+        width: auto;
+    }
+
+    .timeline__item--tark {
+        grid-column: 1;
+        align-self: auto;
+    }
+
+    .timeline__item--vitark {
+        grid-column: 3;
+        align-self: auto;
+    }
+
+    /* Empty spacer to keep grid rows aligned */
+    .timeline__spacer--left {
+        grid-column: 1;
+    }
+
+    .timeline__spacer--right {
+        grid-column: 3;
+    }
+}
+
+/* ── Desktop (≥1024px): wider padding ── */
+@media (min-width: 1024px) {
+    .timeline {
+        padding: 0 120px;
+    }
+}
