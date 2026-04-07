@@ -54,13 +54,8 @@ describe('DebateScreen', () => {
         const { container } = render(<DebateScreen />);
         const buttons = screen.getAllByRole('button');
         expect(buttons).toHaveLength(1);
-        expect(buttons[0]).toHaveAccessibleName(/switch to/i);
+        expect(buttons[0]).toHaveAccessibleName(/toggle theme/i);
         expect(screen.queryAllByRole('textbox')).toHaveLength(0);
         expect(container.querySelector('form')).not.toBeInTheDocument();
-    });
-
-    it('composes ThemeToggle component', () => {
-        render(<DebateScreen />);
-        expect(screen.getByRole('button', { name: /switch to/i })).toBeInTheDocument();
     });
 });
