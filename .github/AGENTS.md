@@ -1,4 +1,4 @@
-<!-- Protocol-Version: 3.4 -->
+<!-- Protocol-Version: 3.5 -->
 <!-- Last-Updated: 2026-04-07 -->
 
 # Shared Agent Protocol
@@ -119,6 +119,10 @@ The full Domain Ownership Policy - universal rules, Figma read/write routing, cr
 ## PR Review Workflow
 
 The full PR review workflow — Strict Accept-vs-Challenge Lens, PR Review Intake Protocol, and Copilot Review Loop Protocol — is defined in the `pr-review-loop` skill (`.github/skills/pr-review-loop/SKILL.md`). All agents must follow that skill when creating PRs, handling review comments, or running the Copilot review loop.
+
+## Stacked PR Review-Loop Workflow
+
+The stacked PR review-loop workflow - pipelined review requests, base-to-tip disposition sequencing, retarget/sync order, and rebase-compatibility recovery - is defined in the `stacked-pr-review-loop` skill (`.github/skills/stacked-pr-review-loop/SKILL.md`). Agents must follow this skill when handling dependent PR chains.
 
 ## Gate Recovery And Resume Workflow
 
