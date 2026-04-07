@@ -6,6 +6,7 @@
 
 .timeline {
     padding: 0 20px;
+    position: relative;
 }
 
 .timeline__list {
@@ -15,16 +16,15 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    position: relative;
 }
 
-/* ── Spine (hidden on mobile, shown tablet+) ── */
+/* ── Spine line (hidden on mobile, overlaid tablet+) ── */
 .timeline__spine {
     display: none;
 }
 
-/* ── Spine dot markers (hidden on mobile) ── */
-.timeline__dot {
+/* ── Per-row spine cell (hidden on mobile) ── */
+.timeline__spine-cell {
     display: none;
 }
 
@@ -47,18 +47,14 @@
         padding: 0 40px;
     }
 
-    .timeline__list {
-        display: grid;
-        grid-template-columns: 1fr 32px 1fr;
-        gap: 16px 0;
-        padding-top: 24px;
-    }
-
     .timeline__spine {
         display: block;
-        grid-column: 2;
-        grid-row: 1 / -1;
-        position: relative;
+        position: absolute;
+        top: 24px;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        pointer-events: none;
     }
 
     .timeline__spine .divider {
@@ -69,40 +65,53 @@
         transform: translateX(-50%);
     }
 
+    .timeline__list {
+        display: grid;
+        grid-template-columns: 1fr 32px 1fr;
+        gap: 16px 0;
+        padding-top: 24px;
+    }
+
+    /* Each item spans all 3 columns; subgrid places children */
+    .timeline__item {
+        width: auto;
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: subgrid;
+        align-items: center;
+    }
+
+    .timeline__item--tark {
+        align-self: auto;
+    }
+
+    .timeline__item--vitark {
+        align-self: auto;
+    }
+
+    /* Place card in correct column based on side */
+    .timeline__item--tark > .argument-card {
+        grid-column: 1;
+    }
+
+    .timeline__item--vitark > .argument-card {
+        grid-column: 3;
+    }
+
+    /* Per-row spine cell: column 2, centered dot */
+    .timeline__spine-cell {
+        display: flex;
+        grid-column: 2;
+        align-items: center;
+        justify-content: center;
+    }
+
     .timeline__dot {
-        display: block;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
         width: 10px;
         height: 10px;
         border-radius: 50%;
         background-color: var(--color-spine-dot);
         z-index: 1;
-    }
-
-    .timeline__item {
-        width: auto;
-    }
-
-    .timeline__item--tark {
-        grid-column: 1;
-        align-self: auto;
-    }
-
-    .timeline__item--vitark {
-        grid-column: 3;
-        align-self: auto;
-    }
-
-    /* Empty spacer to keep grid rows aligned */
-    .timeline__spacer--left {
-        grid-column: 1;
-    }
-
-    .timeline__spacer--right {
-        grid-column: 3;
     }
 }
 
