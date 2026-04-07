@@ -1,4 +1,4 @@
-<!-- Protocol-Version: 2.3 -->
+<!-- Protocol-Version: 2.4 -->
 <!-- Last-Updated: 2026-04-07 -->
 
 # Shared Agent Protocol
@@ -92,31 +92,9 @@ Product Owner may override classification at any time.
 3. Local git commands remain allowed for repository-local branch, commit, diff, and workspace inspection tasks that are not GitHub API interactions.
 4. If a required GitHub action is not available through the GitHub MCP server, the agent must explicitly state the MCP gap and request Product Owner approval before using any fallback path.
 
-## Cloud Handoff Policy
+## Gate Handoff And Decision Workflow
 
-1. For any cloud invocation, orchestrator provides a manual handoff prompt and pauses progression until return artifact is pasted.
-2. Gate progression resumes only after returned artifact is validated in local context.
-
-## Handoff Contract Format
-
-Every handoff should include:
-
-1. Context: objective, scope, constraints.
-2. Inputs: files, requirements, acceptance criteria.
-3. Output expected: concrete artifact format.
-4. Done criteria: objective conditions to accept output.
-5. Risks and assumptions: explicit, testable, and reviewable.
-
-## Decision Challenge Standard
-
-Before accepting major owner decisions (scope, sequencing, architecture tradeoffs, gate bypass requests, or timeline-risk swaps), agents must:
-
-1. Present at least two viable alternatives, including a conservative option.
-2. State tradeoffs explicitly: delivery speed, quality risk, rework risk, and operational impact.
-3. Recommend one option with clear rationale.
-4. Confirm final owner choice and record it in orchestration context.
-
-The orchestrator challenges Product Owner decisions with alternatives and tradeoffs. This applies directly to scope, sequencing, architecture, and risk posture. For domain-specific design decisions, the orchestrator may still challenge for clarity, ask tradeoff questions, and surface concerns, but must route origination of design alternatives to the UX Agent per the Domain Ownership Policy.
+The full gate handoff and decision workflow - Cloud Handoff Policy, Handoff Contract Format, Decision Challenge Standard, and copy-paste gate prompts - is defined in the `gate-handoff-packet` skill (`.github/skills/gate-handoff-packet/SKILL.md`). Agents must follow this skill when preparing handoff packets, handling cloud handoff, or running gate-critical decision hardening.
 
 ## Domain Ownership Policy
 
@@ -142,43 +120,9 @@ No agent may perform work owned by another agent's domain. Each agent executes o
 
 The full PR review workflow — Strict Accept-vs-Challenge Lens, PR Review Intake Protocol, and Copilot Review Loop Protocol — is defined in the `pr-review-loop` skill (`.github/skills/pr-review-loop/SKILL.md`). All agents must follow that skill when creating PRs, handling review comments, or running the Copilot review loop.
 
-## Recovery Protocol
+## Gate Recovery And Resume Workflow
 
-### Partial Gate Artifact
-
-1. If an agent fails mid-gate and a partial artifact is written to `docs/slices/<slice-name>/`, do not advance gate status.
-2. Mark the artifact with `STATUS: INCOMPLETE` at the top.
-3. Re-invoke the same agent with the same inputs and overwrite the incomplete artifact.
-4. If re-invocation fails twice, escalate to Product Owner for manual intervention.
-
-### Figma MCP Failure
-
-1. If a Figma MCP call fails, retry once.
-2. If retry fails, report the MCP error to Product Owner and pause gate progression.
-3. Do not fall back to screenshot-only approximation without explicit Product Owner approval.
-
-### Copilot Review Poll Timeout
-
-1. If the bounded polling window times out, report `status: timeout` and pause.
-2. If timeout occurs three consecutive times for the same PR, escalate with options: extend wait, accept current review state, or investigate service status.
-3. Do not silently skip the review loop.
-
-### Config File Validation
-
-On resume, before any Gate 3 or later work:
-
-1. Validate that `.figma-config.local` exists and is parseable as key-value configuration.
-2. Before the first Gate 3 bootstrap, require `project_name` and `plan_key`. `design_system_library_file_key` may be absent or empty at this stage and must not block the first Gate 3 bootstrap.
-3. After the first Gate 3 bootstrap, require `design_system_library_file_key` to be present and non-empty.
-4. If any key that is required for the current stage is missing, empty, or malformed, report the gap and block Gate 3 progression until resolved.
-
-## Escalation
-
-Escalate to Product Owner when:
-
-1. Requirement readiness is blocked.
-2. Scope, security, or architecture tradeoffs need human choice.
-3. Test and review findings conflict with delivery timeline.
+The full recovery and resume workflow - partial artifact recovery, Figma MCP failure handling, Copilot poll timeout handling, config validation on resume, and escalation - is defined in the `gate-recovery-and-resume` skill (`.github/skills/gate-recovery-and-resume/SKILL.md`). All agents must follow this skill when a gate run fails, is resumed, or is blocked by external tooling.
 
 ## Protocol Versioning
 
