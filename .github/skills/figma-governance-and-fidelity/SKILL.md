@@ -21,7 +21,7 @@ Use this skill to enforce shared Figma conventions and fidelity expectations acr
 3. Frame naming convention: `<Screen>/<State>/<Theme>`.
 4. Enhancement slices are self-contained and reference prior slice files as baseline.
 5. Figma file URL is recorded in `03-ux.md` and `04-design-qa.md`. Raw file keys must not appear in git-tracked artifacts - store them only in `.figma-config.local`.
-6. All Figma files must reside in the designated project (not Drafts). MCP `create_new_file` creates files in Drafts (API limitation); the file must be manually moved to the project before any further design work proceeds. No design activity on files in Drafts.
+6. All Figma files must reside in the designated project (not Drafts). MCP `create_new_file` creates files in Drafts (API limitation); the Product Owner must manually move the file to the designated project before any further design work proceeds. No design activity on files in Drafts.
 
 ## Design System Foundation Policy
 
