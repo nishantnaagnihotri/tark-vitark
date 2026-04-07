@@ -1,0 +1,24 @@
+.argument-card {
+    position: relative;
+}
+
+.argument-card--tark::before,
+.argument-card--vitark::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    width: 8px;
+    height: 10px;
+}
+
+.argument-card--tark::before {
+    left: -8px;
+    clip-path: polygon(100% 0, 100% 100%, 0 50%);
+    background-color: var(--color-tark-surface);
+}
+
+.argument-card--vitark::before {
+    right: -8px;
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+    background-color: var(--color-vitark-surface);
+}
