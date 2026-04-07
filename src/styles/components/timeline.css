@@ -72,13 +72,19 @@
         padding-top: 24px;
     }
 
-    /* Each item spans all 3 columns; subgrid places children */
+    /* Each item spans all 3 columns; explicit columns fallback, subgrid when supported */
     .timeline__item {
         width: auto;
         grid-column: 1 / -1;
         display: grid;
-        grid-template-columns: subgrid;
+        grid-template-columns: 1fr 32px 1fr;
         align-items: center;
+    }
+
+    @supports (grid-template-columns: subgrid) {
+        .timeline__item {
+            grid-template-columns: subgrid;
+        }
     }
 
     .timeline__item--tark {
