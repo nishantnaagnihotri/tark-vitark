@@ -2,6 +2,7 @@ import { DEBATE } from '../data/debate';
 import { Topic } from './Topic';
 import { LegendBar } from './LegendBar';
 import { Timeline } from './Timeline';
+import { ThemeToggle } from './ThemeToggle';
 import '../styles/debate-screen.css';
 
 export function DebateScreen() {
@@ -12,6 +13,7 @@ export function DebateScreen() {
             </header>
             <LegendBar />
             <Timeline arguments={DEBATE.arguments} />
+            <ThemeToggle />
         </main>
     );
 }

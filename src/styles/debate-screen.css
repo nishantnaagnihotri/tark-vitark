@@ -1,6 +1,10 @@
 /* DebateScreen — screen-level layout
    Figma reference: CsPAyUdLSStdmNpmiBMESQ */
 
+body {
+    margin: 0;
+}
+
 .debate-screen {
     min-height: 100vh;
     min-height: 100dvh;
@@ -9,20 +13,22 @@
 }
 
 .debate-header {
-    padding: var(--space-12) var(--space-5) 0;
+    background-color: var(--color-brand-primary);
+    color: var(--color-brand-on-primary);
+    padding: var(--space-12) var(--space-5) var(--space-8);
     text-align: center;
 }
 
 /* ── Tablet ── */
 @media (min-width: 481px) {
     .debate-header {
-        padding: var(--space-12) var(--space-10) 0;
+        padding: var(--space-12) var(--space-10) var(--space-8);
     }
 }
 
 /* ── Desktop ── */
 @media (min-width: 1024px) {
     .debate-header {
-        padding: var(--space-12) var(--space-30) 0;
+        padding: var(--space-12) var(--space-30) var(--space-8);
     }
 }
