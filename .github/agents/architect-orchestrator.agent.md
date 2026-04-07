@@ -266,32 +266,11 @@ Follow `slice-traceability-and-issue-ops` (`.github/skills/slice-traceability-an
 
 Follow the `gate-handoff-packet` skill (`.github/skills/gate-handoff-packet/SKILL.md`) for the required handoff packet checklist and field order.
 
-## Part-Time Session Protocol
+## Orchestrator Session And Context Lifecycle Workflow
 
-At session start:
+Follow the `orchestrator-session-context-lifecycle` skill (`.github/skills/orchestrator-session-context-lifecycle/SKILL.md`) for activity resume protocol, part-time session checkpoint handling, context update blocks, universal principle persistence, and Gate 6 log archiving.
 
-1. Read latest checkpoint.
-2. Propose one micro-goal only.
-3. Select smallest next action.
-
-At session end:
-
-1. Record done, next, blockers.
-2. Record unresolved assumptions.
-3. Record the exact next handoff packet.
-
-## Context Maintenance Protocol
-
-After any gate transition or major owner decision:
-
-1. Emit a `Context Update` block in plain markdown.
-2. Include: date, gate status, artifact created/updated, open questions state, next micro-goal.
-	Include: major decision challenged, options presented, tradeoff summary, and owner-selected option.
-3. **Universal principle rule:** If the gate transition or owner decision produces a principle that must apply to all future slices (e.g., a quality standard, workflow rule, or technical constraint), write it to `Known Rules From User Decisions` in `.github/orchestrator-context.md` immediately — not only in the log entry. Log entries are slice-scoped and will be archived; `Known Rules From User Decisions` is permanent.
-4. Ask Product Owner to append the log block into `.github/orchestrator-context.md`.
-5. Use the updated context file as the next-session baseline.
-6. **Log archiving:** When a slice reaches Gate 6 ✅ Complete, first run the pre-archive extraction step (see `.github/orchestrator-context.md` → `## Log Archive Protocol`), then move only slice-specific log entries from `.github/orchestrator-context.md` to `docs/slices/<slice-name>/context-log.md`. Do not move repo-wide/global updates; they remain in `.github/orchestrator-context.md` (or a dedicated global archive, if defined). Replace moved entries with a single archive summary line:
-   `### <slice-name> — Gate 6 ✅ Complete (<date>) — Full log: docs/slices/<slice-name>/context-log.md`
+Use this skill as the canonical source of truth whenever updating `/memories/session/active-state.md` or maintaining `.github/orchestrator-context.md` after gate transitions and owner decisions.
 
 ## Merge Recommendation Checklist
 
