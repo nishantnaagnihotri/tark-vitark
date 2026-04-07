@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import * as axe from 'axe-core';
 import { DebateScreen } from '../../src/components/DebateScreen';
 
@@ -22,6 +22,10 @@ function filterViolations(results: axe.AxeResults, minImpact: string[]) {
 }
 
 describe('axe-core accessibility audit — DebateScreen', () => {
+    beforeEach(() => {
+        document.documentElement.removeAttribute('data-theme');
+    });
+
     it('light theme: zero critical/serious violations', async () => {
         const { container } = render(<DebateScreen />);
         const results = await runAxe(container);

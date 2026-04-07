@@ -59,7 +59,7 @@ function parseTokensForTheme(css: string, theme: 'light' | 'dark'): Map<string, 
     const tokens = new Map<string, string>();
     const blockRegex =
         theme === 'light'
-            ? /(?::root|\[data-theme="light"\])\s*\{([^}]+)\}/g
+            ? /(?::root\s*,\s*\[data-theme="light"\]|\[data-theme="light"\]|:root)\s*\{([^}]+)\}/g
             : /\[data-theme="dark"\]\s*\{([^}]+)\}/g;
     let blockMatch: RegExpExecArray | null;
 
