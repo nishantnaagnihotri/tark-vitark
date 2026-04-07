@@ -1,4 +1,4 @@
-<!-- Protocol-Version: 2.6 -->
+<!-- Protocol-Version: 2.7 -->
 <!-- Last-Updated: 2026-04-07 -->
 
 # Shared Agent Protocol
@@ -61,13 +61,9 @@ Product Owner may override classification at any time.
 2. Architecture quality checks and package schema are maintained in `.github/references/architecture-quality-checks.md`.
 3. Architecture and orchestrator agents reference these documents instead of duplicating large checklists.
 
-## Requirement-To-PRD Alignment Protocol
+## Requirement-To-PRD Alignment Workflow
 
-1. `01-requirement.md` is the source contract for Gate 2 and must be treated as immutable input during PRD drafting.
-2. Requirement statement, in-scope/out-of-scope boundaries, and AC IDs (AC-1..AC-N) must carry forward unchanged unless Product Owner explicitly approves a change.
-3. PRD must include a Requirement-to-PRD Alignment Check section showing one-to-one mapping from requirement IDs to PRD sections and user stories.
-4. If PRD introduces new scope, changed wording, or rewritten AC intent without explicit owner decision, Gate 2 must loop back.
-5. Templates should only be filled after requirement refinement is complete: no unresolved placeholders in Gate 1 output except explicitly accepted open questions.
+The full Requirement-to-PRD alignment workflow - Gate 1 contract freeze, one-to-one alignment evidence, template completeness rules, and Gate 2 loop-back checks - is defined in the `requirement-prd-alignment` skill (`.github/skills/requirement-prd-alignment/SKILL.md`). Agents must follow this skill when drafting PRD artifacts, validating Gate 2 readiness, or reviewing cloud-returned PRD packages.
 
 ## Environment Routing
 

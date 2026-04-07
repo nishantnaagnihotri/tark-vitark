@@ -61,6 +61,16 @@ Expected input from Architect + Orchestrator:
 2. Explicit request to return PRD v0 + quality decision.
 3. Any new owner constraints or decisions since challenge gate.
 
+## Requirement-To-PRD Alignment Workflow
+
+Follow the `requirement-prd-alignment` skill (`.github/skills/requirement-prd-alignment/SKILL.md`) for Gate 1 contract freeze rules, mandatory one-to-one alignment evidence, template completeness checks, and Gate 2 loop-back conditions.
+
+PRD-specific obligations:
+
+1. Include an explicit `Requirement-to-PRD Alignment Check` section in every Gate 2 response.
+2. Surface owner-approved deltas explicitly rather than silently rewriting Gate 1 intent.
+3. Ensure every `Open Questions` row has a populated `Resolution` field and include the `PR Description` block in the `PRD Draft Package`.
+
 ## Approach
 
 1. Validate the Requirement Context Package for internal consistency.
