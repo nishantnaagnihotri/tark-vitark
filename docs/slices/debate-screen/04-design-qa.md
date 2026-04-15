@@ -51,7 +51,7 @@
 | AC-3 (Tark blue, sequential) | 4 Tark (blue) cards in posting order, left of spine (desktop/tablet), left-aligned (mobile) | PASS |
 | AC-4 (Vitark amber, sequential) | 4 Vitark (amber) cards in posting order, right of spine (desktop/tablet), right-aligned (mobile) | PASS |
 | AC-5 (Hardcoded static) | Placeholder debate content in all frames | PASS |
-| AC-6 (Read-only content) | Debate content zone remains read-only and consumable without interaction; Composer is additive post-tark-vitark extension with Owner approval | PASS |
+| AC-6 (Read-only content) | ⚠ PRD delta: original AC-6 prohibited all interactive affordances. Owner-approved extensions supersede this constraint for the post-tark-vitark slice: (1) mobile "Read more" tap target (approved 2026-04-14, see 03-ux.md delta log); (2) full Composer row — Chip/Filter, TextField, IconButton (approved 2026-04-15, see 03-ux.md delta log). Debate content zone itself remains read-only and consumable. | PASS (PRD delta) |
 | AC-7 (Responsive 3 breakpoints) | Desktop, Tablet, Mobile — all breakpoints represented; Composer adapts padding/width per breakpoint | PASS |
 | AC-8 (Replaces splash at `/`) | Design-stage assertion; implementation concern | N/A — Gate 5 |
 | AC-9 (A11y, WCAG AA) | Contrast verified, variable-bound colors, M3-compliant typography | PASS |
@@ -99,6 +99,8 @@
 **Dark surface update (2026-04-15):** `color/tark/surface` dark updated `#1565C0` → `#002C76` (M3 Blue tone-30); `color/vitark/surface` dark updated `#BF360C` → `#5C1000` (M3 DeepOrange tone-30); `color/tark/on-surface` dark → `#D5E3FF`; `color/vitark/on-surface` dark → `#FFB4A2`. WCAG AA body text ≥8:1 confirmed.
 
 **Token compliance:** All frame fills bound to library variables. No raw hex values remain.
+
+**Pre-Gate 5 action required:** `src/styles/tokens.css` must be updated before Gate 5 build-out to sync dark token values: `--color-tark-surface` dark → `#002C76`, `--color-vitark-surface` dark → `#5C1000`, `--color-tark-on-surface` dark → `#D5E3FF`, `--color-vitark-on-surface` dark → `#FFB4A2`. This design QA package records the approved token change; the implementation token source must be brought into sync before build-out.
 
 ## Edge State Coverage
 
