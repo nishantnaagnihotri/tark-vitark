@@ -78,7 +78,7 @@ TarkVitark's current public presence is a coming-soon splash page. While this es
 | C-6 | No navigation chrome expected beyond what UX recommends at Gate 3. | RCP Accepted Assumptions #6 |
 | C-7 | Interactivity (voting, commenting, submitting) is firmly deferred. Scope creep toward interactivity must be rejected. | RCP Risk |
 
-## 6. Amendments
+## Amendments
 
 Post-gate owner decisions that supersede original PRD content are recorded here. Each amendment is versioned, dated, and cross-referenced in all downstream artifacts.
 
