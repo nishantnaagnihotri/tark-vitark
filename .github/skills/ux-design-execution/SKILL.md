@@ -400,7 +400,7 @@ Before declaring any frame pass complete (Phase 1 or Phase 2), run a final syste
 
 ## Step 11 — Design Quality Gate (Mandatory Pre-PO Presentation Block)
 
-> Sources: M3 Typography (m3.material.io/styles/typography/applying-type), M3 Layout Spacing (m3.material.io/foundations/layout/understanding-layout/spacing), Apple HIG Layout (developer.apple.com/design/human-interface-guidelines/layout), NN/g Heuristic #8 Aesthetic and Minimalist Design.
+> Sources: [M3 Typography](https://m3.material.io/styles/typography/applying-type), [M3 Layout Spacing](https://m3.material.io/foundations/layout/understanding-layout/spacing), [Apple HIG Layout](https://developer.apple.com/design/human-interface-guidelines/layout), [NN/g Heuristic #8: Aesthetic and Minimalist Design](https://www.nngroup.com/articles/aesthetic-minimalist-design/).
 
 This step runs **after** Step 10 (End-of-Pass Full Verification Sweep) and **before** any screenshot or output is returned to Product Owner. Every criterion must pass. Any failure restarts the iteration — no partial presentation.
 
