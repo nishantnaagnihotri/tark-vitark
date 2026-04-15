@@ -96,8 +96,9 @@ Post-gate owner decisions that supersede original PRD content are recorded here.
 
 **Affected requirement:** FR-6, AC-6
 **Original text:** "The page **shall** be read-only. All debate content is consumable without any user interaction. No input controls, forms, buttons, or interactive affordances **shall** be present."
-**Amendment:** A Composer zone at the bottom of the screen is added to scope for the post-tark-vitark slice. It contains a side-selector Chip/Filter toggle (tark/vitark), a text input field (TextField/Outlined), and a send button (IconButton/Filled). This is the entry point for submitting new arguments in the post-tark-vitark slice.
-**What remains out-of-scope:** Data persistence, networking/API calls, authentication, multi-debate navigation, framework selection (Gate 4).
+**Amendment:** A Composer zone at the bottom of the screen is added to scope for the post-tark-vitark slice. It contains a side-selector Chip/Filter toggle (tark/vitark), a text input field (TextField/Outlined), and a send button (IconButton/Filled). This amendment supersedes the earlier FR-6/AC-6 read-only/no-input restriction for this slice, and also supersedes earlier scope statements (including Constraint C-7 and the Out-of-Scope table) that listed users submitting arguments as out-of-scope — but only to the extent required to render and locally interact with the Composer UI.
+**Clarification of scope:** In scope for this amendment are the visible Composer controls and their local interaction states (side selection, text entry, focus, enabled/disabled, and press/tap states). The Composer is the UI entry point for a future submission flow, but this amendment does not require actual argument creation or delivery.
+**What remains out-of-scope:** Backend persistence, networking/API calls, actual submission behavior, server-side or durable storage of drafted/submitted content, authentication/authorization, multi-debate navigation, and framework selection (Gate 4).
 **PO approval on record:** See `docs/slices/debate-screen/03-ux.md` Owner-Approved Deltas log, entry dated 2026-04-15.
 
 ## 6. Success Metrics
