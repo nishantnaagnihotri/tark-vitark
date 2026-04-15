@@ -54,3 +54,37 @@ Use this skill to prevent Gate 1 to Gate 2 drift and to standardize PRD validati
 2. Surface owner-approved deltas in a dedicated subsection.
 3. Ensure every open question includes `ID`, `Question`, `Source`, `Status`, and non-empty `Resolution`.
 4. Include a copy-paste `PR Description` block in the `PRD Draft Package`.
+
+## PRD Amendment Protocol (Post-Gate-2 Scope Changes)
+
+When a Product Owner decision during Gate 3 or later changes an acceptance criterion or adds scope that contradicts a PRD requirement, the PRD must be amended — never silently bypassed by downstream artifacts alone.
+
+### When to Amend
+
+Trigger a PRD amendment whenever:
+- An owner decision changes, narrows, or extends a PRD acceptance criterion (FR or AC)
+- A Gate 3+ owner-approved delta in `03-ux.md` contradicts a PRD requirement
+- A downstream DQA or architecture artifact must add an exception note to a PRD criterion
+
+### How to Amend
+
+1. **Append** an `## Amendments` section to `02-prd.md` (never rewrite the original requirement text — preserve the original).
+2. Each amendment entry must include:
+   - Unique amendment number and title
+   - Date of owner decision
+   - IDs of affected FR/AC rows
+   - Original text (verbatim quote)
+   - Amended text or additive extension
+   - What remains out-of-scope
+   - PO approval reference (commit, delta log entry, or verbatim quote)
+3. Downstream artifacts (`03-ux.md`, `04-design-qa.md`) cross-reference the PRD amendment by amendment number. They do not document the scope change independently of the PRD.
+4. PRD amendments are **additive** — the original requirement rows in the PRD body are never edited. The amendment section is the version history.
+
+### Ownership
+
+- Orchestrator may write PRD amendments directly when the scope change was decided during an active gate cycle (Gate 3–6) and the owning PRD Agent is not in session.
+- For significant scope changes requiring full re-analysis, route to PRD Agent for a formal amendment pass.
+
+### Alignment Check Extension
+
+After any amendment, re-run the Requirement-to-PRD Alignment Check to confirm all affected AC rows are now mapped to their amended definitions, not the original ones.
