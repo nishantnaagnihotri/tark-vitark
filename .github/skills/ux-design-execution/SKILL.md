@@ -570,10 +570,11 @@ The consolidated artifact handed to Design QA:
 10. Baseline provenance (continuation slices only)
 11. Design Execution summary (frame name, node ID, dimensions, theme per row)
 12. Overlap check result
-13. Design Coverage Map (frame/state → UX flow → PRD criterion)
-14. Interaction rules, validation, and content notes
-15. Dependencies, risks, and mitigations
-16. Open questions with owner status
-17. Design artifact reference (Figma file URL)
-18. Design review access packet (node-targeted URLs, page list, frame/state index, pass-level change summary, review focus)
-19. Traceability snapshot to PRD requirements
+13. Design Quality Gate (QG-1..QG-6 mandatory pre-PO checklist result — pass/conditional pass/fail per criterion)
+14. Design Coverage Map (frame/state → UX flow → PRD criterion)
+15. Interaction rules, validation, and content notes
+16. Dependencies, risks, and mitigations
+17. Open questions with owner status
+18. Design artifact reference (Figma file URL)
+19. Design review access packet (node-targeted URLs, page list, frame/state index, pass-level change summary, review focus)
+20. Traceability snapshot to PRD requirements
