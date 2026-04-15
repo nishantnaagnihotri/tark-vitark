@@ -169,7 +169,7 @@ None — all gaps from passes 1–3 resolved.
 
 ## Product Owner Approval
 
-**Approved: 2026-04-05** — Product Owner approved Gate 3 closure after Pass 5 M3 rebuild verification.
+**Current approval: 2026-04-15** — Product Owner approved Gate 3 closure (Pass 6) covering the post-tark-vitark Composer across all 6 frames. Supersedes the earlier 2026-04-05 approval for current document status.
 
 ## Traceability Snapshot
 
