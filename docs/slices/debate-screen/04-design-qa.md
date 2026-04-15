@@ -2,7 +2,7 @@
 
 ## Design QA Readiness
 
-**Approved** — All 9 Design QA checks pass. M3 rebuild verified (Pass 5). Product Owner approved Gate 3 closure 2026-04-05.
+**Approved** — All checks pass. Pass 6 covers post-tark-vitark Composer addition across all 6 frames. Product Owner approved Gate 3 closure 2026-04-15.
 
 ## Canonical Requirement Summary
 
@@ -31,16 +31,16 @@
 | Debate Screen Slice | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ | Yes — all 6 frames accessed via MCP |
 | Design System Library | https://www.figma.com/design/onzB8ujyvn6wnhdaS7Hz28 | Yes — 46 variables (14 color + spacing/radius/breakpoint) |
 
-### Frame Inventory
+### Frame Inventory (post-tark-vitark — active frames in `02-post-tark-vitark [IN PROGRESS]`)
 
-| Frame | Node ID | Breakpoint | Theme |
-|---|---|---|---|
-| Desktop Light | `22:4` | ≥1024px (1440px) | Light |
-| Desktop Dark | `22:32` | ≥1024px (1440px) | Dark |
-| Tablet Light | `22:60` | ~768px | Light |
-| Tablet Dark | `22:88` | ~768px | Dark |
-| Mobile Light | `22:116` | ≤480px (390px) | Light |
-| Mobile Dark | `22:144` | ≤480px (390px) | Dark |
+| Frame | Node ID | Breakpoint | Theme | Composer |
+|---|---|---|---|---|
+| Desktop Light | `582:50` | ≥1024px (1440px) | Light | ✅ |
+| Desktop Dark | `583:62` | ≥1024px (1440px) | Dark | ✅ |
+| Tablet Light | `580:26` | ~768px | Light | ✅ |
+| Tablet Dark | `581:38` | ~768px | Dark | ✅ |
+| Mobile Light | `304:2` | ≤480px (390px) | Light | ✅ |
+| Mobile Dark | `414:78` | ≤480px (390px) | Dark | ✅ |
 
 ## PRD Traceability Confirmation
 
@@ -51,11 +51,11 @@
 | AC-3 (Tark blue, sequential) | 4 Tark (blue) cards in posting order, left of spine (desktop/tablet), left-aligned (mobile) | PASS |
 | AC-4 (Vitark amber, sequential) | 4 Vitark (amber) cards in posting order, right of spine (desktop/tablet), right-aligned (mobile) | PASS |
 | AC-5 (Hardcoded static) | Placeholder debate content in all frames | PASS |
-| AC-6 (Read-only) | No buttons, inputs, forms, or interactive controls | PASS |
-| AC-7 (Responsive 3 breakpoints) | Desktop, Tablet, Mobile — all breakpoints represented | PASS |
+| AC-6 (Read-only content) | Debate content zone remains read-only and consumable without interaction; Composer is additive post-tark-vitark extension with Owner approval | PASS |
+| AC-7 (Responsive 3 breakpoints) | Desktop, Tablet, Mobile — all breakpoints represented; Composer adapts padding/width per breakpoint | PASS |
 | AC-8 (Replaces splash at `/`) | Design-stage assertion; implementation concern | N/A — Gate 5 |
-| AC-9 (A11y, WCAG AA) | Contrast verified, UX specifies `aria-label` for screen readers | PASS |
-| AC-10 (Light/Dark themes) | Both themes present for all 3 breakpoints | PASS |
+| AC-9 (A11y, WCAG AA) | Contrast verified, variable-bound colors, M3-compliant typography | PASS |
+| AC-10 (Light/Dark themes) | Both themes present for all 3 breakpoints; dark mode variable binding confirmed | PASS |
 
 **FR-4 (Legend bar + layout):** Sticky legend bar present in all 6 frames with colored dots, per-card labels removed. Legend separator aligns with timeline spine on desktop/tablet. **PASS**.
 
@@ -63,36 +63,40 @@
 
 | UX Flow / State | Figma Frame(s) | Status |
 |---|---|---|
-| Desktop read (Light/Dark) | 22:4, 22:32 | PASS |
-| Tablet read (Light/Dark) | 22:60, 22:88 | PASS |
-| Mobile read (Light/Dark) | 22:116, 22:144 | PASS |
+| Desktop read (Light/Dark) | 582:50, 583:62 | PASS |
+| Tablet read (Light/Dark) | 580:26, 581:38 | PASS |
+| Mobile read (Light/Dark) | 304:2, 414:78 | PASS |
 | Topic heading (h1, centered) | All 6 frames | PASS |
 | Sticky legend bar | All 6 frames | PASS |
-| Timeline center spine (desktop/tablet) | 22:4, 22:32, 22:60, 22:88 | PASS |
-| Chat-bubble stagger (mobile) | 22:116, 22:144 | PASS |
+| Timeline center spine (desktop/tablet) | 582:50, 583:62, 580:26, 581:38 | PASS |
+| Chat-bubble stagger (mobile) | 304:2, 414:78 | PASS |
 | Card shape (asymmetric + tails) | All 6 frames | PASS |
 | Natural page scroll (OQ-2) | Content extends beyond frame, no scroll containers | PASS |
+| Composer (Chip/Filter + TextField + IconButton) | All 6 frames | PASS |
+| Dark mode variable binding | 414:78, 581:38, 583:62 | PASS |
 
 ## Component and Token Consistency
 
-### Color Variables (14 total, each with Light + Dark modes)
+### Color Variables (14 total, each with Light + Dark modes — updated dark values)
 
 | Variable | Light | Dark |
 |---|---|---|
 | `color/surface/default` | `#FFFBFF` | `#1B1B1F` |
 | `color/brand/primary` | `#4555B7` | `#BBC3FF` |
 | `color/brand/on-primary` | `#FFFFFF` | `#0E2288` |
-| `color/tark/surface` | `#BBDEFB` | `#1565C0` |
-| `color/tark/on-surface` | `#0D47A1` | `#E3F2FD` |
+| `color/tark/surface` | `#BBDEFB` | `#002C76` |
+| `color/tark/on-surface` | `#0D47A1` | `#D5E3FF` |
 | `color/tark/header` | `#1565C0` | `#90CAF9` |
-| `color/vitark/surface` | `#FFECB3` | `#BF360C` |
-| `color/vitark/on-surface` | `#BF360C` | `#FFF8E1` |
+| `color/vitark/surface` | `#FFECB3` | `#5C1000` |
+| `color/vitark/on-surface` | `#BF360C` | `#FFB4A2` |
 | `color/vitark/header` | `#EF6C00` | `#FFB74D` |
 | `color/spine/line` | `#767680` | `#90909A` |
 | `color/spine/dot` | `#9E9E9E` | `#616161` |
 | `color/legend/surface` | `#F5F5F5` | `#1C1C1C` |
 | `color/legend/on-surface` | `#4D4D4D` | `#BFBFBF` |
 | `color/legend/separator` | `#999999` | `#666666` |
+
+**Dark surface update (2026-04-15):** `color/tark/surface` dark updated `#1565C0` → `#002C76` (M3 Blue tone-30); `color/vitark/surface` dark updated `#BF360C` → `#5C1000` (M3 DeepOrange tone-30); `color/tark/on-surface` dark → `#D5E3FF`; `color/vitark/on-surface` dark → `#FFB4A2`. WCAG AA body text ≥8:1 confirmed.
 
 **Token compliance:** All frame fills bound to library variables. No raw hex values remain.
 
@@ -147,6 +151,10 @@ None — all gaps from passes 1–3 resolved.
 | Sequential debate model | Timeline layout (not parallel columns) | 2026-04-04 |
 | Legend bar replaces per-card labels | Sticky legend with colored dots | 2026-04-05 |
 | Legend bar spine alignment | 3-column layout matching timeline columns | 2026-04-05 |
+| Dark card surfaces — M3 tonal containers (tone-30) | Tark dark `#002C76`, Vitark dark `#5C1000`; on-surface tints updated | 2026-04-15 |
+| "Read more" CTA color | `color/brand/primary` (neutral CTA, not side-coded) | 2026-04-15 |
+| Composer addition (post-tark-vitark slice) | Horizontal row: Chip/Filter + TextField/Outlined + IconButton/Filled | 2026-04-15 |
+| Bubble tails on all 6 breakpoints | Accepted — tail anticipates future user avatar attachment; spatial relationship (tail → avatar) applies at all viewports | 2026-04-15 |
 
 ## Design QA History
 
@@ -156,7 +164,8 @@ None — all gaps from passes 1–3 resolved.
 | Pass 2 | Agent-Ready | All 9 checks pass after 11 variables created + 306 bindings |
 | Pass 3 | Needs Revision | Legend bar elements (3 new) used raw hex — 3 variables + 48 bindings needed |
 | Pass 4 | Agent-Ready | All gaps resolved — 14 color variables, full compliance |
-| Pass 5 | Agent-Ready → Approved | M3 rebuild verified: primary #4555B7/#BBC3FF, surface #FFFBFF/#1B1B1F, outline #767680/#90909A, vitark #BF360C WCAG fix confirmed. All 14 variables M3-compliant. |
+| Pass 5 | Agent-Ready → Approved | M3 rebuild verified: primary #4555B7/#BBC3FF, surface #FFFBFF/#1B1B1F, outline #767680/#90909A, vitark #BF360C WCAG fix confirmed. All 14 variables M3-compliant. PO approved Gate 3 closure 2026-04-05. |
+| Pass 6 | PASS → Approved | post-tark-vitark Composer added to all 6 frames. Checks: Composer structure ✅, token binding ✅, dark mode ✅, bubble tails ✅ (PO accepted all-breakpoints intent), AC-6 scope ✅. PO approved Gate 3 closure 2026-04-15. |
 
 ## Product Owner Approval
 
