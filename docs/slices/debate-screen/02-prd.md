@@ -78,6 +78,24 @@ TarkVitark's current public presence is a coming-soon splash page. While this es
 | C-6 | No navigation chrome expected beyond what UX recommends at Gate 3. | RCP Accepted Assumptions #6 |
 | C-7 | Interactivity (voting, commenting, submitting) is firmly deferred. Scope creep toward interactivity must be rejected. | RCP Risk |
 
+## 6. Amendments
+
+Post-gate owner decisions that supersede original PRD content are recorded here. Each amendment is versioned, dated, and cross-referenced in all downstream artifacts.
+
+---
+
+### Amendment 1 — FR-6/AC-6 Scope Extension (2026-04-14)
+
+**Affected requirement:** FR-6, AC-6
+**Original text:** "The page **shall** be read-only. All debate content is consumable without any user interaction. No input controls, forms, buttons, or interactive affordances **shall** be present."
+**Amendment:** The debate content reading zone remains read-only. The following owner-approved interactive affordances are added to scope for the post-tark-vitark slice:
+
+1. **Mobile "Read more" tap target** (approved 2026-04-14): Argument cards on mobile collapse to 4 lines by default. A "Read more" tap target expands to full text. No "Show less" toggle. Desktop/tablet cards show full text always — no affordance there.
+2. **Post-argument Composer row** (approved 2026-04-15): A Composer zone at the bottom of the screen contains a side-selector Chip/Filter toggle (tark/vitark), a text input field (TextField/Outlined), and a send button (IconButton/Filled). This is the entry point for submitting new arguments in the post-tark-vitark slice.
+
+**What remains out-of-scope:** Data persistence, networking/API calls, authentication, multi-debate navigation, framework selection (Gate 4).
+**PO approval on record:** See `docs/slices/debate-screen/03-ux.md` Owner-Approved Deltas log, entries dated 2026-04-14 and 2026-04-15.
+
 ## 6. Success Metrics
 
 | ID | Metric | Measurement Method |

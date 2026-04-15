@@ -40,3 +40,10 @@ Cloud-return rule:
 1. If PRD was executed in cloud, require `PRD Draft Package` to be pasted back.
 2. Validate the returned package in Local against the PRD gate checklist and `requirement-prd-alignment` cloud-return checks before advancing gate status.
 3. If any requirement-prd-alignment check fails (missing PR Description, blank Resolution fields, or unauthorized Gate 1 contract drift), loop back to PRD Agent.
+
+PRD Amendment trigger rule:
+
+1. If any owner decision during Gate 3 or later changes a PRD FR or AC, the PRD amendment MUST be committed on the same branch/PR as the decision before that gate cycle closes.
+2. Gate closure is blocked if: a downstream artifact (`03-ux.md`, `04-design-qa.md`) references an owner-approved scope change but no corresponding PRD amendment exists in `## Amendments` in `02-prd.md`.
+3. The amendment does not require a full PRD re-run. It is an append-only operation to the `## Amendments` section per the `PRD Amendment Protocol` in `requirement-prd-alignment`.
+4. After any amendment, re-run the alignment check to confirm all affected AC rows reference the amended definition.
