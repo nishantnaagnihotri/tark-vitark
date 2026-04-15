@@ -570,7 +570,7 @@ The consolidated artifact handed to Design QA:
 10. Baseline provenance (continuation slices only)
 11. Design Execution summary (frame name, node ID, dimensions, theme per row)
 12. Overlap check result
-13. Design Quality Gate (QG-1..QG-6 mandatory pre-PO checklist result — pass/conditional pass/fail per criterion)
+13. Design Quality Gate (QG-1..QG-6 mandatory pre-PO checklist result — pass/fail per criterion; every criterion must pass before PO review)
 14. Design Coverage Map (frame/state → UX flow → PRD criterion)
 15. Interaction rules, validation, and content notes
 16. Dependencies, risks, and mitigations
