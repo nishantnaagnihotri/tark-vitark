@@ -398,6 +398,119 @@ Before declaring any frame pass complete (Phase 1 or Phase 2), run a final syste
 4. Record the result as `End-of-Pass Verification: ✅ clean` or list each remaining mismatch.
 5. Do NOT return output to Product Owner until the end-of-pass sweep is clean.
 
+## Step 11 — Design Quality Gate (Mandatory Pre-PO Presentation Block)
+
+> Sources: M3 Typography (m3.material.io/styles/typography/applying-type), M3 Layout Spacing (m3.material.io/foundations/layout/understanding-layout/spacing), Apple HIG Layout (developer.apple.com/design/human-interface-guidelines/layout), NN/g Heuristic #8 Aesthetic and Minimalist Design.
+
+This step runs **after** Step 10 (End-of-Pass Full Verification Sweep) and **before** any screenshot or output is returned to Product Owner. Every criterion must pass. Any failure restarts the iteration — no partial presentation.
+
+### QG-1: Typography Role Correctness (M3 Spec)
+
+M3 defines 5 roles. Each content element must map to exactly one role. Using the wrong role is a defect regardless of whether the font size looks approximately correct.
+
+| Role | Correct use | Failure pattern |
+|---|---|---|
+| `display` | Short hero text or numerals on large screens only | Applying to any mobile body content |
+| `headline` | Short, high-emphasis text — primary screen titles on mobile | Using for every section header regardless of emphasis level |
+| `title` | Medium-emphasis secondary passages, section dividers | Using for primary content, collapsing hierarchy |
+| `body` | Longer readable passages — never inside components | Using for button labels or metadata inside components |
+| `label` | Text inside components (buttons = `label/large`), captions, timestamps | Using for passages that require readability at rest |
+
+**Line height rule (M3):** Display/Headline/Title → line height ≥ 1.2× type size. Body/Label → line height ≈ 1.5× type size.
+
+**Test:** For every text node, state its M3 role and confirm it matches the table. If two adjacent text elements with different importance levels both use the same M3 role (e.g., screen title and section subhead both `title/medium`), one is wrong — fix it before proceeding.
+
+### QG-2: Spacing Rhythm (4dp Grid — M3 + Apple HIG)
+
+All padding and gap values must be multiples of 4dp. Non-multiples (e.g. 6px, 10px, 14px) are rhythm violations.
+
+**Grouping rules (M3):**
+- Tightly related elements (icon + label, value + unit): gap ≤ 8dp.
+- Distinct elements within the same section: gap 12–16dp.
+- Distinct sections (different content areas): gap ≥ 24dp or a divider token.
+
+**Crowding rule (Apple HIG):** The most important element on the screen must have more whitespace around it than secondary elements. If essential information is crowded by non-essential details, the hierarchy is wrong.
+
+**Density rule:** Any two interactive elements with fewer than 8dp between touch targets are too close. Grouping by proximity only works when distinct groups have visibly more space between them than within them.
+
+**Test:** For each container, read padding via MCP and confirm every value is a multiple of 4. For each pair of grouped elements, confirm their internal gap is smaller than the gap separating them from unrelated elements. If spacing between groups equals spacing within groups, hierarchy is broken — fix before proceeding.
+
+### QG-3: Visual Weight Hierarchy and Mandatory Greyscale Check
+
+The primary action must be the most visually dominant element. Visual dominance must survive colour removal — if hierarchy collapses in greyscale, it was carried by colour alone, which fails for colour-blind users and is a design defect.
+
+**Greyscale check (mandatory):**
+1. Take a screenshot of the completed frame via Figma MCP.
+2. Mentally strip all colour (imagine the screenshot printed in black and white).
+3. Identify which element draws the eye first.
+4. If the answer is not the primary action element, the hierarchy is wrong. Fix size, weight, or whitespace — not colour — to correct it.
+5. Log the result: `[GREYSCALE CHECK] Primary action draws eye first in greyscale: YES / NO`
+
+A NO result is a blocker. Do not present to Product Owner until the greyscale check passes.
+
+**Additional visual weight rules:**
+- The primary action element must be larger or heavier (font weight or container size) than all secondary elements at the same screen level.
+- Decorative elements (dividers, background fills, inactive labels) must have lower visual contrast than interactive elements. Any decorative element that competes visually with the primary action is a defect.
+- If two elements at the same hierarchy level have the same visual weight, one is over-styled or under-styled — they must be differentiated by size, weight, or whitespace.
+
+### QG-4: Colour Minimalism (NN/g Heuristic #8 + M3)
+
+Every colour on screen must justify its presence by communicating a specific semantic role.
+
+**Rules:**
+1. No decorative colour. Every colour must map to a semantic role: brand surface, interactive, success, warning, error, neutral.
+2. Small text (< 18pt): minimum contrast ratio 4.5:1 against background (M3/WCAG AA).
+3. Large text (≥ 18pt): minimum contrast ratio 3:1.
+4. Secondary/muted text must use the `on-surface-variant` token — not a raw opacity applied to `on-surface`. Opacity-based muting breaks dark mode token resolution.
+5. Never use flat grey text on a coloured background. Use a colour-matched muted variant token for that surface. Pure grey over brand colour is always a token misuse.
+6. Count distinct colour families visible in the frame. More than 4 (brand, neutral, feedback, overlay) without explicit design system justification is over-saturation.
+
+**Test:** List every unique fill colour visible in the frame. For each, answer: *what semantic role does this communicate?* If the answer is "none" or "decoration", remove it or replace with the correct surface token.
+
+### QG-5: Content Minimalism (NN/g Heuristic #8)
+
+Every element in the frame must support the user's primary goal. Elements that do not support the primary goal compete with those that do and must be removed.
+
+**Rules:**
+1. No placeholder decoration — empty dividers between non-existent groups, icons used for visual balance, decorative lines.
+2. Every icon must either have a visible text label or be universally standard (close ×, back ←, hamburger ☰). Unlabelled novel icons are a failure.
+3. No redundant information. If position already communicates something, a label repeating it is noise. If colour communicates state, shape or text must also communicate it (accessibility + token compliance).
+4. One-question test: *What is the single most important thing the user does on this screen?* If the answer requires more than one sentence, the screen is doing too much.
+
+### QG-6: Social App Benchmark Checklist (Pre-PO Gate)
+
+tark-vitark is a social/debate app. The quality standard is: **would this frame look at home alongside Threads, Reddit, or Discord screenshots in the App Store — for a first-time user who does not know the product?**
+
+Before presenting any frame to Product Owner, answer every question. Any NO is a blocker — fix before presenting.
+
+| # | Question | Required answer |
+|---|---|---|
+| 1 | Does the primary action draw the eye first in the greyscale check? | YES |
+| 2 | Are all spacing values multiples of 4dp (confirmed via MCP read-back)? | YES |
+| 3 | Do closely related elements have smaller internal gaps than the gaps between distinct sections? | YES |
+| 4 | Does every text element use the correct M3 role (display / headline / title / body / label) — not just an approximate size? | YES |
+| 5 | Does the layout hierarchy survive greyscale — primary action still dominant without colour? | YES |
+| 6 | Is every colour present for a semantic reason, not decoration? | YES |
+| 7 | Is contrast ≥ 4.5:1 for small text, ≥ 3:1 for large text? | YES |
+| 8 | Does every icon have a label or universal recognition? | YES |
+| 9 | Would this frame look at home alongside Threads, Reddit, or Discord in the App Store? | YES |
+| 10 | Is the visual rhythm (font scale, spacing, colour saturation, border radius) consistent with other `[APPROVED]` frames in this file? | YES |
+
+Q10 requires: take a screenshot of the nearest `[APPROVED]` section baseline frame and compare side by side. Font scales, spacing rhythm, colour saturation, and border radius patterns must feel like the same product. If anything feels out of family, fix it before presenting.
+
+**Log format for this step:**
+
+```
+[DESIGN QUALITY GATE]
+QG-1 Typography roles: ✅ / ❌ <issues>
+QG-2 Spacing rhythm: ✅ / ❌ <values that failed>
+QG-3 Greyscale check: ✅ / ❌ <which element drew eye, was it primary action?>
+QG-4 Colour minimalism: ✅ / ❌ <colours without semantic role>
+QG-5 Content minimalism: ✅ / ❌ <redundant or decorative elements>
+QG-6 Benchmark checklist: ✅ all YES / ❌ Q<n> failed — <reason>
+Overall: PASS — proceed to output | FAIL — fix required before presenting
+```
+
 ## Output: Required Sections (in this order)
 
 1. `UX Readiness`: Ready | Needs Clarification | Blocked
@@ -414,10 +527,11 @@ Before declaring any frame pass complete (Phase 1 or Phase 2), run a final syste
 12. `Design Coverage Map`: every frame/state mapped to UX flow + PRD criterion
 13. `Interaction Notes`: content, validation, accessibility, dependency notes
 14. `Quality Gaps`: unexpected findings during frame execution (expected / observed / tool call / action required). State "none" explicitly if none.
-15. `Open Questions`: unresolved items with owner decision status
-16. `Gate Decision`: can proceed to design-qa | must loop back
-17. `Design Artifact`: mandatory Figma file URL (not raw key)
-18. `Design Review Access`: node-targeted Figma URL(s) (`?node-id=` with actual node IDs), page list, frame/state index with node IDs, pass-level change summary, review focus
+15. `Design Quality Gate`: QG-1 through QG-6 log with `Overall: PASS` or `FAIL` result.
+16. `Open Questions`: unresolved items with owner decision status
+17. `Gate Decision`: can proceed to design-qa | must loop back
+18. `Design Artifact`: mandatory Figma file URL (not raw key)
+19. `Design Review Access`: node-targeted Figma URL(s) (`?node-id=` with actual node IDs), page list, frame/state index with node IDs, pass-level change summary, review focus
 
 ## UX Quality Checks — When "UX Readiness: Ready" May Be Claimed
 
@@ -437,7 +551,8 @@ All of the following must be true:
 12. Phase 1 approved by PO. Phase 2 complete: all frames created via MCP following Frame Blueprint. Both Light and Dark variants exist for every required frame.
 13. Baseline provenance recorded for every continuation slice.
 14. Overlap check completed and documented: no frames overlap, minimum 100px gap confirmed.
-15. `Design Review Access` present with node-targeted URLs containing actual node IDs from this pass.
+15. Design Quality Gate (Step 11) passed: all QG-1 through QG-6 criteria confirmed, log present with `Overall: PASS`.
+16. `Design Review Access` present with node-targeted URLs containing actual node IDs from this pass.
 
 ## UX Flow/State Package Schema
 
