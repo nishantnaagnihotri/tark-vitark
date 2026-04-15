@@ -20,6 +20,8 @@ TarkVitark needs a landing page that demonstrates its core identity as a debate 
 | Timeline | Visual structure for sequencing arguments over a vertical flow. |
 | Legend Bar | Visual key that helps users distinguish Tark and Vitark content by label and color. |
 | Card | Container primitive that presents one argument with side-specific styling. |
+| Audience | A person who reads and follows the debate without posting an argument. The primary user type on the Debate Screen. |
+| Debater | A person who posts an argument (Tark or Vitark) to actively participate in the debate. |
 
 ## Users and Scenarios
 

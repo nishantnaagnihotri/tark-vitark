@@ -86,46 +86,19 @@ Return only:
 4) Interaction Notes
 5) Quality Gaps
 6) Open Questions (with owner decision status)
-7) Gate Decision: can proceed to figma | must loop back
+7) Gate Decision: can proceed to design-qa | must loop back
 8) Design Artifact (mandatory Figma file URL for this UX task)
 9) UX Flow/State Package (for Figma handoff)
 ```
 
-## Example Figma Handoff Message (Copy-Paste)
-
-Use this message when invoking `figma-agent` at Gate 3 Substep B:
-
-```text
-Draft a Figma-ready design package for this slice using the UX Flow/State Package below.
-
-UX Flow/State Package:
-<paste full package>
-
-Additional Product Owner updates (optional):
-<new decisions/constraints, if any>
-
-Return only:
-1) Figma Readiness: Ready | Needs Clarification | Blocked
-2) Screen/Flow Mapping
-3) Component and Token Guidance
-4) Interaction and Edge-State Design Notes
-5) Quality Gaps
-6) Open Questions (with owner decision status)
-7) Gate Decision: can proceed to design-qa | must loop back
-8) Design Draft Package (for Design QA handoff)
-```
-
 ## Example Design QA Handoff Message (Copy-Paste)
 
-Use this message when invoking `design-qa-agent` at Gate 3 Substep C:
+Use this message when invoking `design-qa-agent` at Gate 3 Substep B:
 
 ```text
-Review the Design Draft Package for this slice using the artifacts below.
+Review the UX Flow/State Package and Figma design for this slice using the artifacts below.
 
-Design Draft Package:
-<paste full package>
-
-UX Flow/State Package:
+UX Flow/State Package (from UX Agent — includes Figma design reference and Design Coverage Map):
 <paste full package>
 
 PRD Draft Package:
@@ -135,15 +108,16 @@ Additional Product Owner updates (optional):
 <new decisions/constraints, if any>
 
 Return only:
-1) Design QA Readiness: Ready | Needs Clarification | Blocked
-2) PRD Traceability Review
-3) UX Coverage Review
-4) Component and Token Consistency Review
-5) Edge State Coverage Review
-6) Quality Gaps
-7) Open Questions (with owner decision status)
-8) Gate Decision: can proceed to architecture | must loop back
-9) Design QA Verdict Package (for architecture handoff)
+1) Design QA Readiness: Agent-Ready | Needs Revision | Blocked
+2) Figma Access Confirmation
+3) PRD Traceability Review
+4) UX Coverage Review
+5) Component and Token Consistency Review
+6) Edge State Coverage Review
+7) Quality Gaps (route back to ux-agent if revision needed)
+8) Open Questions (with owner decision status)
+9) Gate Decision: escalate to Product Owner for approval | route back to ux-agent with revision instructions
+10) Design QA Verdict Package (for architecture handoff)
 ```
 
 ## Example Architecture Handoff Message (Copy-Paste)

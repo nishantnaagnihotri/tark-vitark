@@ -16,6 +16,22 @@ plan_tier: <plan tier/quota, e.g. Pro full seat>
 design_system_library_file_key: ""
 design_system_library_url: ""
 
+# Screen-specific Figma files (one file per screen — all slices for that screen share this file).
+# Rule #65 / Known Rule #73: organized per screen, not per slice.
+# New-screen slices create a new entry here. Continuation slices reuse the existing screen file key.
+# Example:
+# debate_screen_file_key: ""
+# debate_screen_file_url: ""
+
+# M3 Baseline Kit — Material 3 Design Kit (official Google UI Kit, read-only).
+# This library is the L1 foundation. It must be enabled ONLY in the TV Design System file.
+# Slice files must NOT enable this library directly.
+# m3_baseline_library_name: display name shown in Figma Assets panel (UI kits section).
+# m3_baseline_library_mcp_key: the lk-... key returned by Figma MCP search_design_system;
+#   used by Figma Agent for importComponentByKeyAsync cross-file component imports.
+m3_baseline_library_name: "Material 3 Design Kit"
+m3_baseline_library_mcp_key: ""
+
 # Project-first policy: All Figma files must reside in the designated project.
 # MCP create_new_file lands files in Drafts (API limitation).
 # After MCP creates a new file, manually move it to the project before any

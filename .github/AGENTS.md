@@ -1,5 +1,5 @@
-<!-- Protocol-Version: 3.7 -->
-<!-- Last-Updated: 2026-04-07 -->
+<!-- Protocol-Version: 3.19 -->
+<!-- Last-Updated: 2026-04-11 -->
 
 # Shared Agent Protocol
 
@@ -17,6 +17,7 @@ This repository follows a human-led, agent-executed workflow.
 2. Use part-time session mode: one micro-goal per session.
 3. Close each session with a short checkpoint: done, next, blockers.
 4. Keep changes small and reversible.
+5. Avoid redundancy unless inevitable. Do not create a duplicate artifact, layer, token, file, or component if an equivalent already exists. When in doubt, check first — create second.
 
 ## Protocol Reuse Policy
 
@@ -47,14 +48,15 @@ Product Owner may override classification at any time.
 1. Requirement challenge gate must pass before PRD freeze for Standard and Complex slices.
 2. PRD drafting uses Requirement Context Package and must pass PRD quality gate before PRD freeze (Standard and Complex slices; Trivial slices skip Gate 2).
 3. Gate 2 (PRD) must preserve Gate 1 intent: no silent reinterpretation of requirement statement, scope boundaries, or acceptance criteria.
-4. Design freeze must happen before coding for Standard and Complex slices. Gate 3 includes UX, Figma, and Design QA substeps.
+4. Design freeze must happen before coding for Standard and Complex slices. Gate 3 includes two substeps: (A) UX+Design single-pass — Orchestrator executes UX work directly using the `ux-design-execution` skill (`.github/skills/ux-design-execution/SKILL.md`) under the **single-screen-first** protocol: create the primary frame (Default/Light/Mobile) first, return it to the Product Owner for explicit approval, then create all remaining frames in a follow-up pass; (B) Design QA. There is no separate UX Agent or Figma Agent substep.
 5. Design artifact is mandatory for every UX task: each Gate 3A UX output must include a Figma artifact reference (Figma file URL) before progression. Raw file keys must never appear in git-tracked artifacts — store them only in `.figma-config.local`.
-6. UX Agent must run an internal challenge phase before producing UX flow/state artifacts: all `Must Resolve` UX gaps must be addressed or accepted by Product Owner before Gate 3A can pass.
+6. Orchestrator must run an internal challenge phase (per `ux-design-execution` skill) before producing UX flow/state artifacts: all `Must Resolve` UX gaps must be addressed or accepted by Product Owner before Gate 3A can pass.
 7. Architecture signoff must happen before coding for Standard and Complex slices.
 8. Architecture Agent must run an internal challenge phase before producing any architecture output: all `Must Resolve` architecture gaps must be addressed or accepted by Product Owner before Gate 4 can pass.
 9. Architecture Agent must run a Discussion Phase before freezing the plan: key technical decisions across System Design, Solution Architecture, and Implementation Design must be surfaced, discussed with Product Owner, and confirmed before the full plan is written.
 10. UI-impacting implementation issues must pass the Gate 5.5 Runtime QA substep before Gate 6 progression, unless Product Owner explicitly accepts residual runtime risk.
 11. Merge requires passing tests, review closure, docs update when applicable, and rollback note.
+12. After Gate 3A (UX+Design single-pass) execution, orchestrator must return a Product Owner `Design Review Access Packet` with: node-targeted Figma URL(s) (include `?node-id=`), page list, key frame/state names with node IDs, pass-level change summary, and the exact review decision requested next. Packet links must prioritize runtime-preview visual frames (minimal/no QA overlays); annotated traceability frames may be included as secondary evidence links. Root file URL alone is insufficient. If node IDs are missing, loop back for clarification before claiming review-ready.
 
 ## Architecture Reference Documents
 
@@ -102,6 +104,36 @@ The full Gate 5, Gate 5.5 Runtime QA, and Gate 6 orchestration workflow - issue-
 5. Orchestrator must summarize intended commands before execution and record the decision in orchestration context updates.
 6. PR merge commands (for example `gh pr merge` or any equivalent merge operation) are never executed by any agent. PR merges are always performed by the Product Owner directly.
 
+## Owner Question Protocol
+
+1. All questions directed to the Product Owner must be presented using the VS Code `vscode_askQuestions` tool. Plain inline text questions are not permitted when a tool-based question can be asked.
+2. Every `vscode_askQuestions` call must keep `allowFreeformInput: true` (the default — must never be overridden to false).
+3. **Context in chat, choices in the tool.** Before invoking `vscode_askQuestions`, print the elaborated context, tradeoffs, and recommendation in the chat message. The tool call itself contains only concise choice labels — not the full explanation. The `question` field in the tool is a short one-line prompt only.
+4. The `header` must be a short unique identifier (3–6 words). Batch related decisions into a single `vscode_askQuestions` call.
+5. **Always mark one option as `recommended: true`** — the option the agent would choose given available information. The only exception is when all options are genuinely cost-equivalent with no clear recommendation; in that case, explicitly note in the chat context why no recommendation is given.
+6. Cross-ref: `orchestrator-context.md` Known Rule #69 and #72.
+
+## Figma Canvas Layout Protocol
+
+1. Design page frames are organized in horizontal journey rows following the UX-defined user flow sequence.
+2. Within each journey row (left to right, 100px horizontal gap): Light/Mobile → Dark/Mobile → Light/Desktop → Dark/Desktop.
+3. Journey row vertical gap: 300px minimum from the bottom of the tallest frame in a row to the top of the next row.
+4. First journey row origin: x=0, y=0. Subsequent rows stack downward. y-coordinate for each new row = y_start of previous row + previous row max height + 300.
+5. Baseline-lock frames occupy a dedicated Baseline Zone: x≥1200 (or ≥1000px right of the last design frame column), y=0, labeled with a text node `_label/baseline-zone`. Baseline frames are named with the `_baseline/` prefix to distinguish them from active design frames of the same state name.
+6. Stale or unrecognized frames are always reported as QGs by the Orchestrator — never silently left in place or deleted without Product Owner confirmation.
+7. Orchestrator must read current frame positions and heights via MCP before computing any new row coordinates. No hardcoded y values in handoff prompts.
+8. Cross-ref: `orchestrator-context.md` Known Rule #75.
+
+## PO Actionable Link Policy
+
+1. Every message that requires a Product Owner action (publish, review, approve, merge, navigate, or any other step PO must perform) must include a direct clickable URL to the exact destination — no searching, no raw keys, no vague references.
+2. **Figma files:** always `https://www.figma.com/design/<file-key>` — never a raw file key alone.
+3. **GitHub issues:** always `https://github.com/nishantnaagnihotri/tark-vitark/issues/<n>`.
+4. **GitHub PRs:** always `https://github.com/nishantnaagnihotri/tark-vitark/pull/<n>`.
+5. If multiple PO actions exist in one message, each action must have its own link on its own line.
+6. Applies to all agents without exception. Orchestrator enforces this in every gate-closure and handoff message.
+7. Cross-ref: `orchestrator-context.md` Known Rule #74.
+
 ## GitHub Interaction Policy
 
 1. For GitHub repository, issue, pull request, review, comment, label, and status interactions, agents must use the GitHub MCP server as the primary and required interface.
@@ -147,6 +179,10 @@ The full orchestrator session and context lifecycle workflow - activity resume p
 
 The full slice traceability workflow - artifact persistence, slice/story issue linkage, and Gate 4 issue operations - is defined in the `slice-traceability-and-issue-ops` skill (`.github/skills/slice-traceability-and-issue-ops/SKILL.md`). Agents must follow this skill when writing `06-tasks.md`, creating/updating slice and story issues, or validating traceability before Build.
 
+## Deferred Issue Protocol
+
+When deferring a decision, UX option, or requirement gap out of scope for the active slice, apply the `deferred` label and follow `.github/skills/defer-issue/SKILL.md` for required body fields, trigger condition, gate re-entry point, and triage rules.
+
 ## Domain Language Policy
 
 All agents use domain language — not framework, infrastructure, or implementation vocabulary — for domain-facing concepts in every artifact, from requirement through code. Shared design-system token taxonomies are the exception: global tokens, CSS custom properties in `src/styles/tokens.css`, and Figma variable categories may use standardized infrastructure-oriented token names such as `color/*`, `spacing/*`, `--color-*`, and `--space-*`.
@@ -170,9 +206,19 @@ The runtime QA validation workflow - acceptance-criterion journey checks in a li
 
 Follow the `figma-governance-and-fidelity` skill (`.github/skills/figma-governance-and-fidelity/SKILL.md`) for the full file structure convention and project-placement rules.
 
+## Figma Baseline-Lock Policy
+
+1. **One Figma file per screen.** All slices that add to or modify the same screen share one Figma file for that screen. Frames from different screens must never share a single Figma file. The file key is recorded in `.figma-config.local` (gitignored); the file URL may appear in git-tracked artifacts. Cross-ref: `orchestrator-context.md` Known Rule #73.
+2. **Mandatory baseline-lock for continuation slices.** When a slice modifies or extends an existing approved screen, the Orchestrator's first Figma action (during Gate 3A using the `ux-design-execution` skill) must be to call `node.clone()` on the approved baseline frame(s) within the same file — not recreate, reinterpret, or approximate them. The source node ID(s) and resulting clone node ID(s) must be recorded as provenance in the `Design Review Access` packet. Because the file is shared, `node.clone()` works natively — no cross-file workaround is needed.
+3. **No rebuilding approved elements.** Any element already present in the approved baseline frame (cards, typography, spacing, spine, layout) must come from the clone — never rebuilt from raw shapes or primitives. Only net-new additions for this slice (e.g., a composer bar) are authored fresh by the agent.
+4. **New-screen slices.** When a slice introduces a brand-new screen with no approved predecessor, a new dedicated file is created for that screen. No baseline duplication is required. All elements must still use Design System library variables only — no raw values.
+5. Violation of rules 2–3 is a loop-back condition: orchestrator must reject `UX Readiness: Ready` claims and re-execute Gate 3A compliant with baseline-lock rules.
+
 ## Design System Foundation Policy
 
-Follow the `figma-governance-and-fidelity` skill (`.github/skills/figma-governance-and-fidelity/SKILL.md`) for design system library and token governance requirements.
+Follow the `figma-governance-and-fidelity` skill (`.github/skills/figma-governance-and-fidelity/SKILL.md`) for design system library, token governance, and M3 component library-first requirements.
+
+Key mandate: the design system follows a strict 3-layer library chain — (L1) M3 Baseline Kit (Material 3 Design Kit, read-only, enabled only in the TV Library file), (L2+L3) TarkVitark Design System file (TV brand token overrides + TV functional components), and slice files (design frames only, import TV Library only). M3 primitives are imported from L1 — never recreated. TV functional components are built in L2+L3 using M3 primitives as building blocks. Slice frames import TV Library components only — no direct M3 Kit enablement in slice files. Orchestrator enforces this via a Component Coverage Check (self-blocking, per `ux-design-execution` skill) before any frame creation. If a required TV Library component is absent, Orchestrator creates it directly in the DS library before proceeding. See `3-Layer Design System Architecture` in the skill for full detail.
 
 ## Figma Fidelity Policy
 

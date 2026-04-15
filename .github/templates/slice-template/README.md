@@ -117,7 +117,7 @@ Gate 6 (Merge Review)
 - Quality gaps and open questions
 - Product Owner sign-off (approval required before architecture)
 
-**How to use:** Design QA agent reads Figma directly via MCP. Maps each AC to a screen/component. Flags any gaps. Loops back to figma-agent if revisions needed. Only closes when Product Owner approves.
+**How to use:** Design QA agent reads Figma directly via MCP. Maps each AC to a screen/component. Flags any gaps. Loops back to ux-agent if revisions needed. Only closes when Product Owner approves.
 
 ---
 
@@ -178,8 +178,8 @@ Gate 6 (Merge Review)
 5. prd-agent fills in 02-prd.md and returns it
 6. At Gate 3A: orchestrator invokes ux-agent, receives UX Flow/State Package
 7. ux-agent fills in 03-ux.md and returns it
-8. At Gate 3B: orchestrator invokes figma-agent, receives Design Draft Package
-9. figma-agent creates Figma screens; design-qa-agent fills in 04-design-qa.md
+8. At Gate 3B: orchestrator invokes design-qa-agent with UX Flow/State Package from ux-agent
+9. design-qa-agent reviews Figma frames (created by ux-agent in Gate 3A); fills in 04-design-qa.md
 10. At Gate 4: orchestrator invokes architecture-agent, receives Architecture Plan
 11. architecture-agent fills in 05-architecture.md and returns it
 12. Orchestrator creates GitHub issues and fills in 06-tasks.md
