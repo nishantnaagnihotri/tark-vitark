@@ -21,7 +21,7 @@
 
 ## Scope Boundaries
 
-- **In-scope:** Debate screen display at 3 breakpoints (Desktop ≥1024px, Tablet ~768px, Mobile ≤480px), Light/Dark themes, semantic HTML structure, token-based design system; mobile "Read more" tap/expand affordance (Owner-Approved PRD delta, 2026-04-14); Composer input row — side toggle (Chip/Filter), argument text field (TextField), send button (IconButton) (Owner-Approved PRD delta, 2026-04-15).
+- **In-scope:** Debate screen display at 3 breakpoints (Desktop ≥1024px, Tablet ~768px, Mobile ≤480px), Light/Dark themes, semantic HTML structure, token-based design system; mobile "Read more" tap/expand affordance (PRD Amendment 1 in `02-prd.md`; Owner-Approved PRD delta, 2026-04-14); Composer input row — side toggle (Chip/Filter), argument text field (TextField), send button (IconButton) (PRD Amendment 2 in `02-prd.md`; Owner-Approved PRD delta, 2026-04-15).
 - **Out-of-scope:** Data persistence, networking/API, authentication, multi-debate navigation, framework selection (Gate 4). Read-only debate content zone itself requires no server interaction for display.
 
 ## Figma Design Reference

@@ -84,17 +84,21 @@ Post-gate owner decisions that supersede original PRD content are recorded here.
 
 ---
 
-### Amendment 1 — FR-6/AC-6 Scope Extension (2026-04-14)
+### Amendment 1 — FR-6/AC-6 Mobile Read-more Affordance (2026-04-14)
 
 **Affected requirement:** FR-6, AC-6
 **Original text:** "The page **shall** be read-only. All debate content is consumable without any user interaction. No input controls, forms, buttons, or interactive affordances **shall** be present."
-**Amendment:** The debate content reading zone remains read-only. The following owner-approved interactive affordances are added to scope for the post-tark-vitark slice:
-
-1. **Mobile "Read more" tap target** (approved 2026-04-14): Argument cards on mobile collapse to 4 lines by default. A "Read more" tap target expands to full text. No "Show less" toggle. Desktop/tablet cards show full text always — no affordance there.
-2. **Post-argument Composer row** (approved 2026-04-15): A Composer zone at the bottom of the screen contains a side-selector Chip/Filter toggle (tark/vitark), a text input field (TextField/Outlined), and a send button (IconButton/Filled). This is the entry point for submitting new arguments in the post-tark-vitark slice.
-
+**Amendment:** The debate content reading zone remains read-only. Mobile argument cards collapse to 4 lines by default; a "Read more" tap target expands to full text. No "Show less" toggle. Desktop/tablet cards show full text always — no affordance there.
 **What remains out-of-scope:** Data persistence, networking/API calls, authentication, multi-debate navigation, framework selection (Gate 4).
-**PO approval on record:** See `docs/slices/debate-screen/03-ux.md` Owner-Approved Deltas log, entries dated 2026-04-14 and 2026-04-15.
+**PO approval on record:** See `docs/slices/debate-screen/03-ux.md` Owner-Approved Deltas log, entry dated 2026-04-14.
+
+### Amendment 2 — FR-6/AC-6 Post-argument Composer Row (2026-04-15)
+
+**Affected requirement:** FR-6, AC-6
+**Original text:** "The page **shall** be read-only. All debate content is consumable without any user interaction. No input controls, forms, buttons, or interactive affordances **shall** be present."
+**Amendment:** A Composer zone at the bottom of the screen is added to scope for the post-tark-vitark slice. It contains a side-selector Chip/Filter toggle (tark/vitark), a text input field (TextField/Outlined), and a send button (IconButton/Filled). This is the entry point for submitting new arguments in the post-tark-vitark slice.
+**What remains out-of-scope:** Data persistence, networking/API calls, authentication, multi-debate navigation, framework selection (Gate 4).
+**PO approval on record:** See `docs/slices/debate-screen/03-ux.md` Owner-Approved Deltas log, entry dated 2026-04-15.
 
 ## 6. Success Metrics
 
