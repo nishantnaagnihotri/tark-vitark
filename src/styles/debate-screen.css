@@ -6,7 +6,7 @@
     min-height: 100dvh;
     display: flex;
     flex-direction: column;
-    padding-bottom: var(--podium-height);
+    padding-bottom: var(--podium-height, 0px);
     background-color: var(--color-surface-default);
     color: var(--color-on-surface);
 }

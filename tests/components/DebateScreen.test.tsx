@@ -103,7 +103,7 @@ describe('DebateScreen', () => {
         await waitFor(() => {
             const items = screen.getAllByRole('listitem');
             expect(items).toHaveLength(DEBATE.arguments.length + 1);
-            expect(items.at(-1)).toHaveTextContent('This post has enough length.');
+            expect(items[items.length - 1]).toHaveTextContent('This post has enough length.');
         });
     });
 
@@ -162,6 +162,6 @@ describe('DebateScreen', () => {
     it('uses shared podium height variable for debate screen clearance', () => {
         expect(debateScreenCss).toContain('display: flex;');
         expect(debateScreenCss).toContain('flex-direction: column;');
-        expect(debateScreenCss).toContain('padding-bottom: var(--podium-height);');
+        expect(debateScreenCss).toContain('padding-bottom: var(--podium-height, 0px);');
     });
 });
