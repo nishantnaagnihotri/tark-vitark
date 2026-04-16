@@ -174,7 +174,7 @@ describe('SegmentedControl', () => {
         expect(tarkRadio).toHaveFocus();
     });
 
-    it('supports Enter and Space to confirm the focused side', () => {
+    it('does not activate selection on Enter or Space keydown and still activates via click', () => {
         const onChange = vi.fn();
 
         render(
@@ -192,10 +192,14 @@ describe('SegmentedControl', () => {
 
         fireEvent.keyDown(vitarkRadio, { key: 'Enter' });
         fireEvent.keyDown(vitarkRadio, { key: ' ' });
+        fireEvent.keyDown(vitarkRadio, { key: 'Spacebar' });
 
-        expect(onChange).toHaveBeenCalledTimes(2);
-        expect(onChange).toHaveBeenNthCalledWith(1, 'vitark');
-        expect(onChange).toHaveBeenNthCalledWith(2, 'vitark');
+        expect(onChange).not.toHaveBeenCalled();
+
+        fireEvent.click(vitarkRadio);
+
+        expect(onChange).toHaveBeenCalledTimes(1);
+        expect(onChange).toHaveBeenCalledWith('vitark');
     });
 
     it('uses radiogroup and radio ARIA roles', () => {

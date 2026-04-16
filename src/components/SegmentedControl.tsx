@@ -75,8 +75,7 @@ export function SegmentedControl({
 
     const handleOptionKeyDown = (
         event: KeyboardEvent<HTMLButtonElement>,
-        optionIndex: number,
-        option: Side
+        optionIndex: number
     ) => {
         switch (event.key) {
             case 'ArrowRight':
@@ -89,13 +88,6 @@ export function SegmentedControl({
             case 'ArrowUp': {
                 event.preventDefault();
                 focusAndSelect(optionIndex - 1);
-                return;
-            }
-            case ' ':
-            case 'Spacebar':
-            case 'Enter': {
-                event.preventDefault();
-                selectOnConfirm(option);
                 return;
             }
             default:
@@ -128,7 +120,7 @@ export function SegmentedControl({
                         tabIndex={optionIndex === selectedIndex ? 0 : -1}
                         onClick={() => selectOnConfirm(option)}
                         onKeyDown={(event) =>
-                            handleOptionKeyDown(event, optionIndex, option)
+                            handleOptionKeyDown(event, optionIndex)
                         }
                     >
                         <span className="segmented-control__label">
