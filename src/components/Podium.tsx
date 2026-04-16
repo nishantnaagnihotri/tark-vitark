@@ -71,7 +71,7 @@ export function Podium({ selectedSide, onSideChange, onPublish }: PodiumProps) {
                     disabled={text.length === 0 || isBusy}
                     aria-label="Publish post"
                 >
-                    Publish
+                    <span aria-hidden="true">&uarr;</span>
                 </button>
             </div>
 
