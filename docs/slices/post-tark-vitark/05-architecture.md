@@ -153,14 +153,15 @@ Render fragment additions:
 The following Figma DS library instances cannot be resized via the Plugin API due to fixed inner dimensions; all are implemented as native builds using DS tokens:
 
 #### Divider/Native (inside Podium)
-- Inline `<div>` — `height: 1px`, `width: 100%`, `background-color: var(--color-spine-line)`, `role="separator"`, `aria-orientation="horizontal"`.
+- Native `<div>` — `display: block`, `height: 1px`, `background-color: var(--color-spine-line)`, `role="separator"`, `aria-orientation="horizontal"`.
+- Must be **full-bleed across the Podium** (edge-to-edge at 390px, not inset by Podium's 16px horizontal padding). Implement as `width: calc(100% + 32px); margin-inline: -16px` to negate the Podium content-box inset.
 - **Not** the DS `<Divider>` component (which is vertical-only in `divider.css`).
 
 #### SegmentedToggle/Native → `SegmentedControl.tsx`
 - Pill shape: `border-radius: 24px`; outer border: `1px solid var(--color-brand-primary)`
 - Selected segment: `background: var(--color-brand-primary)`, text `var(--color-brand-on-primary)`
 - Unselected segment: no fill, text `var(--color-brand-primary)`
-- Width: `calc(100% - 32px)` (16px L/R padding within Podium)
+- Width: `100%` (fills Podium content box; Podium's 16px horizontal padding already provides the L/R inset — do not double-subtract)
 - Each segment: `flex: 1`
 
 #### TextField/Native (inline in `Podium.tsx`)
