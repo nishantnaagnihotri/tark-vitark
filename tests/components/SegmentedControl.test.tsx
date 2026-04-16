@@ -109,6 +109,26 @@ describe('SegmentedControl', () => {
         expect(vitarkRadio).toHaveFocus();
     });
 
+    it('does not fire onChange during arrow navigation when wrapped selection stays unchanged', () => {
+        const onChange = vi.fn();
+
+        render(
+            <SegmentedControl
+                options={['tark']}
+                value="tark"
+                onChange={onChange}
+            />
+        );
+
+        const tarkRadio = screen.getByRole('radio', { name: 'Tark' });
+        tarkRadio.focus();
+
+        fireEvent.keyDown(tarkRadio, { key: 'ArrowRight' });
+
+        expect(onChange).not.toHaveBeenCalled();
+        expect(tarkRadio).toHaveFocus();
+    });
+
     it('supports reverse arrow-key navigation and calls onChange with the previous side', () => {
         const onChange = vi.fn();
 

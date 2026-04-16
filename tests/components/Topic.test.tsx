@@ -10,7 +10,6 @@ describe('Topic', () => {
     });
 
     it('uses Typography headline-large role', () => {
-        // This assertion protects the typography-role contract without changing behavior.
         render(<Topic text="Test topic" />);
         const heading = screen.getByRole('heading', { level: 1 });
         expect(heading).toHaveClass('typography', 'typography--headline-large');

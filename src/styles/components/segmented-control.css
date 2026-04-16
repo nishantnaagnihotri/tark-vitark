@@ -18,7 +18,7 @@
 }
 
 .segmented-control__segment + .segmented-control__segment {
-    border-left: var(--divider-thickness, 1px) solid var(--color-brand-primary);
+    border-left: var(--divider-thickness) solid var(--color-brand-primary);
 }
 
 .segmented-control__segment--selected {
