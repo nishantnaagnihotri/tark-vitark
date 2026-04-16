@@ -15,6 +15,15 @@
     }
 }
 
+@media (min-width: 481px) {
+    .argument-card__body--clamped {
+        display: block;
+        -webkit-line-clamp: unset;
+        -webkit-box-orient: unset;
+        overflow: visible;
+    }
+}
+
 .argument-card__read-more {
     background: none;
     border: none;
