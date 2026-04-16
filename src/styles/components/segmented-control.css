@@ -1,7 +1,7 @@
 .segmented-control {
     display: flex;
     width: 100%;
-    border: 1px solid var(--color-brand-primary);
+    border: var(--divider-thickness) solid var(--color-brand-primary);
     border-radius: 24px;
     overflow: hidden;
 }
@@ -18,7 +18,7 @@
 }
 
 .segmented-control__segment + .segmented-control__segment {
-    border-left: 1px solid var(--color-brand-primary);
+    border-left: var(--divider-thickness, 1px) solid var(--color-brand-primary);
 }
 
 .segmented-control__segment--selected {
