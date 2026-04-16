@@ -163,6 +163,7 @@ The following Figma DS library instances cannot be resized via the Plugin API du
 
 #### TextField/Native (inline in `Podium.tsx`)
 - `<textarea>` — multiline, `resize: none`
+- Accessible name: `aria-label="Post text"` (placeholder text alone is not a reliable accessible name per WCAG 2.1 SC 1.3.1)
 - Rest border: `1px solid var(--color-spine-line)`; focus border: `1px solid var(--color-brand-primary)`; error border: `1px solid var(--color-error)`
 - `border-radius: var(--radius-sharp)` (4px)
 - Horizontal padding: 16px
