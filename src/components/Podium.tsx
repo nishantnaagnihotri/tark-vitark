@@ -57,6 +57,8 @@ export function Podium({ selectedSide, onSideChange, onPublish }: PodiumProps) {
                     {sideLabel}
                 </button>
                 <textarea
+                    id="podium-textarea"
+                    name="post-text"
                     className="podium__textarea"
                     value={text}
                     onChange={(event) => setText(event.target.value)}
