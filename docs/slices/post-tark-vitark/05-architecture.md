@@ -183,7 +183,7 @@ Core layout:
   background-color: var(--color-surface-default);
 }
 
---podium-height: 187px;  /* declared as custom property on .podium */
+--podium-height: 187px;  /* declared on :root so .debate-screen siblings can reference it */
 ```
 
 Desktop responsive — Podium is centred on wide viewports to match Design QA desktop frame (`285:3144`, `285:3180`):
@@ -358,7 +358,7 @@ Tasks are ordered by dependency. Tasks with no declared dependency may be worked
 
 **Test file:** `tests/tokens.test.ts` — add assertions for both tokens in both themes.
 
-**AC coverage:** Prerequisite for AC-7 (placeholder colour), AC-9..AC-11 (error state).
+**Implementation note:** Required for placeholder and error visual styling referenced by this slice.
 
 **Dependency:** None.
 
@@ -495,7 +495,7 @@ Tasks are ordered by dependency. Tasks with no declared dependency may be worked
 **Change:** New files. Implement all 14 BDD scenarios from Section 6 as runnable Cucumber scenarios wired to JSDOM via `@cucumber/cucumber` step definitions. Follow the pattern in `features/step-definitions/scaffold.steps.ts` for imports and assertions. Each scenario maps to one or more acceptance criteria.
 
 **Acceptance criteria:**
-- All 14 scenarios pass in CI (`npm run test` or `npx cucumber-js`).
+- All 14 scenarios pass in CI (`npm run test:bdd`).
 - Each scenario includes a clear `Given`/`When`/`Then` structure with no pending steps.
 
 **AC coverage:** Full AC-1..AC-18; Flows A–G.
