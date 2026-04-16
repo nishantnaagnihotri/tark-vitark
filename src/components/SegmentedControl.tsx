@@ -2,10 +2,10 @@ import type { KeyboardEvent } from 'react';
 import { useRef } from 'react';
 import '../styles/components/segmented-control.css';
 
-interface SegmentedControlProps {
-    options: readonly string[];
-    value: string;
-    onChange: (value: string) => void;
+interface SegmentedControlProps<T extends string> {
+    options: readonly T[];
+    value: T;
+    onChange: (value: T) => void;
     id?: string;
     'aria-label'?: string;
     'aria-labelledby'?: string;
@@ -15,14 +15,14 @@ function toSegmentLabel(option: string): string {
     return option.charAt(0).toUpperCase() + option.slice(1);
 }
 
-export function SegmentedControl({
+export function SegmentedControl<T extends string>({
     options,
     value,
     onChange,
     id,
     'aria-label': ariaLabel,
     'aria-labelledby': ariaLabelledby,
-}: SegmentedControlProps) {
+}: SegmentedControlProps<T>) {
     const optionRefs = useRef<Array<HTMLButtonElement | null>>([]);
     const effectiveValue = options.includes(value) ? value : options[0] ?? value;
     const selectedIndex = options.indexOf(effectiveValue);
@@ -46,7 +46,7 @@ export function SegmentedControl({
         optionRefs.current[wrappedIndex]?.focus();
     };
 
-    const selectOnConfirm = (option: string) => {
+    const selectOnConfirm = (option: T) => {
         if (option !== effectiveValue) {
             onChange(option);
         }
@@ -55,7 +55,7 @@ export function SegmentedControl({
     const handleOptionKeyDown = (
         event: KeyboardEvent<HTMLButtonElement>,
         optionIndex: number,
-        option: string
+        option: T
     ) => {
         switch (event.key) {
             case 'ArrowRight':
@@ -94,7 +94,7 @@ export function SegmentedControl({
 
                 return (
                     <button
-                        key={option}
+                        key={`${option}-${optionIndex}`}
                         type="button"
                         ref={(node) => {
                             optionRefs.current[optionIndex] = node;
