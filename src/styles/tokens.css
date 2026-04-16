@@ -11,6 +11,9 @@
   /* Spine (maps to M3 outline-variant) */
   --color-spine-line: #767680;
 
+  --color-on-surface-variant: #49454E;
+  --color-error: #B3261E;
+
   /* ── Layer 2: Brand Override (empty — no M3 values overridden) ── */
 
   /* ── Layer 3: Functional Override (domain tokens) ── */
@@ -78,6 +81,9 @@
 
   --color-spine-line: #90909A;
 
+  --color-on-surface-variant: #CAC4D0;
+  --color-error: #F2B8B5;
+
   /* ── Layer 3: Functional Override ── */
   --color-tark-surface: #1565C0;
   --color-tark-on-surface: #E3F2FD;
@@ -103,6 +109,9 @@
     --color-brand-on-primary: #0E2288;
 
     --color-spine-line: #90909A;
+
+    --color-on-surface-variant: #CAC4D0;
+    --color-error: #F2B8B5;
 
     /* ── Layer 3: Functional Override ── */
     --color-tark-surface: #1565C0;

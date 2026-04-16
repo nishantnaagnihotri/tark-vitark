@@ -1,7 +1,14 @@
-import { render, screen } from '@testing-library/react';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { DebateScreen } from '../../src/components/DebateScreen';
 import { DEBATE } from '../../src/data/debate';
+
+const debateScreenCss = readFileSync(
+    resolve(process.cwd(), 'src/styles/debate-screen.css'),
+    'utf-8'
+);
 
 describe('DebateScreen', () => {
     afterEach(() => {
@@ -43,10 +50,100 @@ describe('DebateScreen', () => {
         expect(timeline).toBeInTheDocument();
     });
 
+    it('composes Podium controls', () => {
+        render(<DebateScreen />);
+
+        expect(screen.getByRole('radiogroup', { name: 'Post side' })).toBeInTheDocument();
+        expect(screen.getByRole('textbox', { name: 'Post text' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Publish post' })).toBeInTheDocument();
+    });
+
     it('renders all arguments from DEBATE data', () => {
         render(<DebateScreen />);
         const items = screen.getAllByRole('listitem');
         expect(items).toHaveLength(DEBATE.arguments.length);
+    });
+
+    it('defaults selected side to tark on mount', () => {
+        render(<DebateScreen />);
+
+        expect(screen.getByRole('radio', { name: 'Tark' })).toHaveAttribute(
+            'aria-checked',
+            'true'
+        );
+        expect(screen.getByRole('radio', { name: 'Vitark' })).toHaveAttribute(
+            'aria-checked',
+            'false'
+        );
+    });
+
+    it('passes side changes to Podium by updating selected side state', () => {
+        render(<DebateScreen />);
+
+        fireEvent.click(screen.getByRole('radio', { name: 'Vitark' }));
+
+        expect(screen.getByRole('radio', { name: 'Vitark' })).toHaveAttribute(
+            'aria-checked',
+            'true'
+        );
+        expect(screen.getByRole('radio', { name: 'Tark' })).toHaveAttribute(
+            'aria-checked',
+            'false'
+        );
+    });
+
+    it('appends a valid published post as the last timeline item', async () => {
+        render(<DebateScreen />);
+
+        fireEvent.change(screen.getByRole('textbox', { name: 'Post text' }), {
+            target: { value: 'This post has enough length.' },
+        });
+        fireEvent.click(screen.getByRole('button', { name: 'Publish post' }));
+
+        await waitFor(() => {
+            const items = screen.getAllByRole('listitem');
+            expect(items).toHaveLength(DEBATE.arguments.length + 1);
+            expect(items[items.length - 1]).toHaveTextContent('This post has enough length.');
+        });
+    });
+
+    it('resets localPosts to empty after remount', async () => {
+        const { unmount } = render(<DebateScreen />);
+
+        fireEvent.change(screen.getByRole('textbox', { name: 'Post text' }), {
+            target: { value: 'Session-only argument text.' },
+        });
+        fireEvent.click(screen.getByRole('button', { name: 'Publish post' }));
+
+        await waitFor(() => {
+            expect(screen.getAllByRole('listitem')).toHaveLength(
+                DEBATE.arguments.length + 1
+            );
+        });
+
+        unmount();
+        render(<DebateScreen />);
+
+        expect(screen.getAllByRole('listitem')).toHaveLength(DEBATE.arguments.length);
+        expect(screen.queryByText('Session-only argument text.')).not.toBeInTheDocument();
+    });
+
+    it('resets selected side to tark after remount', () => {
+        const { unmount } = render(<DebateScreen />);
+
+        fireEvent.click(screen.getByRole('radio', { name: 'Vitark' }));
+        expect(screen.getByRole('radio', { name: 'Vitark' })).toHaveAttribute(
+            'aria-checked',
+            'true'
+        );
+
+        unmount();
+        render(<DebateScreen />);
+
+        expect(screen.getByRole('radio', { name: 'Tark' })).toHaveAttribute(
+            'aria-checked',
+            'true'
+        );
     });
 
     it('applies debate-screen CSS class to main element', () => {
@@ -55,11 +152,16 @@ describe('DebateScreen', () => {
         expect(main).toHaveClass('debate-screen');
     });
 
-    it('has no input controls or forms (read-only except theme toggle)', () => {
-        const { container } = render(<DebateScreen />);
-        expect(screen.queryAllByRole('button')).toHaveLength(0);
+    it('keeps ThemeToggle present alongside composer controls', () => {
+        render(<DebateScreen />);
+
         expect(screen.getByRole('switch', { name: /dark mode/i })).toBeInTheDocument();
-        expect(screen.queryAllByRole('textbox')).toHaveLength(0);
-        expect(container.querySelector('form')).not.toBeInTheDocument();
+        expect(screen.getByRole('textbox', { name: 'Post text' })).toBeInTheDocument();
+    });
+
+    it('uses shared podium height variable for debate screen clearance', () => {
+        expect(debateScreenCss).toContain('display: flex;');
+        expect(debateScreenCss).toContain('flex-direction: column;');
+        expect(debateScreenCss).toContain('padding-bottom: var(--podium-height, 0px);');
     });
 });

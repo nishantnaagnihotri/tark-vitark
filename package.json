@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:bdd": "node --import tsx/esm node_modules/@cucumber/cucumber/bin/cucumber.js --import 'features/step-definitions/**/*.ts'"
+    "test:bdd": "node --import tsx/esm --loader ./features/support/css-loader.mjs node_modules/@cucumber/cucumber/bin/cucumber.js --import 'features/support/jsdom-setup.mjs' --import 'features/step-definitions/**/*.ts'"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.8",
@@ -20,6 +20,7 @@
     "@cucumber/cucumber": "^11.3.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^22.0.0",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
