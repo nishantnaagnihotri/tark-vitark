@@ -40,6 +40,8 @@ describe('tokens.css — M3 3-layer token presence', () => {
     '--color-legend-surface',
     '--color-legend-on-surface',
     '--color-legend-separator',
+    '--color-on-surface-variant',
+    '--color-error',
   ];
 
   it.each(colorTokens)('defines color token %s in light block', (token) => {
@@ -181,6 +183,8 @@ describe('tokens.css — M3 3-layer token presence', () => {
     ['--color-legend-surface', '#F5F5F5'],
     ['--color-legend-on-surface', '#4D4D4D'],
     ['--color-legend-separator', '#999999'],
+    ['--color-on-surface-variant', '#49454E'],
+    ['--color-error', '#B3261E'],
   ];
 
   it.each(lightColorValues)('light %s equals %s', (token, value) => {
@@ -205,6 +209,8 @@ describe('tokens.css — M3 3-layer token presence', () => {
     ['--color-legend-surface', '#1C1C1C'],
     ['--color-legend-on-surface', '#BFBFBF'],
     ['--color-legend-separator', '#666666'],
+    ['--color-on-surface-variant', '#CAC4D0'],
+    ['--color-error', '#F2B8B5'],
   ];
 
   it.each(darkColorValues)('dark %s equals %s', (token, value) => {
