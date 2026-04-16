@@ -9,7 +9,7 @@
     justify-content: center;
     align-items: center;
     gap: 8px;
-    height: 32px;
+    height: var(--space-8);
     background-color: var(--color-legend-surface);
     color: var(--color-legend-on-surface);
 }
