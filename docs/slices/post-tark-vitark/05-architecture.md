@@ -92,9 +92,9 @@ The `message` copy for `too-short` and `too-long` is unified per Design QA: *"Te
 
 ```typescript
 interface SegmentedControlProps {
-  options: readonly string[];   // exactly 2 values for this slice: ['Tark', 'Vitark']
-  value: string;
-  onChange: (value: string) => void;
+  options: readonly Side[];   // exactly 2 values for this slice: ['tark', 'vitark']; labels derived in render
+  value: Side;
+  onChange: (value: Side) => void;
   id?: string;
   'aria-labelledby'?: string;
 }
@@ -351,7 +351,7 @@ Tasks are ordered by dependency. Tasks with no declared dependency may be worked
 
 **Files:** `src/styles/tokens.css`
 
-**Change:** Add both tokens to all three theme blocks (`:root`/`[data-theme="light"]`, `[data-theme="dark"]`, `@media prefers-color-scheme: dark :root:not([data-theme])`). Values per Section 4.
+**Change:** Add both tokens to all three theme blocks (`:root`/`[data-theme="light"]`, `[data-theme="dark"]`, `@media (prefers-color-scheme: dark) { :root:not([data-theme]) { ... } }`). Values per Section 4.
 
 **Acceptance criteria:**
 - Both token variables are present and non-empty in light and dark computed styles.
@@ -478,6 +478,8 @@ Tasks are ordered by dependency. Tasks with no declared dependency may be worked
 - Clicking Read more sets `expanded = true`; button text changes to "Show less".
 - Clicking Show less sets `expanded = false`; clamp class re-applied.
 - Button has `aria-expanded` attribute reflecting current state.
+
+**Test setup note:** `ResizeObserver` is not available in jsdom. Add a `ResizeObserver` stub to `tests/setup.ts` (or mock it per-test in `ArgumentCard.test.tsx`) before testing clamp detection.
 - No edit or delete buttons are present.
 
 **Test file:** `tests/components/ArgumentCard.test.tsx` (extend existing file)
