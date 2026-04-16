@@ -1,29 +1,46 @@
 import type { KeyboardEvent } from 'react';
 import { useRef } from 'react';
+import type { Side } from '../data/debate';
 import '../styles/components/segmented-control.css';
 
-interface SegmentedControlProps<T extends string> {
-    options: readonly T[];
-    value: T;
-    onChange: (value: T) => void;
+interface SegmentedControlProps {
+    options: readonly Side[];
+    value: Side;
+    onChange: (value: Side) => void;
     id?: string;
     'aria-label'?: string;
     'aria-labelledby'?: string;
 }
 
-function toSegmentLabel(option: string): string {
+function toSegmentLabel(option: Side): string {
     return option.charAt(0).toUpperCase() + option.slice(1);
 }
 
-export function SegmentedControl<T extends string>({
+function assertUniqueOptions(options: readonly Side[]): void {
+    if (new Set(options).size === options.length) {
+        return;
+    }
+
+    const duplicateOptions = Array.from(
+        new Set(options.filter((option, index) => options.indexOf(option) !== index))
+    );
+
+    throw new Error(
+        `SegmentedControl options must be unique. Duplicate value(s): ${duplicateOptions.join(', ')}`
+    );
+}
+
+export function SegmentedControl({
     options,
     value,
     onChange,
     id,
     'aria-label': ariaLabel,
     'aria-labelledby': ariaLabelledby,
-}: SegmentedControlProps<T>) {
+}: SegmentedControlProps) {
     const optionRefs = useRef<Array<HTMLButtonElement | null>>([]);
+    assertUniqueOptions(options);
+
     const effectiveValue = options.includes(value) ? value : options[0] ?? value;
     const selectedIndex = options.indexOf(effectiveValue);
     const labelledByValue = ariaLabelledby?.trim();
@@ -46,7 +63,7 @@ export function SegmentedControl<T extends string>({
         optionRefs.current[wrappedIndex]?.focus();
     };
 
-    const selectOnConfirm = (option: T) => {
+    const selectOnConfirm = (option: Side) => {
         if (option !== effectiveValue) {
             onChange(option);
         }
@@ -55,7 +72,7 @@ export function SegmentedControl<T extends string>({
     const handleOptionKeyDown = (
         event: KeyboardEvent<HTMLButtonElement>,
         optionIndex: number,
-        option: T
+        option: Side
     ) => {
         switch (event.key) {
             case 'ArrowRight':

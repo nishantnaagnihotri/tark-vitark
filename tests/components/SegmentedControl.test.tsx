@@ -88,35 +88,16 @@ describe('SegmentedControl', () => {
         expect(onChange).toHaveBeenCalledWith('vitark');
     });
 
-    it('does not emit duplicate key warnings when options include duplicate labels', () => {
-        const onChange = vi.fn();
-        const consoleErrorSpy = vi
-            .spyOn(console, 'error')
-            .mockImplementation(() => {});
-
-        try {
+    it('throws when options include duplicate side values to preserve valid radiogroup semantics', () => {
+        expect(() =>
             render(
                 <SegmentedControl
-                    options={['tark', 'tark', 'vitark']}
+                    options={['tark', 'tark']}
                     value="tark"
-                    onChange={onChange}
+                    onChange={() => {}}
                 />
-            );
-
-            expect(screen.getAllByRole('radio')).toHaveLength(3);
-
-            const duplicateKeyWarnings = consoleErrorSpy.mock.calls.filter(
-                (call) =>
-                    call
-                        .map((entry) => String(entry))
-                        .join(' ')
-                        .includes('same key')
-            );
-
-            expect(duplicateKeyWarnings).toHaveLength(0);
-        } finally {
-            consoleErrorSpy.mockRestore();
-        }
+            )
+        ).toThrowError(/SegmentedControl options must be unique/);
     });
 
     it('supports arrow-key navigation and calls onChange with the next side', () => {
