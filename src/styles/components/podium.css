@@ -1,0 +1,92 @@
+:root {
+    --podium-height: calc(187px + env(safe-area-inset-bottom, 0px));
+}
+
+.podium {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--space-4) - var(--radius-sharp));
+    padding: calc(var(--space-4) - var(--radius-sharp)) var(--space-4) 0;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background-color: var(--color-surface-default);
+    z-index: 20;
+}
+
+.podium__divider {
+    display: block;
+    width: calc(100% + (var(--space-4) * 2));
+    height: 1px;
+    margin-inline: calc(var(--space-4) * -1);
+    background-color: var(--color-spine-line);
+}
+
+.podium__composer-row {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--space-4) - var(--radius-sharp));
+}
+
+.podium__textarea {
+    flex: 1;
+    min-height: 56px;
+    padding: 0 var(--space-4);
+    border: 1px solid var(--color-spine-line);
+    border-radius: var(--radius-sharp);
+    background-color: var(--color-surface-default);
+    color: var(--color-on-surface);
+    font: inherit;
+    line-height: var(--typescale-body-lg-line-height);
+    resize: none;
+}
+
+.podium__textarea::placeholder {
+    color: var(--color-on-surface-variant);
+}
+
+.podium__textarea:focus-visible {
+    outline: none;
+    border-color: var(--color-brand-primary);
+}
+
+.podium__textarea[aria-invalid='true'] {
+    border-color: var(--color-error);
+}
+
+.podium__publish {
+    width: var(--space-10);
+    height: var(--space-10);
+    border: 0;
+    border-radius: 999px;
+    background-color: var(--color-brand-primary);
+    color: var(--color-brand-on-primary);
+    font: inherit;
+    cursor: pointer;
+}
+
+.podium__publish:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.podium__error {
+    min-height: var(--typescale-label-md-line-height);
+    margin: 0;
+    color: var(--color-error);
+    font-size: var(--typescale-label-md-size);
+    font-weight: var(--typescale-label-md-weight);
+    line-height: var(--typescale-label-md-line-height);
+    letter-spacing: var(--typescale-label-md-tracking);
+}
+
+@media (min-width: 1024px) {
+    .podium {
+        max-width: 600px;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+    }
+}
