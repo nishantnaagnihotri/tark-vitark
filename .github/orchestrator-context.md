@@ -847,7 +847,7 @@ Detailed repo-wide governance history from 2026-03-30 through 2026-04-02 is arch
 - Next micro-goal: Gate 3B Design QA — verify token accuracy on active frames `304:2` and `414:78`, then seek PO approval to close Gate 3.
 - Blockers/owner decisions: PO visual approval of Pass 4 Composer pending before Gate 3 closes.
 
-### 2026-04-16 (post-tark-vitark Gate 3 ✅ Close — PR #83 Merged)
+### 2026-04-16 (post-tark-vitark Gate 3 ✅ Closed — PR #83 Merged)
 - Gate status: `post-tark-vitark` Gate 3 ✅ Pass. PR #83 merged to master. 11 Copilot review passes; all 20 review threads resolved with disposition replies. CI SUCCESS throughout.
 - PR: https://github.com/nishantnaagnihotri/tark-vitark/pull/83
 - Artifact changes: `02-prd.md` (PRD Amendment Protocol — Amendment 1 Read-more + Amendment 2 Composer with supersession clause); `03-ux.md` (SegCtrl→Chip/Filter in QG-5, audit date clarified, token ref corrected); `04-design-qa.md` (Scope Boundaries + AC-6 cite amendment numbers, both dark token blocks noted); `ux-design-execution/SKILL.md` (Design Quality Gate in schema item 13 + Step 11 section, pass/fail only, HTTPS sources); `requirement-prd-alignment/SKILL.md` (PRD Amendment Protocol section); `prd-gate-orchestration/SKILL.md` (PRD Amendment trigger rule).
