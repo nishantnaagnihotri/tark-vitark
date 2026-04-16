@@ -72,7 +72,7 @@ describe('SegmentedControl', () => {
     });
 
     it('fires onChange with the clicked side when clicking a non-selected side', () => {
-        const onChange = vi.fn();
+        const onChange: (nextSide: Side) => void = vi.fn();
 
         render(
             <SegmentedControl
@@ -86,6 +86,37 @@ describe('SegmentedControl', () => {
 
         expect(onChange).toHaveBeenCalledTimes(1);
         expect(onChange).toHaveBeenCalledWith('vitark');
+    });
+
+    it('does not emit duplicate key warnings when options include duplicate labels', () => {
+        const onChange = vi.fn();
+        const consoleErrorSpy = vi
+            .spyOn(console, 'error')
+            .mockImplementation(() => {});
+
+        try {
+            render(
+                <SegmentedControl
+                    options={['tark', 'tark', 'vitark']}
+                    value="tark"
+                    onChange={onChange}
+                />
+            );
+
+            expect(screen.getAllByRole('radio')).toHaveLength(3);
+
+            const duplicateKeyWarnings = consoleErrorSpy.mock.calls.filter(
+                (call) =>
+                    call
+                        .map((entry) => String(entry))
+                        .join(' ')
+                        .includes('same key')
+            );
+
+            expect(duplicateKeyWarnings).toHaveLength(0);
+        } finally {
+            consoleErrorSpy.mockRestore();
+        }
     });
 
     it('supports arrow-key navigation and calls onChange with the next side', () => {
