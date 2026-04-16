@@ -187,7 +187,7 @@ Core layout:
 }
 
 :root {
-  --podium-height: 187px;  /* shared ancestor property so .debate-screen siblings can reference it */
+  --podium-height: calc(187px + env(safe-area-inset-bottom, 0px));  /* shared ancestor: full rendered Podium height (Figma base 187px + safe-area inset) so .debate-screen sibling can reference it for correct clearance */
 }
 ```
 
@@ -280,7 +280,7 @@ No other new tokens are required. All other Composer token references (`--color-
 | ID | Risk | Severity | Mitigation |
 |---|---|---|---|
 | R-1 | Mobile keyboard-open: `position: fixed; bottom: 0` works in iOS Safari and Chrome Android but on some older Android browsers the keyboard may obscure fixed elements rather than resize the visual viewport. | High | Gate 5.5 runtime QA must include a keyboard-open test on a real or emulated Android viewport. Use `padding-bottom: env(safe-area-inset-bottom, 0px)` in `.podium` to protect home indicator. Accept browser-level variation as known-acceptable outside this slice scope. |
-| R-2 | `padding-bottom` on `.debate-screen` for Podium clearance is hardcoded to `var(--podium-height)`. If Podium content height grows (e.g. error text wrapping), bottom content may be partially hidden. | Medium | Declare `--podium-height: 187px` as a CSS custom property on `:root` (shared ancestor), so both `.podium` and `.debate-screen` can reference it. Document that this value matches the Figma-specified 187px Composer frame height. If future states require taller Podium, update this single property. |
+| R-2 | `padding-bottom` on `.debate-screen` for Podium clearance is hardcoded to `var(--podium-height)`. If Podium content height grows (e.g. error text wrapping), bottom content may be partially hidden. In addition, `.podium` adds `padding-bottom: env(safe-area-inset-bottom, 0px)`, making the rendered Podium taller than 187px on iOS home-indicator devices. | Medium | Declare `--podium-height: calc(187px + env(safe-area-inset-bottom, 0px))` on `:root` (shared ancestor) so `.debate-screen` clearance accounts for the full rendered Podium height. Both `.podium` and `.debate-screen` reference `var(--podium-height)`. The base 187px matches the Figma Composer frame height. If future states require a taller Podium, update this single property. |
 | R-3 | Amendment-1 clamp detection via `scrollHeight > clientHeight` may return `false` on initial render if fonts have not loaded, causing "Read more" button to not appear. | Medium | Use `useEffect` with a `ResizeObserver` on the text `ref` node to re-measure after font load. Accept that in rare cases the button appears unnecessarily (non-blocking UX). |
 | R-4 | Amendment-1 has no Figma frame evidence for expanded/collapsed card states. No Gate 3B revision required (open item OQ-2 accepted). | Low | Validate at Gate 5.5 runtime QA. Implementation follows architecture spec. |
 | R-5 | Monotonic post ID (`DEBATE.arguments.length + localPosts.length + 1`) provides uniqueness only within a single in-memory session. IDs are used only as React keys; collision across sessions is not possible (session-local state). | Low | Accept. Document in code that ID uniqueness guarantees are session-scoped only. |
@@ -421,7 +421,7 @@ Tasks are ordered by dependency. Tasks with no declared dependency may be worked
 
 **Files:** `src/components/Podium.tsx`, `src/styles/components/podium.css`
 
-**Change:** New component. Contains Divider/Native (inline), `SegmentedControl`, native `<textarea>`, Publish `<button>`. `position: fixed; bottom: 0; left: 0; right: 0`. Shared layout custom property `--podium-height: 187px` declared on `:root` so sibling layout regions such as `.debate-screen` can consume `var(--podium-height)` for bottom padding. Safe-area via `env(safe-area-inset-bottom, 0px)`. Desktop breakpoint at `min-width: 1024px`: `max-width: 600px; left: 50%; right: auto; transform: translateX(-50%)` (matches Design QA desktop frames `285:3144` / `285:3180`). Calls `validatePost` on submit. Error region with `role="alert"` and `aria-live="polite"`. Textarea `aria-invalid` and `aria-describedby`.
+**Change:** New component. Contains Divider/Native (inline), `SegmentedControl`, native `<textarea>`, Publish `<button>`. `position: fixed; bottom: 0; left: 0; right: 0`. Shared layout custom property declared on `:root` as `--podium-height: calc(187px + env(safe-area-inset-bottom, 0px))` (full rendered height: Figma base 187px + safe-area inset, so `.debate-screen` sibling always has correct bottom clearance via `var(--podium-height)`). Safe-area via `env(safe-area-inset-bottom, 0px)`. Desktop breakpoint at `min-width: 1024px`: `max-width: 600px; left: 50%; right: auto; transform: translateX(-50%)` (matches Design QA desktop frames `285:3144` / `285:3180`). Calls `validatePost` on submit. Error region with `role="alert"` and `aria-live="polite"`. Textarea `aria-invalid` and `aria-describedby`.
 
 **Acceptance criteria:**
 - `SegmentedControl`, `textarea`, and Publish button are all in the DOM.
@@ -431,8 +431,8 @@ Tasks are ordered by dependency. Tasks with no declared dependency may be worked
 - `textarea` is cleared after a valid submit.
 - `isBusy = true` prevents a second call to `onPublish` before the first completes.
 - Error message is associated to textarea via `aria-describedby`.
-- `.podium` has `position: fixed` in computed styles.
-- At desktop viewport (`min-width: 1024px`) `.podium` is centred (max-width 600px, transform translateX(-50%)).
+- `podium.css` source contains `position: fixed` (assert by reading file text in test; jsdom does not apply external stylesheets, so `getComputedStyle` assertions for CSS-injected layout properties are not used).
+- Desktop `@media (min-width: 1024px)` centering (max-width 600px, `transform: translateX(-50%)`) is verified in Gate 5.5 runtime QA; no jsdom assertion for @media-scoped computed styles.
 
 **Test file:** `tests/components/Podium.test.tsx`
 
