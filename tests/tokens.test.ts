@@ -28,6 +28,8 @@ describe('tokens.css — M3 3-layer token presence', () => {
     '--color-brand-primary',
     '--color-brand-on-primary',
     '--color-spine-line',
+    '--color-on-surface-variant',
+    '--color-error',
     '--color-tark-surface',
     '--color-tark-on-surface',
     '--color-tark-header',
@@ -38,8 +40,6 @@ describe('tokens.css — M3 3-layer token presence', () => {
     '--color-legend-surface',
     '--color-legend-on-surface',
     '--color-legend-separator',
-    '--color-on-surface-variant',
-    '--color-error',
   ];
 
   it.each(colorTokens)('defines color token %s in light block', (token) => {
@@ -169,6 +169,8 @@ describe('tokens.css — M3 3-layer token presence', () => {
     ['--color-brand-primary', '#4555B7'],
     ['--color-brand-on-primary', '#FFFFFF'],
     ['--color-spine-line', '#767680'],
+    ['--color-on-surface-variant', '#49454E'],
+    ['--color-error', '#B3261E'],
     ['--color-tark-surface', '#BBDEFB'],
     ['--color-tark-on-surface', '#0D47A1'],
     ['--color-tark-header', '#1565C0'],
@@ -179,8 +181,6 @@ describe('tokens.css — M3 3-layer token presence', () => {
     ['--color-legend-surface', '#F5F5F5'],
     ['--color-legend-on-surface', '#4D4D4D'],
     ['--color-legend-separator', '#999999'],
-    ['--color-on-surface-variant', '#49454E'],
-    ['--color-error', '#B3261E'],
   ];
 
   it.each(lightColorValues)('light %s equals %s', (token, value) => {
@@ -193,6 +193,8 @@ describe('tokens.css — M3 3-layer token presence', () => {
     ['--color-brand-primary', '#BBC3FF'],
     ['--color-brand-on-primary', '#0E2288'],
     ['--color-spine-line', '#90909A'],
+    ['--color-on-surface-variant', '#CAC4D0'],
+    ['--color-error', '#F2B8B5'],
     ['--color-tark-surface', '#1565C0'],
     ['--color-tark-on-surface', '#E3F2FD'],
     ['--color-tark-header', '#90CAF9'],
@@ -203,8 +205,6 @@ describe('tokens.css — M3 3-layer token presence', () => {
     ['--color-legend-surface', '#1C1C1C'],
     ['--color-legend-on-surface', '#BFBFBF'],
     ['--color-legend-separator', '#666666'],
-    ['--color-on-surface-variant', '#CAC4D0'],
-    ['--color-error', '#F2B8B5'],
   ];
 
   it.each(darkColorValues)('dark %s equals %s', (token, value) => {
