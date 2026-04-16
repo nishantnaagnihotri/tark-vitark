@@ -41,7 +41,7 @@ DebateScreen (state: localPosts, selectedSide)
          onSideChange={setSelectedSide}
          onPublish={handlePublish}
      />
-       ├─ <SegmentedControl value={selectedSide} onChange={onSideChange} />
+       ├─ <SegmentedControl options={['tark','vitark']} value={selectedSide} onChange={onSideChange} />
        ├─ <textarea>  ← Native TextField
        ├─ <button>    ← Publish IconButton (aria-label="Publish post")
        └─ validatePost(text) → ValidationResult
@@ -183,7 +183,9 @@ Core layout:
   background-color: var(--color-surface-default);
 }
 
---podium-height: 187px;  /* declared on :root so .debate-screen siblings can reference it */
+:root {
+  --podium-height: 187px;  /* shared ancestor property so .debate-screen siblings can reference it */
+}
 ```
 
 Desktop responsive — Podium is centred on wide viewports to match Design QA desktop frame (`285:3144`, `285:3180`):
@@ -427,7 +429,7 @@ Tasks are ordered by dependency. Tasks with no declared dependency may be worked
 
 **Test file:** `tests/components/Podium.test.tsx`
 
-**AC coverage:** AC-1, AC-2, AC-6, AC-7, AC-8..AC-16.
+**AC coverage:** AC-1, AC-2, AC-6, AC-7, AC-8..AC-13.
 
 **Dependency:** T-1, T-2, T-3.
 
