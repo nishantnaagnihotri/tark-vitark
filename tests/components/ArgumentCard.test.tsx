@@ -113,6 +113,28 @@ describe('ArgumentCard', () => {
         expect(readMoreButton).toHaveAttribute('aria-expanded', 'false');
     });
 
+    it('uses descriptive accessible names for expand/collapse controls across cards', () => {
+        mockBodyHeights(64, 128);
+
+        render(
+            <>
+                <ArgumentCard argument={tarkArgument} />
+                <ArgumentCard argument={vitarkArgument} />
+            </>
+        );
+
+        const tarkReadMoreButton = screen.getByRole('button', { name: 'Read more for Tark argument 1' });
+        const vitarkReadMoreButton = screen.getByRole('button', { name: 'Read more for Vitark argument 2' });
+
+        expect(tarkReadMoreButton).toHaveTextContent('Read more');
+        expect(vitarkReadMoreButton).toHaveTextContent('Read more');
+
+        fireEvent.click(tarkReadMoreButton);
+
+        const tarkShowLessButton = screen.getByRole('button', { name: 'Show less for Tark argument 1' });
+        expect(tarkShowLessButton).toHaveTextContent('Show less');
+    });
+
     it('attaches ResizeObserver only while collapsed', () => {
         mockBodyHeights(64, 128);
 
