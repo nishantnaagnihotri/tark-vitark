@@ -1,5 +1,5 @@
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ArgumentCard } from '../../src/components/ArgumentCard';
 import type { Argument } from '../../src/data/debate';
 
@@ -14,6 +14,26 @@ const vitarkArgument: Argument = {
     side: 'vitark',
     text: 'Vitark argument text',
 };
+
+class ResizeObserverStub {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+}
+
+function mockBodyHeights(clientHeight: number, scrollHeight: number) {
+    vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockReturnValue(clientHeight);
+    vi.spyOn(HTMLElement.prototype, 'scrollHeight', 'get').mockReturnValue(scrollHeight);
+}
+
+beforeEach(() => {
+    vi.stubGlobal('ResizeObserver', ResizeObserverStub);
+});
+
+afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+});
 
 describe('ArgumentCard', () => {
     it('renders argument text content', () => {
@@ -53,5 +73,57 @@ describe('ArgumentCard', () => {
         render(<ArgumentCard argument={tarkArgument} />);
         const text = screen.getByText('Tark argument text');
         expect(text).toHaveClass('typography', 'typography--body-large');
+    });
+
+    it('does not render read more button when text is not clamped', () => {
+        mockBodyHeights(64, 64);
+
+        render(<ArgumentCard argument={tarkArgument} />);
+
+        expect(screen.queryByRole('button', { name: /read more/i })).not.toBeInTheDocument();
+    });
+
+    it('renders read more when clamped and toggles expanded state with aria-expanded', () => {
+        mockBodyHeights(64, 128);
+
+        render(<ArgumentCard argument={tarkArgument} />);
+
+        const bodyText = screen.getByText('Tark argument text');
+        const bodyContainer = bodyText.closest('.argument-card__body');
+        const toggleButton = screen.getByRole('button', { name: /read more/i });
+
+        expect(bodyContainer).not.toBeNull();
+        if (!bodyContainer) {
+            throw new Error('Argument body container should be present.');
+        }
+
+        expect(bodyContainer).toHaveClass('argument-card__body--clamped');
+        expect(toggleButton).toHaveAttribute('aria-expanded', 'false');
+
+        fireEvent.click(toggleButton);
+
+        const showLessButton = screen.getByRole('button', { name: /show less/i });
+        expect(bodyContainer).not.toHaveClass('argument-card__body--clamped');
+        expect(showLessButton).toHaveAttribute('aria-expanded', 'true');
+
+        fireEvent.click(showLessButton);
+
+        const readMoreButton = screen.getByRole('button', { name: /read more/i });
+        expect(bodyContainer).toHaveClass('argument-card__body--clamped');
+        expect(readMoreButton).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    it('never renders edit or delete controls', () => {
+        mockBodyHeights(64, 128);
+
+        render(<ArgumentCard argument={tarkArgument} />);
+
+        expect(screen.queryByRole('button', { name: /edit/i })).not.toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: /delete/i })).not.toBeInTheDocument();
+
+        fireEvent.click(screen.getByRole('button', { name: /read more/i }));
+
+        expect(screen.queryByRole('button', { name: /edit/i })).not.toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: /delete/i })).not.toBeInTheDocument();
     });
 });
