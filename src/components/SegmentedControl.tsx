@@ -1,19 +1,18 @@
 import type { KeyboardEvent } from 'react';
 import { useRef } from 'react';
-import type { Side } from '../data/debate';
 import '../styles/components/segmented-control.css';
 
 interface SegmentedControlProps {
-    options: readonly Side[];
-    value: Side;
-    onChange: (value: Side) => void;
+    options: readonly string[];
+    value: string;
+    onChange: (value: string) => void;
     id?: string;
     'aria-label'?: string;
     'aria-labelledby'?: string;
 }
 
-function toSegmentLabel(side: Side): string {
-    return side.charAt(0).toUpperCase() + side.slice(1);
+function toSegmentLabel(option: string): string {
+    return option.charAt(0).toUpperCase() + option.slice(1);
 }
 
 export function SegmentedControl({
@@ -38,11 +37,16 @@ export function SegmentedControl({
 
         const wrappedIndex = (nextIndex + options.length) % options.length;
         const nextOption = options[wrappedIndex];
+        if (nextOption === effectiveValue) {
+            optionRefs.current[wrappedIndex]?.focus();
+            return;
+        }
+
         onChange(nextOption);
         optionRefs.current[wrappedIndex]?.focus();
     };
 
-    const selectOnConfirm = (option: Side) => {
+    const selectOnConfirm = (option: string) => {
         if (option !== effectiveValue) {
             onChange(option);
         }
@@ -51,7 +55,7 @@ export function SegmentedControl({
     const handleOptionKeyDown = (
         event: KeyboardEvent<HTMLButtonElement>,
         optionIndex: number,
-        option: Side
+        option: string
     ) => {
         switch (event.key) {
             case 'ArrowRight':
