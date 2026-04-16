@@ -10,7 +10,7 @@ const podiumCss = readFileSync(
 );
 
 describe('Podium', () => {
-    it('renders segmented control, textarea, publish button, and native divider', () => {
+    it('renders chip button, textarea, publish button, and native divider', () => {
         render(
             <Podium
                 selectedSide="tark"
@@ -19,7 +19,7 @@ describe('Podium', () => {
             />
         );
 
-        expect(screen.getByRole('radiogroup', { name: 'Post side' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Post as Tark' })).toBeInTheDocument();
         expect(screen.getByRole('textbox', { name: 'Post text' })).toBeInTheDocument();
         const publishButton = screen.getByRole('button', { name: 'Publish post' });
         expect(publishButton).toBeInTheDocument();
@@ -148,7 +148,7 @@ describe('Podium', () => {
         expect(publishButton).not.toBeDisabled();
     });
 
-    it('delegates side changes through SegmentedControl interaction', () => {
+    it('delegates side changes through chip interaction', () => {
         const onSideChange = vi.fn();
 
         render(
@@ -159,7 +159,7 @@ describe('Podium', () => {
             />
         );
 
-        fireEvent.click(screen.getByRole('radio', { name: 'Vitark' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Post as Tark' }));
 
         expect(onSideChange).toHaveBeenCalledTimes(1);
         expect(onSideChange).toHaveBeenCalledWith('vitark');
@@ -167,7 +167,7 @@ describe('Podium', () => {
 
     it('defines fixed and desktop-centered layout rules in podium.css source', () => {
         expect(podiumCss).toContain('position: fixed;');
-        expect(podiumCss).toContain('--podium-height: calc(187px + env(safe-area-inset-bottom, 0px));');
+        expect(podiumCss).toContain('--podium-height: calc(103px + env(safe-area-inset-bottom, 0px));');
         expect(podiumCss).toContain('@media (min-width: 1024px)');
         expect(podiumCss).toContain('max-width: 600px;');
         expect(podiumCss).toContain('transform: translateX(-50%);');
