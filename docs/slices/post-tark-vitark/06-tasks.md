@@ -9,7 +9,7 @@ https://github.com/nishantnaagnihotri/tark-vitark/issues/85
 
 ## Architecture Reference
 
-[05-architecture.md](docs/slices/post-tark-vitark/05-architecture.md)
+[05-architecture.md](05-architecture.md)
 
 ---
 
