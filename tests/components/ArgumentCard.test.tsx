@@ -113,6 +113,34 @@ describe('ArgumentCard', () => {
         expect(readMoreButton).toHaveAttribute('aria-expanded', 'false');
     });
 
+    it('attaches ResizeObserver only while collapsed', () => {
+        mockBodyHeights(64, 128);
+
+        const observe = vi.fn();
+        const disconnect = vi.fn();
+
+        class TrackingResizeObserver {
+            observe = observe;
+            unobserve() {}
+            disconnect = disconnect;
+        }
+
+        vi.stubGlobal('ResizeObserver', TrackingResizeObserver);
+
+        render(<ArgumentCard argument={tarkArgument} />);
+
+        expect(observe).toHaveBeenCalledTimes(1);
+
+        fireEvent.click(screen.getByRole('button', { name: /read more/i }));
+
+        expect(disconnect).toHaveBeenCalledTimes(1);
+        expect(observe).toHaveBeenCalledTimes(1);
+
+        fireEvent.click(screen.getByRole('button', { name: /show less/i }));
+
+        expect(observe).toHaveBeenCalledTimes(2);
+    });
+
     it('never renders edit or delete controls', () => {
         mockBodyHeights(64, 128);
 
