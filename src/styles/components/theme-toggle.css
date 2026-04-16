@@ -19,3 +19,10 @@
     padding: 0;
     line-height: 1;
 }
+
+@media (max-width: 1023px) {
+    .theme-toggle {
+        bottom: unset;
+        top: calc(var(--space-4) + var(--space-8));
+    }
+}
