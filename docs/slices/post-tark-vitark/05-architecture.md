@@ -262,9 +262,13 @@ Add to all three theme blocks in `tokens.css` under `/* ── Layer 1: M3 Basel
 --color-on-surface-variant: #CAC4D0;
 --color-error: #F2B8B5;
 
-/* inside @media (prefers-color-scheme: dark) :root:not([data-theme]) */
---color-on-surface-variant: #CAC4D0;
---color-error: #F2B8B5;
+/* inside @media (prefers-color-scheme: dark) { :root:not([data-theme]) { ... } } */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --color-on-surface-variant: #CAC4D0;
+    --color-error: #F2B8B5;
+  }
+}
 ```
 
 No other new tokens are required. All other Composer token references (`--color-brand-primary`, `--color-brand-on-primary`, `--color-surface-default`, `--color-spine-line`) are already present.
