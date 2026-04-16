@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Argument } from '../data/debate';
-import { Card, Typography } from '../design-system';
+import { Card } from '../design-system';
 import '../styles/components/argument-card.css';
 
 interface ArgumentCardProps {
@@ -15,12 +15,13 @@ const ariaLabels = {
 export function ArgumentCard({ argument }: ArgumentCardProps) {
     const [expanded, setExpanded] = useState(false);
     const [isClamped, setIsClamped] = useState(false);
+    const bodyRef = useRef<HTMLParagraphElement | null>(null);
     const bodyId = `argument-card-body-${argument.id}`;
 
     useEffect(() => {
-        const bodyNode = document.getElementById(bodyId);
+        const bodyNode = bodyRef.current;
 
-        if (!(bodyNode instanceof HTMLElement)) {
+        if (!(bodyNode instanceof HTMLParagraphElement)) {
             return;
         }
 
@@ -42,7 +43,7 @@ export function ArgumentCard({ argument }: ArgumentCardProps) {
         return () => {
             resizeObserver.disconnect();
         };
-    }, [argument.text, bodyId, expanded]);
+    }, [argument.text, expanded]);
 
     const shouldShowExpandToggle = isClamped || expanded;
 
@@ -53,13 +54,13 @@ export function ArgumentCard({ argument }: ArgumentCardProps) {
             role="group"
             aria-label={ariaLabels[argument.side]}
         >
-            <Typography
+            <p
                 id={bodyId}
-                role="body-large"
-                className={`argument-card__body${expanded ? '' : ' argument-card__body--clamped'}`}
+                ref={bodyRef}
+                className={`typography typography--body-large argument-card__body${expanded ? '' : ' argument-card__body--clamped'}`}
             >
                 {argument.text}
-            </Typography>
+            </p>
             {shouldShowExpandToggle ? (
                 <button
                     type="button"
