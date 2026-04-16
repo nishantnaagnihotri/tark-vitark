@@ -202,9 +202,6 @@ Desktop responsive — Podium is full-width with 120px side inset to match Figma
 @media (min-width: 1024px) {
   .podium {
     padding-inline: var(--space-30); /* 120px each side, matches Figma px-120 */
-  }
-}
-```
 
 ---
 
@@ -429,10 +426,10 @@ Tasks are ordered by dependency. Tasks with no declared dependency may be worked
 
 **Files:** `src/components/Podium.tsx`, `src/styles/components/podium.css`
 
-**Change:** New component. Contains Divider/Native (inline), `SegmentedControl`, native `<textarea>`, Publish `<button>`. `position: fixed; bottom: 0; left: 0; right: 0`. Shared layout custom property declared on `:root` as `--podium-height: calc(187px + env(safe-area-inset-bottom, 0px))` (full rendered height: Figma base 187px + safe-area inset, so `.debate-screen` sibling always has correct bottom clearance via `var(--podium-height)`). Safe-area via `env(safe-area-inset-bottom, 0px)`. Desktop breakpoint at `min-width: 1024px`: `padding-inline: var(--space-30)` (120px side inset, full-width — matches Figma desktop frames `582:50` / `583:62` which show `px-[120px]` and `w-full`). Calls `validatePost` on submit. Error region with `role="alert"` and `aria-live="polite"`. Textarea `aria-invalid` and `aria-describedby`.
+**Change:** New component. Contains Divider/Native (inline), inline side ChipFilter pill (`podium__chip`), native `<textarea>`, Publish `<button>`. `position: fixed; bottom: 0; left: 0; right: 0`. Shared layout custom properties declared on `:root`: `--podium-height: calc(109px + env(safe-area-inset-bottom, 0px))` (full rendered height, corrected from original Figma-text-estimated 187px) and `--podium-inline-padding: var(--space-4)` (mobile default, overridden to `var(--space-30)` at desktop for full-bleed divider consistency). Safe-area via `env(safe-area-inset-bottom, 0px)`. Desktop breakpoint at `min-width: 1024px`: `--podium-inline-padding: var(--space-30)` (120px side inset, full-width — matches Figma desktop frames `582:50` / `583:62` which show `px-[120px]` and `w-full`). Calls `validatePost` on submit. Error region with `role="alert"` and `aria-live="polite"`. Textarea `aria-invalid` and `aria-describedby`.
 
 **Acceptance criteria:**
-- `SegmentedControl`, `textarea`, and Publish button are all in the DOM.
+- Inline side ChipFilter pill (`podium__chip`), `textarea`, and Publish button are all in the DOM.
 - Publish button is `disabled` when `textarea` is empty.
 - Submitting whitespace-only text renders an error message and does **not** call `onPublish`.
 - Submitting valid text (10–300 characters) calls `onPublish(trimmedText, side)`.
@@ -440,10 +437,9 @@ Tasks are ordered by dependency. Tasks with no declared dependency may be worked
 - `isBusy = true` prevents a second call to `onPublish` before the first completes.
 - Error message is associated to textarea via `aria-describedby`.
 - `podium.css` source contains `position: fixed` (assert by reading file text in test; jsdom does not apply external stylesheets, so `getComputedStyle` assertions for CSS-injected layout properties are not used).
-- Desktop `@media (min-width: 1024px)` full-width rule (`padding-inline: var(--space-30)`) is verified in Gate 5.5 runtime QA; source-text assertion for `padding-inline` in `Podium.test.tsx`.
+- Desktop `@media (min-width: 1024px)` full-width rule (`--podium-inline-padding: var(--space-30)`) is verified in Gate 5.5 runtime QA; source-text assertion for `--podium-inline-padding` in `Podium.test.tsx`.
 
 **Test file:** `tests/components/Podium.test.tsx`
-
 **AC coverage:** AC-1, AC-2, AC-6, AC-7, AC-8..AC-13.
 
 **Dependency:** T-1, T-2, T-3.
@@ -669,3 +665,4 @@ tests/
 | AD-6 | Horizontal Divider in Podium | DS `<Divider>` component, native `<div>` | Native `<div>` | DS `Divider` is vertical-only in current implementation (Known Rule #70) |
 | AD-7 | `SegmentedControl` scope | DS component (new), feature component | Feature component in `src/components/` (not `src/design-system/`) | PO constraint: no new DS components unless clearly necessary; this is slice-specific |
 | AD-8 | Desktop Podium responsive spec | Full-width with 120px side inset | `padding-inline: var(--space-30)` at `min-width: 1024px` | Figma `582:50` uses `px-[120px]` and `w-full`; original `max-width: 600px` spec was authored from text, not Figma frame — corrected 2026-04-16 |
+Full-width with 120px side inset | `padding-inline: var(--space-30)` at `min-width: 1024px` | Figma `582:50` uses `px-[120px]` and `w-full`; original `max-width: 600px` spec was authored from text, not Figma frame — corrected 2026-04-16

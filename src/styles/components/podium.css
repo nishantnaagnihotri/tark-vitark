@@ -1,5 +1,6 @@
 :root {
     --podium-height: calc(109px + env(safe-area-inset-bottom, 0px));
+    --podium-inline-padding: var(--space-4);
 }
 
 .podium {
@@ -10,7 +11,7 @@
     display: flex;
     flex-direction: column;
     gap: calc(var(--space-4) - var(--radius-sharp));
-    padding: calc(var(--space-4) - var(--radius-sharp)) var(--space-4) 0;
+    padding: calc(var(--space-4) - var(--radius-sharp)) var(--podium-inline-padding) 0;
     padding-bottom: env(safe-area-inset-bottom, 0px);
     background-color: var(--color-surface-default);
     z-index: 20;
@@ -18,9 +19,9 @@
 
 .podium__divider {
     display: block;
-    width: calc(100% + (var(--space-4) * 2));
+    width: calc(100% + (var(--podium-inline-padding) * 2));
     height: var(--divider-thickness);
-    margin-inline: calc(var(--space-4) * -1);
+    margin-inline: calc(var(--podium-inline-padding) * -1);
     background-color: var(--color-spine-line);
 }
 
@@ -108,6 +109,6 @@
 
 @media (min-width: 1024px) {
     .podium {
-        padding-inline: var(--space-30);
+        --podium-inline-padding: var(--space-30);
     }
 }
