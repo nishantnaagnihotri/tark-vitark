@@ -201,7 +201,10 @@ Desktop responsive — Podium is full-width with 120px side inset to match Figma
 /* ── Desktop ── */
 @media (min-width: 1024px) {
   .podium {
-    padding-inline: var(--space-30); /* 120px each side, matches Figma px-120 */
+    --podium-inline-padding: var(--space-30); /* 120px side inset, full-bleed divider */
+  }
+}
+```
 
 ---
 
