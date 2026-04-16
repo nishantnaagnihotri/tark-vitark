@@ -15,19 +15,23 @@ const ariaLabels = {
 export function ArgumentCard({ argument }: ArgumentCardProps) {
     const [expanded, setExpanded] = useState(false);
     const [isClamped, setIsClamped] = useState(false);
-    const bodyRef = useRef<HTMLDivElement | null>(null);
+    const bodyRef = useRef<HTMLElement | null>(null);
     const bodyId = `argument-card-body-${argument.id}`;
 
     useEffect(() => {
-        const bodyNode = bodyRef.current;
+        const bodyNode = document.getElementById(bodyId);
 
-        if (!bodyNode) {
+        if (!(bodyNode instanceof HTMLElement)) {
             return;
         }
 
+        bodyRef.current = bodyNode;
+
         const updateClampState = () => {
-            if (!expanded) {
-                setIsClamped(bodyNode.scrollHeight > bodyNode.clientHeight);
+            const textNode = bodyRef.current;
+
+            if (textNode && !expanded) {
+                setIsClamped(textNode.scrollHeight > textNode.clientHeight);
             }
         };
 
@@ -43,7 +47,7 @@ export function ArgumentCard({ argument }: ArgumentCardProps) {
         return () => {
             resizeObserver.disconnect();
         };
-    }, [argument.text, expanded]);
+    }, [argument.text, bodyId, expanded]);
 
     const shouldShowExpandToggle = isClamped || expanded;
 
@@ -54,17 +58,17 @@ export function ArgumentCard({ argument }: ArgumentCardProps) {
             role="group"
             aria-label={ariaLabels[argument.side]}
         >
-            <div
+            <Typography
                 id={bodyId}
-                ref={bodyRef}
+                role="body-large"
                 className={`argument-card__body${expanded ? '' : ' argument-card__body--clamped'}`}
             >
-                <Typography role="body-large">{argument.text}</Typography>
-            </div>
+                {argument.text}
+            </Typography>
             {shouldShowExpandToggle ? (
                 <button
                     type="button"
-                    className="read-more-btn"
+                    className="argument-card__read-more"
                     aria-expanded={expanded}
                     aria-controls={bodyId}
                     onClick={() => setExpanded((isExpanded) => !isExpanded)}
