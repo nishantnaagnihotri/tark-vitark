@@ -8,6 +8,7 @@ interface TypographyProps {
     as?: keyof JSX.IntrinsicElements;
     children: ReactNode;
     className?: string;
+    id?: string;
 }
 
 const defaultElements: Record<TypographyRole, keyof JSX.IntrinsicElements> = {
@@ -16,11 +17,15 @@ const defaultElements: Record<TypographyRole, keyof JSX.IntrinsicElements> = {
     'label-medium': 'span',
 };
 
-export function Typography({ role, as, children, className }: TypographyProps) {
+export function Typography({ role, as, children, className, id }: TypographyProps) {
     const Component = as ?? defaultElements[role];
     const classes = ['typography', `typography--${role}`, className]
         .filter(Boolean)
         .join(' ');
 
-    return <Component className={classes}>{children}</Component>;
+    return (
+        <Component id={id} className={classes}>
+            {children}
+        </Component>
+    );
 }
