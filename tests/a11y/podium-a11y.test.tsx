@@ -108,4 +108,18 @@ describe('Podium ARIA semantics', () => {
         expect(chip).toBeInTheDocument();
         expect(chip).toHaveAccessibleName('Post as Tark');
     });
+
+    it('chip button has accessible name matching vitark selected side', () => {
+        render(
+            <Podium
+                selectedSide="vitark"
+                onSideChange={() => {}}
+                onPublish={() => {}}
+            />
+        );
+
+        const chip = screen.getByRole('button', { name: 'Post as Vitark' });
+        expect(chip).toBeInTheDocument();
+        expect(chip).toHaveAccessibleName('Post as Vitark');
+    });
 });

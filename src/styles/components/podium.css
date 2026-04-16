@@ -82,6 +82,7 @@
     font: inherit;
     font-size: var(--typescale-label-md-size);
     font-weight: var(--typescale-label-md-weight);
+    line-height: var(--typescale-label-md-line-height);
     letter-spacing: var(--typescale-label-md-tracking);
 }
 

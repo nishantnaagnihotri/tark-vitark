@@ -39,6 +39,9 @@ export function Podium({ selectedSide, onSideChange, onPublish }: PodiumProps) {
         }
     };
 
+    const sideLabel = selectedSide === 'tark' ? 'Tark' : 'Vitark';
+    const nextSide: Side = selectedSide === 'tark' ? 'vitark' : 'tark';
+
     return (
         <form className="podium" onSubmit={handleSubmit} aria-label="Post composer">
             {/* Divider/Native: inline horizontal separator, not DS Divider. */}
@@ -48,10 +51,10 @@ export function Podium({ selectedSide, onSideChange, onPublish }: PodiumProps) {
                 <button
                     type="button"
                     className={`podium__chip podium__chip--${selectedSide}`}
-                    aria-label={`Post as ${selectedSide === 'tark' ? 'Tark' : 'Vitark'}`}
-                    onClick={() => onSideChange(selectedSide === 'tark' ? 'vitark' : 'tark')}
+                    aria-label={`Post as ${sideLabel}`}
+                    onClick={() => onSideChange(nextSide)}
                 >
-                    {selectedSide === 'tark' ? 'Tark' : 'Vitark'}
+                    {sideLabel}
                 </button>
                 <textarea
                     className="podium__textarea"
