@@ -8,12 +8,19 @@ interface SegmentedControlProps {
     value: Side;
     onChange: (value: Side) => void;
     id?: string;
-    'aria-label'?: string;
     'aria-labelledby'?: string;
 }
 
 function toSegmentLabel(option: Side): string {
     return option.charAt(0).toUpperCase() + option.slice(1);
+}
+
+function assertNonEmptyOptions(options: readonly Side[]): void {
+    if (options.length > 0) {
+        return;
+    }
+
+    throw new Error('SegmentedControl options must include at least one value.');
 }
 
 function assertUniqueOptions(options: readonly Side[]): void {
@@ -35,23 +42,20 @@ export function SegmentedControl({
     value,
     onChange,
     id,
-    'aria-label': ariaLabel,
     'aria-labelledby': ariaLabelledby,
 }: SegmentedControlProps) {
     const optionRefs = useRef<Array<HTMLButtonElement | null>>([]);
+    assertNonEmptyOptions(options);
     assertUniqueOptions(options);
 
     const effectiveValue = options.includes(value) ? value : options[0] ?? value;
     const selectedIndex = options.indexOf(effectiveValue);
     const labelledByValue = ariaLabelledby?.trim();
-    const labelValue = ariaLabel?.trim();
     const radiogroupNameProps = labelledByValue
         ? { 'aria-labelledby': labelledByValue }
-        : { 'aria-label': labelValue || 'Side selection' };
+        : { 'aria-label': 'Side selection' };
 
     const focusAndSelect = (nextIndex: number) => {
-        if (options.length === 0) return;
-
         const wrappedIndex = (nextIndex + options.length) % options.length;
         const nextOption = options[wrappedIndex];
         if (nextOption === effectiveValue) {

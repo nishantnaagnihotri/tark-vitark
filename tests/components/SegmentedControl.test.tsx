@@ -100,6 +100,18 @@ describe('SegmentedControl', () => {
         ).toThrowError(/SegmentedControl options must be unique/);
     });
 
+    it('throws when options are empty to preserve valid radiogroup semantics', () => {
+        expect(() =>
+            render(
+                <SegmentedControl
+                    options={[]}
+                    value="tark"
+                    onChange={() => {}}
+                />
+            )
+        ).toThrowError(/SegmentedControl options must include at least one value/);
+    });
+
     it('supports arrow-key navigation and calls onChange with the next side', () => {
         const onChange = vi.fn();
 
@@ -205,23 +217,6 @@ describe('SegmentedControl', () => {
             })
         ).toBeInTheDocument();
         expect(screen.getAllByRole('radio')).toHaveLength(sideOptions.length);
-    });
-
-    it('supports aria-label naming for radiogroup when aria-labelledby is absent', () => {
-        render(
-            <SegmentedControl
-                options={sideOptions}
-                value="tark"
-                onChange={() => {}}
-                aria-label="Choose side"
-            />
-        );
-
-        expect(
-            screen.getByRole('radiogroup', {
-                name: 'Choose side',
-            })
-        ).toBeInTheDocument();
     });
 
     it('falls back to a default radiogroup accessible name when no label props are provided', () => {
