@@ -122,6 +122,7 @@ describe('SegmentedControl', () => {
         fireEvent.keyDown(vitarkRadio, { key: 'Enter' });
         fireEvent.keyDown(vitarkRadio, { key: ' ' });
 
+        expect(onChange).toHaveBeenCalledTimes(2);
         expect(onChange).toHaveBeenNthCalledWith(1, 'vitark');
         expect(onChange).toHaveBeenNthCalledWith(2, 'vitark');
     });
