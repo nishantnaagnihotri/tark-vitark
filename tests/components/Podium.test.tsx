@@ -21,7 +21,10 @@ describe('Podium', () => {
 
         expect(screen.getByRole('radiogroup', { name: 'Post side' })).toBeInTheDocument();
         expect(screen.getByRole('textbox', { name: 'Post text' })).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: 'Publish post' })).toBeInTheDocument();
+        const publishButton = screen.getByRole('button', { name: 'Publish post' });
+        expect(publishButton).toBeInTheDocument();
+        expect(publishButton).toHaveAttribute('aria-label', 'Publish post');
+        expect(publishButton).not.toHaveTextContent(/publish/i);
 
         const nativeDivider = screen.getByRole('separator');
         expect(nativeDivider.tagName).toBe('DIV');
