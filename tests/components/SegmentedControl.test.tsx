@@ -115,6 +115,9 @@ describe('SegmentedControl', () => {
         );
 
         const vitarkRadio = screen.getByRole('radio', { name: 'Vitark' });
+        vitarkRadio.focus();
+
+        expect(vitarkRadio).toHaveFocus();
 
         fireEvent.keyDown(vitarkRadio, { key: 'Enter' });
         fireEvent.keyDown(vitarkRadio, { key: ' ' });
@@ -144,8 +147,47 @@ describe('SegmentedControl', () => {
         expect(screen.getAllByRole('radio')).toHaveLength(sideOptions.length);
     });
 
+    it('supports aria-label naming for radiogroup when aria-labelledby is absent', () => {
+        render(
+            <SegmentedControl
+                options={sideOptions}
+                value="tark"
+                onChange={() => {}}
+                aria-label="Choose side"
+            />
+        );
+
+        expect(
+            screen.getByRole('radiogroup', {
+                name: 'Choose side',
+            })
+        ).toBeInTheDocument();
+    });
+
+    it('falls back to a default radiogroup accessible name when no label props are provided', () => {
+        render(
+            <SegmentedControl
+                options={sideOptions}
+                value="tark"
+                onChange={() => {}}
+            />
+        );
+
+        expect(
+            screen.getByRole('radiogroup', {
+                name: 'Side selection',
+            })
+        ).toBeInTheDocument();
+    });
+
     it('binds selected and unselected visual colors to brand tokens', () => {
         expect(segmentedControlCss).toContain('var(--color-brand-primary)');
         expect(segmentedControlCss).toContain('var(--color-brand-on-primary)');
+    });
+
+    it('uses defined spacing tokens and state-aware focus color in segmented-control CSS', () => {
+        expect(segmentedControlCss).not.toContain('var(--space-2)');
+        expect(segmentedControlCss).toContain('padding: var(--space-4) var(--space-4);');
+        expect(segmentedControlCss).toContain('outline: 2px solid currentColor;');
     });
 });

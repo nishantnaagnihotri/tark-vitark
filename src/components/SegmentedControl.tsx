@@ -8,6 +8,7 @@ interface SegmentedControlProps {
     value: Side;
     onChange: (value: Side) => void;
     id?: string;
+    'aria-label'?: string;
     'aria-labelledby'?: string;
 }
 
@@ -20,10 +21,16 @@ export function SegmentedControl({
     value,
     onChange,
     id,
+    'aria-label': ariaLabel,
     'aria-labelledby': ariaLabelledby,
 }: SegmentedControlProps) {
     const optionRefs = useRef<Array<HTMLButtonElement | null>>([]);
     const selectedIndex = options.includes(value) ? options.indexOf(value) : 0;
+    const labelledByValue = ariaLabelledby?.trim();
+    const labelValue = ariaLabel?.trim();
+    const radiogroupNameProps = labelledByValue
+        ? { 'aria-labelledby': labelledByValue }
+        : { 'aria-label': labelValue || 'Side selection' };
 
     const focusAndSelect = (nextIndex: number) => {
         if (options.length === 0) return;
@@ -75,7 +82,7 @@ export function SegmentedControl({
             id={id}
             className="segmented-control"
             role="radiogroup"
-            aria-labelledby={ariaLabelledby}
+            {...radiogroupNameProps}
         >
             {options.map((option, optionIndex) => {
                 const isSelected = option === value;
