@@ -665,4 +665,3 @@ tests/
 | AD-6 | Horizontal Divider in Podium | DS `<Divider>` component, native `<div>` | Native `<div>` | DS `Divider` is vertical-only in current implementation (Known Rule #70) |
 | AD-7 | `SegmentedControl` scope | DS component (new), feature component | Feature component in `src/components/` (not `src/design-system/`) | PO constraint: no new DS components unless clearly necessary; this is slice-specific |
 | AD-8 | Desktop Podium responsive spec | Full-width with 120px side inset | `padding-inline: var(--space-30)` at `min-width: 1024px` | Figma `582:50` uses `px-[120px]` and `w-full`; original `max-width: 600px` spec was authored from text, not Figma frame — corrected 2026-04-16 |
-Full-width with 120px side inset | `padding-inline: var(--space-30)` at `min-width: 1024px` | Figma `582:50` uses `px-[120px]` and `w-full`; original `max-width: 600px` spec was authored from text, not Figma frame — corrected 2026-04-16
