@@ -48,7 +48,7 @@ export function SegmentedControl({
     assertNonEmptyOptions(options);
     assertUniqueOptions(options);
 
-    const effectiveValue = options.includes(value) ? value : options[0] ?? value;
+    const effectiveValue = options.includes(value) ? value : options[0];
     const selectedIndex = options.indexOf(effectiveValue);
     const labelledByValue = ariaLabelledby?.trim();
     const radiogroupNameProps = labelledByValue

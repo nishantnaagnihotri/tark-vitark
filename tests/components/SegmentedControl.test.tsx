@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { SegmentedControl } from '../../src/components/SegmentedControl';
 import type { Side } from '../../src/data/debate';
@@ -174,8 +175,9 @@ describe('SegmentedControl', () => {
         expect(tarkRadio).toHaveFocus();
     });
 
-    it('does not activate selection on Enter or Space keydown and still activates via click', () => {
+    it('activates selection exactly once for Enter and Space keyboard interaction', async () => {
         const onChange = vi.fn();
+        const user = userEvent.setup();
 
         render(
             <SegmentedControl
@@ -190,13 +192,15 @@ describe('SegmentedControl', () => {
 
         expect(vitarkRadio).toHaveFocus();
 
-        fireEvent.keyDown(vitarkRadio, { key: 'Enter' });
-        fireEvent.keyDown(vitarkRadio, { key: ' ' });
-        fireEvent.keyDown(vitarkRadio, { key: 'Spacebar' });
+        await user.keyboard('{Enter}');
 
-        expect(onChange).not.toHaveBeenCalled();
+        expect(onChange).toHaveBeenCalledTimes(1);
+        expect(onChange).toHaveBeenCalledWith('vitark');
 
-        fireEvent.click(vitarkRadio);
+        onChange.mockClear();
+        vitarkRadio.focus();
+
+        await user.keyboard(' ');
 
         expect(onChange).toHaveBeenCalledTimes(1);
         expect(onChange).toHaveBeenCalledWith('vitark');
