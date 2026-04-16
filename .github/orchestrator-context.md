@@ -150,6 +150,7 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). U
 77. Figma Agent eliminated (Protocol 3.17, adopted 2026-04-10): UX Agent (now Orchestrator via `ux-design-execution` skill) owns both slice design frames AND DS library management (bootstrap, TV component creation, token/variable updates). Safety constraint: DS library writes must be scoped to a named component task; publish only after verifying no regressions in existing components. There is no separate Figma Agent. Cross-ref: Known Rule #79.
 78. Single-screen-first Gate 3A protocol (Protocol 3.18, adopted 2026-04-11): Gate 3A runs in two phases. Phase 1: Orchestrator creates only the primary frame (Default/Light/Mobile) and returns it for Product Owner explicit visual approval before any other frames are created. Phase 2 (authorized by PO approval): Orchestrator creates all remaining frames. Phase 2 must NOT start until PO has explicitly approved Phase 1. Root cause for this rule: applying variable modes or resizing the outer cloned frame after `duplicate_node` can silently mutate existing elements (topic bar fills, card bubble arrow positions). Phase 1 approval is the mandatory visual gate that catches this class of fidelity failures early. Cross-ref: AGENTS.md Rule 4, `design-gate-orchestration/SKILL.md` Substep A.
 79. UX Agent eliminated (Protocol 3.19, adopted 2026-04-11): Orchestrator absorbs full UX execution and Figma write ownership. All UX work (Challenge Phase, UX Flow/State Package, Frame Blueprint, DS Coverage Declaration, Component Coverage Check, Baseline-Lock, Figma frame execution, Overlap Check) is performed by Orchestrator directly using the `ux-design-execution` skill (`.github/skills/ux-design-execution/SKILL.md`). `ux.agent.md` is deprecated. Cross-ref: Known Rules #41, #68, `domain-ownership-governance` skill.
+80. PRD Amendment Protocol (adopted 2026-04-16): When the Product Owner approves a scope change after Gate 2 is closed, all three conditions must be met before Gate 3 closure: (1) a dated `## Amendments` entry appended in `02-prd.md` (amendment number, date, scope narrative, supersession clause if applicable), (2) delta markers in `03-ux.md` and `04-design-qa.md` citing the amendment number, and (3) no downstream artifact may remain with stale scope that conflicts with the amendment. Gate 3 is blocked until all three are satisfied. Cross-ref: `requirement-prd-alignment/SKILL.md` §PRD Amendment Protocol, `prd-gate-orchestration/SKILL.md` §PRD Amendment trigger rule.
 
 ## Resume Protocol For Orchestrator
 
@@ -182,7 +183,7 @@ On first response in any new activity:
 |---|---|---|---|---|---|---|
 | `coming-soon-splash-page` | ✅ Pass | ✅ Full Pass | ✅ Pass (PO approved 2026-03-29) | ✅ Pass | ✅ Complete (T3 PR #18, T4 PR #19, T5 PR #20 all merged) | ✅ Complete (2026-03-29) |
 | `debate-screen` | ✅ Pass | ✅ Full Pass | ✅ Pass (PO approved 2026-04-06) | ✅ Pass (Revision 1.1) | ✅ Complete (T1–T9 + visual polish PR #61) | ✅ Complete (2026-04-07) |
-| `post-tark-vitark` | ✅ Re-pass (refined, 2026-04-08) | ✅ Re-pass (2026-04-08) | 🔄 Re-run required (new requirement baseline) | ⬜ Not Started | ⬜ Not Started | ⬜ Not Started |
+| `post-tark-vitark` | ✅ Re-pass (refined, 2026-04-08) | ✅ Re-pass (2026-04-08) | ✅ Pass (PO approved 2026-04-16, PR #83 merged) | ⬜ Not Started | ⬜ Not Started | ⬜ Not Started |
 
 ## Log Archive Protocol
 
@@ -845,3 +846,11 @@ Detailed repo-wide governance history from 2026-03-30 through 2026-04-02 is arch
 - Known rule added: All three DS component replacement cases (SegmentedControl, TextField, Divider) confirmed same root pattern — M3 component inner containers have `layoutMode:NONE` with hardcoded dimensions, API-unresizable. Native rebuild with DS token bindings is the correct resolution. Doc pattern established in `03-ux.md` Pass 4 Amendment.
 - Next micro-goal: Gate 3B Design QA — verify token accuracy on active frames `304:2` and `414:78`, then seek PO approval to close Gate 3.
 - Blockers/owner decisions: PO visual approval of Pass 4 Composer pending before Gate 3 closes.
+
+### 2026-04-16 (post-tark-vitark Gate 3 ✅ Close — PR #83 Merged)
+- Gate status: `post-tark-vitark` Gate 3 ✅ Pass. PR #83 merged to master. 11 Copilot review passes; all 20 review threads resolved with disposition replies. CI SUCCESS throughout.
+- PR: https://github.com/nishantnaagnihotri/tark-vitark/pull/83
+- Artifact changes: `02-prd.md` (PRD Amendment Protocol — Amendment 1 Read-more + Amendment 2 Composer with supersession clause); `03-ux.md` (SegCtrl→Chip/Filter in QG-5, audit date clarified, token ref corrected); `04-design-qa.md` (Scope Boundaries + AC-6 cite amendment numbers, both dark token blocks noted); `ux-design-execution/SKILL.md` (Design Quality Gate in schema item 13 + Step 11 section, pass/fail only, HTTPS sources); `requirement-prd-alignment/SKILL.md` (PRD Amendment Protocol section); `prd-gate-orchestration/SKILL.md` (PRD Amendment trigger rule).
+- Open questions status: None blocking.
+- Next micro-goal: Gate 4 (Architecture) for `post-tark-vitark` slice.
+- Blockers/owner decisions: None. Product Owner merged PR #83.
