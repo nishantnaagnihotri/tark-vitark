@@ -25,10 +25,12 @@ export function ArgumentCard({ argument }: ArgumentCardProps) {
             return;
         }
 
+        if (expanded) {
+            return;
+        }
+
         const updateClampState = () => {
-            if (!expanded) {
-                setIsClamped(bodyNode.scrollHeight > bodyNode.clientHeight);
-            }
+            setIsClamped(bodyNode.scrollHeight > bodyNode.clientHeight);
         };
 
         updateClampState();
