@@ -196,7 +196,7 @@ Core layout:
 }
 ```
 
-Desktop responsive — Podium is centred on wide viewports to match Design QA desktop frame (`285:3144`, `285:3180`):
+Desktop responsive — Podium is centred on wide viewports to match Design QA desktop frame (`582:50`, `583:62`):
 ```css
 /* ── Desktop ── */
 @media (min-width: 1024px) {
@@ -432,7 +432,7 @@ Tasks are ordered by dependency. Tasks with no declared dependency may be worked
 
 **Files:** `src/components/Podium.tsx`, `src/styles/components/podium.css`
 
-**Change:** New component. Contains Divider/Native (inline), `SegmentedControl`, native `<textarea>`, Publish `<button>`. `position: fixed; bottom: 0; left: 0; right: 0`. Shared layout custom property declared on `:root` as `--podium-height: calc(187px + env(safe-area-inset-bottom, 0px))` (full rendered height: Figma base 187px + safe-area inset, so `.debate-screen` sibling always has correct bottom clearance via `var(--podium-height)`). Safe-area via `env(safe-area-inset-bottom, 0px)`. Desktop breakpoint at `min-width: 1024px`: `max-width: 600px; left: 50%; right: auto; transform: translateX(-50%)` (matches Design QA desktop frames `285:3144` / `285:3180`). Calls `validatePost` on submit. Error region with `role="alert"` and `aria-live="polite"`. Textarea `aria-invalid` and `aria-describedby`.
+**Change:** New component. Contains Divider/Native (inline), `SegmentedControl`, native `<textarea>`, Publish `<button>`. `position: fixed; bottom: 0; left: 0; right: 0`. Shared layout custom property declared on `:root` as `--podium-height: calc(187px + env(safe-area-inset-bottom, 0px))` (full rendered height: Figma base 187px + safe-area inset, so `.debate-screen` sibling always has correct bottom clearance via `var(--podium-height)`). Safe-area via `env(safe-area-inset-bottom, 0px)`. Desktop breakpoint at `min-width: 1024px`: `max-width: 600px; left: 50%; right: auto; transform: translateX(-50%)` (matches Design QA desktop frames `582:50` / `583:62`). Calls `validatePost` on submit. Error region with `role="alert"` and `aria-live="polite"`. Textarea `aria-invalid` and `aria-describedby`.
 
 **Acceptance criteria:**
 - `SegmentedControl`, `textarea`, and Publish button are all in the DOM.
@@ -456,12 +456,12 @@ Tasks are ordered by dependency. Tasks with no declared dependency may be worked
 |---|---|---|
 | Default/Light/Mobile | `304:2` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=304-2 |
 | Default/Dark/Mobile | `414:78` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=414-78 |
-| Typing/Light/Mobile | `285:2732` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=285-2732 |
-| ValidationError/Light/Mobile | `285:2846` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=285-2846 |
-| SubmitSuccess/Light/Mobile | `285:2964` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=285-2964 |
-| KeyboardOpen/Light/Mobile | `285:3078` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=285-3078 |
-| Default/Light/Desktop | `285:3144` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=285-3144 |
-| Default/Dark/Desktop | `285:3180` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=285-3180 |
+| Default/Light/Tablet | `580:26` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=580-26 |
+| Default/Dark/Tablet | `581:38` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=581-38 |
+| Default/Light/Desktop | `582:50` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=582-50 |
+| Default/Dark/Desktop | `583:62` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=583-62 |
+
+> **Note — interaction-state frames:** Typing, ValidationError, SubmitSuccess, and KeyboardOpen state frames were planned in Gate 3A UX doc but deferred to Pass 5 (pending PO Composer design approval) and were never executed in Figma. These interaction states are validated via BDD tests (`features/post-tark-vitark.feature`) and Gate 5.5 runtime QA. No Figma node IDs exist for these states.
 
 ---
 
@@ -495,8 +495,10 @@ Tasks are ordered by dependency. Tasks with no declared dependency may be worked
 |---|---|---|
 | Default/Light/Mobile | `304:2` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=304-2 |
 | Default/Dark/Mobile | `414:78` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=414-78 |
-| Default/Light/Desktop | `285:3144` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=285-3144 |
-| Default/Dark/Desktop | `285:3180` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=285-3180 |
+| Default/Light/Tablet | `580:26` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=580-26 |
+| Default/Dark/Tablet | `581:38` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=581-38 |
+| Default/Light/Desktop | `582:50` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=582-50 |
+| Default/Dark/Desktop | `583:62` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=583-62 |
 
 ---
 
@@ -585,7 +587,7 @@ Parallelizable pairs: {T-1, T-2, T-6}; {T-3} after T-1; {T-4} after T-3; {T-5, T
 |---|---|---|---|
 | OQ-1 | PO constraint item 9 references "FR-6/AC-6 includes mobile 4-line clamp (Amendment 1)." FR-6/AC-6 in `02-prd.md` is the open-posting/no-auth criterion — not the clamp behavior. The AC reference appears to be a labelling error. | **Accepted** — Amendment-1 is treated as an explicit in-scope addition via PO constraint, independent of legacy AC numbering. No PRD revision required. | Proceed. |
 | OQ-2 | Amendment-1 (mobile 4-line clamp + Read more) has no Figma frame evidence. No expanded or collapsed card state was designed in Gate 3B. | **Accepted pending Gate 5.5** — implement per Section 2.5 spec. Gate 5.5 runtime QA is the validation gate. | Proceed. Builder follows architecture spec; no design revision required. |
-| OQ-3 | Desktop Podium centering was not explicitly specified in the architecture agent output. Identified during Orchestrator UX review against Design QA desktop frames (`285:3144`, `285:3180`). | **Resolved (2026-04-16)** — PO selected option 1: add desktop breakpoint to architecture. Applied to Section 2.6 Podium CSS spec and T-4 acceptance criteria. | Closed. |
+| OQ-3 | Desktop Podium centering was not explicitly specified in the architecture agent output. Identified during Orchestrator UX review against Design QA desktop frames (`582:50`, `583:62`). | **Resolved (2026-04-16)** — PO selected option 1: add desktop breakpoint to architecture. Applied to Section 2.6 Podium CSS spec and T-4 acceptance criteria. | Closed. |
 
 ---
 
@@ -614,12 +616,12 @@ All 18 acceptance criteria plus Amendment-1 and C-4 are covered by the architect
 |---|---|---|
 | Default/Light/Mobile (authoritative, Pass 4) | `304:2` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=304-2 |
 | Default/Dark/Mobile (authoritative, Pass 4) | `414:78` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=414-78 |
-| Typing/Light/Mobile | `285:2732` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=285-2732 |
-| ValidationError/Light/Mobile | `285:2846` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=285-2846 |
-| SubmitSuccess/Light/Mobile | `285:2964` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=285-2964 |
-| KeyboardOpen/Light/Mobile | `285:3078` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=285-3078 |
-| Default/Light/Desktop | `285:3144` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=285-3144 |
-| Default/Dark/Desktop | `285:3180` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=285-3180 |
+| Default/Light/Tablet | `580:26` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=580-26 |
+| Default/Dark/Tablet | `581:38` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=581-38 |
+| Default/Light/Desktop | `582:50` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=582-50 |
+| Default/Dark/Desktop | `583:62` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=583-62 |
+
+> **Note — interaction-state frames:** Typing, ValidationError, SubmitSuccess, and KeyboardOpen state frames were planned in Gate 3A UX doc (Pass 5, pending Composer design approval) but were never executed in Figma. These states are validated via BDD tests and Gate 5.5 runtime QA. No Figma node IDs exist.
 
 Section 02 container: node `399:78`, file `CsPAyUdLSStdmNpmiBMESQ`.
 
@@ -669,4 +671,4 @@ tests/
 | AD-5 | `SegmentedControl` ARIA pattern | `role="tablist"`, `role="radiogroup"`, custom `role="group"` | `role="radiogroup"` + `role="radio"` | M3 single-select semantics map precisely to radio group; correct screen reader behavior |
 | AD-6 | Horizontal Divider in Podium | DS `<Divider>` component, native `<div>` | Native `<div>` | DS `Divider` is vertical-only in current implementation (Known Rule #70) |
 | AD-7 | `SegmentedControl` scope | DS component (new), feature component | Feature component in `src/components/` (not `src/design-system/`) | PO constraint: no new DS components unless clearly necessary; this is slice-specific |
-| AD-8 | Desktop Podium responsive spec | Span full viewport width, centre with max-width + transform | Centre: `max-width: 600px; left: 50%; transform: translateX(-50%)` at `min-width: 1024px` | Matches Design QA desktop frames `285:3144`/`285:3180`; PO selected option 1 (2026-04-16) |
+| AD-8 | Desktop Podium responsive spec | Span full viewport width, centre with max-width + transform | Centre: `max-width: 600px; left: 50%; transform: translateX(-50%)` at `min-width: 1024px` | Matches Design QA desktop frames `582:50`/`583:62`; PO selected option 1 (2026-04-16) |
