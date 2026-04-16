@@ -1,5 +1,5 @@
 :root {
-    --podium-height: calc(103px + env(safe-area-inset-bottom, 0px));
+    --podium-height: calc(109px + env(safe-area-inset-bottom, 0px));
 }
 
 .podium {

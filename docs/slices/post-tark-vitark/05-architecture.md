@@ -196,15 +196,12 @@ Core layout:
 }
 ```
 
-Desktop responsive — Podium is centred on wide viewports to match Design QA desktop frame (`582:50`, `583:62`):
+Desktop responsive — Podium is full-width with 120px side inset to match Figma desktop frame (`582:50`, `583:62`). The frame uses `px-[120px]` and `w-full` — Podium spans edge-to-edge (correction from original `max-width: 600px` spec which was authored from text, not from Figma frame):
 ```css
 /* ── Desktop ── */
 @media (min-width: 1024px) {
   .podium {
-    max-width: 600px;
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
+    padding-inline: var(--space-30); /* 120px each side, matches Figma px-120 */
   }
 }
 ```
@@ -432,7 +429,7 @@ Tasks are ordered by dependency. Tasks with no declared dependency may be worked
 
 **Files:** `src/components/Podium.tsx`, `src/styles/components/podium.css`
 
-**Change:** New component. Contains Divider/Native (inline), `SegmentedControl`, native `<textarea>`, Publish `<button>`. `position: fixed; bottom: 0; left: 0; right: 0`. Shared layout custom property declared on `:root` as `--podium-height: calc(187px + env(safe-area-inset-bottom, 0px))` (full rendered height: Figma base 187px + safe-area inset, so `.debate-screen` sibling always has correct bottom clearance via `var(--podium-height)`). Safe-area via `env(safe-area-inset-bottom, 0px)`. Desktop breakpoint at `min-width: 1024px`: `max-width: 600px; left: 50%; right: auto; transform: translateX(-50%)` (matches Design QA desktop frames `582:50` / `583:62`). Calls `validatePost` on submit. Error region with `role="alert"` and `aria-live="polite"`. Textarea `aria-invalid` and `aria-describedby`.
+**Change:** New component. Contains Divider/Native (inline), `SegmentedControl`, native `<textarea>`, Publish `<button>`. `position: fixed; bottom: 0; left: 0; right: 0`. Shared layout custom property declared on `:root` as `--podium-height: calc(187px + env(safe-area-inset-bottom, 0px))` (full rendered height: Figma base 187px + safe-area inset, so `.debate-screen` sibling always has correct bottom clearance via `var(--podium-height)`). Safe-area via `env(safe-area-inset-bottom, 0px)`. Desktop breakpoint at `min-width: 1024px`: `padding-inline: var(--space-30)` (120px side inset, full-width — matches Figma desktop frames `582:50` / `583:62` which show `px-[120px]` and `w-full`). Calls `validatePost` on submit. Error region with `role="alert"` and `aria-live="polite"`. Textarea `aria-invalid` and `aria-describedby`.
 
 **Acceptance criteria:**
 - `SegmentedControl`, `textarea`, and Publish button are all in the DOM.
@@ -443,7 +440,7 @@ Tasks are ordered by dependency. Tasks with no declared dependency may be worked
 - `isBusy = true` prevents a second call to `onPublish` before the first completes.
 - Error message is associated to textarea via `aria-describedby`.
 - `podium.css` source contains `position: fixed` (assert by reading file text in test; jsdom does not apply external stylesheets, so `getComputedStyle` assertions for CSS-injected layout properties are not used).
-- Desktop `@media (min-width: 1024px)` centering (max-width 600px, `transform: translateX(-50%)`) is verified in Gate 5.5 runtime QA; no jsdom assertion for @media-scoped computed styles.
+- Desktop `@media (min-width: 1024px)` full-width rule (`padding-inline: var(--space-30)`) is verified in Gate 5.5 runtime QA; source-text assertion for `padding-inline` in `Podium.test.tsx`.
 
 **Test file:** `tests/components/Podium.test.tsx`
 
@@ -671,4 +668,4 @@ tests/
 | AD-5 | `SegmentedControl` ARIA pattern | `role="tablist"`, `role="radiogroup"`, custom `role="group"` | `role="radiogroup"` + `role="radio"` | M3 single-select semantics map precisely to radio group; correct screen reader behavior |
 | AD-6 | Horizontal Divider in Podium | DS `<Divider>` component, native `<div>` | Native `<div>` | DS `Divider` is vertical-only in current implementation (Known Rule #70) |
 | AD-7 | `SegmentedControl` scope | DS component (new), feature component | Feature component in `src/components/` (not `src/design-system/`) | PO constraint: no new DS components unless clearly necessary; this is slice-specific |
-| AD-8 | Desktop Podium responsive spec | Span full viewport width, centre with max-width + transform | Centre: `max-width: 600px; left: 50%; transform: translateX(-50%)` at `min-width: 1024px` | Matches Design QA desktop frames `582:50`/`583:62`; PO selected option 1 (2026-04-16) |
+| AD-8 | Desktop Podium responsive spec | Full-width with 120px side inset | `padding-inline: var(--space-30)` at `min-width: 1024px` | Figma `582:50` uses `px-[120px]` and `w-full`; original `max-width: 600px` spec was authored from text, not Figma frame — corrected 2026-04-16 |
