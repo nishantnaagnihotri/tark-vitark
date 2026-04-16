@@ -148,9 +148,9 @@ Render fragment additions:
 />
 ```
 
-### 2.6 Native Component Specifications (Known Rule #70)
+### 2.6 Native Component Specifications (Traceability: `03-ux.md` Pass 4 Amendment — hardcoded-dimension DS instances)
 
-The following Figma DS library instances cannot be resized via the Plugin API due to fixed inner dimensions; all are implemented as native builds using DS tokens:
+Per the `03-ux.md` Pass 4 Amendment notes, the following Figma DS library instances cannot be resized via the Plugin API due to fixed inner dimensions; all are implemented as native builds using DS tokens:
 
 #### Divider/Native (inside Podium)
 - Native `<div>` — `display: block`, `height: 1px`, `background-color: var(--color-spine-line)`, `role="separator"`, `aria-orientation="horizontal"`.
@@ -304,8 +304,8 @@ Revert the merge commit on master. No data persistence; no backend; full rollbac
 
 | AC | Criterion | Test Layer | Location |
 |---|---|---|---|
-| AC-1 | Composer always visible, bottom-anchored | DOM assertion (position:fixed present) | `tests/components/Podium.test.tsx` |
-| AC-2 | Inline, not full-screen | DOM assertion (no modal/overlay) | `tests/components/Podium.test.tsx` |
+| AC-1 | Composer always visible, bottom-anchored | CSS source assertion (`position: fixed` present in `podium.css`) | `tests/components/Podium.test.tsx` |
+| AC-2 | Inline, not full-screen | CSS source assertion (Podium layout styles in `podium.css`; no full-screen/modal treatment) | `tests/components/Podium.test.tsx` |
 | AC-3 | M3 SegCtrl, exactly Tark + Vitark | Component test | `tests/components/SegmentedControl.test.tsx` |
 | AC-4 | Tark preselected on load | Component test | `tests/components/DebateScreen.test.tsx` |
 | AC-5 | Last side remembered after change | Component test | `tests/components/DebateScreen.test.tsx` |
