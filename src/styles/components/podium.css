@@ -108,9 +108,6 @@
 
 @media (min-width: 1024px) {
     .podium {
-        max-width: 600px;
-        left: 50%;
-        right: auto;
-        transform: translateX(-50%);
+        padding-inline: var(--space-30);
     }
 }

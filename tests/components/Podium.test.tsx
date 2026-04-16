@@ -165,11 +165,10 @@ describe('Podium', () => {
         expect(onSideChange).toHaveBeenCalledWith('vitark');
     });
 
-    it('defines fixed and desktop-centered layout rules in podium.css source', () => {
+    it('defines fixed and desktop full-width layout rules in podium.css source', () => {
         expect(podiumCss).toContain('position: fixed;');
         expect(podiumCss).toContain('--podium-height: calc(103px + env(safe-area-inset-bottom, 0px));');
         expect(podiumCss).toContain('@media (min-width: 1024px)');
-        expect(podiumCss).toContain('max-width: 600px;');
-        expect(podiumCss).toContain('transform: translateX(-50%);');
+        expect(podiumCss).toContain('padding-inline: var(--space-30);');
     });
 });
