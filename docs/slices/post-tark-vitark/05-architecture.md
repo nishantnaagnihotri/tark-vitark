@@ -26,7 +26,7 @@ Challenge Phase complete against `01-requirement.md`, `02-prd.md`, `03-ux.md` (P
 | `DebateScreen` | `src/components/DebateScreen.tsx` (MODIFY) | State owner: `localPosts`, `selectedSide`. Renders combined argument list + Podium. |
 | `Timeline` | `src/components/Timeline.tsx` (UNCHANGED) | Display-only. Accepts `Argument[]`. Append behavior achieved by passing `[...DEBATE.arguments, ...localPosts]`. |
 | `ArgumentCard` | `src/components/ArgumentCard.tsx` (MODIFY) | Amendment-1: mobile 4-line clamp + Read more toggle. Previously pure display; gains local `expanded`/`isClamped` state. |
-| `Podium` | `src/components/Podium.tsx` (NEW) | Composer bar. Owns `text`, `error`, `isBusy`. Calls `validatePost`. Calls `onPublish` on valid submit. Fixed-positioned below viewport. |
+| `Podium` | `src/components/Podium.tsx` (NEW) | Composer bar. Owns `text`, `error`, `isBusy`. Calls `validatePost`. Calls `onPublish` on valid submit. Fixed to the bottom of the viewport. |
 | `SegmentedControl` | `src/components/SegmentedControl.tsx` (NEW) | Native M3 two-option single-select side selector. Extracted for unit-testability and ARIA isolation. |
 | `validatePost` | `src/lib/validatePost.ts` (NEW) | Pure function: Trimmed Text validation (whitespace-only, min 10, max 300). No React dependency. |
 
@@ -101,6 +101,8 @@ interface SegmentedControlProps {
 ```
 
 ARIA pattern: `role="radiogroup"` on container; each option `role="radio"` with `aria-checked={value === option}`. Keyboard: Tab enters group; Arrow keys move selection; Space/Enter confirm.
+
+**Note:** Issue #88 may describe `SegmentedControl` with a string-based API (`options: readonly string[]`, `value: string`, `onChange: (value: string) => void`) as story shorthand. That is not the implementation contract for this slice. The authoritative contract here uses `Side`-typed props; render labels are derived from the `Side` values (`'tark'`, `'vitark'`) at render time.
 
 #### `Podium` — `src/components/Podium.tsx`
 
@@ -536,7 +538,7 @@ T-6 (independent) ──────────── T-3 (needs T-1) → T-4 (
                                                                   └──────────────────→ T-8
 ```
 
-Parallelisable pairs: {T-1, T-2, T-6}; {T-3} after T-1; {T-4} after T-3; {T-5, T-8} after T-4.
+Parallelizable pairs: {T-1, T-2, T-6}; {T-3} after T-1; {T-4} after T-3; {T-5, T-8} after T-4.
 
 ---
 

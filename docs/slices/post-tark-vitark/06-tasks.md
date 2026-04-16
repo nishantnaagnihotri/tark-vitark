@@ -38,7 +38,7 @@ T-6 (#91 — independent) ──── T-3 (#88, needs T-1) → T-4 (#89, needs 
                                                                   └──────────────────────────────→ T-8 (#93)
 ```
 
-Parallelisable at start: **T-1, T-2, T-6** (no dependencies).
+Parallelizable at start: **T-1, T-2, T-6** (no dependencies).
 
 ---
 
