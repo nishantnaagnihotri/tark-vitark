@@ -183,7 +183,7 @@ On first response in any new activity:
 |---|---|---|---|---|---|---|
 | `coming-soon-splash-page` | ✅ Pass | ✅ Full Pass | ✅ Pass (PO approved 2026-03-29) | ✅ Pass | ✅ Complete (T3 PR #18, T4 PR #19, T5 PR #20 all merged) | ✅ Complete (2026-03-29) |
 | `debate-screen` | ✅ Pass | ✅ Full Pass | ✅ Pass (PO approved 2026-04-06) | ✅ Pass (Revision 1.1) | ✅ Complete (T1–T9 + visual polish PR #61) | ✅ Complete (2026-04-07) |
-| `post-tark-vitark` | ✅ Re-pass (refined, 2026-04-08) | ✅ Re-pass (2026-04-08) | ✅ Pass (PO approved 2026-04-16, PR #83 merged) | ⬜ Not Started | ⬜ Not Started | ⬜ Not Started |
+| `post-tark-vitark` | ✅ Re-pass (refined, 2026-04-08) | ✅ Re-pass (2026-04-08) | ✅ Pass (PO approved 2026-04-16, PR #83 merged) | ✅ Pass (2026-04-16, PR #94 merged) | ⬜ Not Started | ⬜ Not Started |
 
 ## Log Archive Protocol
 
@@ -854,3 +854,14 @@ Detailed repo-wide governance history from 2026-03-30 through 2026-04-02 is arch
 - Open questions status: None blocking.
 - Next micro-goal: Gate 4 (Architecture) for `post-tark-vitark` slice.
 - Blockers/owner decisions: None. Product Owner merged PR #83.
+
+### 2026-04-16 (post-tark-vitark Gate 4 ✅ Closed — PR #94 Merged)
+- Gate status: `post-tark-vitark` Gate 4 ✅ Pass. PR #94 merged to master. 11 Copilot review passes (P1–P11); all review threads resolved with disposition replies. P11: clean 0-comment pass. CI SUCCESS throughout.
+- PR: https://github.com/nishantnaagnihotri/tark-vitark/pull/94
+- Branch: `docs/post-tark-vitark-architecture`
+- Artifact changes: `docs/slices/post-tark-vitark/05-architecture.md` and `docs/slices/post-tark-vitark/06-tasks.md` created and merged.
+- Key architecture decisions finalized: Podium fixed-bottom composer with `--podium-height: calc(187px + env(safe-area-inset-bottom, 0px))` on `:root`; native component builds for DS instances that cannot be resized via Plugin API (SegmentedControl, TextField, Divider); `onPublish: void` (synchronous in-memory, R-7); T-4 AC assertions reframed to CSS source assertion + Gate 5.5 runtime QA (jsdom does not apply external stylesheets).
+- Open challenge disposition: `r3090426670` — Copilot suggested `onPublish: Promise<void>`; challenge posted (R-7: isBusy guard is synchronous in-memory, no async I/O). PR merged as-is → PO accepted challenge (keep `void`).
+- Open questions status: None.
+- Next micro-goal: Gate 5 — delegate tasks to Dev Agent. First batch (parallel-safe): T-1 (#86), T-2 (#87), T-6 (#91).
+- Blockers/owner decisions: None. Product Owner merged PR #94.
