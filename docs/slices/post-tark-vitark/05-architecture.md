@@ -1,6 +1,10 @@
 # Architecture Plan — post-tark-vitark
 ## Gate 4 — 2026-04-16
 
+## Gate 4 Amendment — 2026-04-16 (H-4 Retroactive Figma Frame References)
+
+Figma frame node IDs added to UI-impacting task blocks (T-3, T-4, T-5, T-6) per protocol hardening H-4. Node IDs sourced from Section 10 `Figma Active Implementation Reference`. No other content changed.
+
 ---
 
 ## 1. Architecture Readiness
@@ -416,6 +420,12 @@ Tasks are ordered by dependency. Tasks with no declared dependency may be worked
 
 **Dependency:** T-1 (tokens).
 
+**Figma Reference:**
+| Frame | Node ID | URL |
+|---|---|---|
+| Default/Light/Mobile | `304:2` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=304-2 |
+| Default/Dark/Mobile | `414:78` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=414-78 |
+
 ---
 
 ### T-4 — `Podium` component (Composer bar)
@@ -440,6 +450,18 @@ Tasks are ordered by dependency. Tasks with no declared dependency may be worked
 **AC coverage:** AC-1, AC-2, AC-6, AC-7, AC-8..AC-13.
 
 **Dependency:** T-1, T-2, T-3.
+
+**Figma Reference:**
+| Frame | Node ID | URL |
+|---|---|---|
+| Default/Light/Mobile | `304:2` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=304-2 |
+| Default/Dark/Mobile | `414:78` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=414-78 |
+| Typing/Light/Mobile | `285:2732` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=285-2732 |
+| ValidationError/Light/Mobile | `285:2846` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=285-2846 |
+| SubmitSuccess/Light/Mobile | `285:2964` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=285-2964 |
+| KeyboardOpen/Light/Mobile | `285:3078` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=285-3078 |
+| Default/Light/Desktop | `285:3144` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=285-3144 |
+| Default/Dark/Desktop | `285:3180` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=285-3180 |
 
 ---
 
@@ -467,6 +489,14 @@ Tasks are ordered by dependency. Tasks with no declared dependency may be worked
 **AC coverage:** AC-1, AC-4, AC-5, AC-14, AC-15, AC-18.
 
 **Dependency:** T-2, T-3, T-4.
+
+**Figma Reference:**
+| Frame | Node ID | URL |
+|---|---|---|
+| Default/Light/Mobile | `304:2` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=304-2 |
+| Default/Dark/Mobile | `414:78` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=414-78 |
+| Default/Light/Desktop | `285:3144` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=285-3144 |
+| Default/Dark/Desktop | `285:3180` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=285-3180 |
 
 ---
 
@@ -497,6 +527,8 @@ Tasks are ordered by dependency. Tasks with no declared dependency may be worked
 **AC coverage:** Amendment-1, AC-16.
 
 **Dependency:** None (independent of Podium work).
+
+**Figma Reference:** None — OQ-2 accepted; no Figma frame evidence exists for Amendment-1 (mobile 4-line clamp + Read more). Validate at Gate 5.5 runtime QA.
 
 ---
 
@@ -561,7 +593,7 @@ Parallelizable pairs: {T-1, T-2, T-6}; {T-3} after T-1; {T-4} after T-3; {T-5, T
 
 **Can proceed to build.**
 
-All 18 acceptance criteria plus Amendment-1 and C-4 are covered by the architecture plan. Module boundaries, interface contracts, data shapes, task ordering, and test locations are fully specified. Known Rule #70 is explicitly accounted for across Divider/Native, SegmentedToggle/Native, and TextField/Native. All open questions are accepted or resolved. Architecture quality checks per `.github/references/architecture-quality-checks.md` pass. Desktop Podium responsive spec added per PO direction (OQ-3 resolved).
+All 18 acceptance criteria plus Amendment-1 and C-4 are covered by the architecture plan. Module boundaries, interface contracts, data shapes, task ordering, and test locations are fully specified. Known Rule #70 is explicitly accounted for across Divider/Native, SegmentedToggle/Native, and TextField/Native. All open questions are accepted or resolved. Architecture quality checks per `.github/references/architecture-quality-checks.md` pass. Desktop Podium responsive spec added per PO direction (OQ-3 resolved). H-4 Figma frame reference requirement satisfied: Figma Reference fields added to all UI-impacting task blocks (T-3, T-4, T-5, T-6).
 
 ---
 
