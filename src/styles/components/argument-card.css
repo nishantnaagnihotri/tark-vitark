@@ -6,11 +6,13 @@
     width: 100%;
 }
 
-.argument-card__body--clamped {
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+@media (max-width: 480px) {
+    .argument-card__body--clamped {
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
 }
 
 .argument-card__read-more {

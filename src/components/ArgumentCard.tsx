@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Argument } from '../data/debate';
 import { Card, Typography } from '../design-system';
 import '../styles/components/argument-card.css';
@@ -15,7 +15,6 @@ const ariaLabels = {
 export function ArgumentCard({ argument }: ArgumentCardProps) {
     const [expanded, setExpanded] = useState(false);
     const [isClamped, setIsClamped] = useState(false);
-    const bodyRef = useRef<HTMLElement | null>(null);
     const bodyId = `argument-card-body-${argument.id}`;
 
     useEffect(() => {
@@ -25,13 +24,9 @@ export function ArgumentCard({ argument }: ArgumentCardProps) {
             return;
         }
 
-        bodyRef.current = bodyNode;
-
         const updateClampState = () => {
-            const textNode = bodyRef.current;
-
-            if (textNode && !expanded) {
-                setIsClamped(textNode.scrollHeight > textNode.clientHeight);
+            if (!expanded) {
+                setIsClamped(bodyNode.scrollHeight > bodyNode.clientHeight);
             }
         };
 
