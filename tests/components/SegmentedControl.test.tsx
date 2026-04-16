@@ -44,6 +44,33 @@ describe('SegmentedControl', () => {
         );
     });
 
+    it('falls back to the first side when value is not in options for selection and focus anchor', () => {
+        render(
+            <SegmentedControl
+                options={sideOptions}
+                value={'unknown' as Side}
+                onChange={() => {}}
+            />
+        );
+
+        expect(screen.getByRole('radio', { name: 'Tark' })).toHaveAttribute(
+            'aria-checked',
+            'true'
+        );
+        expect(screen.getByRole('radio', { name: 'Vitark' })).toHaveAttribute(
+            'aria-checked',
+            'false'
+        );
+        expect(screen.getByRole('radio', { name: 'Tark' })).toHaveAttribute(
+            'tabindex',
+            '0'
+        );
+        expect(screen.getByRole('radio', { name: 'Vitark' })).toHaveAttribute(
+            'tabindex',
+            '-1'
+        );
+    });
+
     it('fires onChange with the clicked side when clicking a non-selected side', () => {
         const onChange = vi.fn();
 

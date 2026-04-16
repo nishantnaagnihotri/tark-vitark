@@ -25,7 +25,8 @@ export function SegmentedControl({
     'aria-labelledby': ariaLabelledby,
 }: SegmentedControlProps) {
     const optionRefs = useRef<Array<HTMLButtonElement | null>>([]);
-    const selectedIndex = options.includes(value) ? options.indexOf(value) : 0;
+    const effectiveValue = options.includes(value) ? value : options[0] ?? value;
+    const selectedIndex = options.indexOf(effectiveValue);
     const labelledByValue = ariaLabelledby?.trim();
     const labelValue = ariaLabel?.trim();
     const radiogroupNameProps = labelledByValue
@@ -42,7 +43,7 @@ export function SegmentedControl({
     };
 
     const selectOnConfirm = (option: Side) => {
-        if (option !== value) {
+        if (option !== effectiveValue) {
             onChange(option);
         }
     };
@@ -85,7 +86,7 @@ export function SegmentedControl({
             {...radiogroupNameProps}
         >
             {options.map((option, optionIndex) => {
-                const isSelected = option === value;
+                const isSelected = option === effectiveValue;
 
                 return (
                     <button
