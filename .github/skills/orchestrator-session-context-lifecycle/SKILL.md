@@ -70,7 +70,7 @@ Any `run_async_subagents` call creates a fire-and-forget session. Without active
 
 Do this before any other response content. If `/memories/session/active-state.md` does not exist yet, create it.
 
-**Tool naming note** — the canonical tool name is `mcp_agent-orchest_get_run_status`. References to `get_run_status` (short form) in this skill mean the same tool; use whichever name the current environment exposes. All other skills in this repo use the full canonical name.
+**Tool naming note** — the canonical tool name is `mcp_agent-orchest_get_run_status`. References to `get_run_status` (short form) in this skill or others mean the same tool; treat both forms as equivalent and use whichever name the current environment exposes.
 
 **On resume** — as the very first action of the Resume Protocol (before returning the resume snapshot), scan `## Pending Async Runs` in session memory. For each row with status `running`, call `mcp_agent-orchest_get_run_status` immediately and update the row to reflect the current state (`running` / `done` / `pending-clarification` / `failed`). Surface any completed or blocked runs in the resume snapshot.
 
