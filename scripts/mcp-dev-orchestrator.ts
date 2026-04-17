@@ -495,17 +495,67 @@ server.tool(
         runId: z.string().uuid().describe("runId returned by run_async_subagents"),
     },
     async ({ runId }) => {
-        // Always re-read from disk before serving status — the in-memory Map can
-        // be stale when VS Code restarts the MCP server process after a run
-        // completes (old process writes "done" to disk; new process already
-        // loaded an intermediate "running"→"failed" snapshot at startup).
+        // Re-read from disk before serving status so a restarted MCP process can
+        // observe a newer persisted terminal state, but do NOT blindly replace
+        // richer in-memory data with the lossy on-disk snapshot (persistRuns strips
+        // TaskResult.output, so an unconditional overwrite drops outputPreview).
+        const isTerminalStatus = (s: Run["status"]) =>
+            s === "done" || s === "failed" || s === "pending-clarification";
+
+        const shouldPreferDisk = (mem: Run, disk: Run): boolean => {
+            // Always prefer disk when memory was crash-marked "failed" at startup
+            // and disk now has a real terminal state.
+            if (mem.status === "failed" && isTerminalStatus(disk.status)) return true;
+            // Prefer disk when disk has a finishedAt that memory lacks or is older.
+            if (disk.finishedAt) {
+                if (!mem.finishedAt) return true;
+                return new Date(disk.finishedAt).getTime() >= new Date(mem.finishedAt).getTime();
+            }
+            return false;
+        };
+
+        const mergeRunState = (mem: Run | undefined, disk: Run): Run => {
+            if (!mem) return { ...disk, _tasks: disk._tasks ?? [] };
+
+            const memById = new Map(mem.results.map((r) => [r.taskId, r]));
+            const diskById = new Map(disk.results.map((r) => [r.taskId, r]));
+            const allIds = new Set([...memById.keys(), ...diskById.keys()]);
+            const preferDisk = shouldPreferDisk(mem, disk);
+
+            const mergedResults = Array.from(allIds).map((id) => {
+                const mr = memById.get(id);
+                const dr = diskById.get(id);
+                if (!mr) return dr!;
+                if (!dr) return mr;
+                // Whichever source wins, always preserve richer in-memory output.
+                return {
+                    ...(preferDisk ? mr : dr),
+                    ...(preferDisk ? dr : mr),
+                    output: mr.output ?? dr.output,
+                };
+            });
+
+            return {
+                ...(preferDisk ? mem : disk),
+                ...(preferDisk ? disk : mem),
+                results: mergedResults,
+                _tasks: mem._tasks ?? disk._tasks ?? [],
+                taskIds: mem.taskIds.length > 0 ? mem.taskIds : disk.taskIds,
+                pendingClarification: preferDisk
+                    ? (disk.pendingClarification ?? mem.pendingClarification)
+                    : (mem.pendingClarification ?? disk.pendingClarification),
+                finishedAt: preferDisk
+                    ? (disk.finishedAt ?? mem.finishedAt)
+                    : (mem.finishedAt ?? disk.finishedAt),
+            };
+        };
+
         try {
             if (existsSync(RUNS_FILE)) {
                 const raw = JSON.parse(readFileSync(RUNS_FILE, "utf-8")) as Record<string, Run>;
                 const diskRun = raw[runId];
                 if (diskRun) {
-                    diskRun._tasks = runs.get(runId)?._tasks ?? diskRun._tasks ?? [];
-                    runs.set(runId, diskRun);
+                    runs.set(runId, mergeRunState(runs.get(runId), diskRun));
                 }
             }
         } catch { /* non-fatal — fall through to in-memory state */ }
