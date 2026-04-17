@@ -238,11 +238,14 @@ Before creating any frame, run this scan in full. The purpose is to surface all 
 
 3. **Library publish state check:** Verify no pending unpublished changes exist in the DS library from prior sessions. If any exist, surface them now.
 
-4. **Baseline state check (continuation slices):** Confirm the `[IN PROGRESS]` section does not already exist on the target page (which would indicate a prior blocked session). If it does, check `docs/slices/<slice-name>/context-log.md` for a `gate-status: BLOCKED_AWAITING_PO` marker before proceeding.
+4. **Baseline state check (continuation slices):** Inspect the target page and `docs/slices/<slice-name>/context-log.md` together and classify the state explicitly:
+   - **No `[IN PROGRESS]` section present:** pass the baseline check and continue normally.
+   - **`[IN PROGRESS]` section present + `gate-status: BLOCKED_AWAITING_PO` marker present in the context log:** treat this as a valid resume path from a previously blocked session. Resume from the blocked point only. Do **not** re-run completed pre-flight checks or recreate frames/components already completed in the prior attempt unless the PO explicitly authorizes rework.
+   - **`[IN PROGRESS]` section present + no `gate-status: BLOCKED_AWAITING_PO` marker in the context log:** treat this as a baseline ambiguity/corruption gap. Do **not** proceed with frame execution. Raise it to the PO for confirmation on whether to resume, reset, or discard the prior partial state.
 
-**If any check returns a gap:** consolidate all gaps into a single PO message listing every missing component, unpublished change, token gap, and baseline ambiguity — with the specific authorization or action required for each. Do NOT begin frame execution until the PO message has been sent and all authorizations received.
+**If any check returns a gap:** consolidate all gaps into a single PO message listing every missing component, unpublished change, token gap, and baseline ambiguity (including any `[IN PROGRESS]` section without a matching `gate-status: BLOCKED_AWAITING_PO` marker) — with the specific authorization or action required for each. Do NOT begin frame execution until the PO message has been sent and all authorizations received.
 
-**If all checks pass:** record `[PRE-FLIGHT] All checks passed — proceeding to Step 4` and continue.
+**If all checks pass:** record the applicable pre-flight status and continue — either `[PRE-FLIGHT] All checks passed — proceeding to Step 4` for a clean start, or `[PRE-FLIGHT] Resume path confirmed via BLOCKED_AWAITING_PO marker — resuming from blocked point` for a continuation that must not re-run completed steps.
 
 ---
 
@@ -434,14 +437,14 @@ If a loop-back condition requires PO input and the session ends before a respons
 
 1. Write the following marker to the slice context log (`docs/slices/<slice-name>/context-log.md`) before the session closes:
 
-```
-gate-status: BLOCKED_AWAITING_PO
-gate: 3A
-blocked-at: <Step N — description>
-blocker: <exact loop-back condition description>
-frames-in-progress: <list of frame names and node IDs created so far>
-timestamp: <ISO timestamp>
-```
+   ```
+   gate-status: BLOCKED_AWAITING_PO
+   gate: 3A
+   blocked-at: <Step N — description>
+   blocker: <exact loop-back condition description>
+   frames-in-progress: <list of frame names and node IDs created so far>
+   timestamp: <ISO timestamp>
+   ```
 
 2. On **any resume of Gate 3A**, before executing any frame step, check the context log for this marker. If found:
    - Read the blocker description.
