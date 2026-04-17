@@ -201,9 +201,10 @@ function loadPersistedRuns(): void {
             if (run.status === "running") {
                 run.status = "failed";
                 run.finishedAt = nowIST();
-                run.results = (run.results ?? []).concat(
+                const existingResults = run.results ?? [];
+                run.results = existingResults.concat(
                     (run.taskIds ?? [])
-                        .filter((tid) => !run.results.some((r) => r.taskId === tid))
+                        .filter((tid) => !existingResults.some((r) => r.taskId === tid))
                         .map((tid) => ({
                             taskId: tid,
                             role: "unknown",
@@ -298,7 +299,7 @@ async function runAgentTask(
 
         mkdirSync(LOG_DIR, { recursive: true });
         const safeId = task.id.replace(/[^a-zA-Z0-9_-]/g, "_");
-        writeFileSync(join(LOG_DIR, `${safeId}.log`), output, "utf-8");
+        writeFileSync(join(LOG_DIR, `${runId}-${safeId}.log`), output, "utf-8");
 
         if (detectNeedsClarification(output)) {
             return {
@@ -357,7 +358,10 @@ function startRun(tasks: Task[], clarifications: Record<string, string>): Run {
                 .filter((r) => r.status === "needs-clarification")
                 .map((r) => r.taskId);
             run.finishedAt = nowIST();
-            run.status = run.pendingClarification.length > 0 ? "pending-clarification" : "done";
+            const hasFailed = run.results.some((r) => r.status === "failed");
+            run.status = run.pendingClarification.length > 0
+                ? "pending-clarification"
+                : hasFailed ? "failed" : "done";
             persistRuns();
 
             mkdirSync(LOG_DIR, { recursive: true });
@@ -505,6 +509,18 @@ server.tool(
         if (!previousRun) {
             return {
                 content: [{ type: "text", text: JSON.stringify({ error: `Run ${runId} not found` }) }],
+                isError: true,
+            };
+        }
+
+        // _tasks is not persisted across restarts — guard before attempting replay
+        if (previousRun._tasks.length === 0 && previousRun.pendingClarification.length > 0) {
+            return {
+                content: [{ type: "text", text: JSON.stringify({
+                    error: "Cannot re-queue: task details were not persisted across an orchestrator restart. " +
+                           "Submit a new run_async_subagents call to replace this run.",
+                    pendingClarification: previousRun.pendingClarification,
+                }) }],
                 isError: true,
             };
         }
