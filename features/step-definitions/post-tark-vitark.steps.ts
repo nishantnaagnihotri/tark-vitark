@@ -93,7 +93,7 @@ Given('the debate screen is loaded', function (this: PostTarkVitarkWorld) {
 Then('the composer controls are visible', function (this: PostTarkVitarkWorld) {
   const view = activeRender(this);
 
-  assert.ok(view.getByRole('switch', { name: 'Toggle post side' }));
+  assert.ok(view.getByRole('switch', { name: 'Post as Tark' }));
   assert.ok(composerInput(this));
   assert.ok(publishButton(this));
   assert.equal(view.queryByRole('button', { name: /sign in|log in/i }), null);
@@ -103,19 +103,19 @@ Then('the composer controls are visible', function (this: PostTarkVitarkWorld) {
 Then('Tark is selected by default', function (this: PostTarkVitarkWorld) {
   const view = activeRender(this);
 
-  const chip = view.getByRole('switch', { name: 'Toggle post side' });
+  const chip = view.getByRole('switch', { name: 'Post as Tark' });
   assert.ok(chip);
   assert.equal(chip.getAttribute('aria-checked'), 'true');
 });
 
 When('the visitor selects the Vitark side', function (this: PostTarkVitarkWorld) {
-  fireEvent.click(activeRender(this).getByRole('switch', { name: 'Toggle post side' }));
+  fireEvent.click(activeRender(this).getByRole('switch', { name: 'Post as Tark' }));
 });
 
 Then('Vitark remains selected', function (this: PostTarkVitarkWorld) {
   const view = activeRender(this);
 
-  const chip = view.getByRole('switch', { name: 'Toggle post side' });
+  const chip = view.getByRole('switch', { name: 'Post as Tark' });
   assert.ok(chip);
   assert.equal(chip.getAttribute('aria-checked'), 'false');
 });
