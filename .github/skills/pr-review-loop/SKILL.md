@@ -79,6 +79,7 @@ Status: semantic-closed | semantic-open (reason)
 
 6. **Ongoing check frequency:** verify sync status at minimum once per review loop completion (after 0-comments clean pass). If the PR has been open for multiple sessions or large changes have landed on the base branch since the PR was opened, also check before each fix-push batch.
 
+## 2. PR Review Intake Protocol
 
 1. Before summarizing PR feedback, offering to fix it, or editing code/docs, the agent must first enumerate each actionable review comment and classify it as `Accept`, `Challenge`, or `Needs Product Owner Decision`.
 2. Each classification must include concise reasoning tied to scope, correctness, protocol alignment, or readability.
