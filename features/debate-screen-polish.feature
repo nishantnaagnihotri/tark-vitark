@@ -4,15 +4,15 @@ Feature: Debate Screen Polish
   And see correctly aligned spine dots on tablet and desktop
   So that the timeline is legible and visually coherent
 
-  Scenario: Argument cards carry the timeline item CSS class
+  Scenario: Timeline items carry the timeline item CSS class
     Given the debate screen is loaded
     Then each timeline item has the timeline__item CSS class
 
-  Scenario: Tark argument cards have the tark side class
+  Scenario: Tark timeline items have the tark side class
     Given the debate screen is loaded
     Then each Tark timeline item has the timeline__item--tark class
 
-  Scenario: Vitark argument cards have the vitark side class
+  Scenario: Vitark timeline items have the vitark side class
     Given the debate screen is loaded
     Then each Vitark timeline item has the timeline__item--vitark class
 
