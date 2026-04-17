@@ -1,0 +1,130 @@
+name: Slice PR Status Notifier
+
+# Posts/updates a status comment on the slice tracker issue whenever a PR
+# targeting a slice/* branch is opened, updated, reviewed, or closed.
+# This serves as the orchestrator's async "ready to resume" signal.
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - closed
+      - reopened
+    branches:
+      - 'slice/**'
+  pull_request_review:
+    types:
+      - submitted
+    branches:
+      - 'slice/**'
+
+permissions:
+  contents: read
+  pull-requests: read
+  issues: write
+
+jobs:
+  notify-slice-tracker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Derive slice name from base branch
+        id: slice
+        run: |
+          BASE="${{ github.event.pull_request.base.ref }}"
+          # strip "slice/" prefix
+          SLICE_NAME="${BASE#slice/}"
+          echo "name=${SLICE_NAME}" >> "$GITHUB_OUTPUT"
+
+      - name: Find slice tracker issue
+        id: tracker
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLICE_NAME: ${{ steps.slice.outputs.name }}
+          REPO: ${{ github.repository }}
+        run: |
+          ISSUE_NUMBER=$(gh issue list \
+            --repo "$REPO" \
+            --label "slice-tracker,slice:${SLICE_NAME}" \
+            --state open \
+            --json number \
+            --jq '.[0].number // empty')
+
+          if [ -z "$ISSUE_NUMBER" ]; then
+            echo "No open slice-tracker issue found for slice '${SLICE_NAME}'. Skipping."
+            echo "found=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "found=true" >> "$GITHUB_OUTPUT"
+            echo "number=${ISSUE_NUMBER}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Collect open PRs targeting slice branch
+        if: steps.tracker.outputs.found == 'true'
+        id: prs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
+          REPO: ${{ github.repository }}
+        run: |
+          PR_TABLE=$(gh pr list \
+            --repo "$REPO" \
+            --base "$BASE_BRANCH" \
+            --state all \
+            --json number,title,state,reviewDecision,headRefName \
+            --jq '
+              ["| PR | Branch | State | Review |", "|---|---|---|---|"] +
+              [
+                .[] |
+                "| [#\(.number)](https://github.com/'"${REPO}"'/pull/\(.number)) | `\(.headRefName)` | \(.state) | \(.reviewDecision // "—") |"
+              ] | .[]
+            ')
+          # store as multiline output
+          {
+            echo "table<<EOF"
+            echo "$PR_TABLE"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Post or update status comment on tracker issue
+        if: steps.tracker.outputs.found == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ steps.tracker.outputs.number }}
+          SLICE_NAME: ${{ steps.slice.outputs.name }}
+          PR_TABLE: ${{ steps.prs.outputs.table }}
+          TRIGGER_PR: ${{ github.event.pull_request.number }}
+          TRIGGER_ACTION: ${{ github.event.action }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          MARKER="<!-- slice-pr-status-notifier -->"
+          TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M UTC')
+
+          BODY="${MARKER}
+          ## Slice PR Status — \`${SLICE_NAME}\`
+
+          **Triggered by:** PR #${TRIGGER_PR} — \`${TRIGGER_ACTION}\` — ${TIMESTAMP}
+
+          ### PRs targeting \`slice/${SLICE_NAME}\`
+
+          ${PR_TABLE}
+
+          **Orchestrator next step:** Resume session, poll run status, continue merge sequencing.
+          [View workflow run](${RUN_URL})"
+
+          # Find existing comment with our marker
+          EXISTING_COMMENT_ID=$(gh api \
+            "repos/${REPO}/issues/${ISSUE_NUMBER}/comments" \
+            --jq ".[] | select(.body | startswith(\"${MARKER}\")) | .id" | head -1)
+
+          if [ -n "$EXISTING_COMMENT_ID" ]; then
+            gh api --method PATCH \
+              "repos/${REPO}/issues/comments/${EXISTING_COMMENT_ID}" \
+              --field body="$BODY"
+            echo "Updated existing comment ${EXISTING_COMMENT_ID} on issue #${ISSUE_NUMBER}"
+          else
+            gh api --method POST \
+              "repos/${REPO}/issues/${ISSUE_NUMBER}/comments" \
+              --field body="$BODY"
+            echo "Posted new comment on issue #${ISSUE_NUMBER}"
+          fi
