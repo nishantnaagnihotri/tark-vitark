@@ -25,8 +25,24 @@ jobs:
         env:
           PR_BODY: ${{ github.event.pull_request.body }}
         run: |
-          if ! printf '%s' "$PR_BODY" | grep -q "Agent Provenance"; then
-            echo "::warning::PR body missing ## Agent Provenance block"
+          missing_provenance=false
+
+          if [ -z "$PR_BODY" ]; then
+            missing_provenance=true
+          fi
+
+          if ! printf '%s\n' "$PR_BODY" | grep -qE '^[[:space:]]*##[[:space:]]+Agent Provenance[[:space:]]*$'; then
+            missing_provenance=true
+          fi
+
+          for key in 'run-id:' 'task-id:' 'role:' 'dispatched:'; do
+            if ! printf '%s\n' "$PR_BODY" | grep -qE "^[[:space:]]*${key}[[:space:]]*"; then
+              missing_provenance=true
+            fi
+          done
+
+          if [ "$missing_provenance" = true ]; then
+            echo "::warning::PR body missing ## Agent Provenance block or required provenance fields (run-id:, task-id:, role:, dispatched:)"
           fi
 
       - name: Check PR body for issue-closing keyword

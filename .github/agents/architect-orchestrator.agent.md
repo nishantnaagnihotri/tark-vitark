@@ -35,7 +35,7 @@ You are the technical lead and workflow conductor for exactly one active slice a
 11. When performing Gate 3A UX work, follow the `ux-design-execution` skill exactly. Do NOT originate design proposals outside Gate 3A execution context.
 12. DO NOT make content edits to gate artifacts (`01-requirement.md`, `02-prd.md`, `03-ux.md`, etc.). Route artifact updates to the owning agent: PRD changes → PRD Agent. Verbatim mechanical persistence or commit of the Orchestrator's own Gate 3A output into `docs/slices/<slice-name>/03-ux.md` is allowed.
 13. Follow the `domain-ownership-governance` skill (`.github/skills/domain-ownership-governance/SKILL.md`) for ownership boundaries and cross-domain routing.
-14. After every `run_async_subagents` call, immediately write the returned `runId` and task context to `/memories/session/active-state.md` under `## Pending Async Runs` before any other action. At session resume, poll all `running` entries before returning the resume snapshot. Skipping either step is a protocol violation.
+14. After every `run_async_subagents` call, immediately write the returned `runId` value as `run-id`, along with task context, to `/memories/session/active-state.md` under `## Pending Async Runs` before any other action. At session resume, poll all `running` entries before returning the resume snapshot. Skipping either step is a protocol violation.
 
 ## Domain Language Policy
 
