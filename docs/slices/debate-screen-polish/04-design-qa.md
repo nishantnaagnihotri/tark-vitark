@@ -84,13 +84,13 @@ All 9 Design QA checks passed. No structural gaps. No token violations. Full the
 
 | Element | Token | Result |
 |---|---|---|
-| Card background — Tark light | `var(--color/tark/surface)` | PASS |
-| Card background — Vitark light | `var(--color/vitark/surface)` | PASS |
-| Card background — Tark dark | `var(--color/tark/surface)` | PASS |
-| Card background — Vitark dark | `var(--color/vitark/surface)` | PASS |
-| Surface background | `var(--color/surface/default)` | PASS |
-| Text — Tark | `var(--color/tark/on-surface)` | PASS |
-| Text — Vitark | `var(--color/vitark/on-surface)` | PASS |
+| Card background — Tark light | `var(--color-tark-surface)` | PASS |
+| Card background — Vitark light | `var(--color-vitark-surface)` | PASS |
+| Card background — Tark dark | `var(--color-tark-surface)` | PASS |
+| Card background — Vitark dark | `var(--color-vitark-surface)` | PASS |
+| Surface background | `var(--color-surface-default)` | PASS |
+| Text — Tark | `var(--color-tark-on-surface)` | PASS |
+| Text — Vitark | `var(--color-vitark-on-surface)` | PASS |
 | Raw hex colors | None found | PASS |
 | New tokens introduced | None — CSS-only changes | PASS |
 

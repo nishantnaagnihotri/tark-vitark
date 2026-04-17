@@ -70,7 +70,7 @@ jobs:
           PR_TABLE=$(gh pr list \
             --repo "$REPO" \
             --base "$BASE_BRANCH" \
-            --state all \
+            --state open \
             --json number,title,state,reviewDecision,headRefName \
             --jq '
               ["| PR | Branch | State | Review |", "|---|---|---|---|"] +
@@ -101,7 +101,8 @@ jobs:
           MARKER="<!-- slice-pr-status-notifier -->"
           TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M UTC')
 
-          BODY="${MARKER}
+          BODY=$(cat <<EOF
+          ${MARKER}
           ## Slice PR Status — \`${SLICE_NAME}\`
 
           **Triggered by:** PR #${TRIGGER_PR} — \`${TRIGGER_ACTION}\` — ${TIMESTAMP}
@@ -111,7 +112,9 @@ jobs:
           ${PR_TABLE}
 
           **Orchestrator next step:** Resume session, poll run status, continue merge sequencing.
-          [View workflow run](${RUN_URL})"
+          [View workflow run](${RUN_URL})
+          EOF
+          )
 
           # Find existing comment with our marker
           EXISTING_COMMENT_ID=$(gh api \

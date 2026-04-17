@@ -271,9 +271,9 @@ Feature: Debate Screen Polish
 
 ## 7. Rollout and Rollback Strategy
 
-**Rollout:** Both changes are in a single CSS file. Standard PR merge to `master`. No feature flag required. Both changes are visually isolated to their respective breakpoints with no runtime branching.
+**Rollout:** Both changes are in a single CSS file. Merge through the mandatory `slice/debate-screen-polish` integration branch, then open the final `slice/debate-screen-polish` → `master` PR. No feature flag required. Both changes are visually isolated to their respective breakpoints with no runtime branching.
 
-**Rollback:** `git revert <merge-commit>` on `master` restores both items atomically (if merged as a single PR) or per-item (if merged separately). No migrations, no token removals, no API rollback. Single-command revert.
+**Rollback:** Before the final `slice/debate-screen-polish` → `master` PR merges, revert the relevant commit(s) on `slice/debate-screen-polish`. After promotion to `master`, revert the final merge commit/PR from `slice/debate-screen-polish` to restore both items atomically (if promoted together) or revert the specific slice-branch commit(s) if promoted separately. No migrations, no token removals, and no API rollback are required.
 
 ---
 
