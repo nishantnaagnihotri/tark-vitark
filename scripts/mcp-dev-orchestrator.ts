@@ -495,21 +495,6 @@ server.tool(
         runId: z.string().uuid().describe("runId returned by run_async_subagents"),
     },
     async ({ runId }) => {
-        // Always re-read from disk before serving status — the in-memory Map can
-        // be stale when VS Code restarts the MCP server process after a run
-        // completes (old process writes "done" to disk; new process already
-        // loaded an intermediate "running"→"failed" snapshot at startup).
-        try {
-            if (existsSync(RUNS_FILE)) {
-                const raw = JSON.parse(readFileSync(RUNS_FILE, "utf-8")) as Record<string, Run>;
-                const diskRun = raw[runId];
-                if (diskRun) {
-                    diskRun._tasks = runs.get(runId)?._tasks ?? diskRun._tasks ?? [];
-                    runs.set(runId, diskRun);
-                }
-            }
-        } catch { /* non-fatal — fall through to in-memory state */ }
-
         const run = runs.get(runId);
         if (!run) {
             return {
