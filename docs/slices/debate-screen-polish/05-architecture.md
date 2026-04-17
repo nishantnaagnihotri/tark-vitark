@@ -60,7 +60,7 @@ Challenge Phase complete against all four gate artifacts. Both items are CSS-onl
 
 **360 px no-scroll check (AC-2):** `.timeline` padding = `var(--space-5)` = `1.25rem` (~20px at 16px root). The card at `85%` of its containing block, plus the `.timeline` padding, fits well within the 360 px viewport. No overflow introduced at any supported mobile width.
 
-**Bubble tail clearance (AC-5):** `.argument-card--tark::before` at `left: -8px`; `.argument-card--vitark::before` at `right: -8px`. With `1.25rem` `.timeline` padding (~20px at 16px root), each tail sits ≥12 px from the viewport edge. No `overflow: hidden` on `.timeline` or ancestors. Tails are **not clipped**. `argument-card.css` change is **not required**.
+**Bubble tail clearance (AC-5):** `.argument-card--tark::before` at `left: -8px`; `.argument-card--vitark::before` at `right: -8px`. With `1.25rem` `.timeline` padding, each tail sits `calc(1.25rem - 8px)` from the viewport edge (~12 px at a 16px root font size). No `overflow: hidden` on `.timeline` or ancestors. Tails are **not clipped**. `argument-card.css` change is **not required**.
 
 ### 2.4 CSS Change Plan — Item 2 (Vitark Spine-Cell Row Fix ≥481 px)
 
