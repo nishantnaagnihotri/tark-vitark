@@ -10,6 +10,7 @@ interface TaskResult {
     role: string;
     status: TaskStatus;
     error?: string;
+    challenge?: string;
 }
 
 interface Run {
@@ -99,7 +100,11 @@ class TaskResultItem extends vscode.TreeItem {
             : result.status === "failed"
             ? new vscode.ThemeIcon("error", new vscode.ThemeColor("charts.red"))
             : new vscode.ThemeIcon("question");
-        if (result.error) this.tooltip = result.error;
+        if (result.status === "needs-clarification" && result.challenge) {
+            this.tooltip = result.challenge;
+        } else if (result.error) {
+            this.tooltip = result.error;
+        }
         this.contextValue = "taskResult";
     }
 }
