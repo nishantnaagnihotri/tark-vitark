@@ -173,6 +173,15 @@ interface Run {
     _tasks: Task[];  // kept for submit_clarifications replay
 }
 
+// persistRuns writes a lossy schema: _tasks is omitted and results[].output is
+// stripped to keep runs.json small. Use PersistedRun when reading from disk so
+// TypeScript surfaces missing fields instead of silently assuming they exist.
+type PersistedTaskResult = Omit<TaskResult, "output"> & { output?: never };
+type PersistedRun = Omit<Run, "_tasks" | "results"> & {
+    _tasks?: never;
+    results: PersistedTaskResult[];
+};
+
 // ── Run registry (in-memory + disk) ──────────────────────────────────────────
 
 const RUNS_FILE = join(LOG_DIR, "runs.json");
@@ -507,9 +516,15 @@ server.tool(
             // and disk now has a real terminal state.
             if (mem.status === "failed" && isTerminalStatus(disk.status)) return true;
             // Prefer disk when disk has a finishedAt that memory lacks or is older.
+            // finishedAt is produced by nowIST() which returns a locale-formatted string
+            // ("17 Apr 2026, 22:00:00 IST") — not ISO 8601. Date.parse may return NaN,
+            // so guard explicitly and treat NaN as "indeterminate" (keep memory).
             if (disk.finishedAt) {
                 if (!mem.finishedAt) return true;
-                return new Date(disk.finishedAt).getTime() >= new Date(mem.finishedAt).getTime();
+                const diskMs = new Date(disk.finishedAt).getTime();
+                const memMs = new Date(mem.finishedAt).getTime();
+                if (!Number.isFinite(diskMs) || !Number.isFinite(memMs)) return false;
+                return diskMs >= memMs;
             }
             return false;
         };
@@ -552,10 +567,17 @@ server.tool(
 
         try {
             if (existsSync(RUNS_FILE)) {
-                const raw = JSON.parse(readFileSync(RUNS_FILE, "utf-8")) as Record<string, Run>;
+                const raw = JSON.parse(readFileSync(RUNS_FILE, "utf-8")) as Record<string, PersistedRun>;
                 const diskRun = raw[runId];
                 if (diskRun) {
-                    runs.set(runId, mergeRunState(runs.get(runId), diskRun));
+                    // Hydrate the lossy persisted shape back to Run: restore _tasks from
+                    // memory (disk never has it) and keep results typed correctly.
+                    const hydratedDisk: Run = {
+                        ...diskRun,
+                        _tasks: runs.get(runId)?._tasks ?? [],
+                        results: diskRun.results as TaskResult[],
+                    };
+                    runs.set(runId, mergeRunState(runs.get(runId), hydratedDisk));
                 }
             }
         } catch { /* non-fatal — fall through to in-memory state */ }
