@@ -231,11 +231,14 @@ Before creating any frame, run this scan in full. The purpose is to surface all 
 
 1. **Component inventory check:** For every component in the Frame Blueprint, verify whether it exists in the TV Library (`design_system_library_file_key`) and is published. Record: component name, layer (L1/L2/L3), exists: YES/NO, published: YES/NO.
 
-2. **Token namespace check:** Call `figma.variables.getLocalVariables()` in the DS library (fresh — record the timestamp). For every token referenced in the Frame Blueprint, confirm it exists by semantic name. Record: token name, exists: YES/NO.
+2. **Token namespace check:** Call `figma.variables.getLocalVariables()` in the DS library (fresh). This is the single `[TOKEN LIST FETCH]` for the gate run — log it now in the format below and reuse this list for all token-exists checks through to Step 4. For every token referenced in the Frame Blueprint, confirm it exists by semantic name. Record: token name, exists: YES/NO.
+```
+[TOKEN LIST FETCH] DS library key: <key> | timestamp: <ISO timestamp> | variable count: <n>
+```
 
 3. **Library publish state check:** Verify no pending unpublished changes exist in the DS library from prior sessions. If any exist, surface them now.
 
-4. **Baseline state check (continuation slices):** Confirm the `[IN PROGRESS]` section does not already exist on the target page (which would indicate a prior blocked session). If it does, check `.github/docs/slices/<slice-name>/context-log.md` for a `gate-status: BLOCKED_AWAITING_PO` marker before proceeding.
+4. **Baseline state check (continuation slices):** Confirm the `[IN PROGRESS]` section does not already exist on the target page (which would indicate a prior blocked session). If it does, check `docs/slices/<slice-name>/context-log.md` for a `gate-status: BLOCKED_AWAITING_PO` marker before proceeding.
 
 **If any check returns a gap:** consolidate all gaps into a single PO message listing every missing component, unpublished change, token gap, and baseline ambiguity — with the specific authorization or action required for each. Do NOT begin frame execution until the PO message has been sent and all authorizations received.
 
@@ -254,12 +257,7 @@ No frame creation until all declared components pass their layer check. Document
 
 ### Token-Exists Check (Mandatory Before Creating Any Variable)
 
-**Fresh-fetch requirement:** At the start of gate execution (or on session resume), call `figma.variables.getLocalVariables()` in the DS library and record the fetch timestamp. This list must be fetched fresh — do NOT use a variable list from a prior session or earlier in the same session without re-fetching. All token-exists checks in this gate run must reference the timestamped list.
-
-Log format:
-```
-[TOKEN LIST FETCH] DS library key: <key> | timestamp: <ISO timestamp> | variable count: <n>
-```
+**Fetch protocol:** Reuse the timestamped `[TOKEN LIST FETCH]` logged in Step 3B pre-flight for all token-exists checks in this gate run. Do NOT fetch again unless the DS library was published or known to have changed since Step 3B completed. On session resume (no Step 3B in scope), call `figma.variables.getLocalVariables()` fresh and log a new `[TOKEN LIST FETCH]` entry before proceeding.
 
 Before creating any new Figma variable or token, search the timestamped list for existing variables that cover the same semantic role.
 
