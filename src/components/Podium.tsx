@@ -50,8 +50,10 @@ export function Podium({ selectedSide, onSideChange, onPublish }: PodiumProps) {
             <div className="podium__composer-row">
                 <button
                     type="button"
+                    role="switch"
                     className={`podium__chip podium__chip--${selectedSide}`}
-                    aria-label={`Post as ${sideLabel}`}
+                    aria-label="Toggle post side"
+                    aria-checked={selectedSide === 'tark'}
                     onClick={() => onSideChange(nextSide)}
                 >
                     {sideLabel}

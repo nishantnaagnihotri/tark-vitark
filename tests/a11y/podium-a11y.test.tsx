@@ -95,7 +95,7 @@ describe('Podium ARIA semantics', () => {
         );
     });
 
-    it('chip button has accessible name matching selected side', () => {
+    it('chip button uses role="switch" and aria-checked for tark side', () => {
         render(
             <Podium
                 selectedSide="tark"
@@ -104,12 +104,14 @@ describe('Podium ARIA semantics', () => {
             />
         );
 
-        const chip = screen.getByRole('button', { name: 'Post as Tark' });
+        const chip = screen.getByRole('switch', { name: 'Toggle post side' });
         expect(chip).toBeInTheDocument();
-        expect(chip).toHaveAccessibleName('Post as Tark');
+        expect(chip).toHaveAttribute('role', 'switch');
+        expect(chip).toHaveAttribute('aria-checked', 'true');
+        expect(chip).toHaveAccessibleName('Toggle post side');
     });
 
-    it('chip button has accessible name matching vitark selected side', () => {
+    it('chip button uses role="switch" and aria-checked for vitark side', () => {
         render(
             <Podium
                 selectedSide="vitark"
@@ -118,8 +120,10 @@ describe('Podium ARIA semantics', () => {
             />
         );
 
-        const chip = screen.getByRole('button', { name: 'Post as Vitark' });
+        const chip = screen.getByRole('switch', { name: 'Toggle post side' });
         expect(chip).toBeInTheDocument();
-        expect(chip).toHaveAccessibleName('Post as Vitark');
+        expect(chip).toHaveAttribute('role', 'switch');
+        expect(chip).toHaveAttribute('aria-checked', 'false');
+        expect(chip).toHaveAccessibleName('Toggle post side');
     });
 });
