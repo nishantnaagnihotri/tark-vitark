@@ -1,5 +1,6 @@
 {
   "name": "agent-status",
+  "publisher": "nishantnaagnihotri",
   "displayName": "Agent Status",
   "description": "Shows async agent run status in the status bar and Activity Bar sidebar",
   "version": "0.1.0",
@@ -21,7 +22,7 @@
         "agentStatus.runsFilePath": {
           "type": "string",
           "default": "",
-          "description": "Absolute path to runs.json, or leave empty to auto-detect from workspace root (logs/parallel-agents/runs.json)."
+          "description": "Absolute or workspace-relative path to runs.json (e.g. /home/user/runs.json or logs/parallel-agents/runs.json). Leave empty to auto-detect from workspace root."
         }
       }
     },
