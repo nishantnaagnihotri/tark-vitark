@@ -168,6 +168,36 @@ describe('Podium', () => {
         expect(onSideChange).toHaveBeenCalledWith('vitark');
     });
 
+    it('chip aria-label matches visible text — Tark side', () => {
+        render(
+            <Podium
+                selectedSide="tark"
+                onSideChange={() => {}}
+                onPublish={() => {}}
+            />
+        );
+
+        const chip = screen.getByRole('switch', { name: 'Post as Tark' });
+        expect(chip).toBeInTheDocument();
+        expect(chip).toHaveTextContent('Tark');
+        expect(chip).toHaveAttribute('aria-label', 'Post as Tark');
+    });
+
+    it('chip aria-label matches visible text — Vitark side', () => {
+        render(
+            <Podium
+                selectedSide="vitark"
+                onSideChange={() => {}}
+                onPublish={() => {}}
+            />
+        );
+
+        const chip = screen.getByRole('switch', { name: 'Post as Vitark' });
+        expect(chip).toBeInTheDocument();
+        expect(chip).toHaveTextContent('Vitark');
+        expect(chip).toHaveAttribute('aria-label', 'Post as Vitark');
+    });
+
     it('defines fixed and desktop full-width layout rules in podium.css source', () => {
         expect(podiumCss).toContain('position: fixed;');
         expect(podiumCss).toContain('--podium-height: calc(109px + env(safe-area-inset-bottom, 0px));');
