@@ -1,0 +1,80 @@
+{
+  "name": "agent-status",
+  "displayName": "Agent Status",
+  "description": "Shows async agent run status in the status bar and Activity Bar sidebar",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onView:agentStatus.runsView",
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "Agent Status",
+      "properties": {
+        "agentStatus.runsFilePath": {
+          "type": "string",
+          "default": "",
+          "description": "Absolute path to runs.json, or leave empty to auto-detect from workspace root (logs/parallel-agents/runs.json)."
+        }
+      }
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "agentStatus",
+          "title": "Agent Runs",
+          "icon": "resources/agent.svg"
+        }
+      ]
+    },
+    "views": {
+      "agentStatus": [
+        {
+          "id": "agentStatus.runsView",
+          "name": "Runs"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "agentStatus.showDetails",
+        "title": "Agent Status: Show Run Details"
+      },
+      {
+        "command": "agentStatus.openRun",
+        "title": "Agent Status: Open Run JSON"
+      },
+      {
+        "command": "agentStatus.refresh",
+        "title": "Refresh",
+        "icon": "$(refresh)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "agentStatus.refresh",
+          "when": "view == agentStatus.runsView",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p tsconfig.json",
+    "watch": "tsc -watch -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.9.0",
+    "typescript": "^5.0.0"
+  }
+}

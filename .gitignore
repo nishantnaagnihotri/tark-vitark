@@ -12,6 +12,9 @@ node_modules/
 # Build output
 dist/
 
+# Runtime agent logs (generated at runtime, not source)
+logs/parallel-agents/
+
 # Python cache artifacts
 __pycache__/
 *.pyc
