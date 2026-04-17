@@ -174,8 +174,9 @@ interface Run {
 }
 
 // persistRuns writes a lossy schema: _tasks is omitted and results[].output is
-// stripped to keep runs.json small. Use PersistedRun when reading from disk so
-// TypeScript surfaces missing fields instead of silently assuming they exist.
+// stripped to keep runs.json small. Use PersistedRun when reading from disk
+// (loadPersistedRuns and get_run_status disk-refresh) so TypeScript surfaces
+// missing fields instead of silently assuming they exist.
 type PersistedTaskResult = Omit<TaskResult, "output"> & { output?: never };
 type PersistedRun = Omit<Run, "_tasks" | "results"> & {
     _tasks?: never;
@@ -219,8 +220,14 @@ function loadPersistedRuns(): void {
     try {
         if (!existsSync(RUNS_FILE)) return;
         let mutated = false;
-        const raw = JSON.parse(readFileSync(RUNS_FILE, "utf-8")) as Record<string, Run>;
-        for (const [id, run] of Object.entries(raw)) {
+        const raw = JSON.parse(readFileSync(RUNS_FILE, "utf-8")) as Record<string, PersistedRun>;
+        for (const [id, persisted] of Object.entries(raw)) {
+            // Hydrate the lossy persisted shape back to a full Run before mutating.
+            const run: Run = {
+                ...persisted,
+                _tasks: [],
+                results: persisted.results as TaskResult[],
+            };
             // Mark any run that was "running" at crash time as failed
             if (run.status === "running") {
                 run.status = "failed";
@@ -239,7 +246,6 @@ function loadPersistedRuns(): void {
                 );
                 mutated = true;
             }
-            run._tasks = run._tasks ?? [];
             runs.set(id, run);
         }
         if (mutated) persistRuns();
