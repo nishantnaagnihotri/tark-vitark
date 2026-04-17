@@ -22,7 +22,7 @@ Figma frames documented in `04-design-qa.md` are the **authoritative design sour
 Dev agent handoff must include:
 
 1. GitHub Issue link (primary input).
-2. Figma frame URLs with node IDs from `04-design-qa.md` — explicitly listed as the authoritative visual reference.
+2. Figma frame URLs with node IDs from `04-design-qa.md` — include in prompt **only if those URLs are not already present in the issue body**; when the issue already contains Figma references, the issue link alone is sufficient and inlining them is a duplication anti-pattern.
 3. Statement: "Implement exact values from Figma frames. When text spec and Figma frame conflict, Figma frame wins."
 
 Dev agent must:
@@ -46,7 +46,7 @@ Git setup (required before any code changes):
 After PR is merged, clean up:
 
 ```
-  cd /home/nishant/workspace/tark-vitark
+  cd "$(git rev-parse --show-toplevel)"
   git worktree remove ../worktree-<issue-number>
 ```
 
@@ -63,11 +63,11 @@ When Gate 4 decomposes a slice into N issues, the orchestrator must evaluate ind
 
 **Parallel execution protocol (when independence check passes):**
 
-1. Load `mcp_agent-orchest_start_parallel_run` via tool_search before invoking.
-2. Call `mcp_agent-orchest_start_parallel_run` with all parallel dev tasks.
+1. Use `tool_search` to discover the canonical parallel-run tools (`run_async_subagents` and `get_run_status`) before invoking — do not assume hardcoded tool IDs.
+2. Call the canonical "start async run" tool (`mcp_agent-orchest_run_async_subagents`) with all parallel dev tasks.
 3. **Immediately** write the returned `runId` to `/memories/session/active-state.md` under `## Pending Async Runs` before any other action.
 4. Poll with `mcp_agent-orchest_get_run_status` until all tasks complete.
-5. Validate each PR independently, then merge base-to-tip (stacked PR pattern via `stacked-pr-review-loop` skill).
+5. Validate each task PR independently (each targets `slice/<slice-name>`). After all task PRs are merged into the slice branch, open a single `slice/<slice-name> → master` PR for PO merge.
 
 **Sequential execution (when independence check fails or issues = 1):**
 
