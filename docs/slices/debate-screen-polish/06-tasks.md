@@ -49,12 +49,12 @@ T-3 depends on both T-1 and T-2 merged.
 
 ## Dev Protocol for Each Task
 
-1. `git worktree add ../worktree-<issue-number> -b <branch-name>`
+1. `git worktree add ../worktree-<issue-number> -b <branch-name> slice/debate-screen-polish`
 2. Make change in worktree
 3. Run `npm test` — all tests must pass
-4. `git push` and open PR targeting `master`
-5. Orchestrator runs Copilot review loop per `pr-review-loop` skill
-6. Once review passes (0 comments), orchestrator signals merge-ready for PO
+4. `git push` and open PR targeting `slice/debate-screen-polish`
+5. Dev agent runs Copilot review loop per `pr-review-loop` skill
+6. Once review passes (0 comments), dev agent marks PR merge-ready for PO review against `slice/debate-screen-polish`
 
 ## Figma Authority
 

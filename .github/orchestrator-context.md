@@ -184,7 +184,7 @@ On first response in any new activity:
 | `coming-soon-splash-page` | ✅ Pass | ✅ Full Pass | ✅ Pass (PO approved 2026-03-29) | ✅ Pass | ✅ Complete (T3 PR #18, T4 PR #19, T5 PR #20 all merged) | ✅ Complete (2026-03-29) |
 | `debate-screen` | ✅ Pass | ✅ Full Pass | ✅ Pass (PO approved 2026-04-06) | ✅ Pass (Revision 1.1) | ✅ Complete (T1–T9 + visual polish PR #61) | ✅ Complete (2026-04-07) |
 | `post-tark-vitark` | ✅ Re-pass (refined, 2026-04-08) | ✅ Re-pass (2026-04-08) | ✅ Pass (PO approved 2026-04-16, PR #83 merged) | ✅ Pass (2026-04-16, PR #94 merged) | ✅ Complete (T-1–T-8 + post-build PRs #106, #108, slice merge PR #109) | ✅ Complete (2026-04-17, PR #112 merged) |
-| `debate-screen-polish` | ✅ Pass (2026-04-17, Standard) | ✅ Full Pass (2026-04-17) | — | — | — | — |
+| `debate-screen-polish` | ✅ Pass (2026-04-17, Standard) | ✅ Full Pass (2026-04-17) | ✅ Pass | ✅ Pass | — | — |
 
 ## Log Archive Protocol
 
