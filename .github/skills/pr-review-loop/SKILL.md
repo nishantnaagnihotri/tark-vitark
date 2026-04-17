@@ -21,7 +21,7 @@ On-demand workflow for handling PR reviews end-to-end: intake triage, dispositio
 2. **Review arrives** → enumerate comments → classify each (Intake Protocol)
 3. **Execute dispositions** → fix accepted items, post challenge replies, escalate PO items
 4. **Reply to all threads** → push fixes → **[REVIEW REQUESTED]** → **[POLLING STARTED]** (single atomic sequence)
-5. **Exit Copilot polling loop** when the latest Copilot review body says "generated 0 comments" (or equivalent). **Complete the overall PR review workflow** only when both conditions are met: no `semantic-open` review threads remain from the latest pass, and all challenges are resolved with Product Owner.
+5. **Exit Copilot polling loop** when the latest Copilot review body says "generated 0 comments" (or equivalent). Before declaring merge-ready, verify the branch is up-to-date with the base branch (see Branch Sync Protocol, section 4). If behind, rebase, push, and re-enter the polling loop. **Complete the overall PR review workflow** only when both conditions are met: no `semantic-open` review threads remain from the latest pass, and all challenges are resolved with Product Owner.
 
 ## Review Loop Ownership
 
@@ -65,7 +65,20 @@ Status: semantic-closed | semantic-open (reason)
 
 ---
 
-## 2. PR Review Intake Protocol
+## 4. Branch Sync Protocol
+
+1. **Mandatory sync check before merge-ready declaration.** Before declaring any PR merge-ready, the review-loop owner must verify the PR branch is up-to-date with the base branch. The GitHub UI warning "This branch is out-of-date with the base branch" is the authoritative signal. A merge-ready declaration while the branch is behind the base is a workflow failure.
+
+2. **How to sync:** run `git fetch origin && git rebase origin/<base-branch>` on the PR branch. Resolve any conflicts. Push with `git push --force-with-lease` (never bare `--force`).
+
+3. **After a rebase push:** the PR head SHA changes and prior Copilot review passes are against a superseded SHA. Request a fresh Copilot review and re-enter the polling loop. Do not declare merge-ready until a clean pass (0 new comments) is received on the rebased head SHA.
+
+4. **Policy:** prefer `rebase` over `merge` for branch updates to maintain linear history and preserve rebase-merge compatibility.
+
+5. **If rebase fails** (non-trivial conflicts or history divergence): do not attempt to force-resolve. Surface the conflict summary to the Product Owner and await explicit authorization before proceeding.
+
+6. **Ongoing check frequency:** verify sync status at minimum once per review loop completion (after 0-comments clean pass). If the PR has been open for multiple sessions or large changes have landed on the base branch since the PR was opened, also check before each fix-push batch.
+
 
 1. Before summarizing PR feedback, offering to fix it, or editing code/docs, the agent must first enumerate each actionable review comment and classify it as `Accept`, `Challenge`, or `Needs Product Owner Decision`.
 2. Each classification must include concise reasoning tied to scope, correctness, protocol alignment, or readability.
