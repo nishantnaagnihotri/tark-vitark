@@ -285,7 +285,7 @@ None. All open questions from Gates 1–3 are resolved:
 |---|---|---|
 | OQ-1: target card width % | 85% — PO approved on frame `620:145` | Gate 3A |
 | OQ-2: bubble tail anchor | Follows card edge via `right: -8px` / `left: -8px` — no change needed | Gate 2 |
-| OQ-3: 72% width causes scroll? | Non-blocking per Gate 2 — no scroll confirmed at 72%; widening to 85% reduces risk further; AC-2 validates zero scroll at Gate 5.5 | Gate 2 |
+| OQ-3: 72% width causes scroll? | Non-blocking per Gate 2 — no confirmed report of horizontal scroll at 72%; widening to 85% reduces risk further; AC-2 validates zero scroll at Gate 5.5 | Gate 2 |
 | OQ-6: legend bar / composer impact | Unaffected — full-width, independent of card width | Gate 3A |
 | OQ-4: spine dot fix mechanism | `grid-row: 1` CSS-only — PO accepted | Gate 3A |
 
