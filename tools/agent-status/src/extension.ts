@@ -286,13 +286,16 @@ export function activate(context: vscode.ExtensionContext): void {
 
     // Watch for file changes
     let watcher: fs.FSWatcher | undefined;
+    let retryTimer: ReturnType<typeof setTimeout> | undefined;
+
+    context.subscriptions.push({ dispose: () => { clearTimeout(retryTimer); watcher?.close(); } });
 
     function startWatcher(): void {
         const runsFile = getRunsFile();
-        if (!runsFile) { setTimeout(startWatcher, 5000); return; }
+        if (!runsFile) { retryTimer = setTimeout(startWatcher, 5000); return; }
         const dir = path.dirname(runsFile);
         if (!fs.existsSync(dir)) {
-            setTimeout(startWatcher, 5000);
+            retryTimer = setTimeout(startWatcher, 5000);
             return;
         }
         try {
@@ -306,7 +309,6 @@ export function activate(context: vscode.ExtensionContext): void {
                 }
             });
         }
-        context.subscriptions.push({ dispose: () => watcher?.close() });
     }
 
     startWatcher();
