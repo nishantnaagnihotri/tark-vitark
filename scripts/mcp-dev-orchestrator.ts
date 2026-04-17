@@ -28,17 +28,18 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { CopilotClient, approveAll, type MCPServerConfig } from "@github/copilot-sdk";
 import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { basename, join, resolve } from "node:path";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
-const WORKSPACE_ROOT = resolve(import.meta.dirname, "..");
+const WORKSPACE_ROOT = resolve(fileURLToPath(new URL(".", import.meta.url)), "..");
 const AGENTS_DIR = join(WORKSPACE_ROOT, ".github", "agents");
 const MCP_CONFIG_PATH = join(WORKSPACE_ROOT, ".vscode", "mcp.json");
 const MODEL = "gpt-5.3-codex";
-const LOG_DIR = resolve(import.meta.dirname, "../logs/parallel-agents");
+const LOG_DIR = resolve(fileURLToPath(new URL(".", import.meta.url)), "../logs/parallel-agents");
 const AGENT_TIMEOUT_MS = 60 * 60 * 1000; // 1 hour per agent
 
 // ── Runtime MCP resolution ────────────────────────────────────────────────────
@@ -120,7 +121,7 @@ Return a Runtime QA Verdict Package.`,
     "prd-agent": `\
 You are a PRD agent. Convert the provided Requirement Context Package into a
 PRD v0 draft and validate completeness.
-Follow .github/agents/prd-agent.agent.md as the authoritative protocol.`,
+Follow .github/agents/prd.agent.md as the authoritative protocol.`,
 
     "requirement-challenger": `\
 You are a requirement challenger. Grill the provided requirements, expose ambiguity,
@@ -130,7 +131,7 @@ Follow .github/agents/requirement-challenger.agent.md as the authoritative proto
     "design-qa-agent": `\
 You are a design QA agent. Review the provided Design Draft Package against PRD
 and UX artifacts and produce a Design QA Verdict Package.
-Follow .github/agents/design-qa-agent.agent.md as the authoritative protocol.`,
+Follow .github/agents/design-qa.agent.md as the authoritative protocol.`,
 };
 
 function systemMessageForRole(role: string, override?: string): string {
