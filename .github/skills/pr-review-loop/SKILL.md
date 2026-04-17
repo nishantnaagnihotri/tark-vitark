@@ -1,6 +1,6 @@
 ---
 name: pr-review-loop
-description: "PR review workflow: Copilot review loop, PR review intake triage, and Accept-vs-Challenge disposition. Use when: creating a PR, addressing PR review comments, running the Copilot review loop, classifying review feedback, resolving review threads, polling for Copilot review results, or handling review dispositions."
+description: "PR review workflow: Copilot review loop, PR review intake triage, and Accept-vs-Challenge disposition. Use when: creating a PR, addressing PR review comments, running the Copilot review loop, classifying review feedback, resolving review threads, polling for Copilot review results, or handling review dispositions. IMPORTANT: this skill also triggers automatically after any PR is opened as the final step of a multi-step workflow or todo list — not only when the user's top-level request is explicitly to create a PR."
 ---
 
 # PR Review Loop
@@ -56,7 +56,7 @@ On-demand workflow for handling PR reviews end-to-end: intake triage, dispositio
 
 ## 3. Copilot Review Loop Protocol
 
-1. Immediately after creating a PR, the review-loop owner must request Copilot review on that PR and begin the bounded polling window. This is automatic and unconditional — the review-loop owner must not pause, ask for confirmation, or wait for PO input before entering the loop. PR creation and review-loop entry are a single atomic sequence.
+1. Immediately after creating a PR — whether the PR was opened in direct response to a user request **or** as the final step of a multi-step todo list or workflow — the review-loop owner must request Copilot review on that PR and begin the bounded polling window. This is automatic and unconditional — the review-loop owner must not pause, ask for confirmation, or wait for PO input before entering the loop. PR creation and review-loop entry are a single atomic sequence. The trigger is the act of opening a PR, not the scope of the originating user request.
 2. After pushing a commit that addresses PR feedback, the review-loop owner must request a fresh Copilot review on that PR before considering the review cycle complete.
 3. Once an active PR review loop has started, the review-loop owner must continue it automatically after each push and review request; it must not pause for another Product Owner prompt unless a blocker, protocol conflict, missing capability, or explicit owner-decision point is reached.
 4. The **only exit condition** from the review loop is when the latest Copilot review body semantically indicates **zero new comments**, including known variants such as **"generated 0 comments"**, **"0 new comments"**, or **"generated no new comments"**. Historical review records may remain on the PR; outdated or resolved threads do not count. The agent must not declare the loop complete based on thread-level analysis alone — the zero-comments result in the newest review is the sole pass criterion.

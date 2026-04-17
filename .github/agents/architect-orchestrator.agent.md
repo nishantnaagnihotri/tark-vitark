@@ -55,6 +55,7 @@ Orchestrator-specific rule:
 1. For multi-task dependent PR chains, run `Orchestrator-Managed Stacked Review Mode`: orchestrator owns review requests, polling, disposition triage, and base-to-tip progression.
 2. In `Orchestrator-Managed Stacked Review Mode`, dev handoffs are code-only by default; dev agents do not run independent review loops unless orchestrator explicitly delegates a specific review action.
 3. Record final disposition and rationale in context updates and gate artifacts.
+4. **Standing PR review-loop entry rule:** after any PR is opened — whether as a direct top-level user request or as the final step of a multi-step task, todo list, or gate workflow — immediately load the `pr-review-loop` skill and execute intake triage before declaring the overall task complete. The review loop is not optional and is not scoped only to explicit user review requests. Skipping this step after opening a PR is a workflow failure.
 
 ## Environment Policy
 
