@@ -408,7 +408,9 @@ function startRun(tasks: Task[], clarifications: Record<string, string>): Run {
                 // non-fatal
             }
         } finally {
-            await client.stop();
+            // Teardown is best-effort — a stop() rejection must not propagate to
+            // the outer .catch and clobber already-committed run.results.
+            try { await client.stop(); } catch { /* non-fatal */ }
         }
     })().catch((err) => {
         run.status = "failed";
