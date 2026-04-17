@@ -106,10 +106,11 @@ Expected input from Architect + Orchestrator:
 9. Implement code with smallest safe diff to satisfy scenario tests.
 10. Refactor safely while keeping scenario tests green.
 11. Run relevant checks and capture concise evidence.
-12. For UI-impacting issues, prepare a Runtime QA handoff package: acceptance-criterion journey mapping, route list, required setup/test data, expected states, and known-risk notes.
-13. Prepare PR that references and closes the issue and includes scenario-to-test traceability.
-14. Return build package with code/test/PR evidence and residual risks.
-15. If handoff specifies `Orchestrator-Managed Stacked Review Mode`, stop after push + handback package and wait for orchestrator-supplied fix instructions for any review feedback.
+12. For UI-impacting issues, perform in-agent visual validation: start the development server locally, navigate to the relevant route/screen, and capture a browser screenshot for each required viewport and theme (Light and Dark) using Chrome DevTools MCP. Retrieve the corresponding Figma frame screenshot via Figma MCP for the same node IDs. Produce a side-by-side parity assessment (exact match / intentional deviation / regression) for each viewport+theme pair. Attach all browser screenshots and Figma reference screenshots as inline evidence in the PR body. If a regression is found, fix before opening the PR.
+13. For UI-impacting issues, prepare a Runtime QA handoff package: acceptance-criterion journey mapping, route list, required setup/test data, expected states, and known-risk notes.
+14. Prepare PR that references and closes the issue and includes scenario-to-test traceability.
+15. Return build package with code/test/PR evidence and residual risks.
+16. If handoff specifies `Orchestrator-Managed Stacked Review Mode`, stop after push + handback package and wait for orchestrator-supplied fix instructions for any review feedback.
 
 ## Build Quality Checks
 
@@ -127,6 +128,7 @@ A build output is "Ready" only when all are true:
 10. For token compliance, color values and spacing values in code must use CSS custom properties from the token file; avoid raw hex values and hardcoded spacing pixel literals, while allowing explicit units for non-token dimensions when needed.
 11. Domain language compliance: all domain-facing identifiers (variable names, function names, class names, component names, CSS class names) use glossary-derived terms from `05-architecture.md` §2.3. Infrastructure terms (`div`, `span`, `render`, `component`) appear only in framework-required positions.
 12. For UI-impacting issues, runtime QA handoff package is included and sufficient for Gate 5.5 validation.
+13. For UI-impacting issues, browser screenshot evidence (at all required viewports and themes) paired with Figma reference screenshots is attached to the PR body; any intentional deviation is explicitly noted with justification.
 
 ## Output Format
 
@@ -146,6 +148,9 @@ Always return sections in this order:
 For Figma-parity tasks, include an additional subsection under `Verification Evidence`:
 - `Figma Traceability`: table of frame/node, extracted value, code location, and status (exact/applied/deviation-approved).
 
+For UI-impacting issues, include an additional subsection under `Verification Evidence`:
+- `Visual Validation Evidence`: browser screenshot per viewport+theme pair (minimum: mobile Light, mobile Dark, tablet Light, tablet Dark where applicable), corresponding Figma frame screenshot for the same node, and parity assessment (exact match / intentional deviation / regression) for each pair.
+
 ## Build Output Package Schema
 
 1. Issue reference and slice path.
@@ -157,3 +162,4 @@ For Figma-parity tasks, include an additional subsection under `Verification Evi
 7. Residual risk and rollback note.
 8. Open questions with owner status.
 9. Traceability snapshot to issue acceptance criteria and architecture sections.
+10. For UI-impacting issues: visual validation evidence — browser screenshots per viewport/theme pair with paired Figma reference screenshots and parity notes (exact match / intentional deviation / regression).

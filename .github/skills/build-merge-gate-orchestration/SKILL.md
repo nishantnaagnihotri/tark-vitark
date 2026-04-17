@@ -15,6 +15,66 @@ Use this skill to run Gate 5, Gate 5.5 Runtime QA, and Gate 6 consistently from 
 - Running Gate 6 merge-readiness review in local context
 - Applying build and merge checklist contracts before recommendation
 
+## Figma Frame Authority Rule (Gate 5)
+
+Figma frames documented in `04-design-qa.md` are the **authoritative design source of truth** for all visual implementation decisions at Gate 5. Text specs in markdown files are secondary; Figma frames win on all visual properties.
+
+Dev agent handoff must include:
+
+1. GitHub Issue link (primary input).
+2. Figma frame URLs with node IDs from `04-design-qa.md` — explicitly listed as the authoritative visual reference.
+3. Statement: "Implement exact values from Figma frames. When text spec and Figma frame conflict, Figma frame wins."
+
+Dev agent must:
+
+1. Read Figma frames (via MCP or URL reference) to extract exact implementation values (CSS widths, spacing, color tokens) before writing code.
+2. Never hardcode a visual value from a text spec if the corresponding Figma frame is accessible.
+3. Record each Figma-derived value in the PR description under "Design Reference" with the source node ID.
+
+## Git Worktree Isolation Protocol
+
+Each dev agent task runs in an isolated `git worktree` to prevent parallel agents from sharing working-tree state.
+
+Orchestrator must include in every dev agent handoff:
+
+```
+Git setup (required before any code changes):
+  git worktree add ../worktree-<issue-number> -b <branch-name>
+  cd ../worktree-<issue-number>
+```
+
+After PR is merged, clean up:
+
+```
+  cd /home/nishant/workspace/tark-vitark
+  git worktree remove ../worktree-<issue-number>
+```
+
+Dev agent must confirm worktree setup before creating any files or making any commits.
+
+## Parallel Build Sequencing (Multi-Issue Gates)
+
+When Gate 4 decomposes a slice into N issues, the orchestrator must evaluate independence before choosing sequential vs parallel execution.
+
+**Independence check (both conditions must hold for parallel execution):**
+
+1. **File independence:** the two issues modify **different files**, OR the same file at clearly non-overlapping sections where no diff hunk touches a shared context line. Same file with overlapping hunks → sequential only.
+2. **Test independence:** their test files do not share a describe/suite block in the same test file.
+
+**Parallel execution protocol (when independence check passes):**
+
+1. Load `mcp_agent-orchest_start_parallel_run` via tool_search before invoking.
+2. Call `mcp_agent-orchest_start_parallel_run` with all parallel dev tasks.
+3. **Immediately** write the returned `runId` to `/memories/session/active-state.md` under `## Pending Async Runs` before any other action.
+4. Poll with `mcp_agent-orchest_get_run_status` until all tasks complete.
+5. Validate each PR independently, then merge base-to-tip (stacked PR pattern via `stacked-pr-review-loop` skill).
+
+**Sequential execution (when independence check fails or issues = 1):**
+
+1. Invoke one `dev` subagent, complete full review loop, merge, then invoke next.
+
+**Default:** if independence is ambiguous, choose sequential. Parallel execution is an optimization, not a requirement.
+
 ## Build Gate Handoff Trigger
 
 When executing Gate 5, invoke `dev` with one GitHub Issue at a time. Minimum handoff input is Issue link/number.

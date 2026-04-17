@@ -184,6 +184,7 @@ On first response in any new activity:
 | `coming-soon-splash-page` | ✅ Pass | ✅ Full Pass | ✅ Pass (PO approved 2026-03-29) | ✅ Pass | ✅ Complete (T3 PR #18, T4 PR #19, T5 PR #20 all merged) | ✅ Complete (2026-03-29) |
 | `debate-screen` | ✅ Pass | ✅ Full Pass | ✅ Pass (PO approved 2026-04-06) | ✅ Pass (Revision 1.1) | ✅ Complete (T1–T9 + visual polish PR #61) | ✅ Complete (2026-04-07) |
 | `post-tark-vitark` | ✅ Re-pass (refined, 2026-04-08) | ✅ Re-pass (2026-04-08) | ✅ Pass (PO approved 2026-04-16, PR #83 merged) | ✅ Pass (2026-04-16, PR #94 merged) | ✅ Complete (T-1–T-8 + post-build PRs #106, #108, slice merge PR #109) | ✅ Complete (2026-04-17, PR #112 merged) |
+| `debate-screen-polish` | ✅ Pass (2026-04-17, Standard) | ✅ Full Pass (2026-04-17) | — | — | — | — |
 
 ## Log Archive Protocol
 
@@ -215,6 +216,20 @@ Template:
 - Open questions status:
 - Next micro-goal:
 - Blockers/owner decisions:
+
+### 2026-04-17 (debate-screen-polish Gate 2 Full Pass)
+- Gate status: `debate-screen-polish` Gate 2 ✅ Full Pass. PRD v0 complete with 11 FRs, 12 ACs, 5 constraints, 5 success metrics.
+- Artifact changes: Created `docs/slices/debate-screen-polish/02-prd.md`.
+- Open questions status: OQ-1 (width) non-blocking — Gate 3A owns resolution, AC-1 carries placeholder. OQ-4 (fix strategy) non-blocking — Gate 4 owns resolution. OQ-3 non-blocking, no gate assignment. OQ-5 de-facto resolved by AC-6 + AC-7.
+- Next micro-goal: Gate 3 — UX+Design single-pass (Orchestrator executes via `ux-design-execution` skill).
+- Blockers/owner decisions: None. Ready for Gate 3.
+
+### 2026-04-17 (debate-screen-polish Gate 1 Pass)
+- Gate status: `debate-screen-polish` Gate 1 ✅ Pass. Complexity: Standard (full 6-gate flow).
+- Artifact changes: Created `docs/slices/debate-screen-polish/01-requirement.md`.
+- Open questions status: OQ-2 resolved (stagger preserved — Tark left, Vitark right). OQ-1 (target mobile card width) accepted as PO-approved open to be resolved at Gate 3A via Figma frames. OQ-3, OQ-4, OQ-5 non-blocking, carried forward.
+- Next micro-goal: Gate 2 — invoke PRD Agent with Requirement Context Package.
+- Blockers/owner decisions: None. OQ-1 resolution delegated to Gate 3A.
 
 ### coming-soon-splash-page — Gate 6 ✅ Complete (2026-03-29) — Full log: docs/slices/coming-soon-splash-page/context-log.md
 
