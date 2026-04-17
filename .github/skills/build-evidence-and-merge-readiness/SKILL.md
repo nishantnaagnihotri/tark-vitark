@@ -42,8 +42,8 @@ A superset block injected by the orchestrator (with additional fields such as `t
 1. Every Gate 5 PR must include an issue-closing keyword (for example, `Closes #123`).
 2. Every Gate 5 PR must include an `## Agent Provenance` block containing at minimum `run-id`, `task-id`, `role`, and `dispatched` fields; a superset block (e.g., orchestrator-injected) also satisfies this requirement.
 3. This `## Agent Provenance` block replaces the legacy `Execution-Agent: dev` marker everywhere provenance completeness is evaluated; `Execution-Agent: dev` alone is not provenance-complete.
-4. The `run-id` traces back to the `run_async_subagents` call recorded in `/memories/session/active-state.md`.
-5. Orchestrator verifies linkage and provenance against the `## Agent Provenance` block before merge recommendation.
+4. If `run-id` is an orchestrator-generated identifier, it must trace back to the `run_async_subagents` call recorded in `/memories/session/active-state.md`; if `run-id: direct-invocation`, this session-memory linkage requirement is explicitly N/A.
+5. Orchestrator verifies provenance completeness for every Gate 5 PR and verifies `/memories/session/active-state.md` linkage when the `run-id` is an orchestrator-generated identifier.
 
 ## Merge Gate Policy
 
