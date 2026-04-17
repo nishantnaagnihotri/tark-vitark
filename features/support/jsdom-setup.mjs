@@ -18,6 +18,7 @@ defineGlobalValue('document', win.document);
 defineGlobalValue('navigator', win.navigator);
 defineGlobalValue('self', win);
 defineGlobalValue('HTMLElement', win.HTMLElement);
+defineGlobalValue('HTMLParagraphElement', win.HTMLParagraphElement);
 defineGlobalValue('Node', win.Node);
 defineGlobalValue('Text', win.Text);
 defineGlobalValue('Event', win.Event);
