@@ -115,7 +115,7 @@ When('the visitor selects the Vitark side', function (this: PostTarkVitarkWorld)
 Then('Vitark remains selected', function (this: PostTarkVitarkWorld) {
   const view = activeRender(this);
 
-  const chip = view.getByRole('switch', { name: 'Post as Vitark' });
+  const chip = view.getByRole('switch', { name: 'Post as Tark' });
   assert.ok(chip);
   assert.equal(chip.getAttribute('aria-checked'), 'false');
 });
