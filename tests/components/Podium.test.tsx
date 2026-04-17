@@ -19,7 +19,10 @@ describe('Podium', () => {
             />
         );
 
-        expect(screen.getByRole('button', { name: 'Post as Tark' })).toBeInTheDocument();
+        const chipButton = screen.getByRole('switch', { name: 'Toggle post side' });
+        expect(chipButton).toBeInTheDocument();
+        expect(chipButton).toHaveAttribute('role', 'switch');
+        expect(chipButton).toHaveAttribute('aria-checked', 'true');
         expect(screen.getByRole('textbox', { name: 'Post text' })).toBeInTheDocument();
         const publishButton = screen.getByRole('button', { name: 'Publish post' });
         expect(publishButton).toBeInTheDocument();
@@ -159,7 +162,7 @@ describe('Podium', () => {
             />
         );
 
-        fireEvent.click(screen.getByRole('button', { name: 'Post as Tark' }));
+        fireEvent.click(screen.getByRole('switch', { name: 'Toggle post side' }));
 
         expect(onSideChange).toHaveBeenCalledTimes(1);
         expect(onSideChange).toHaveBeenCalledWith('vitark');

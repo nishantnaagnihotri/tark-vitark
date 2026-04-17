@@ -53,7 +53,7 @@ describe('DebateScreen', () => {
     it('composes Podium controls', () => {
         render(<DebateScreen />);
 
-        expect(screen.getByRole('button', { name: 'Post as Tark' })).toBeInTheDocument();
+        expect(screen.getByRole('switch', { name: 'Toggle post side' })).toBeInTheDocument();
         expect(screen.getByRole('textbox', { name: 'Post text' })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'Publish post' })).toBeInTheDocument();
     });
@@ -67,17 +67,19 @@ describe('DebateScreen', () => {
     it('defaults selected side to tark on mount', () => {
         render(<DebateScreen />);
 
-        expect(screen.getByRole('button', { name: 'Post as Tark' })).toBeInTheDocument();
-        expect(screen.queryByRole('button', { name: 'Post as Vitark' })).not.toBeInTheDocument();
+        const chip = screen.getByRole('switch', { name: 'Toggle post side' });
+        expect(chip).toBeInTheDocument();
+        expect(chip).toHaveAttribute('aria-checked', 'true');
     });
 
     it('passes side changes to Podium by updating selected side state', () => {
         render(<DebateScreen />);
 
-        fireEvent.click(screen.getByRole('button', { name: 'Post as Tark' }));
+        fireEvent.click(screen.getByRole('switch', { name: 'Toggle post side' }));
 
-        expect(screen.getByRole('button', { name: 'Post as Vitark' })).toBeInTheDocument();
-        expect(screen.queryByRole('button', { name: 'Post as Tark' })).not.toBeInTheDocument();
+        const chip = screen.getByRole('switch', { name: 'Toggle post side' });
+        expect(chip).toBeInTheDocument();
+        expect(chip).toHaveAttribute('aria-checked', 'false');
     });
 
     it('appends a valid published post as the last timeline item', async () => {
@@ -119,13 +121,13 @@ describe('DebateScreen', () => {
     it('resets selected side to tark after remount', () => {
         const { unmount } = render(<DebateScreen />);
 
-        fireEvent.click(screen.getByRole('button', { name: 'Post as Tark' }));
-        expect(screen.getByRole('button', { name: 'Post as Vitark' })).toBeInTheDocument();
+        fireEvent.click(screen.getByRole('switch', { name: 'Toggle post side' }));
+        expect(screen.getByRole('switch', { name: 'Toggle post side' })).toHaveAttribute('aria-checked', 'false');
 
         unmount();
         render(<DebateScreen />);
 
-        expect(screen.getByRole('button', { name: 'Post as Tark' })).toBeInTheDocument();
+        expect(screen.getByRole('switch', { name: 'Toggle post side' })).toHaveAttribute('aria-checked', 'true');
     });
 
     it('applies debate-screen CSS class to main element', () => {
