@@ -69,4 +69,11 @@ How can this be safely undone if needed?
 
 ---
 
-Execution-Agent: dev
+## Agent Provenance
+
+```
+run-id: direct-invocation
+task-id: direct-invocation
+role: dev
+dispatched: direct-invocation
+```

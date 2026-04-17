@@ -198,7 +198,7 @@ PR:
 Required evidence:
 - Build Output Package
 - issue-closing reference
-- `Execution-Agent: dev` marker
+- `## Agent Provenance` block
 - test results
 - review status
 - docs/release note status

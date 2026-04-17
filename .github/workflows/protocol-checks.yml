@@ -25,8 +25,8 @@ jobs:
         env:
           PR_BODY: ${{ github.event.pull_request.body }}
         run: |
-          if ! printf '%s' "$PR_BODY" | grep -q "Execution-Agent:"; then
-            echo "::warning::PR body missing Execution-Agent provenance marker"
+          if ! printf '%s' "$PR_BODY" | grep -q "Agent Provenance"; then
+            echo "::warning::PR body missing ## Agent Provenance block"
           fi
 
       - name: Check PR body for issue-closing keyword

@@ -26,22 +26,24 @@ Use this skill to validate implementation evidence and merge readiness for Gate 
 
 ## PR Provenance Convention
 
-Every Gate 5 PR must include an `## Agent Provenance` section in its body with this exact format:
+Every Gate 5 PR must include an `## Agent Provenance` section in its body. The block must contain at least these required fields:
 
 ```
 ## Agent Provenance
-```
-run-id: <uuid or "direct-invocation">
+
+run-id: <uuid or direct-invocation>
 task-id: <task id or issue ref>
 role: dev
-dispatched: <ISO timestamp or "direct-invocation">
-```
+dispatched: <ISO timestamp or direct-invocation>
 ```
 
+A superset block injected by the orchestrator (with additional fields such as `title`, `model`, `repo`) also satisfies this requirement; dev must copy it verbatim. This `## Agent Provenance` block replaces the legacy `Execution-Agent: dev` marker everywhere provenance completeness is evaluated; `Execution-Agent: dev` alone is not provenance-complete.
+
 1. Every Gate 5 PR must include an issue-closing keyword (for example, `Closes #123`).
-2. Every Gate 5 PR must include the full `## Agent Provenance` block above (not just `Execution-Agent: dev`).
-3. The `run-id` traces back to the `run_async_subagents` call recorded in `/memories/session/active-state.md`.
-4. Orchestrator verifies linkage and provenance before merge recommendation.
+2. Every Gate 5 PR must include an `## Agent Provenance` block containing at minimum `run-id`, `task-id`, `role`, and `dispatched` fields; a superset block (e.g., orchestrator-injected) also satisfies this requirement.
+3. This `## Agent Provenance` block replaces the legacy `Execution-Agent: dev` marker everywhere provenance completeness is evaluated; `Execution-Agent: dev` alone is not provenance-complete.
+4. The `run-id` traces back to the `run_async_subagents` call recorded in `/memories/session/active-state.md`.
+5. Orchestrator verifies linkage and provenance against the `## Agent Provenance` block before merge recommendation.
 
 ## Merge Gate Policy
 
