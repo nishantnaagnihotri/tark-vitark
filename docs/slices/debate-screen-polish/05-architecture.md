@@ -58,9 +58,9 @@ Challenge Phase complete against all four gate artifacts. Both items are CSS-onl
 - `.timeline__item--vitark { align-self: flex-end }` → Vitark right-aligned
 - Both selectors are **unchanged**. Stagger is preserved at the new width automatically.
 
-**360 px no-scroll check (AC-2):** `.timeline` padding = `var(--space-5)` = `1.25rem` = `20px`. The card at `85%` of its containing block, plus the `.timeline` padding, fits well within the 360 px viewport. No overflow introduced at any supported mobile width.
+**360 px no-scroll check (AC-2):** `.timeline` padding = `var(--space-5)` = `1.25rem` (~20px at 16px root). The card at `85%` of its containing block, plus the `.timeline` padding, fits well within the 360 px viewport. No overflow introduced at any supported mobile width.
 
-**Bubble tail clearance (AC-5):** `.argument-card--tark::before` at `left: -8px`; `.argument-card--vitark::before` at `right: -8px`. With 20 px `.timeline` padding, each tail sits ≥12 px from the viewport edge. No `overflow: hidden` on `.timeline` or ancestors. Tails are **not clipped**. `argument-card.css` change is **not required**.
+**Bubble tail clearance (AC-5):** `.argument-card--tark::before` at `left: -8px`; `.argument-card--vitark::before` at `right: -8px`. With `1.25rem` `.timeline` padding (~20px at 16px root), each tail sits ≥12 px from the viewport edge. No `overflow: hidden` on `.timeline` or ancestors. Tails are **not clipped**. `argument-card.css` change is **not required**.
 
 ### 2.4 CSS Change Plan — Item 2 (Vitark Spine-Cell Row Fix ≥481 px)
 
@@ -285,7 +285,7 @@ None. All open questions from Gates 1–3 are resolved:
 |---|---|---|
 | OQ-1: target card width % | 85% — PO approved on frame `620:145` | Gate 3A |
 | OQ-2: bubble tail anchor | Follows card edge via `right: -8px` / `left: -8px` — no change needed | Gate 2 |
-| OQ-3: legend bar / composer impact | Unaffected — full-width, independent of card width | Gate 2 |
+| OQ-6: legend bar / composer impact | Unaffected — full-width, independent of card width | Gate 2 |
 | OQ-4: spine dot fix mechanism | `grid-row: 1` CSS-only — PO accepted | Gate 3A |
 
 ---
