@@ -7,6 +7,7 @@ interface DebateScreenPolishWorld extends World {
 }
 
 function activeRender(world: DebateScreenPolishWorld): RenderResult {
+  // Shared World + Given setup lives in post-tark-vitark.steps.ts; this file reads the rendered view from that setup.
   assert.ok(world.renderResult, 'Expected the debate screen to be rendered.');
   return world.renderResult;
 }
@@ -51,7 +52,10 @@ Then('each timeline item has the timeline__item CSS class', function (this: Deba
   assert.ok(items.length > 0, 'Expected timeline items to exist.');
 
   for (const item of items) {
-    assert.equal(item.classList.contains('timeline__item'), true);
+    assert.ok(
+      item.classList.contains('timeline__item'),
+      'Expected each timeline item to include the timeline__item CSS class.'
+    );
   }
 });
 
@@ -60,7 +64,10 @@ Then('each Tark timeline item has the timeline__item--tark class', function (thi
   assert.ok(tarkItems.length > 0, 'Expected at least one Tark timeline item.');
 
   for (const item of tarkItems) {
-    assert.equal(item.classList.contains('timeline__item--tark'), true);
+    assert.ok(
+      item.classList.contains('timeline__item--tark'),
+      'Expected each Tark timeline item to have the timeline__item--tark class.'
+    );
   }
 });
 
@@ -69,7 +76,10 @@ Then('each Vitark timeline item has the timeline__item--vitark class', function 
   assert.ok(vitarkItems.length > 0, 'Expected at least one Vitark timeline item.');
 
   for (const item of vitarkItems) {
-    assert.equal(item.classList.contains('timeline__item--vitark'), true);
+    assert.ok(
+      item.classList.contains('timeline__item--vitark'),
+      'Expected each Vitark timeline item to have the timeline__item--vitark class.'
+    );
   }
 });
 
