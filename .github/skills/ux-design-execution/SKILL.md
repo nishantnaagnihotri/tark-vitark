@@ -188,7 +188,22 @@ Produce before ANY frame creation:
 
 ### Cross-Screen Reuse Scan (Mandatory Before Classifying Any Element as Screen-Local)
 
-Before finalising the Frame Blueprint, review every **structural element** in the layout with this question:
+**First: enumerate the full Figma file context (mandatory before any reuse judgment).**
+
+1. Call MCP to list all pages in the Figma file.
+2. For each page, list all top-level sections and their names.
+3. Filter sections to those ending with `[APPROVED]` — these represent all previously shipped screens.
+4. Record the page name, section name, and node ID for each `[APPROVED]` section.
+5. This inventory is the complete screen universe against which reuse is evaluated. Without it, the reuse question cannot be answered correctly.
+
+Log the result as:
+```
+[REUSE SCAN — FILE INVENTORY]
+Pages found: <list>
+APPROVED sections found: <list with page, section name, node ID>
+```
+
+Only after the inventory is recorded, review every **structural element** in the layout with this question:
 
 > *Could this element plausibly appear on any other screen in the product, now or in the future?*
 
@@ -208,6 +223,26 @@ If **any signal applies**, stop and resolve it as a DS component gap (see Step 4
 
 Elements that are genuinely screen-local (e.g., a one-off decorative illustration, a screen-specific hero layout) must be explicitly flagged as such in the blueprint output with a one-line justification.
 
+## Step 3B — Pre-Flight Gap Scan (Run Before Step 4 — Consolidates All Blockers Into One PO Question)
+
+Before creating any frame, run this scan in full. The purpose is to surface all likely blocking conditions in a single pass and ask the Product Owner one consolidated question — rather than hitting gaps sequentially mid-execution.
+
+**Required checks (all must be run before frame creation begins):**
+
+1. **Component inventory check:** For every component in the Frame Blueprint, verify whether it exists in the TV Library (`design_system_library_file_key`) and is published. Record: component name, layer (L1/L2/L3), exists: YES/NO, published: YES/NO.
+
+2. **Token namespace check:** Call `figma.variables.getLocalVariables()` in the DS library (fresh — record the timestamp). For every token referenced in the Frame Blueprint, confirm it exists by semantic name. Record: token name, exists: YES/NO.
+
+3. **Library publish state check:** Verify no pending unpublished changes exist in the DS library from prior sessions. If any exist, surface them now.
+
+4. **Baseline state check (continuation slices):** Confirm the `[IN PROGRESS]` section does not already exist on the target page (which would indicate a prior blocked session). If it does, check `.github/docs/slices/<slice-name>/context-log.md` for a `gate-status: BLOCKED_AWAITING_PO` marker before proceeding.
+
+**If any check returns a gap:** consolidate all gaps into a single PO message listing every missing component, unpublished change, token gap, and baseline ambiguity — with the specific authorization or action required for each. Do NOT begin frame execution until the PO message has been sent and all authorizations received.
+
+**If all checks pass:** record `[PRE-FLIGHT] All checks passed — proceeding to Step 4` and continue.
+
+---
+
 ## Step 4 — Component Coverage Check (Self-Blocking)
 
 Before creating any frame, verify every declared component:
@@ -219,7 +254,14 @@ No frame creation until all declared components pass their layer check. Document
 
 ### Token-Exists Check (Mandatory Before Creating Any Variable)
 
-Before creating any new Figma variable or token, call `figma.variables.getLocalVariables()` in the DS library and search for existing variables that cover the same semantic role.
+**Fresh-fetch requirement:** At the start of gate execution (or on session resume), call `figma.variables.getLocalVariables()` in the DS library and record the fetch timestamp. This list must be fetched fresh — do NOT use a variable list from a prior session or earlier in the same session without re-fetching. All token-exists checks in this gate run must reference the timestamped list.
+
+Log format:
+```
+[TOKEN LIST FETCH] DS library key: <key> | timestamp: <ISO timestamp> | variable count: <n>
+```
+
+Before creating any new Figma variable or token, search the timestamped list for existing variables that cover the same semantic role.
 
 **A new variable must NOT be created if:**
 
@@ -388,6 +430,29 @@ Any unexpected finding during frame execution (missing component, variable bindi
 
 Do NOT patch inline. Await instruction.
 
+### Blocked-State Persistence (Mandatory on Session Close While Awaiting PO)
+
+If a loop-back condition requires PO input and the session ends before a response is received:
+
+1. Write the following marker to the slice context log (`docs/slices/<slice-name>/context-log.md`) before the session closes:
+
+```
+gate-status: BLOCKED_AWAITING_PO
+gate: 3A
+blocked-at: <Step N — description>
+blocker: <exact loop-back condition description>
+frames-in-progress: <list of frame names and node IDs created so far>
+timestamp: <ISO timestamp>
+```
+
+2. On **any resume of Gate 3A**, before executing any frame step, check the context log for this marker. If found:
+   - Read the blocker description.
+   - Surface the unresolved blocker to PO and wait for authorization before continuing.
+   - Do NOT re-execute any step that was already completed before the block. Use the `frames-in-progress` list to identify what exists.
+   - Only remove the `gate-status: BLOCKED_AWAITING_PO` marker after PO has explicitly authorized continuation.
+
+Skipping this check on resume and re-executing Phase 1 will create duplicate `[IN PROGRESS]` sections. This is a protocol violation.
+
 ## Step 10 — End-of-Pass Full Verification Sweep
 
 Before declaring any frame pass complete (Phase 1 or Phase 2), run a final systematic read-back sweep across every node modified in this pass:
@@ -496,7 +561,35 @@ Before presenting any frame to Product Owner, answer every question. Any NO is a
 | 9 | Would this frame look at home alongside Threads, Reddit, or Discord in the App Store? | YES |
 | 10 | Is the visual rhythm (font scale, spacing, colour saturation, border radius) consistent with other `[APPROVED]` frames in this file? | YES |
 
-Q10 requires: take a screenshot of the nearest `[APPROVED]` section baseline frame and compare side by side. Font scales, spacing rhythm, colour saturation, and border radius patterns must feel like the same product. If anything feels out of family, fix it before presenting.
+Q10 requires both a visual check AND objective MCP read-back consistency checks:
+
+**Visual check:** take a screenshot of the nearest `[APPROVED]` section baseline frame and compare side by side. Font scales, spacing rhythm, colour saturation, and border radius patterns must feel like the same product.
+
+**MCP consistency checks (mandatory — must accompany the visual check):** select the nearest `[APPROVED]` baseline frame and read the following properties via MCP, then read the same properties from the new frame and compare value-for-value:
+
+| Property | How to read | Pass condition |
+|---|---|---|
+| Primary text token | `fills[0].boundVariables.color.id` on the primary text node | Same variable ID |
+| Card corner radii | `topLeftRadius`, `topRightRadius`, `bottomLeftRadius`, `bottomRightRadius` on a Card instance | All 4 values identical |
+| Container padding | `paddingTop`, `paddingBottom`, `paddingLeft`, `paddingRight` on the outermost content frame | All values identical |
+| Section gap | `itemSpacing` on the primary vertical auto-layout frame | Same value |
+| Surface fill token | `fills[0].boundVariables.color.id` on the screen background frame | Same variable ID |
+
+Log the result as:
+```
+[Q10 CONSISTENCY CHECK]
+Baseline frame: <node ID>
+New frame: <node ID>
+Primary text token: baseline=<id> / new=<id> | match: YES/NO
+Card radii (TL/TR/BL/BR): baseline=<values> / new=<values> | match: YES/NO
+Container padding: baseline=<values> / new=<values> | match: YES/NO
+Section gap: baseline=<value> / new=<value> | match: YES/NO
+Surface fill token: baseline=<id> / new=<id> | match: YES/NO
+Visual check: same product family: YES/NO
+Q10 result: PASS / FAIL
+```
+
+Any NO in the MCP checks is a blocker — fix the mismatched property before presenting, even if the visual check passed. The visual check alone is not sufficient.
 
 **Log format for this step:**
 
