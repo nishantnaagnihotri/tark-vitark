@@ -17,10 +17,10 @@ On-demand workflow for handling PR reviews end-to-end: intake triage, dispositio
 
 ## Procedure Overview
 
-1. **Create PR** → review-loop owner immediately requests Copilot review → enter polling loop
+1. **Create PR** → **[REVIEW REQUESTED]** → **[POLLING STARTED]** (single atomic sequence — no step between request and poll)
 2. **Review arrives** → enumerate comments → classify each (Intake Protocol)
 3. **Execute dispositions** → fix accepted items, post challenge replies, escalate PO items
-4. **Reply to all threads** → push fixes → request fresh Copilot review → poll again
+4. **Reply to all threads** → push fixes → **[REVIEW REQUESTED]** → **[POLLING STARTED]** (single atomic sequence)
 5. **Exit Copilot polling loop** when the latest Copilot review body says "generated 0 comments" (or equivalent). **Complete the overall PR review workflow** only when both conditions are met: no `semantic-open` review threads remain from the latest pass, and all challenges are resolved with Product Owner.
 
 ## Review Loop Ownership
@@ -82,12 +82,12 @@ Status: semantic-closed | semantic-open (reason)
 1. Immediately after creating a PR — whether the PR was opened in direct response to a user request **or** as the final step of a multi-step todo list or workflow — the review-loop owner must request Copilot review on that PR and begin the bounded polling window. This is automatic and unconditional — the review-loop owner must not pause, ask for confirmation, or wait for PO input before entering the loop. PR creation and review-loop entry are a single atomic sequence. The trigger is the act of opening a PR, not the scope of the originating user request.
 2. **Thread Reply Completeness Check (mandatory before every push):** Before pushing any fix commit, the review-loop owner must verify that a reply has been posted on every comment actioned in this pass. Run through the Per-Comment Disposition Execution Checklist (section 1B) for each comment and confirm Step 2 (Reply) shows ✅ for all. If any reply is missing, post it first — then push. Pushing without all replies posted is a workflow failure.
 
-3. After pushing a commit that addresses PR feedback, the review-loop owner must request a fresh Copilot review on that PR before considering the review cycle complete.
+3. After pushing a commit that addresses PR feedback, the review-loop owner must request a fresh Copilot review and immediately begin polling. Review request and polling are a single atomic sequence — see rule 8 below.
 4. Once an active PR review loop has started, the review-loop owner must continue it automatically after each push and review request; it must not pause for another Product Owner prompt unless a blocker, protocol conflict, missing capability, or explicit owner-decision point is reached.
 5. The **only exit condition** from the review loop is when the latest Copilot review body semantically indicates **zero new comments**, including known variants such as **"generated 0 comments"**, **"0 new comments"**, or **"generated no new comments"**. Historical review records may remain on the PR; outdated or resolved threads do not count. The agent must not declare the loop complete based on thread-level analysis alone — the zero-comments result in the newest review is the sole pass criterion.
 6. Each new Copilot comment must go through the PR Review Intake Protocol (section 2 above) before any additional changes are proposed or made.
 7. If the loop cannot continue because of a protocol conflict, missing capability, or explicit owner-decision point, the agent must pause, discuss the issue with the Product Owner, and proceed only with the agreed position.
-8. After requesting a fresh Copilot review, the agent must poll the live GitHub PR state for a bounded window before concluding the result is pending. Default polling window: up to 5 minutes at a practical cadence.
+8. **Review request and polling are a single atomic sequence (no gap permitted).** The tool call return value from the review request — including `(empty)` — is a trigger to begin polling immediately. It is not a completion signal, not a status, and not a reason to summarize or report. Any return value from the review request tool must be followed by polling without pause. Immediately after calling the review request tool, emit the log entry `[REVIEW REQUESTED] → [POLLING STARTED]` and begin the polling window. If this log entry is absent, the atomic sequence was broken — that is a workflow failure.
 9. Polling must use live GitHub MCP review data as the source of truth rather than relying on cached editor extension payloads.
 10. When a non-MCP polling fallback is used, prefer `node scripts/wait_for_copilot_review.js --owner <owner> --repo <repo> --pr <number>`.
 11. Review threads should normally be resolved as part of disposition execution.
