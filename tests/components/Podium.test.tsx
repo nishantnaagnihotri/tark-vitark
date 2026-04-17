@@ -19,7 +19,7 @@ describe('Podium', () => {
             />
         );
 
-        const chipButton = screen.getByRole('switch', { name: 'Toggle post side' });
+        const chipButton = screen.getByRole('switch', { name: 'Post as Tark' });
         expect(chipButton).toBeInTheDocument();
         expect(chipButton).toHaveAttribute('role', 'switch');
         expect(chipButton).toHaveAttribute('aria-checked', 'true');
@@ -162,7 +162,7 @@ describe('Podium', () => {
             />
         );
 
-        fireEvent.click(screen.getByRole('switch', { name: 'Toggle post side' }));
+        fireEvent.click(screen.getByRole('switch', { name: 'Post as Tark' }));
 
         expect(onSideChange).toHaveBeenCalledTimes(1);
         expect(onSideChange).toHaveBeenCalledWith('vitark');

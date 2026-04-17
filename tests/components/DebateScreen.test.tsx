@@ -53,7 +53,7 @@ describe('DebateScreen', () => {
     it('composes Podium controls', () => {
         render(<DebateScreen />);
 
-        expect(screen.getByRole('switch', { name: 'Toggle post side' })).toBeInTheDocument();
+        expect(screen.getByRole('switch', { name: 'Post as Tark' })).toBeInTheDocument();
         expect(screen.getByRole('textbox', { name: 'Post text' })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'Publish post' })).toBeInTheDocument();
     });
@@ -67,7 +67,7 @@ describe('DebateScreen', () => {
     it('defaults selected side to tark on mount', () => {
         render(<DebateScreen />);
 
-        const chip = screen.getByRole('switch', { name: 'Toggle post side' });
+        const chip = screen.getByRole('switch', { name: 'Post as Tark' });
         expect(chip).toBeInTheDocument();
         expect(chip).toHaveAttribute('aria-checked', 'true');
     });
@@ -75,9 +75,9 @@ describe('DebateScreen', () => {
     it('passes side changes to Podium by updating selected side state', () => {
         render(<DebateScreen />);
 
-        fireEvent.click(screen.getByRole('switch', { name: 'Toggle post side' }));
+        fireEvent.click(screen.getByRole('switch', { name: 'Post as Tark' }));
 
-        const chip = screen.getByRole('switch', { name: 'Toggle post side' });
+        const chip = screen.getByRole('switch', { name: 'Post as Tark' });
         expect(chip).toBeInTheDocument();
         expect(chip).toHaveAttribute('aria-checked', 'false');
     });
@@ -121,13 +121,13 @@ describe('DebateScreen', () => {
     it('resets selected side to tark after remount', () => {
         const { unmount } = render(<DebateScreen />);
 
-        fireEvent.click(screen.getByRole('switch', { name: 'Toggle post side' }));
-        expect(screen.getByRole('switch', { name: 'Toggle post side' })).toHaveAttribute('aria-checked', 'false');
+        fireEvent.click(screen.getByRole('switch', { name: 'Post as Tark' }));
+        expect(screen.getByRole('switch', { name: 'Post as Tark' })).toHaveAttribute('aria-checked', 'false');
 
         unmount();
         render(<DebateScreen />);
 
-        expect(screen.getByRole('switch', { name: 'Toggle post side' })).toHaveAttribute('aria-checked', 'true');
+        expect(screen.getByRole('switch', { name: 'Post as Tark' })).toHaveAttribute('aria-checked', 'true');
     });
 
     it('applies debate-screen CSS class to main element', () => {
