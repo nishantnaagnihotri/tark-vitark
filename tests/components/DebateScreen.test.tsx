@@ -77,7 +77,7 @@ describe('DebateScreen', () => {
 
         fireEvent.click(screen.getByRole('switch', { name: 'Post as Tark' }));
 
-        const chip = screen.getByRole('switch', { name: 'Post as Vitark' });
+        const chip = screen.getByRole('switch', { name: 'Post as Tark' });
         expect(chip).toBeInTheDocument();
         expect(chip).toHaveAttribute('aria-checked', 'false');
     });
@@ -122,7 +122,7 @@ describe('DebateScreen', () => {
         const { unmount } = render(<DebateScreen />);
 
         fireEvent.click(screen.getByRole('switch', { name: 'Post as Tark' }));
-        expect(screen.getByRole('switch', { name: 'Post as Vitark' })).toHaveAttribute('aria-checked', 'false');
+        expect(screen.getByRole('switch', { name: 'Post as Tark' })).toHaveAttribute('aria-checked', 'false');
 
         unmount();
         render(<DebateScreen />);
