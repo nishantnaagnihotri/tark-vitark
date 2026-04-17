@@ -232,9 +232,9 @@ Before creating any frame, run this scan in full. The purpose is to surface all 
 1. **Component inventory check:** For every component in the Frame Blueprint, verify whether it exists in the TV Library (`design_system_library_file_key`) and is published. Record: component name, layer (L1/L2/L3), exists: YES/NO, published: YES/NO.
 
 2. **Token namespace check:** Call `figma.variables.getLocalVariables()` in the DS library (fresh). This is the single `[TOKEN LIST FETCH]` for the gate run — log it now in the format below and reuse this list for all token-exists checks through to Step 4. For every token referenced in the Frame Blueprint, confirm it exists by semantic name. Record: token name, exists: YES/NO.
-```
-[TOKEN LIST FETCH] DS library key: <key> | timestamp: <ISO timestamp> | variable count: <n>
-```
+   ```
+   [TOKEN LIST FETCH] DS library key: <key> | timestamp: <ISO timestamp> | variable count: <n>
+   ```
 
 3. **Library publish state check:** Verify no pending unpublished changes exist in the DS library from prior sessions. If any exist, surface them now.
 
