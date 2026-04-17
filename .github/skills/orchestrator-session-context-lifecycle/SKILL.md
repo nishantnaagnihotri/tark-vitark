@@ -72,6 +72,8 @@ Do this before any other response content. If `/memories/session/active-state.md
 
 **On resume** — as the very first action of the Resume Protocol (before returning the resume snapshot), scan `## Pending Async Runs` in session memory. For each row with status `running`, call `get_run_status` immediately and update the row to reflect the current state (`running` / `done` / `pending-clarification` / `failed`). Surface any completed or blocked runs in the resume snapshot.
 
+**On every turn while runs are active** — if `## Pending Async Runs` contains any row with status `running` at the start of a turn, poll `get_run_status` for each such run before processing the user message. If any run has moved to `done` or `pending-clarification`, surface it immediately and continue with the next gate step autonomously (merge sequencing, clarification resolution, etc.) without waiting for a separate user prompt. This is what enables autonomous resumption: the user's next message — whatever it is — triggers the poll and the orchestrator picks up where it left off.
+
 **On completion** — when `get_run_status` returns `done` or `pending-clarification` for a run, update its row status in session memory and record the outcome (output preview or challenge text). Do not delete the row — keep it as an audit trail for the session.
 
 **Standing rule** — never leave a turn where `run_async_subagents` was called without updating session memory. This is not optional. Forgetting to write the `run-id` to session memory is a protocol violation.
