@@ -120,10 +120,10 @@ describe('Podium ARIA semantics', () => {
             />
         );
 
-        const chip = screen.getByRole('switch', { name: 'Post as Tark' });
+        const chip = screen.getByRole('switch', { name: 'Post as Vitark' });
         expect(chip).toBeInTheDocument();
         expect(chip).toHaveAttribute('role', 'switch');
         expect(chip).toHaveAttribute('aria-checked', 'false');
-        expect(chip).toHaveAccessibleName('Post as Tark');
+        expect(chip).toHaveAccessibleName('Post as Vitark');
     });
 });
