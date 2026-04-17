@@ -204,6 +204,7 @@ function persistRuns(): void {
 function loadPersistedRuns(): void {
     try {
         if (!existsSync(RUNS_FILE)) return;
+        let mutated = false;
         const raw = JSON.parse(readFileSync(RUNS_FILE, "utf-8")) as Record<string, Run>;
         for (const [id, run] of Object.entries(raw)) {
             // Mark any run that was "running" at crash time as failed
@@ -222,10 +223,12 @@ function loadPersistedRuns(): void {
                             error: "Orchestrator crashed or restarted before task completed",
                         }))
                 );
+                mutated = true;
             }
             run._tasks = run._tasks ?? [];
             runs.set(id, run);
         }
+        if (mutated) persistRuns();
     } catch {
         // corrupted file — start fresh
     }
