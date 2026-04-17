@@ -123,8 +123,8 @@ All 9 Design QA checks passed. No structural gaps. No token violations. Full the
 | OQ-1 | Target card width % | **85% = 332px** — PO approved 2026-04-17 |
 | OQ-2 | Bubble tail anchor on width change | Tail follows card edge via CSS absolute positioning |
 | OQ-3 | Does 72% width cause horizontal scroll? | Non-blocking per Gate 2 — no confirmed report of horizontal scroll at 72%; widening to 85% reduces risk further |
-| OQ-6 | Legend bar / composer impact | No impact — full-width, unaffected |
 | OQ-4 | Spine dot fix mechanism | `grid-row: 1` on `.timeline__spine-cell` — CSS-only, confirmed at Gate 4 |
+| OQ-6 | Legend bar / composer impact | No impact — full-width, unaffected |
 
 ---
 
