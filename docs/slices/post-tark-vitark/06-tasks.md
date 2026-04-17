@@ -36,7 +36,8 @@ https://github.com/nishantnaagnihotri/tark-vitark/issues/85
 | Chip replace | Replace Podium `SegmentedControl` with inline `ChipFilter` pill | [#107](https://github.com/nishantnaagnihotri/tark-vitark/issues/107) / PR #108 | ✅ merged 2026-04-16 |
 | Slice merge | Stacked PR merge of post-tark-vitark feature into master | PR #109 | ✅ merged 2026-04-17 |
 | Theme-toggle reposition | Reposition to top-right to avoid Podium (second pass) | PR #111 | ✅ merged 2026-04-17 |
-| a11y: Podium chip | `role="switch"` + static `aria-label="Post as Tark"` + `aria-checked` | [#110](https://github.com/nishantnaagnihotri/tark-vitark/issues/110) / PR #112 | ✅ merged 2026-04-17; ⚠️ follow-up: WCAG 2.5.3 Label in Name — chip shows "Vitark" visually but aria-label stays "Post as Tark" |
+| a11y: Podium chip | `role="switch"` + static `aria-label="Post as Tark"` + `aria-checked` | [#110](https://github.com/nishantnaagnihotri/tark-vitark/issues/110) / PR #112 | ✅ merged 2026-04-17 |
+| WCAG 2.5.3 bugfix | Dynamic aria-label for Podium chip to match visible label (Tark/Vitark) | [#116](https://github.com/nishantnaagnihotri/tark-vitark/issues/116) / PR #118 | ✅ merged 2026-04-17 |
 
 ---
 

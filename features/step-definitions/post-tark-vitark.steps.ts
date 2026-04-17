@@ -183,7 +183,7 @@ Given('a publish is already in progress in the composer', async function (this: 
   this.renderResult = render(
     createElement(Podium, {
       selectedSide: 'tark',
-      onSideChange: () => {},
+      onSideChange: () => { },
       onPublish: () =>
         new Promise<void>((resolve) => {
           this.publishCalls += 1;

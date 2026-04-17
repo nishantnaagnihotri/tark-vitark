@@ -26,9 +26,22 @@ Use this skill to validate implementation evidence and merge readiness for Gate 
 
 ## PR Provenance Convention
 
+Every Gate 5 PR must include an `## Agent Provenance` section in its body with this exact format:
+
+```
+## Agent Provenance
+```
+run-id: <uuid or "direct-invocation">
+task-id: <task id or issue ref>
+role: dev
+dispatched: <ISO timestamp or "direct-invocation">
+```
+```
+
 1. Every Gate 5 PR must include an issue-closing keyword (for example, `Closes #123`).
-2. Every Gate 5 PR must include `Execution-Agent: dev` in the PR body.
-3. Orchestrator verifies linkage and provenance before merge recommendation.
+2. Every Gate 5 PR must include the full `## Agent Provenance` block above (not just `Execution-Agent: dev`).
+3. The `run-id` traces back to the `run_async_subagents` call recorded in `/memories/session/active-state.md`.
+4. Orchestrator verifies linkage and provenance before merge recommendation.
 
 ## Merge Gate Policy
 
@@ -46,7 +59,7 @@ Use this skill to validate implementation evidence and merge readiness for Gate 
 5. Domain language lock: verify code uses domain terminology and concepts (e.g., `displayBrandMessage()` not `renderDOMElement()`). Variable names, function names, and class names reflect the problem domain.
 6. Verification lock: verify required test commands passed and evidence is explicit. All tests passing is mandatory.
 7. PR lock: verify PR exists and includes explicit issue-closing reference and scenario-to-test mapping evidence.
-8. Provenance lock: verify PR body includes `Execution-Agent: dev` marker.
+8. Provenance lock: verify PR body includes a full `## Agent Provenance` block with `run-id`, `task-id`, `role`, and `dispatched` fields.
 9. Risk lock: verify residual risks and rollback note are documented.
 10. Approval lock: verify unresolved open questions are resolved or explicitly accepted by Product Owner.
 11. Runtime QA scope lock: verify issue is classified as `UI-impacting` or `Runtime QA: Not Required` with explicit rationale.
@@ -56,7 +69,7 @@ Use this skill to validate implementation evidence and merge readiness for Gate 
 
 1. Scope lock: verify PR still maps cleanly to the intended Issue and approved slice boundaries.
 2. Verification lock: verify required tests passed and Build evidence remains sufficient.
-3. Provenance lock: verify PR includes issue-closing keyword and `Execution-Agent: dev` marker.
+3. Provenance lock: verify PR includes issue-closing keyword and a full `## Agent Provenance` block with `run-id` tracing back to session memory.
 4. Review lock: verify review comments are resolved or explicitly accepted by Product Owner.
 5. Copilot review loop lock: verify the latest Copilot review on the latest commit reports zero comments in its review body, including known phrasings such as **"generated 0 comments"**, **"0 new comments"**, or **"generated no new comments"**. This is the only exit condition. Historical outdated threads do not count. If the latest review still reports >0 comments, the loop must continue. `semantically-closed/tooling-unresolved` items must be reported explicitly and do not block merge unless Product Owner decides otherwise.
 6. Runtime QA lock: for `UI-impacting` issues, verify latest Runtime QA verdict is `Pass`, or explicit Product Owner risk acceptance is documented.

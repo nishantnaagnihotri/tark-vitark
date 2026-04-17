@@ -54,6 +54,28 @@ After any gate transition or major owner decision:
 4. Ask Product Owner to append the log block into `.github/orchestrator-context.md`.
 5. Use the updated context file as next-session baseline.
 
+## Async Run Tracking Protocol
+
+Any `run_async_subagents` call creates a fire-and-forget session. Without active tracking these runIds get lost in chat history.
+
+**On dispatch** — immediately after `run_async_subagents` returns a `runId`, write or update `/memories/session/active-state.md` with an `## Pending Async Runs` section:
+
+```
+## Pending Async Runs
+
+| runId | dispatched | tasks | purpose | status |
+|-------|------------|-------|---------|--------|
+| <uuid> | <ISO timestamp> | <task ids> | <one-line context> | running |
+```
+
+Do this before any other response content. If `/memories/session/active-state.md` does not exist yet, create it.
+
+**On resume** — as the very first action of the Resume Protocol (before returning the resume snapshot), scan `## Pending Async Runs` in session memory. For each row with status `running`, call `get_run_status` immediately and update the row to reflect the current state (`running` / `done` / `pending-clarification` / `failed`). Surface any completed or blocked runs in the resume snapshot.
+
+**On completion** — when `get_run_status` returns `done` or `pending-clarification` for a run, update its row status in session memory and record the outcome (output preview or challenge text). Do not delete the row — keep it as an audit trail for the session.
+
+**Standing rule** — never leave a turn where `run_async_subagents` was called without updating session memory. This is not optional. Forgetting to write the runId to session memory is a protocol violation.
+
 ## Log Archiving Protocol
 
 When a slice reaches Gate 6 ✅ Complete:
