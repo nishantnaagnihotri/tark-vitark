@@ -832,9 +832,7 @@ Detailed repo-wide governance history from 2026-03-30 through 2026-04-02 is arch
 - **Rationale:** Eliminates agent-to-agent delegation overhead for Gate 3A. Orchestrator now executes UX work with full Figma write access using the ux-design-execution skill, reducing context handoff cost and enabling tighter iteration loops with the Product Owner.
 
 ### Known Rule #81 — Branch Sync Protocol (2026-04-17)
-- PR branches must be synced with the base branch before a merge-ready declaration. GitHub's "This branch is out-of-date with the base branch" warning is the authoritative signal; declaring merge-ready on a stale branch is a workflow failure.
-- Tracked canonically in `pr-review-loop` skill (`.github/skills/pr-review-loop/SKILL.md`) Section 4 (Branch Sync Protocol). This entry is a context pointer only.
-- Key rules: (1) rebase (`git fetch origin && git rebase origin/<base>`) — never bare merge for linear history; (2) push with `--force-with-lease` only; (3) after rebase push, head SHA changes — prior reviews are superseded; request a fresh Copilot review and re-enter the polling loop before declaring merge-ready; (4) check branch sync status after every clean-pass poll and before any fix-push batch on long-lived PRs; (5) rebase conflicts are surfaced to PO — never force-resolved.
+- Canonical source: `.github/skills/pr-review-loop/SKILL.md` Section 4 (Branch Sync Protocol). Follow that section verbatim; this entry is a context pointer only and does not restate the rules locally.
 
 ### 2026-04-15 (post-tark-vitark Gate 3A — Pass 4 Composer Rebuild)
 - Gate status: `post-tark-vitark` Gate 3A Pass 4 in progress. Composer bar rebuilt per PO direction. Gate 3B Design QA not yet started.
