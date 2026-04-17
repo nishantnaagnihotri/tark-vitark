@@ -74,7 +74,7 @@ A superset block injected by the orchestrator (with additional fields such as `t
 3. Provenance lock: verify PR includes issue-closing keyword and a full `## Agent Provenance` block with `run-id` tracing back to session memory.
 4. Review lock: verify review comments are resolved or explicitly accepted by Product Owner.
 5. Copilot review loop lock: verify the latest Copilot review on the latest commit reports zero comments in its review body, including known phrasings such as **"generated 0 comments"**, **"0 new comments"**, or **"generated no new comments"**. This is the only exit condition. Historical outdated threads do not count. If the latest review still reports >0 comments, the loop must continue. `semantically-closed/tooling-unresolved` items must be reported explicitly and do not block merge unless Product Owner decides otherwise.
-6. Runtime QA lock: for `UI-impacting` issues, verify latest Runtime QA verdict is `Pass`, or explicit Product Owner risk acceptance is documented.
+6. Runtime QA lock: for `UI-impacting` issues, verify latest Runtime QA verdict is `Pass`, or explicit Product Owner risk acceptance is documented via `vscode_askQuestions` (unilateral agent declaration is not valid — see `build-merge-gate-orchestration` Explicit PO Acceptance Enforcement rule).
 7. Documentation lock: verify docs and release notes are updated when applicable.
 8. Rollback lock: verify rollback note is documented and feasible.
 9. Risk acceptance lock: verify residual risks are visible and explicitly accepted when required.
@@ -96,4 +96,4 @@ Recommend merge only if all are true:
 3. Review issues are resolved or explicitly accepted by Product Owner.
 4. Documentation and release notes are updated.
 5. Rollback approach is documented.
-6. For UI-impacting issues, runtime QA verdict is `Pass` or Product Owner has explicitly accepted residual runtime risk.
+6. For UI-impacting issues, runtime QA verdict is `Pass` or Product Owner has explicitly accepted residual runtime risk via `vscode_askQuestions` in the current session (unilateral agent declaration is not valid).
