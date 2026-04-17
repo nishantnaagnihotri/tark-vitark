@@ -867,7 +867,7 @@ Detailed repo-wide governance history from 2026-03-30 through 2026-04-02 is arch
 - Blockers/owner decisions: None. Product Owner merged PR #94.
 
 ### 2026-04-16 (post-tark-vitark Gate 5 ✅ Complete — T-1 through T-8 All Merged)
-- Gate status: `post-tark-vitark` Gate 5 ✅ Complete. All 8 tasks and post-build fixes merged to master via stacked PR chain.
+- Gate status: `post-tark-vitark` Gate 5 ✅ Complete. All 8 tasks and post-build fixes merged on the slice branch; merged to master via PR #109 on 2026-04-17.
 - PRs merged (T-1 through T-8):
   - PR #96: feat(tokens): add `--color-on-surface-variant` + `--color-error` (closes #86)
   - PR #97: feat: extract `validatePost` pure utility (closes #87)
@@ -887,12 +887,12 @@ Detailed repo-wide governance history from 2026-03-30 through 2026-04-02 is arch
 ### 2026-04-17 (post-tark-vitark Gate 5.5 Runtime QA → Issue #110 Found → PR #111 + PR #112 → Gate 6 ✅ Complete)
 - Gate status: `post-tark-vitark` Gate 6 ✅ Complete. Slice fully delivered and merged to master.
 - Stacked slice merge: PR #109 (`feat(post-tark-vitark): merge slice into master`) merged 2026-04-17. master HEAD: `0831c74`.
-- Gate 5.5 Runtime QA findings: Issue #110 — Podium chip `aria-label` describes current state (`"Tark"` / `"Vitark"`) instead of action. Screen reader announces changing role name; WCAG 2.5.3 non-conformance.
+- Gate 5.5 Runtime QA findings: Issue #110 — Podium chip `aria-label` describes current state (`"Tark"` / `"Vitark"`) instead of action. Screen reader announces a changing control name/state interaction; WCAG 4.1.2 (Name, Role, Value) concern.
 - Gate 5.5 post-QA fix PRs:
   - PR #111: fix(theme-toggle): reposition to top-right on mobile/tablet (overlap correction). Merged 2026-04-17.
   - PR #112: fix(a11y): Podium chip `role="switch"` + static `aria-label="Post as Tark"` + `aria-checked`. Closes #110. Merged 2026-04-17T02:39:40Z.
 - Final implementation decision (OQ-1 in PR #112): static `aria-label="Post as Tark"` — matches `ThemeToggle` `"Dark mode"` pattern; state differentiation via `aria-checked`. Copilot review loop: R1→R4. R1 suggested static label; R2 flagged dynamic label; R3 challenged switch semantics; R4 (static label commit `2a03fe4`): "generated 0 comments" — exit condition met.
-- Follow-up required (WCAG 2.5.3 Label in Name): chip visible text toggles between `"Tark"` / `"Vitark"` while `aria-label` stays `"Post as Tark"` — in the Vitark state the accessible name does not contain the visible label. Resolve in a follow-up slice by making `aria-label` dynamic (e.g. `"Post as Tark"` / `"Post as Vitark"`) or making the visible chip label static. Tracked as a deferred a11y issue.
+- Follow-up required (WCAG 2.5.3 Label in Name): chip visible text toggles between `"Tark"` / `"Vitark"` while `aria-label` stays `"Post as Tark"` — in the Vitark state the accessible name does not contain the visible label. Resolve in a follow-up slice by making `aria-label` dynamic (e.g. `"Post as Tark"` / `"Post as Vitark"`) or making the visible chip label static. Tracked as Issue #116: https://github.com/nishantnaagnihotri/tark-vitark/issues/116
 - Test result: 263/263 passing on merged commit `2a03fe4`.
 - Open questions status: None.
 - Next micro-goal: context-update PR (this entry) + then start next slice intake.
