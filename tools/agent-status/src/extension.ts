@@ -299,15 +299,16 @@ export function activate(context: vscode.ExtensionContext): void {
             return;
         }
         try {
-            watcher = fs.watch(runsFile, { persistent: false }, () => refresh());
-        } catch {
+            // Watch the directory, not the file, so inode replacement from atomic
+            // rename (write-to-tmp + rename-into-place in the orchestrator) keeps
+            // triggering updates reliably on Linux/inotify and macOS/kqueue.
             watcher = fs.watch(dir, { persistent: false }, (_, filename) => {
                 if (String(filename) === path.basename(runsFile)) {
                     refresh();
-                    watcher?.close();
-                    startWatcher();
                 }
             });
+        } catch {
+            retryTimer = setTimeout(startWatcher, 5000);
         }
     }
 
