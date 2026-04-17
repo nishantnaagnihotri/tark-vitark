@@ -52,7 +52,7 @@ export function Podium({ selectedSide, onSideChange, onPublish }: PodiumProps) {
                     type="button"
                     role="switch"
                     className={`podium__chip podium__chip--${selectedSide}`}
-                    aria-label="Post as Tark"
+                    aria-label={`Post as ${sideLabel}`}
                     aria-checked={selectedSide === 'tark'}
                     onClick={() => onSideChange(nextSide)}
                 >
