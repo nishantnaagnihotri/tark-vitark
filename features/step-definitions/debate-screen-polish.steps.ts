@@ -13,24 +13,32 @@ function activeRender(world: DebateScreenPolishWorld): RenderResult {
 
 function timelineItems(world: DebateScreenPolishWorld): HTMLElement[] {
   return Array.from(
-    activeRender(world).container.querySelectorAll<HTMLElement>('.timeline__list > .timeline__item')
+    activeRender(world).container.querySelectorAll<HTMLElement>('.timeline__list > li')
   );
 }
 
 function sideItems(world: DebateScreenPolishWorld, side: 'tark' | 'vitark'): HTMLElement[] {
-  return timelineItems(world).filter((item) => item.classList.contains(`timeline__item--${side}`));
+  const cards = Array.from(
+    activeRender(world).container.querySelectorAll<HTMLElement>(`.argument-card--${side}`)
+  );
+  assert.ok(cards.length > 0, `Expected at least one ${side} argument card.`);
+
+  return cards.map((card) => {
+    const timelineItem = card.closest('.timeline__item');
+    assert.ok(timelineItem instanceof HTMLElement, `Expected ${side} argument card to be inside a timeline item.`);
+    return timelineItem;
+  });
 }
 
 function assertSpineCellAsSecondChild(items: HTMLElement[], side: 'tark' | 'vitark'): void {
   assert.ok(items.length > 0, `Expected at least one ${side} timeline item.`);
 
   for (const item of items) {
-    assert.equal(item.children.length >= 2, true, `Expected ${side} item to have at least 2 children.`);
+    assert.ok(item.children.length >= 2, `Expected ${side} item to have at least 2 children.`);
     const secondChild = item.children.item(1);
     assert.ok(secondChild, `Expected ${side} item to have a second child.`);
-    assert.equal(
+    assert.ok(
       secondChild.classList.contains('timeline__spine-cell'),
-      true,
       `Expected ${side} item second child to be .timeline__spine-cell.`
     );
   }
