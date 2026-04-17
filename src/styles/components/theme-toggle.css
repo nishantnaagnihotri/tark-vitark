@@ -22,7 +22,7 @@
 
 @media (max-width: 1023px) {
     .theme-toggle {
-        bottom: unset;
+        bottom: auto;
         top: calc(var(--space-4) + var(--space-8));
     }
 }

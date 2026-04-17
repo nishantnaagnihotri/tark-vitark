@@ -54,7 +54,7 @@
 @media (min-width: 481px) {
     .legend-bar {
         display: grid;
-        grid-template-columns: 1fr 32px 1fr;
+        grid-template-columns: 1fr var(--space-8) 1fr;
         gap: 12px;
         padding-inline: 40px;
     }
