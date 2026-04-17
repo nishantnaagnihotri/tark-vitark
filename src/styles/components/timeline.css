@@ -2,7 +2,7 @@
    Figma reference: CsPAyUdLSStdmNpmiBMESQ
    Desktop: 3-col grid (572 | 32 spine | 572) within 1200px content
    Tablet:  3-col grid (316 | 32 spine | 316) within 688px content
-   Mobile:  single-col flex, chat-bubble stagger ~72% width */
+   Mobile:  single-col flex, chat-bubble stagger ~85% width */
 
 .timeline {
     padding: 0 var(--space-5);
