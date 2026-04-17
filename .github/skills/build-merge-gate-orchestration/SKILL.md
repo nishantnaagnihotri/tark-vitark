@@ -39,7 +39,7 @@ Orchestrator must include in every dev agent handoff:
 
 ```
 Git setup (required before any code changes):
-  git worktree add ../worktree-<issue-number> -b <branch-name>
+  git worktree add ../worktree-<issue-number> -b <branch-name> slice/<slice-name>
   cd ../worktree-<issue-number>
 ```
 
