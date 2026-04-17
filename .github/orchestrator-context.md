@@ -183,7 +183,7 @@ On first response in any new activity:
 |---|---|---|---|---|---|---|
 | `coming-soon-splash-page` | ✅ Pass | ✅ Full Pass | ✅ Pass (PO approved 2026-03-29) | ✅ Pass | ✅ Complete (T3 PR #18, T4 PR #19, T5 PR #20 all merged) | ✅ Complete (2026-03-29) |
 | `debate-screen` | ✅ Pass | ✅ Full Pass | ✅ Pass (PO approved 2026-04-06) | ✅ Pass (Revision 1.1) | ✅ Complete (T1–T9 + visual polish PR #61) | ✅ Complete (2026-04-07) |
-| `post-tark-vitark` | ✅ Re-pass (refined, 2026-04-08) | ✅ Re-pass (2026-04-08) | ✅ Pass (PO approved 2026-04-16, PR #83 merged) | ✅ Pass (2026-04-16, PR #94 merged) | ✅ Complete (T-1–T-8 + post-build PRs #106, #108, #111, slice merge PR #109) | ✅ Complete (2026-04-17, PR #112 merged) |
+| `post-tark-vitark` | ✅ Re-pass (refined, 2026-04-08) | ✅ Re-pass (2026-04-08) | ✅ Pass (PO approved 2026-04-16, PR #83 merged) | ✅ Pass (2026-04-16, PR #94 merged) | ✅ Complete (T-1–T-8 + post-build PRs #106, #108, slice merge PR #109) | ✅ Complete (2026-04-17, PR #112 merged) |
 
 ## Log Archive Protocol
 
@@ -880,18 +880,19 @@ Detailed repo-wide governance history from 2026-03-30 through 2026-04-02 is arch
 - Post-build fix PRs:
   - PR #106: fix(theme-toggle): reposition to top on mobile/tablet to avoid Podium overlap
   - PR #108: fix: replace Podium `SegmentedControl` with inline `ChipFilter` pill (closes #107)
-- Stacked slice merge: PR #109 (`feat(post-tark-vitark): merge slice into master`) merged 2026-04-17. master HEAD: `0831c74`.
 - Open questions status: None.
 - Next micro-goal: Gate 5.5 Runtime QA → Gate 6.
 - Blockers/owner decisions: None (stacked merge authorized by PO via PR merge actions).
 
 ### 2026-04-17 (post-tark-vitark Gate 5.5 Runtime QA → Issue #110 Found → PR #111 + PR #112 → Gate 6 ✅ Complete)
 - Gate status: `post-tark-vitark` Gate 6 ✅ Complete. Slice fully delivered and merged to master.
+- Stacked slice merge: PR #109 (`feat(post-tark-vitark): merge slice into master`) merged 2026-04-17. master HEAD: `0831c74`.
 - Gate 5.5 Runtime QA findings: Issue #110 — Podium chip `aria-label` describes current state (`"Tark"` / `"Vitark"`) instead of action. Screen reader announces changing role name; WCAG 2.5.3 non-conformance.
 - Gate 5.5 post-QA fix PRs:
   - PR #111: fix(theme-toggle): reposition to top-right on mobile/tablet (overlap correction). Merged 2026-04-17.
   - PR #112: fix(a11y): Podium chip `role="switch"` + static `aria-label="Post as Tark"` + `aria-checked`. Closes #110. Merged 2026-04-17T02:39:40Z.
 - Final implementation decision (OQ-1 in PR #112): static `aria-label="Post as Tark"` — matches `ThemeToggle` `"Dark mode"` pattern; state differentiation via `aria-checked`. Copilot review loop: R1→R4. R1 suggested static label; R2 flagged dynamic label; R3 challenged switch semantics; R4 (static label commit `2a03fe4`): "generated 0 comments" — exit condition met.
+- Follow-up required (WCAG 2.5.3 Label in Name): chip visible text toggles between `"Tark"` / `"Vitark"` while `aria-label` stays `"Post as Tark"` — in the Vitark state the accessible name does not contain the visible label. Resolve in a follow-up slice by making `aria-label` dynamic (e.g. `"Post as Tark"` / `"Post as Vitark"`) or making the visible chip label static. Tracked as a deferred a11y issue.
 - Test result: 263/263 passing on merged commit `2a03fe4`.
 - Open questions status: None.
 - Next micro-goal: context-update PR (this entry) + then start next slice intake.
