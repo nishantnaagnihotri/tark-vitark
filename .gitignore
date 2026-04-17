@@ -13,7 +13,11 @@ node_modules/
 dist/
 
 # Runtime agent logs (generated at runtime, not source)
-logs/parallel-agents/
+logs/
+
+# VS Code extension — build/package outputs (also covered by tools/agent-status/.gitignore)
+tools/agent-status/out/
+tools/agent-status/*.vsix
 
 # Python cache artifacts
 __pycache__/
