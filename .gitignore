@@ -20,7 +20,8 @@ __pycache__/
 *.pyc
 
 # Editor / IDE
-.vscode/
+.vscode/*
+!.vscode/mcp.json
 
 # OS artifacts
 .DS_Store

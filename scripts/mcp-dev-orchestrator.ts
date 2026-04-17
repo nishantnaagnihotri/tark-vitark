@@ -299,14 +299,20 @@ async function runAgentTask(
         : `${task.prompt}${provenance}`;
 
     const mcpServers = resolveAgentMcpServers(task.role);
-    const session = await client.createSession({
-        model: MODEL,
-        onPermissionRequest: approveAll,
-        systemMessage: { content: systemMessageForRole(task.role, task.systemMessage) },
-        ...(Object.keys(mcpServers).length > 0 ? { mcpServers } : {}),
-    });
+    // Declare outside try so finally can reference it for disconnect; starts
+    // undefined so a session-creation failure also gets a task-scoped result.
+    let session: Awaited<ReturnType<typeof client.createSession>> | undefined;
 
     try {
+        // createSession is inside try so a failure returns a task-scoped
+        // "failed" result rather than throwing into Promise.all.
+        session = await client.createSession({
+            model: MODEL,
+            onPermissionRequest: approveAll,
+            systemMessage: { content: systemMessageForRole(task.role, task.systemMessage) },
+            ...(Object.keys(mcpServers).length > 0 ? { mcpServers } : {}),
+        });
+
         const result = await session.sendAndWait(
             { prompt: finalPrompt },
             AGENT_TIMEOUT_MS
@@ -340,12 +346,14 @@ async function runAgentTask(
         return {
             taskId: task.id,
             role: task.role,
-            sessionId: session.sessionId,
+            sessionId: session?.sessionId ?? "unknown",
             status: "failed",
             error: err instanceof Error ? err.message : String(err),
         };
     } finally {
-        await session.disconnect();
+        // Best-effort teardown — a disconnect() rejection must not mask the
+        // already-returned task result (or throw into Promise.all).
+        try { await session?.disconnect(); } catch { /* non-fatal */ }
     }
 }
 

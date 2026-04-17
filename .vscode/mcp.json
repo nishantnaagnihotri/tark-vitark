@@ -1,0 +1,47 @@
+{
+    "servers": {
+        "agent-orchestrator": {
+            "type": "stdio",
+            "command": "npx",
+            "args": [
+                "--yes",
+                "--package",
+                "@github/copilot-sdk@^0.2.2",
+                "--package",
+                "@modelcontextprotocol/sdk@^1.10.2",
+                "--package",
+                "tsx",
+                "tsx",
+                "${workspaceFolder}/scripts/mcp-dev-orchestrator.ts"
+            ]
+        },
+        "com.figma.mcp/mcp": {
+            "type": "http",
+            "url": "https://mcp.figma.com/mcp",
+            "_toolPrefixes": [
+                "com.figma.mcp"
+            ]
+        },
+        "io.github.github/github-mcp-server": {
+            "type": "http",
+            "url": "https://api.githubcopilot.com/mcp/",
+            "_toolPrefixes": [
+                "github",
+                "io.github.github"
+            ]
+        },
+        "io.github.ChromeDevTools/chrome-devtools-mcp": {
+            "type": "stdio",
+            "command": "npx",
+            "args": [
+                "--registry",
+                "https://registry.npmjs.org",
+                "chrome-devtools-mcp@0.21.0"
+            ],
+            "_toolPrefixes": [
+                "io.github.chromedevtools",
+                "io.github.ChromeDevTools"
+            ]
+        }
+    }
+}
