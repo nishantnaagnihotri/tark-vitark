@@ -45,13 +45,14 @@ jobs:
         run: |
           ISSUE_NUMBER=$(gh issue list \
             --repo "$REPO" \
-            --label "slice-tracker,slice:${SLICE_NAME}" \
+            --label "slice" \
             --state open \
-            --json number \
-            --jq '.[0].number // empty')
+            --json number,title \
+            --jq ".[] | select(.title == (\"[Slice] \" + \"${SLICE_NAME}\")) | .number" \
+            | head -n 1)
 
           if [ -z "$ISSUE_NUMBER" ]; then
-            echo "No open slice-tracker issue found for slice '${SLICE_NAME}'. Skipping."
+            echo "No open slice tracker issue found for slice '${SLICE_NAME}'. Skipping."
             echo "found=false" >> "$GITHUB_OUTPUT"
           else
             echo "found=true" >> "$GITHUB_OUTPUT"
