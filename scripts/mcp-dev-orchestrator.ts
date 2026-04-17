@@ -515,6 +515,9 @@ server.tool(
             // Always prefer disk when memory was crash-marked "failed" at startup
             // and disk now has a real terminal state.
             if (mem.status === "failed" && isTerminalStatus(disk.status)) return true;
+            // Prefer disk when disk is terminal and memory is not — disk caught a
+            // completion that the in-memory run hasn't observed yet.
+            if (isTerminalStatus(disk.status) && !isTerminalStatus(mem.status)) return true;
             // Prefer disk when disk has a finishedAt that memory lacks or is older.
             // finishedAt is produced by nowIST() which returns a locale-formatted string
             // ("17 Apr 2026, 22:00:00 IST") — not ISO 8601. Date.parse may return NaN,
