@@ -56,15 +56,15 @@ After any gate transition or major owner decision:
 
 ## Async Run Tracking Protocol
 
-Any `run_async_subagents` call creates a fire-and-forget session. Without active tracking these runIds get lost in chat history.
+Any `run_async_subagents` call creates a fire-and-forget session. Without active tracking these `run-id` values get lost in chat history.
 
-**On dispatch** — immediately after `run_async_subagents` returns a `runId`, write or update `/memories/session/active-state.md` with an `## Pending Async Runs` section:
+**On dispatch** — immediately after `run_async_subagents` returns a `runId`, write or update `/memories/session/active-state.md` with an `## Pending Async Runs` section, recording the value as `run-id`:
 
 ```
 ## Pending Async Runs
 
-| runId | dispatched | tasks | purpose | status |
-|-------|------------|-------|---------|--------|
+| run-id | dispatched | tasks | purpose | status |
+|--------|------------|-------|---------|--------|
 | <uuid> | <ISO timestamp> | <task ids> | <one-line context> | running |
 ```
 
@@ -74,7 +74,7 @@ Do this before any other response content. If `/memories/session/active-state.md
 
 **On completion** — when `get_run_status` returns `done` or `pending-clarification` for a run, update its row status in session memory and record the outcome (output preview or challenge text). Do not delete the row — keep it as an audit trail for the session.
 
-**Standing rule** — never leave a turn where `run_async_subagents` was called without updating session memory. This is not optional. Forgetting to write the runId to session memory is a protocol violation.
+**Standing rule** — never leave a turn where `run_async_subagents` was called without updating session memory. This is not optional. Forgetting to write the `run-id` to session memory is a protocol violation.
 
 ## Log Archiving Protocol
 
