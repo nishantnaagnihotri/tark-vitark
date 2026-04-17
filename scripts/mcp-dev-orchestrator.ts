@@ -27,7 +27,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { CopilotClient, approveAll, type MCPServerConfig } from "@github/copilot-sdk";
-import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { basename, join, resolve } from "node:path";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
@@ -188,7 +188,13 @@ function persistRuns(): void {
         }
         const tmp = RUNS_FILE + ".tmp";
         writeFileSync(tmp, JSON.stringify(snapshot, null, 2), "utf-8");
-        renameSync(tmp, RUNS_FILE);
+        try {
+            renameSync(tmp, RUNS_FILE);
+        } catch {
+            // Windows: fs.rename cannot overwrite an existing file (EPERM); unlink first
+            try { unlinkSync(RUNS_FILE); } catch { /* file may not exist on first write */ }
+            renameSync(tmp, RUNS_FILE);
+        }
     } catch {
         // non-fatal — in-memory state is authoritative
     }
