@@ -22,7 +22,7 @@ On first response in any new activity:
 2. Read `.github/orchestrator-context.md`.
 3. Identify current gate from context.
 4. Read only gate-relevant agent files under `.github/agents/`.
-5. Write `/memories/session/active-state.md` with current slice, gate, blockers, and next micro-goal.
+5. Write or update `/memories/session/active-state.md` with current slice, gate, blockers, and next micro-goal. When updating an existing file, preserve and merge the `## Pending Async Runs` section and all prior rows — do not replace the whole file.
 6. Return a short resume snapshot:
    - current gate
    - known artifacts present or missing
