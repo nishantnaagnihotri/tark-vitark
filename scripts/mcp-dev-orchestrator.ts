@@ -185,7 +185,12 @@ function persistRuns(): void {
         const snapshot: Record<string, Omit<Run, "_tasks"> & { _tasks?: unknown }> = {};
         for (const [id, run] of runs) {
             const { _tasks, ...rest } = run;
-            snapshot[id] = rest;
+            // Strip full output from disk — already saved to per-task .log files.
+            // Keeps runs.json small so the VS Code watcher stays fast as history grows.
+            snapshot[id] = {
+                ...rest,
+                results: rest.results.map(({ output, ...r }) => r),
+            };
         }
         const tmp = RUNS_FILE + ".tmp";
         writeFileSync(tmp, JSON.stringify(snapshot, null, 2), "utf-8");
@@ -309,9 +314,15 @@ async function runAgentTask(
 
         const output = result?.data?.content ?? "(no output)";
 
-        mkdirSync(LOG_DIR, { recursive: true });
-        const safeId = task.id.replace(/[^a-zA-Z0-9_-]/g, "_");
-        writeFileSync(join(LOG_DIR, `${runId}-${safeId}.log`), output, "utf-8");
+        // Log write is best-effort — a disk/permission error must not flip a
+        // successful agent session to "failed".
+        try {
+            mkdirSync(LOG_DIR, { recursive: true });
+            const safeId = task.id.replace(/[^a-zA-Z0-9_-]/g, "_");
+            writeFileSync(join(LOG_DIR, `${runId}-${safeId}.log`), output, "utf-8");
+        } catch {
+            // non-fatal — session result is still returned correctly
+        }
 
         if (detectNeedsClarification(output)) {
             return {
@@ -376,12 +387,18 @@ function startRun(tasks: Task[], clarifications: Record<string, string>): Run {
                 : hasFailed ? "failed" : "done";
             persistRuns();
 
-            mkdirSync(LOG_DIR, { recursive: true });
-            writeFileSync(
-                join(LOG_DIR, "run-summary.json"),
-                JSON.stringify({ ...run, _tasks: undefined }, null, 2),
-                "utf-8"
-            );
+            // Summary write is best-effort — a filesystem error here must not
+            // overwrite the already-committed run.results via the outer .catch.
+            try {
+                mkdirSync(LOG_DIR, { recursive: true });
+                writeFileSync(
+                    join(LOG_DIR, "run-summary.json"),
+                    JSON.stringify({ ...run, _tasks: undefined }, null, 2),
+                    "utf-8"
+                );
+            } catch {
+                // non-fatal
+            }
         } finally {
             await client.stop();
         }
