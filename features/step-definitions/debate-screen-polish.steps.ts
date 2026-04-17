@@ -88,7 +88,7 @@ Then('each Vitark timeline item has exactly 2 direct children', function (this: 
   assert.ok(vitarkItems.length > 0, 'Expected at least one Vitark timeline item.');
 
   for (const item of vitarkItems) {
-    assert.equal(item.children.length, 2);
+    assert.equal(item.children.length, 2, `Expected Vitark timeline item to have exactly 2 direct children, but found ${item.children.length}.`);
   }
 });
 
@@ -104,5 +104,9 @@ Then('the number of spine dots equals the number of argument cards', function (t
   const view = activeRender(this);
   const spineDots = view.container.querySelectorAll('.timeline__dot');
   const argumentCards = view.container.querySelectorAll('.argument-card');
-  assert.equal(spineDots.length, argumentCards.length);
+  assert.equal(
+    spineDots.length,
+    argumentCards.length,
+    `Expected the number of spine dots to equal the number of argument cards, but found ${spineDots.length} spine dots and ${argumentCards.length} argument cards.`
+  );
 });
