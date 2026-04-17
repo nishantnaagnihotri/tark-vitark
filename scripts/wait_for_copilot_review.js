@@ -108,7 +108,7 @@ function parseCliArgs() {
         repo: { type: "string" },
         pr: { type: "string" },
         "head-sha": { type: "string" },
-        "timeout-seconds": { type: "string", default: "300" },
+        "timeout-seconds": { type: "string", default: "600" },
         "interval-seconds": { type: "string", default: "15" },
       },
       strict: true,
