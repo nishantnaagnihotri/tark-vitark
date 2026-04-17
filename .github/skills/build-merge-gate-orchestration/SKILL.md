@@ -42,7 +42,7 @@ Gate 5 completion rule:
 
 1. Each Issue is complete only when code, tests, and PR package are produced.
 2. PR must include explicit issue-closing reference.
-3. For UI-impacting issues, Gate 5.5 Runtime QA must pass before Gate 6 progression (or Product Owner must explicitly accept residual runtime risk).
+3. For UI-impacting issues, Gate 5.5 Runtime QA must pass before Gate 6 progression (or Product Owner must explicitly accept residual runtime risk via `vscode_askQuestions` — see Explicit PO Acceptance Enforcement rule below).
 4. Gate 6 (Merge) may begin for that Issue only after required Gate 5 and Gate 5.5 checks pass.
 
 Local-validation rule:
@@ -71,6 +71,8 @@ Proceeding rule:
 2. If runtime QA runs and verdict is `Fail`, return findings to Dev and loop implementation.
 3. If runtime QA runs and verdict is `Blocked`, apply `gate-recovery-and-resume` and pause progression.
 4. Product Owner may explicitly accept residual runtime risk to proceed from `Fail` or `Blocked`; this must be recorded in merge evidence.
+
+**Explicit PO Acceptance Enforcement (blocking):** The phrase "explicitly accept residual runtime risk" is only satisfied when the orchestrator has invoked `vscode_askQuestions` presenting the specific risk to Product Owner and received an explicit in-session confirmation. An agent unilaterally declaring "PO accepted residual runtime risk" in a gate closure summary — without a `vscode_askQuestions` call in that session — is a workflow failure and an invalid skip path. Gate 5.5 remains `semantic-open` until either a passing verdict is attached or a `vscode_askQuestions` confirmation is on record.
 
 Gate 5.5 completion rule:
 
