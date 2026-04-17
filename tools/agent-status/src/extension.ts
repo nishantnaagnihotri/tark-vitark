@@ -299,7 +299,7 @@ export function activate(context: vscode.ExtensionContext): void {
             watcher = fs.watch(runsFile, { persistent: false }, () => refresh());
         } catch {
             watcher = fs.watch(dir, { persistent: false }, (_, filename) => {
-                if (filename === "runs.json") {
+                if (String(filename) === path.basename(runsFile)) {
                     refresh();
                     watcher?.close();
                     startWatcher();
