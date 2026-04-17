@@ -831,6 +831,11 @@ Detailed repo-wide governance history from 2026-03-30 through 2026-04-02 is arch
 - **`ux.agent.md` status:** Deprecated. Content preserved as historical reference. Skill at `ux-design-execution/SKILL.md` is the canonical source.
 - **Rationale:** Eliminates agent-to-agent delegation overhead for Gate 3A. Orchestrator now executes UX work with full Figma write access using the ux-design-execution skill, reducing context handoff cost and enabling tighter iteration loops with the Product Owner.
 
+### Known Rule #81 — Branch Sync Protocol (2026-04-17)
+- PR branches must be synced with the base branch before a merge-ready declaration. GitHub's "This branch is out-of-date with the base branch" warning is the authoritative signal; declaring merge-ready on a stale branch is a workflow failure.
+- Tracked canonically in `pr-review-loop` skill (`.github/skills/pr-review-loop/SKILL.md`) Section 4 (Branch Sync Protocol). This entry is a context pointer only.
+- Key rules: (1) rebase (`git fetch origin && git rebase origin/<base>`) — never bare merge for linear history; (2) push with `--force-with-lease` only; (3) after rebase push, head SHA changes — prior reviews are superseded; request a fresh Copilot review and re-enter the polling loop before declaring merge-ready; (4) check branch sync status after every clean-pass poll and before any fix-push batch on long-lived PRs; (5) rebase conflicts are surfaced to PO — never force-resolved.
+
 ### 2026-04-15 (post-tark-vitark Gate 3A — Pass 4 Composer Rebuild)
 - Gate status: `post-tark-vitark` Gate 3A Pass 4 in progress. Composer bar rebuilt per PO direction. Gate 3B Design QA not yet started.
 - Artifact changes: `docs/slices/post-tark-vitark/03-ux.md` — Pass 4 Amendment section added (Figma file migration notes, new active frame node IDs, Composer anatomy table, token binding table, native component rationale, updated Design Review Access links).
@@ -897,3 +902,16 @@ Detailed repo-wide governance history from 2026-03-30 through 2026-04-02 is arch
 - Open questions status: None.
 - Next micro-goal: context-update PR (this entry) + then start next slice intake.
 - Blockers/owner decisions: None. Product Owner merged PR #112 to master.
+
+### 2026-04-17 (Global — Skill Hardening PR #115 Merged)
+- Gate status: No active slice. Skill/workflow hardening task complete.
+- PR: https://github.com/nishantnaagnihotri/tark-vitark/pull/115
+- Issue: https://github.com/nishantnaagnihotri/tark-vitark/issues/114
+- Artifact changes:
+  - `.github/skills/ux-design-execution/SKILL.md` — 5 gaps hardened: Step 3B pre-flight scan (detect stale `[IN PROGRESS]` marker before starting), blocked-state persistence (`gate-status: BLOCKED_AWAITING_PO` marker protocol), MCP read-back consistency table (QG-6 Q10, single canonical `[TOKEN LIST FETCH]` per gate run), cross-screen reuse enumeration (explicit page+section reference format), token fresh-fetch with timestamp logging. Copilot review fixes across passes 4–7: path typo, double-fetch resolution, 3-state baseline classification, fenced-block indentation.
+  - `.github/skills/pr-review-loop/SKILL.md` — 3 gaps + Branch Sync Protocol hardened: Gap 6 (review loop auto-entry on multi-step workflow PR), Gap 7 (mandatory thread replies before push — Section 1B checklist, rule 1.7, rule 3.2 pre-push gate), Gap 8 (review-request + polling as atomic sequence — rule 3.8 rewrite, `[REVIEW REQUESTED] → [POLLING STARTED]` log entry), Section 4 Branch Sync Protocol (6 rules covering stale-branch detection, rebase procedure, head-SHA change → fresh review, linear history preference, conflict escalation, and check frequency). Final document section order: 1 → 1B → 2 → 3 → 4.
+  - `.github/agents/architect-orchestrator.agent.md` — Standing review-loop rule #4 updated: after any PR is opened as the last step of a multi-step workflow or todo list, immediately load pr-review-loop skill and execute atomic entry sequence (request review → start polling → intake triage).
+- Copilot review loop: 8 passes total (commit a83b7fa). Pass 8 "generated no new comments" — clean exit condition met. Branch rebased onto master and synced before merge-ready declaration (Branch Sync Protocol Section 4 enforced).
+- Open questions status: None.
+- Next micro-goal: Start next slice intake or governance task.
+- Known Rules added: #81 (Branch Sync Protocol — context pointer to pr-review-loop Section 4).
