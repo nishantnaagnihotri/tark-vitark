@@ -2,7 +2,6 @@ import type { FormEvent } from 'react';
 import { useState } from 'react';
 import type { Side } from '../data/debate';
 import { validatePost } from '../lib/validatePost';
-import { SegmentedControl } from './SegmentedControl';
 import '../styles/components/podium.css';
 
 interface PodiumProps {
@@ -10,8 +9,6 @@ interface PodiumProps {
     onSideChange: (side: Side) => void;
     onPublish: (text: string, side: Side) => void;
 }
-
-const sideOptions: readonly Side[] = ['tark', 'vitark'];
 
 export function Podium({ selectedSide, onSideChange, onPublish }: PodiumProps) {
     const [text, setText] = useState('');
@@ -42,19 +39,23 @@ export function Podium({ selectedSide, onSideChange, onPublish }: PodiumProps) {
         }
     };
 
+    const sideLabel = selectedSide === 'tark' ? 'Tark' : 'Vitark';
+    const nextSide: Side = selectedSide === 'tark' ? 'vitark' : 'tark';
+
     return (
         <form className="podium" onSubmit={handleSubmit} aria-label="Post composer">
             {/* Divider/Native: inline horizontal separator, not DS Divider. */}
             <div className="podium__divider" role="separator" aria-orientation="horizontal" />
 
-            <SegmentedControl
-                options={sideOptions}
-                value={selectedSide}
-                onChange={onSideChange}
-                aria-label="Post side"
-            />
-
             <div className="podium__composer-row">
+                <button
+                    type="button"
+                    className={`podium__chip podium__chip--${selectedSide}`}
+                    aria-label={`Post as ${sideLabel}`}
+                    onClick={() => onSideChange(nextSide)}
+                >
+                    {sideLabel}
+                </button>
                 <textarea
                     className="podium__textarea"
                     value={text}

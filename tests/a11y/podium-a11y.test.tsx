@@ -95,7 +95,7 @@ describe('Podium ARIA semantics', () => {
         );
     });
 
-    it('SegmentedControl exposes radiogroup and radio roles', () => {
+    it('chip button has accessible name matching selected side', () => {
         render(
             <Podium
                 selectedSide="tark"
@@ -104,14 +104,22 @@ describe('Podium ARIA semantics', () => {
             />
         );
 
-        const segmentedControl = screen.getByRole('radiogroup', {
-            name: 'Post side',
-        });
-        expect(segmentedControl).toBeInTheDocument();
+        const chip = screen.getByRole('button', { name: 'Post as Tark' });
+        expect(chip).toBeInTheDocument();
+        expect(chip).toHaveAccessibleName('Post as Tark');
+    });
 
-        const options = screen.getAllByRole('radio');
-        expect(options).toHaveLength(2);
-        expect(options[0]).toHaveAccessibleName('Tark');
-        expect(options[1]).toHaveAccessibleName('Vitark');
+    it('chip button has accessible name matching vitark selected side', () => {
+        render(
+            <Podium
+                selectedSide="vitark"
+                onSideChange={() => {}}
+                onPublish={() => {}}
+            />
+        );
+
+        const chip = screen.getByRole('button', { name: 'Post as Vitark' });
+        expect(chip).toBeInTheDocument();
+        expect(chip).toHaveAccessibleName('Post as Vitark');
     });
 });

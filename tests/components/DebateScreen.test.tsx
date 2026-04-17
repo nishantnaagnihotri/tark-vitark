@@ -53,7 +53,7 @@ describe('DebateScreen', () => {
     it('composes Podium controls', () => {
         render(<DebateScreen />);
 
-        expect(screen.getByRole('radiogroup', { name: 'Post side' })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Post as Tark' })).toBeInTheDocument();
         expect(screen.getByRole('textbox', { name: 'Post text' })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'Publish post' })).toBeInTheDocument();
     });
@@ -67,29 +67,17 @@ describe('DebateScreen', () => {
     it('defaults selected side to tark on mount', () => {
         render(<DebateScreen />);
 
-        expect(screen.getByRole('radio', { name: 'Tark' })).toHaveAttribute(
-            'aria-checked',
-            'true'
-        );
-        expect(screen.getByRole('radio', { name: 'Vitark' })).toHaveAttribute(
-            'aria-checked',
-            'false'
-        );
+        expect(screen.getByRole('button', { name: 'Post as Tark' })).toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: 'Post as Vitark' })).not.toBeInTheDocument();
     });
 
     it('passes side changes to Podium by updating selected side state', () => {
         render(<DebateScreen />);
 
-        fireEvent.click(screen.getByRole('radio', { name: 'Vitark' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Post as Tark' }));
 
-        expect(screen.getByRole('radio', { name: 'Vitark' })).toHaveAttribute(
-            'aria-checked',
-            'true'
-        );
-        expect(screen.getByRole('radio', { name: 'Tark' })).toHaveAttribute(
-            'aria-checked',
-            'false'
-        );
+        expect(screen.getByRole('button', { name: 'Post as Vitark' })).toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: 'Post as Tark' })).not.toBeInTheDocument();
     });
 
     it('appends a valid published post as the last timeline item', async () => {
@@ -131,19 +119,13 @@ describe('DebateScreen', () => {
     it('resets selected side to tark after remount', () => {
         const { unmount } = render(<DebateScreen />);
 
-        fireEvent.click(screen.getByRole('radio', { name: 'Vitark' }));
-        expect(screen.getByRole('radio', { name: 'Vitark' })).toHaveAttribute(
-            'aria-checked',
-            'true'
-        );
+        fireEvent.click(screen.getByRole('button', { name: 'Post as Tark' }));
+        expect(screen.getByRole('button', { name: 'Post as Vitark' })).toBeInTheDocument();
 
         unmount();
         render(<DebateScreen />);
 
-        expect(screen.getByRole('radio', { name: 'Tark' })).toHaveAttribute(
-            'aria-checked',
-            'true'
-        );
+        expect(screen.getByRole('button', { name: 'Post as Tark' })).toBeInTheDocument();
     });
 
     it('applies debate-screen CSS class to main element', () => {

@@ -1,6 +1,10 @@
 # Architecture Plan — post-tark-vitark
 ## Gate 4 — 2026-04-16
 
+## Gate 4 Amendment — 2026-04-16 (H-4 Retroactive Figma Frame References)
+
+Figma frame node IDs added to UI-impacting task blocks (T-3, T-4, T-5, T-6) per protocol hardening H-4. Node IDs sourced from Section 10 `Figma Active Implementation Reference`.
+
 ---
 
 ## 1. Architecture Readiness
@@ -177,30 +181,30 @@ Per the `03-ux.md` Pass 4 Amendment notes, the following Figma DS library instan
 
 Core layout:
 ```css
+:root {
+  --podium-height: calc(109px + env(safe-area-inset-bottom, 0px));  /* shared layout token: full rendered Podium height (Figma base 109px + safe-area inset) so .debate-screen sibling always has correct bottom clearance via var(--podium-height) */
+  --podium-inline-padding: var(--space-4);
+}
+
 .podium {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 12px 16px 0;
+  display: flex;
+  flex-direction: column;
+  padding: calc(var(--space-4) - var(--radius-sharp)) var(--podium-inline-padding) 0;
   padding-bottom: env(safe-area-inset-bottom, 0px);
   background-color: var(--color-surface-default);
 }
-
-:root {
-  --podium-height: calc(187px + env(safe-area-inset-bottom, 0px));  /* shared ancestor: full rendered Podium height (Figma base 187px + safe-area inset) so .debate-screen sibling can reference it for correct clearance */
-}
 ```
 
-Desktop responsive — Podium is centred on wide viewports to match Design QA desktop frame (`285:3144`, `285:3180`):
+Desktop responsive — Podium stays full-width; horizontal guttering increases via `--podium-inline-padding` at `min-width: 1024px` (matches Design QA desktop frames `582:50`, `583:62`):
 ```css
 /* ── Desktop ── */
 @media (min-width: 1024px) {
   .podium {
-    max-width: 600px;
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
+    --podium-inline-padding: var(--space-30);
   }
 }
 ```
@@ -416,16 +420,23 @@ Tasks are ordered by dependency. Tasks with no declared dependency may be worked
 
 **Dependency:** T-1 (tokens).
 
+**Figma Reference:**
+| Frame | Node ID | URL |
+|---|---|---|
+| Default/Light/Mobile | `304:2` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=304-2 |
+| Default/Dark/Mobile | `414:78` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=414-78 |
+
 ---
 
 ### T-4 — `Podium` component (Composer bar)
 
 **Files:** `src/components/Podium.tsx`, `src/styles/components/podium.css`
 
-**Change:** New component. Contains Divider/Native (inline), `SegmentedControl`, native `<textarea>`, Publish `<button>`. `position: fixed; bottom: 0; left: 0; right: 0`. Shared layout custom property declared on `:root` as `--podium-height: calc(187px + env(safe-area-inset-bottom, 0px))` (full rendered height: Figma base 187px + safe-area inset, so `.debate-screen` sibling always has correct bottom clearance via `var(--podium-height)`). Safe-area via `env(safe-area-inset-bottom, 0px)`. Desktop breakpoint at `min-width: 1024px`: `max-width: 600px; left: 50%; right: auto; transform: translateX(-50%)` (matches Design QA desktop frames `285:3144` / `285:3180`). Calls `validatePost` on submit. Error region with `role="alert"` and `aria-live="polite"`. Textarea `aria-invalid` and `aria-describedby`.
+**Change:** New component. Contains Divider/Native (inline), a single side chip `<button>`, native `<textarea>`, and Publish `<button>`. `position: fixed; bottom: 0; left: 0; right: 0`. Shared layout custom property declared on `:root` as `--podium-height: calc(109px + env(safe-area-inset-bottom, 0px))` (full rendered height: base 109px + safe-area inset, so `.debate-screen` sibling always has correct bottom clearance via `var(--podium-height)`). Safe-area via `env(safe-area-inset-bottom, 0px)`. Desktop breakpoint at `min-width: 1024px` keeps the Podium full-width and applies horizontal guttering via `--podium-inline-padding: var(--space-30)` (matches Design QA desktop frames `582:50` / `583:62`). Calls `validatePost` on submit. Error region with `role="alert"` and `aria-live="polite"`. Textarea `aria-invalid` and `aria-describedby`. Amendment (Gate 5.5 QA fix): SegmentedControl replaced by inline chip `<button>`; `--podium-height` corrected from 187px to 109px; desktop layout changed from centred/max-width to full-width padding.
 
 **Acceptance criteria:**
-- `SegmentedControl`, `textarea`, and Publish button are all in the DOM.
+- Side chip button, `textarea`, and Publish button are all in the DOM.
+- Pressing the side chip button toggles the selected side used for publish.
 - Publish button is `disabled` when `textarea` is empty.
 - Submitting whitespace-only text renders an error message and does **not** call `onPublish`.
 - Submitting valid text (10–300 characters) calls `onPublish(trimmedText, side)`.
@@ -433,13 +444,25 @@ Tasks are ordered by dependency. Tasks with no declared dependency may be worked
 - `isBusy = true` prevents a second call to `onPublish` before the first completes.
 - Error message is associated to textarea via `aria-describedby`.
 - `podium.css` source contains `position: fixed` (assert by reading file text in test; jsdom does not apply external stylesheets, so `getComputedStyle` assertions for CSS-injected layout properties are not used).
-- Desktop `@media (min-width: 1024px)` centering (max-width 600px, `transform: translateX(-50%)`) is verified in Gate 5.5 runtime QA; no jsdom assertion for @media-scoped computed styles.
+- Desktop `@media (min-width: 1024px)` full-width padding (`--podium-inline-padding: var(--space-30)`) is verified in Gate 5.5 runtime QA; no jsdom assertion for @media-scoped computed styles.
 
 **Test file:** `tests/components/Podium.test.tsx`
 
 **AC coverage:** AC-1, AC-2, AC-6, AC-7, AC-8..AC-13.
 
-**Dependency:** T-1, T-2, T-3.
+**Dependency:** T-1, T-2.
+
+**Figma Reference:**
+| Frame | Node ID | URL |
+|---|---|---|
+| Default/Light/Mobile | `304:2` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=304-2 |
+| Default/Dark/Mobile | `414:78` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=414-78 |
+| Default/Light/Tablet | `580:26` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=580-26 |
+| Default/Dark/Tablet | `581:38` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=581-38 |
+| Default/Light/Desktop | `582:50` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=582-50 |
+| Default/Dark/Desktop | `583:62` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=583-62 |
+
+> **Note — interaction-state frames:** Typing, ValidationError, SubmitSuccess, and KeyboardOpen state frames were planned in Gate 3A UX doc but deferred to Pass 5 (pending PO Composer design approval) and were never executed in Figma. These interaction states are validated via BDD tests (`features/post-tark-vitark.feature`) and Gate 5.5 runtime QA. No Figma node IDs exist for these states.
 
 ---
 
@@ -466,7 +489,17 @@ Tasks are ordered by dependency. Tasks with no declared dependency may be worked
 
 **AC coverage:** AC-1, AC-4, AC-5, AC-14, AC-15, AC-18.
 
-**Dependency:** T-2, T-3, T-4.
+**Dependency:** T-2, T-4.
+
+**Figma Reference:**
+| Frame | Node ID | URL |
+|---|---|---|
+| Default/Light/Mobile | `304:2` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=304-2 |
+| Default/Dark/Mobile | `414:78` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=414-78 |
+| Default/Light/Tablet | `580:26` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=580-26 |
+| Default/Dark/Tablet | `581:38` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=581-38 |
+| Default/Light/Desktop | `582:50` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=582-50 |
+| Default/Dark/Desktop | `583:62` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=583-62 |
 
 ---
 
@@ -497,6 +530,8 @@ Tasks are ordered by dependency. Tasks with no declared dependency may be worked
 **AC coverage:** Amendment-1, AC-16.
 
 **Dependency:** None (independent of Podium work).
+
+**Figma Reference:** None — OQ-2 accepted; no Figma frame evidence exists for Amendment-1 (mobile 4-line clamp + Read more). Validate at Gate 5.5 runtime QA.
 
 ---
 
@@ -553,7 +588,7 @@ Parallelizable pairs: {T-1, T-2, T-6}; {T-3} after T-1; {T-4} after T-3; {T-5, T
 |---|---|---|---|
 | OQ-1 | PO constraint item 9 references "FR-6/AC-6 includes mobile 4-line clamp (Amendment 1)." FR-6/AC-6 in `02-prd.md` is the open-posting/no-auth criterion — not the clamp behavior. The AC reference appears to be a labelling error. | **Accepted** — Amendment-1 is treated as an explicit in-scope addition via PO constraint, independent of legacy AC numbering. No PRD revision required. | Proceed. |
 | OQ-2 | Amendment-1 (mobile 4-line clamp + Read more) has no Figma frame evidence. No expanded or collapsed card state was designed in Gate 3B. | **Accepted pending Gate 5.5** — implement per Section 2.5 spec. Gate 5.5 runtime QA is the validation gate. | Proceed. Builder follows architecture spec; no design revision required. |
-| OQ-3 | Desktop Podium centering was not explicitly specified in the architecture agent output. Identified during Orchestrator UX review against Design QA desktop frames (`285:3144`, `285:3180`). | **Resolved (2026-04-16)** — PO selected option 1: add desktop breakpoint to architecture. Applied to Section 2.6 Podium CSS spec and T-4 acceptance criteria. | Closed. |
+| OQ-3 | Desktop Podium centering was not explicitly specified in the architecture agent output. Identified during Orchestrator UX review against Design QA desktop frames (`582:50`, `583:62`). | **Resolved (2026-04-16)** — PO selected option 1: add desktop breakpoint to architecture. Applied to Section 2.6 Podium CSS spec and T-4 acceptance criteria. | Closed. |
 
 ---
 
@@ -561,7 +596,7 @@ Parallelizable pairs: {T-1, T-2, T-6}; {T-3} after T-1; {T-4} after T-3; {T-5, T
 
 **Can proceed to build.**
 
-All 18 acceptance criteria plus Amendment-1 and C-4 are covered by the architecture plan. Module boundaries, interface contracts, data shapes, task ordering, and test locations are fully specified. Known Rule #70 is explicitly accounted for across Divider/Native, SegmentedToggle/Native, and TextField/Native. All open questions are accepted or resolved. Architecture quality checks per `.github/references/architecture-quality-checks.md` pass. Desktop Podium responsive spec added per PO direction (OQ-3 resolved).
+All 18 acceptance criteria plus Amendment-1 and C-4 are covered by the architecture plan. Module boundaries, interface contracts, data shapes, task ordering, and test locations are fully specified. Known Rule #70 is explicitly accounted for across Divider/Native, SegmentedToggle/Native, and TextField/Native. All open questions are accepted or resolved. Architecture quality checks per `.github/references/architecture-quality-checks.md` pass. Desktop Podium responsive spec added per PO direction (OQ-3 resolved). H-4 Figma frame reference requirement satisfied: Figma Reference fields added to all UI-impacting task blocks (T-3, T-4, T-5, T-6).
 
 ---
 
@@ -582,12 +617,12 @@ All 18 acceptance criteria plus Amendment-1 and C-4 are covered by the architect
 |---|---|---|
 | Default/Light/Mobile (authoritative, Pass 4) | `304:2` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=304-2 |
 | Default/Dark/Mobile (authoritative, Pass 4) | `414:78` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=414-78 |
-| Typing/Light/Mobile | `285:2732` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=285-2732 |
-| ValidationError/Light/Mobile | `285:2846` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=285-2846 |
-| SubmitSuccess/Light/Mobile | `285:2964` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=285-2964 |
-| KeyboardOpen/Light/Mobile | `285:3078` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=285-3078 |
-| Default/Light/Desktop | `285:3144` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=285-3144 |
-| Default/Dark/Desktop | `285:3180` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=285-3180 |
+| Default/Light/Tablet | `580:26` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=580-26 |
+| Default/Dark/Tablet | `581:38` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=581-38 |
+| Default/Light/Desktop | `582:50` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=582-50 |
+| Default/Dark/Desktop | `583:62` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=583-62 |
+
+> **Note — interaction-state frames:** Typing, ValidationError, SubmitSuccess, and KeyboardOpen state frames were planned in Gate 3A UX doc (Pass 5, pending Composer design approval) but were never executed in Figma. These states are validated via BDD tests and Gate 5.5 runtime QA. No Figma node IDs exist.
 
 Section 02 container: node `399:78`, file `CsPAyUdLSStdmNpmiBMESQ`.
 
@@ -637,4 +672,4 @@ tests/
 | AD-5 | `SegmentedControl` ARIA pattern | `role="tablist"`, `role="radiogroup"`, custom `role="group"` | `role="radiogroup"` + `role="radio"` | M3 single-select semantics map precisely to radio group; correct screen reader behavior |
 | AD-6 | Horizontal Divider in Podium | DS `<Divider>` component, native `<div>` | Native `<div>` | DS `Divider` is vertical-only in current implementation (Known Rule #70) |
 | AD-7 | `SegmentedControl` scope | DS component (new), feature component | Feature component in `src/components/` (not `src/design-system/`) | PO constraint: no new DS components unless clearly necessary; this is slice-specific |
-| AD-8 | Desktop Podium responsive spec | Span full viewport width, centre with max-width + transform | Centre: `max-width: 600px; left: 50%; transform: translateX(-50%)` at `min-width: 1024px` | Matches Design QA desktop frames `285:3144`/`285:3180`; PO selected option 1 (2026-04-16) |
+| AD-8 | Desktop Podium responsive spec | Span full viewport width, centre with max-width + transform | Span full viewport width; increase horizontal guttering via `--podium-inline-padding: var(--space-30)` at `min-width: 1024px` | Matches Design QA desktop frames `582:50`/`583:62`; PO selected option 1 (2026-04-16); centring approach superseded by PR #108 full-width redesign |

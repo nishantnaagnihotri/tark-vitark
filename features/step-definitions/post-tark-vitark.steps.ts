@@ -93,7 +93,7 @@ Given('the debate screen is loaded', function (this: PostTarkVitarkWorld) {
 Then('the composer controls are visible', function (this: PostTarkVitarkWorld) {
   const view = activeRender(this);
 
-  assert.ok(view.getByRole('radiogroup', { name: 'Post side' }));
+  assert.ok(view.getByRole('button', { name: 'Post as Tark' }));
   assert.ok(composerInput(this));
   assert.ok(publishButton(this));
   assert.equal(view.queryByRole('button', { name: /sign in|log in/i }), null);
@@ -103,19 +103,19 @@ Then('the composer controls are visible', function (this: PostTarkVitarkWorld) {
 Then('Tark is selected by default', function (this: PostTarkVitarkWorld) {
   const view = activeRender(this);
 
-  assert.equal(view.getByRole('radio', { name: 'Tark' }).getAttribute('aria-checked'), 'true');
-  assert.equal(view.getByRole('radio', { name: 'Vitark' }).getAttribute('aria-checked'), 'false');
+  assert.ok(view.getByRole('button', { name: 'Post as Tark' }));
+  assert.equal(view.queryByRole('button', { name: 'Post as Vitark' }), null);
 });
 
 When('the visitor selects the Vitark side', function (this: PostTarkVitarkWorld) {
-  fireEvent.click(activeRender(this).getByRole('radio', { name: 'Vitark' }));
+  fireEvent.click(activeRender(this).getByRole('button', { name: 'Post as Tark' }));
 });
 
 Then('Vitark remains selected', function (this: PostTarkVitarkWorld) {
   const view = activeRender(this);
 
-  assert.equal(view.getByRole('radio', { name: 'Vitark' }).getAttribute('aria-checked'), 'true');
-  assert.equal(view.getByRole('radio', { name: 'Tark' }).getAttribute('aria-checked'), 'false');
+  assert.ok(view.getByRole('button', { name: 'Post as Vitark' }));
+  assert.equal(view.queryByRole('button', { name: 'Post as Tark' }), null);
 });
 
 When('the visitor enters whitespace-only post text', function (this: PostTarkVitarkWorld) {
