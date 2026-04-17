@@ -20,7 +20,7 @@ On-demand workflow for handling PR reviews end-to-end: intake triage, dispositio
 1. **Create PR** → review-loop owner immediately requests Copilot review → enter polling loop
 2. **Review arrives** → enumerate comments → classify each (Intake Protocol)
 3. **Execute dispositions** → fix accepted items, post challenge replies, escalate PO items
-4. **Push fixes** → request fresh Copilot review → poll again
+4. **Reply to all threads** → push fixes → request fresh Copilot review → poll again
 5. **Exit Copilot polling loop** when the latest Copilot review body says "generated 0 comments" (or equivalent). **Complete the overall PR review workflow** only when both conditions are met: no `semantic-open` review threads remain from the latest pass, and all challenges are resolved with Product Owner.
 
 ## Review Loop Ownership
@@ -39,8 +39,31 @@ On-demand workflow for handling PR reviews end-to-end: intake triage, dispositio
 4. If feedback conflicts with approved protocol, prior owner decisions, or slice scope, the agent must decide whether it is (a) a `Challenge` that can be safely posted while the review loop continues unchanged, or (b) a true blocker / `Needs Product Owner Decision` item that would require changing approved direction, scope, or implementation before the loop can continue. Only case (b) requires pausing and requesting explicit Product Owner approval before changing course.
 5. Internal triage may classify an item as `Challenge`. The agent posts the `Challenge` reply on the PR thread immediately — including rationale, the safer alternative, and a citation of the grounding rule/decision — and continues the review loop without pausing. Once the loop reaches a clean pass (no `semantic-open` review threads remain from the latest pass), the agent presents all open challenges to the Product Owner one by one for final disposition. If the Product Owner overrides any challenge (decides to accept/fix), the agent implements the fix, re-enters the review loop, and repeats until both conditions are met: (1) no `semantic-open` review threads remain from the latest pass, and (2) all challenges resolved with Product Owner.
 6. Final disposition and rationale must be recorded in the relevant output (PR reply, handoff, or context update).
-7. When fixing a review comment, agents must also post a review response that explains their position: what was accepted or challenged, what changed (or why no change), and the rationale/tradeoff.
+7. **Thread reply is a required blocking step — not optional.** Posting a reply on the review thread is part of the disposition, not a follow-up. A disposition is `semantic-open` until the reply is posted, regardless of whether the code fix is already pushed or committed. An agent that pushes a fix without posting the thread reply has not completed the disposition.
 8. After an `Accept` or fully-executed `Challenge` disposition is completed, the agent must resolve the review thread when no Product Owner decision or reviewer follow-up remains.
+
+## 1B. Per-Comment Disposition Execution Checklist (Mandatory — Run for Every Actioned Comment)
+
+For every review comment actioned in a pass, execute these steps **in order**. No step may be skipped. The comment is `semantic-open` until all three are confirmed.
+
+1. **Fix** — implement the code or content change (Accept path) or document the rationale (Challenge path). Push is deferred until all comments in this pass have completed steps 1 and 2.
+2. **Reply** — post a reply on the GitHub PR review thread for this comment stating:
+   - Disposition: `Accept` / `Challenge` / `Needs PO Decision`
+   - What changed (Accept): brief description of the fix, or
+   - Why no change (Challenge): rationale, safer alternative, and citation of grounding rule/decision
+   - **This reply must be posted before the fix commit is pushed.** Pushing first and replying later is not permitted — the reply may be forgotten if the session ends between push and reply.
+3. **Resolve** — mark the thread resolved (or record as `semantically-closed/tooling-unresolved` if MCP lacks the capability).
+
+Log format per comment:
+```
+[DISPOSITION] Thread: <thread ID or comment excerpt>
+Step 1 Fix: ✅ implemented | ⏭ no change (Challenge)
+Step 2 Reply: ✅ posted | 🔴 MISSING — must post before push
+Step 3 Resolve: ✅ resolved | ⚠️ tooling-unresolved
+Status: semantic-closed | semantic-open (reason)
+```
+
+---
 
 ## 2. PR Review Intake Protocol
 
@@ -57,14 +80,16 @@ On-demand workflow for handling PR reviews end-to-end: intake triage, dispositio
 ## 3. Copilot Review Loop Protocol
 
 1. Immediately after creating a PR — whether the PR was opened in direct response to a user request **or** as the final step of a multi-step todo list or workflow — the review-loop owner must request Copilot review on that PR and begin the bounded polling window. This is automatic and unconditional — the review-loop owner must not pause, ask for confirmation, or wait for PO input before entering the loop. PR creation and review-loop entry are a single atomic sequence. The trigger is the act of opening a PR, not the scope of the originating user request.
-2. After pushing a commit that addresses PR feedback, the review-loop owner must request a fresh Copilot review on that PR before considering the review cycle complete.
-3. Once an active PR review loop has started, the review-loop owner must continue it automatically after each push and review request; it must not pause for another Product Owner prompt unless a blocker, protocol conflict, missing capability, or explicit owner-decision point is reached.
-4. The **only exit condition** from the review loop is when the latest Copilot review body semantically indicates **zero new comments**, including known variants such as **"generated 0 comments"**, **"0 new comments"**, or **"generated no new comments"**. Historical review records may remain on the PR; outdated or resolved threads do not count. The agent must not declare the loop complete based on thread-level analysis alone — the zero-comments result in the newest review is the sole pass criterion.
-5. Each new Copilot comment must go through the PR Review Intake Protocol (section 2 above) before any additional changes are proposed or made.
-6. If the loop cannot continue because of a protocol conflict, missing capability, or explicit owner-decision point, the agent must pause, discuss the issue with the Product Owner, and proceed only with the agreed position.
-7. After requesting a fresh Copilot review, the agent must poll the live GitHub PR state for a bounded window before concluding the result is pending. Default polling window: up to 5 minutes at a practical cadence.
-8. Polling must use live GitHub MCP review data as the source of truth rather than relying on cached editor extension payloads.
-9. When a non-MCP polling fallback is used, prefer `node scripts/wait_for_copilot_review.js --owner <owner> --repo <repo> --pr <number>`.
-10. Review threads should normally be resolved as part of disposition execution.
-11. If no new Copilot review arrives within the bounded polling window, the agent must report that the loop is blocked on external async review completion.
-12. If a thread still remains outdated and unresolved after disposition execution, the agent must reconcile that thread state before declaring the loop complete, or explicitly record it as `semantically-closed/tooling-unresolved` when MCP lacks the required resolution capability.
+2. **Thread Reply Completeness Check (mandatory before every push):** Before pushing any fix commit, the review-loop owner must verify that a reply has been posted on every comment actioned in this pass. Run through the Per-Comment Disposition Execution Checklist (section 1B) for each comment and confirm Step 2 (Reply) shows ✅ for all. If any reply is missing, post it first — then push. Pushing without all replies posted is a workflow failure.
+
+3. After pushing a commit that addresses PR feedback, the review-loop owner must request a fresh Copilot review on that PR before considering the review cycle complete.
+4. Once an active PR review loop has started, the review-loop owner must continue it automatically after each push and review request; it must not pause for another Product Owner prompt unless a blocker, protocol conflict, missing capability, or explicit owner-decision point is reached.
+5. The **only exit condition** from the review loop is when the latest Copilot review body semantically indicates **zero new comments**, including known variants such as **"generated 0 comments"**, **"0 new comments"**, or **"generated no new comments"**. Historical review records may remain on the PR; outdated or resolved threads do not count. The agent must not declare the loop complete based on thread-level analysis alone — the zero-comments result in the newest review is the sole pass criterion.
+6. Each new Copilot comment must go through the PR Review Intake Protocol (section 2 above) before any additional changes are proposed or made.
+7. If the loop cannot continue because of a protocol conflict, missing capability, or explicit owner-decision point, the agent must pause, discuss the issue with the Product Owner, and proceed only with the agreed position.
+8. After requesting a fresh Copilot review, the agent must poll the live GitHub PR state for a bounded window before concluding the result is pending. Default polling window: up to 5 minutes at a practical cadence.
+9. Polling must use live GitHub MCP review data as the source of truth rather than relying on cached editor extension payloads.
+10. When a non-MCP polling fallback is used, prefer `node scripts/wait_for_copilot_review.js --owner <owner> --repo <repo> --pr <number>`.
+11. Review threads should normally be resolved as part of disposition execution.
+12. If no new Copilot review arrives within the bounded polling window, the agent must report that the loop is blocked on external async review completion.
+13. If a thread still remains outdated and unresolved after disposition execution, the agent must reconcile that thread state before declaring the loop complete, or explicitly record it as `semantically-closed/tooling-unresolved` when MCP lacks the required resolution capability.
