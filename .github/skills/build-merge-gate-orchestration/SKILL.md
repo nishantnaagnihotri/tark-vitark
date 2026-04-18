@@ -79,6 +79,8 @@ When Gate 4 decomposes a slice into N issues, the orchestrator must evaluate ind
 
 When executing Gate 5, invoke `dev` with one GitHub Issue at a time. Minimum handoff input is Issue link/number.
 
+**Background agent option:** Gate 5 + PR review loops are the primary candidates for background agent handoff. When the dev subagent has been dispatched and a multi-iteration Copilot review polling loop is expected, hand off to a background agent session rather than blocking the active chat. Follow the Background Agent Handoff Protocol in the `orchestrator-session-context-lifecycle` skill. Resume the foreground session to run Gate 6 (merge readiness) after background completes.
+
 **Prompt content rule:** Do NOT inline issue body content (acceptance criteria, diffs, Figma node IDs, implementation notes) into the dev agent prompt when the issue already contains that information. The dev agent reads the issue directly. Inlining is a duplication anti-pattern that creates drift risk and violates the issue-as-single-source-of-truth principle. The only additions allowed in the prompt beyond the issue link are: PR base branch override, execution mode override (if not local), and `Orchestrator-Managed Stacked Review Mode` flag when applicable.
 
 Pre-handoff confirmation rule:

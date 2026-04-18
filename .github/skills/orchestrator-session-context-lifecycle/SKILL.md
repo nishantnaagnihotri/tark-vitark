@@ -85,6 +85,51 @@ Do this before any other response content. If `/memories/session/active-state.md
 
 **Standing rule** — never leave a turn where `run_async_subagents` was called without updating session memory. This is not optional. Forgetting to write the `run-id` to session memory is a protocol violation.
 
+## Background Agent Handoff Protocol
+
+Use when a gate step involves a blocking wait that would hold the active chat session for 2+ minutes with no PO decision required:
+- PR review polling loops (waiting for Copilot review results)
+- Gate 5 build + test cycles with long run times
+- Gate 5.5 runtime QA requiring extended browser automation
+
+### When to hand off
+
+Hand off to a background agent when ALL of the following are true:
+1. The next action is a bounded wait — polling, build, or test run — with no PO decision needed mid-wait.
+2. The expected wait exceeds approximately 2 minutes.
+3. Gate state is fully serialized in session memory and context files.
+
+### How to hand off
+
+1. **Checkpoint before handoff** — write or update `/memories/session/active-state.md` with:
+   - Current gate and slice
+   - Last action completed
+   - Exact next action for the background session to execute
+   - Exit condition (e.g., "0 new Copilot review comments on PR #N at SHA X")
+   - Resume signal instruction: "write `## Background Session Result` to `/memories/session/active-state.md` when done"
+2. **Confirm these are written and current** before handing off:
+   - `.github/orchestrator-context.md` (gate state)
+   - Session memory `## Pending Async Runs` section (any in-flight subagents)
+3. **Trigger handoff** — in the VS Code Copilot Chat panel, use **"Continue in background"** (or the session type picker: Local → Background). Context is passed automatically by VS Code.
+4. **In the handoff message**, explicitly tell the background session:
+   - Which PR / gate / task to continue
+   - The exit condition
+   - Where to write its result (`## Background Session Result` in session memory)
+
+### Resuming after background completion
+
+On the next foreground session turn after a background handoff:
+1. Read `## Background Session Result` in `/memories/session/active-state.md`.
+2. If outcome is clean (no PO decisions needed) → proceed autonomously to next gate step.
+3. If outcome has PO decisions needed → surface them immediately and await input before proceeding.
+4. Move the `## Background Session Result` block into a `## Completed Background Sessions` table (or delete it) before continuing, to avoid confusion in future turns.
+
+### Prerequisite
+
+Verify `github.copilot.chat.backgroundAgent.enabled` is `true` (VS Code default) before relying on this flow. If unavailable, fall back to the blocking `wait_for_copilot_review.js` terminal script.
+
+---
+
 ## Log Archiving Protocol
 
 When a slice reaches Gate 6 ✅ Complete:
