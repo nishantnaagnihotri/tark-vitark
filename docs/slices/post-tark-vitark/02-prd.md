@@ -274,7 +274,7 @@ Artifact:
 
 | ID | Original Text (verbatim, preserved) | Amended Text (A-1) | Status |
 |---|---|---|---|
-| FR-1 | "Debate Screen shall show an always-visible, bottom-anchored Composer on load and during normal scrolling." | Debate Screen shall show a collapsed FAB (single `+` icon, bottom-right, absolute-positioned) at all times. The Podium (Composer) shall not be inline-visible by default; it shall open as a bottom sheet only when triggered via the FAB. | Superseded by A-1; see FR-19, FR-20, FR-21 |
+| FR-1 | "Debate Screen shall show an always-visible, bottom-anchored Composer on load and during normal scrolling." | Debate Screen shall show a collapsed FAB (single `+` icon, always-visible bottom-right) at all times. The Podium (Composer) shall not be inline-visible by default; it shall open as a bottom sheet only when triggered via the FAB. | Superseded by A-1; see FR-19, FR-20, FR-21 |
 | FR-2 | "Composer shall be inline (WhatsApp-style) and not full-screen." | The Podium shall open as a Material 3 bottom sheet (not inline, not full-screen). It shall slide up from below the screen with M3 sheet animation (300 ms ease-out) when triggered by the FAB. | Superseded by A-1; see FR-21, FR-22 |
 
 ---
@@ -292,7 +292,7 @@ Artifact:
 
 | ID | Requirement | Priority | Traced To |
 |---|---|---|---|
-| FR-19 | FAB/Menu shall be always-visible bottom-right on the Debate Screen in collapsed state (single `+` icon, absolute-positioned). | Must | AC-19 |
+| FR-19 | FAB/Menu shall be always-visible bottom-right on the Debate Screen in collapsed state (single `+` icon). | Must | AC-19 |
 | FR-20 | Tapping the collapsed FAB shall expand it to show three mini-buttons — T (Tark), V (Vitark), and × (close) — with M3 expansion animation (Smart Animate, 300 ms ease-out). | Must | AC-20 |
 | FR-21 | Tapping T or V in the expanded FAB shall open the Podium as a Material 3 bottom sheet (300 ms ease-out) with the corresponding side pre-selected in the SegmentedControl. | Must | AC-21 |
 | FR-22 | The Podium bottom sheet shall include a SegmentedControl (Tark \| Vitark) allowing in-sheet side switching without dismissing the sheet. | Must | AC-22 |
