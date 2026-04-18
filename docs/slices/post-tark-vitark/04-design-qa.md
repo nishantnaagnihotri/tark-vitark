@@ -10,6 +10,8 @@
 
 All 9 Design QA checks pass for the 8 Section 04 frames (FAB/Podium 4-phase, 2 themes). No structural gaps. Advisory A1 (light SC native vs DS instance — build agent to unify) is non-blocking. Ready for Product Owner approval.
 
+**Supersession note:** Amendment A-1 / Pass 2 is the canonical implementation and traceability contract for Section 04. Any subsequent **Pass 1 — Original Design QA** content in this file is retained for historical reference only and is superseded wherever it conflicts with the FAB-triggered Podium flow documented here.
+
 ### P2 Frame Index
 
 | Frame | Node ID | Figma URL |
