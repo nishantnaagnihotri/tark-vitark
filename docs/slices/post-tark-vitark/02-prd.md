@@ -259,6 +259,7 @@ Artifact:
 **Trigger:** Product Owner verbal approval during Gate 3 design session, 2026-04-18.
 **PO Approval Reference:** "PO verbal approval during Gate 3 design session, 2026-04-18."
 **Affected IDs:** FR-1, FR-2, AC-1, AC-2, Domain Glossary (Podium)
+**Override Note:** This amendment overrides any earlier summary, canonical requirement summary, and traceability text in this PRD that still describes an always-visible inline Composer. A-1 is now the current contract for Podium entry behavior.
 
 ---
 
