@@ -122,7 +122,9 @@ On the next foreground session turn after a background handoff:
 1. Read `## Background Session Result` in `/memories/session/active-state.md`.
 2. If outcome is clean (no PO decisions needed) → proceed autonomously to next gate step.
 3. If outcome has PO decisions needed → surface them immediately and await input before proceeding.
-4. Move the `## Background Session Result` block into the `## Completed Background Sessions` table in the same session memory file before continuing, to keep results auditable. Append one row per completed background session using this schema:
+4. Move the `## Background Session Result` block into the `## Completed Background Sessions` table in the same session memory file before continuing, to keep results auditable. If the `## Completed Background Sessions` section does not yet exist in the file, create it (with the header and table schema below) before appending. Preserve this section on all subsequent session-memory updates. Append one row per completed background session using this schema:
+
+   ## Completed Background Sessions
 
    | Completed at | Gate/Slice | Task | Outcome | PO decisions surfaced |
    |---|---|---|---|---|
