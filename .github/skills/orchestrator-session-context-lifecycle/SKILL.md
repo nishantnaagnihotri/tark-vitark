@@ -110,7 +110,7 @@ Hand off to a background agent when ALL of the following are true:
 2. **Confirm these are written and current** before handing off:
    - `.github/orchestrator-context.md` (gate state)
    - Session memory `## Pending Async Runs` section (any in-flight subagents)
-3. **Trigger handoff** — in the VS Code Copilot Chat panel, use **"Continue in background"** (or the session type picker: Local → Background). Context is passed automatically by VS Code.
+3. **Trigger handoff** — in the VS Code Copilot Chat panel, use the session type picker (Local → **Copilot CLI**) or the **"Continue in Copilot CLI"** button that appears during an active task. Context is passed automatically by VS Code. Note: the Copilot CLI agent runs the session in the background on your machine using an isolated git worktree.
 4. **In the handoff message**, explicitly tell the background session:
    - Which PR / gate / task to continue
    - The exit condition
