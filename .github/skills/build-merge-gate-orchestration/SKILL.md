@@ -81,6 +81,8 @@ When executing Gate 5, invoke `dev` with one GitHub Issue at a time. Minimum han
 
 **Background agent option:** Gate 5 dispatch is the primary candidate for background agent handoff. After invoking the `dev` subagent for an issue, the orchestrator's next action is a potentially long wait for dev completion — polling `get_run_status` and checking for a PR that references or closes the issue. Rather than blocking the active chat session during that wait, hand off to a background agent and resume the foreground session for Gate 6 (merge readiness) once dev completion is confirmed. Follow the Background Agent Handoff Protocol in the `orchestrator-session-context-lifecycle` skill.
 
+Resume the foreground session to continue the Gate 5 → Gate 5.5 (runtime QA and evidence checks) → Gate 6 (merge readiness) flow once dev completion is confirmed. Follow the Background Agent Handoff Protocol in the `orchestrator-session-context-lifecycle` skill.
+
 **Prompt content rule:** Do NOT inline issue body content (acceptance criteria, diffs, Figma node IDs, implementation notes) into the dev agent prompt when the issue already contains that information. The dev agent reads the issue directly. Inlining is a duplication anti-pattern that creates drift risk and violates the issue-as-single-source-of-truth principle. The only additions allowed in the prompt beyond the issue link are: PR base branch override, execution mode override (if not local), and `Orchestrator-Managed Stacked Review Mode` flag when applicable.
 
 Pre-handoff confirmation rule:

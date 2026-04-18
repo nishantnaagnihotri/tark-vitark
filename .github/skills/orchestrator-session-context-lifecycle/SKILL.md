@@ -118,17 +118,21 @@ Hand off to a background agent when ALL of the following are true:
 
 ### Resuming after background completion
 
+
 On the next foreground session turn after a background handoff:
 1. Read `## Background Session Result` in `/memories/session/active-state.md`.
 2. If outcome is clean (no PO decisions needed) → proceed autonomously to next gate step.
 3. If outcome has PO decisions needed → surface them immediately and await input before proceeding.
-4. Move the `## Background Session Result` block into the `## Completed Background Sessions` table in the same session memory file before continuing, to keep results auditable. If the `## Completed Background Sessions` section does not yet exist in the file, create it (with the header and table schema below) before appending. Preserve this section on all subsequent session-memory updates. Append one row per completed background session using this schema:
+4. Archive the background session result in two steps:
+   - (a) Add a summary row to the `## Completed Background Sessions` table (create the section and table if missing; preserve on all updates):
 
-   ## Completed Background Sessions
+     ## Completed Background Sessions
 
-   | Completed at | Gate/Slice | Task | Outcome | PO decisions surfaced |
-   |---|---|---|---|---|
-   | `<ISO timestamp>` | `<gate> / <slice>` | `<one-line task description>` | clean \| decisions-needed | yes \| no |
+     | Completed at | Gate/Slice | Task | Outcome | PO decisions surfaced |
+     |---|---|---|---|---|
+     | `<ISO timestamp>` | `<gate> / <slice>` | `<one-line task description>` | clean \| decisions-needed | yes \| no |
+
+   - (b) Archive the full `## Background Session Result` content under a dated subsection (e.g., `### Background Session Result — <ISO timestamp>`) elsewhere in the session memory file, or in a dedicated archival section, to preserve full details for auditability. Do not attempt to embed multi-line blocks inside the markdown table.
 
 ### Prerequisite
 
