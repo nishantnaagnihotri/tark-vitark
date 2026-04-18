@@ -126,7 +126,7 @@ On the next foreground session turn after a background handoff:
 
 ### Prerequisite
 
-Verify `github.copilot.chat.backgroundAgent.enabled` is `true` (VS Code default) before relying on this flow. If unavailable, fall back to the blocking `wait_for_copilot_review.js` terminal script.
+Verify `github.copilot.chat.backgroundAgent.enabled` is `true` (VS Code default) before relying on this flow. If unavailable, fall back to the non-blocking async polling procedure described in the `pr-review-loop` skill's non-MCP fallback section.
 
 ---
 
