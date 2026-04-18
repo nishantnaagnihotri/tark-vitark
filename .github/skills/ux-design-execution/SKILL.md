@@ -334,7 +334,10 @@ After every new or modified component is added to the TV DS library, a correspon
 1. **Right column only.** All new sections go inside `Component Showcase` (`52:24`) at `x=40`. Never place showcase frames at `x=0` or outside the `Component Showcase` frame.
 2. **Bottom-append.** Calculate `lastBottom = max(child.y + child.height)` over all existing children of `Component Showcase`. New section starts at `y = lastBottom + 40`.
 3. **Component instances, not raw frames.** Use `component.createInstance()` for all component references in showcase sub-frames. Never draw raw shapes as visual stand-ins.
-4. **Variable modes.** Call `f.setExplicitVariableModeForCollection(colorCollection.id, modeId)` on each Light/Dark sub-frame. Pass the collection **ID string** and the mode **ID string** (e.g., `"4:0"`), not the collection or mode objects.
+4. **Variable modes — dual-collection rule.** Frames that contain DS library component instances use **two** variable collections: (1) the local file collection and (2) the DS library's published collection. Both must receive an explicit mode override or DS library components will default to their own Light mode regardless of the local override.
+   - Discover all active collection IDs: inspect bound variable IDs on fills/strokes/text of DS component nodes → `getVariableByIdAsync(id).variableCollectionId` → `getVariableCollectionByIdAsync(collId).modes`.
+   - Call `f.setExplicitVariableModeForCollection(collectionId, modeId)` once per collection per frame. Pass the collection **ID string** and the mode **ID string** (e.g., `"4:0"`), not the collection or mode objects.
+   - Verify: inspect `frame.explicitVariableModes` — both collection IDs must be present as keys before the frame is considered correctly themed.
 5. **Extend frame height.** After appending all new sections, call `showcaseFrame.resizeWithoutConstraints(1200, newH)` where `newH = lastChild.y + lastChild.height + 60`.
 6. **Label style.** Title: Inter Semi Bold 18px, dark fill. Theme label: Inter Medium 12px; dark fill on Light sub-frame, white fill on Dark sub-frame.
 7. **Section naming.** Section frame name: `<Component Name> Section`. Inner themes frame name: `<Component Name> States` or `<Component Name> Variants`. Sub-frames: `Light` / `Dark`.

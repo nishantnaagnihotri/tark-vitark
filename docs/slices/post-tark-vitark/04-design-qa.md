@@ -38,8 +38,8 @@ All 9 Design QA checks pass for the 8 Section 04 frames (FAB/Podium 4-phase, 2 t
 ### P2 Token Consistency
 
 All fills, strokes, and text on FAB, SegmentedControl, and Podium are DS token-bound. No raw hex. Both variable collections confirmed active on dark frames:
-- Local: `VariableCollectionId:65:2` → dark `65:1`
-- DS library: `VariableCollectionId:3f8bb364.../4:40` → dark `4:1`
+- Local: collection `VariableCollectionId:65:2`; light mode `65:0`; dark mode `65:1`
+- DS library: collection `VariableCollectionId:3f8bb364...` (truncated — full ID in `/memories/repo/figma-mcp-gotchas.md`); light mode `4:0`; dark mode `4:1`
 
 ### P2 Advisory (non-blocking)
 
