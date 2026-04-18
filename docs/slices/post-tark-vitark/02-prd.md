@@ -246,3 +246,94 @@ Unresolved question blocking map:
 
 Artifact:
 [docs/slices/post-tark-vitark/02-prd.md](docs/slices/post-tark-vitark/02-prd.md)
+
+---
+
+## Amendments
+
+---
+
+### A-1 — FAB-Triggered Podium (Replaces Always-Visible Composer)
+
+**Date:** 2026-04-18
+**Trigger:** Product Owner verbal approval during Gate 3 design session, 2026-04-18.
+**PO Approval Reference:** "PO verbal approval during Gate 3 design session, 2026-04-18."
+**Affected IDs:** FR-1, FR-2, AC-1, AC-2, Domain Glossary (Podium)
+
+---
+
+#### Domain Glossary Update
+
+| Term | Original Definition | Amended Definition |
+|---|---|---|
+| Podium | "The bottom-anchored, always-visible input area used by a Debater to create and publish a new Post." | The FAB-triggered, bottom-sheet input area used by a Debater to create and publish a new Post. Opened via a FAB/Menu component; not always-visible inline on the Debate Screen. |
+
+---
+
+#### Superseded Functional Requirements
+
+| ID | Original Text (verbatim, preserved) | Amended Text (A-1) | Status |
+|---|---|---|---|
+| FR-1 | "Debate Screen shall show an always-visible, bottom-anchored Composer on load and during normal scrolling." | Debate Screen shall show a collapsed FAB (single `+` icon, bottom-right, absolute-positioned) at all times. The Podium (Composer) shall not be inline-visible by default; it shall open as a bottom sheet only when triggered via the FAB. | Superseded by A-1; see FR-19, FR-20, FR-21 |
+| FR-2 | "Composer shall be inline (WhatsApp-style) and not full-screen." | The Podium shall open as a Material 3 bottom sheet (not inline, not full-screen). It shall slide up from below the screen with M3 sheet animation (300 ms ease-out) when triggered by the FAB. | Superseded by A-1; see FR-21, FR-22 |
+
+---
+
+#### Superseded Acceptance Criteria
+
+| ID | Original Text (verbatim, preserved) | Amended Text (A-1) | Status |
+|---|---|---|---|
+| AC-1 | "The debate screen shows an always-visible, bottom-anchored composer on load and during normal scrolling." | The Debate Screen shows a collapsed FAB (single `+` icon, bottom-right) at all times. No inline Composer is visible by default. | Superseded by A-1; see AC-19 |
+| AC-2 | "The composer is inline (WhatsApp-style) and not full-screen." | The Podium opens as a Material 3 bottom sheet (not inline, not full-screen) when triggered via the FAB. | Superseded by A-1; see AC-21 |
+
+---
+
+#### Additive Functional Requirements (A-1)
+
+| ID | Requirement | Priority | Traced To |
+|---|---|---|---|
+| FR-19 | FAB/Menu shall be always-visible bottom-right on the Debate Screen in collapsed state (single `+` icon, absolute-positioned). | Must | AC-19 |
+| FR-20 | Tapping the collapsed FAB shall expand it to show three mini-buttons — T (Tark), V (Vitark), and × (close) — with M3 expansion animation (Smart Animate, 300 ms ease-out). | Must | AC-20 |
+| FR-21 | Tapping T or V in the expanded FAB shall open the Podium as a Material 3 bottom sheet (300 ms ease-out) with the corresponding side pre-selected in the SegmentedControl. | Must | AC-21 |
+| FR-22 | The Podium bottom sheet shall include a SegmentedControl (Tark \| Vitark) allowing in-sheet side switching without dismissing the sheet. | Must | AC-22 |
+| FR-23 | Tapping × in the expanded FAB shall collapse the FAB back to Phase 1 (single `+`). Dragging down on the Podium sheet shall dismiss the sheet and return to FAB expanded state (Phase 2). | Must | AC-23 |
+
+---
+
+#### Additive Acceptance Criteria (A-1)
+
+| ID | Acceptance Criterion |
+|---|---|
+| AC-19 | The FAB is visible collapsed (single `+` icon, bottom-right) at all times on the Debate Screen. |
+| AC-20 | Tapping the collapsed FAB expands it with M3 animation (300 ms ease-out) to show T, V, and × mini-buttons. |
+| AC-21 | Tapping T opens the Podium bottom sheet with Tark pre-selected; tapping V opens it with Vitark pre-selected. |
+| AC-22 | The Podium bottom sheet includes a SegmentedControl (Tark \| Vitark) for switching side without dismissing the sheet. |
+| AC-23 | Tapping × collapses the FAB to Phase 1; dragging the Podium sheet down dismisses the sheet and returns to FAB expanded state. |
+
+---
+
+#### What Remains Unchanged
+
+The following items are explicitly **not affected** by Amendment A-1 and remain fully binding:
+
+- FR-3 through FR-18 — all text validation rules, side selection memory, lifecycle, mobile keyboard behaviour, and refresh behaviour.
+- AC-3 through AC-18 — all corresponding acceptance criteria.
+- All Out-of-Scope items (OOS-1 through OOS-7).
+- All Constraints (C-1 through C-7).
+- In-Scope items IS-1, IS-3 through IS-12 (IS-2 "always-visible, bottom-anchored Composer" is superseded by A-1).
+
+---
+
+#### Post-Amendment Alignment Note
+
+| Superseded ID | Superseded By | New IDs |
+|---|---|---|
+| FR-1 / AC-1 | Amendment A-1 | FR-19 / AC-19 |
+| FR-2 / AC-2 | Amendment A-1 | FR-21 / AC-21 |
+| FR-3 – FR-18 / AC-3 – AC-18 | Not superseded | Unchanged, still binding |
+
+Additive scope introduced by A-1: FR-19, FR-20, FR-21, FR-22, FR-23 / AC-19, AC-20, AC-21, AC-22, AC-23.
+
+---
+
+**Summary:** Amendment A-1 documents the PO-approved Gate 3 decision to replace the always-visible inline Podium with a FAB-triggered bottom-sheet pattern. Original requirement text in FR-1, FR-2, AC-1, and AC-2 is preserved verbatim above and superseded only within this amendment block. All validation, lifecycle, and mobile-keyboard requirements (FR-3 – FR-18 / AC-3 – AC-18) remain unchanged.

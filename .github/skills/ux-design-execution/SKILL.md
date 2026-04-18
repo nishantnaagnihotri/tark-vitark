@@ -285,15 +285,17 @@ Any time a new or modified component is added to the DS library, **publishing is
 
 **After any DS library component is created or modified:**
 
-1. **Immediately surface the publish requirement to Product Owner** with:
+1. **STOP immediately** — do not proceed to slice frame work. The publish gate runs first.
+2. **Immediately surface the publish requirement to Product Owner** with:
    - Component(s) added or changed
    - Exact action required: open the DS library in Figma UI → **File → Publish library** (or use the Assets panel → Publish changes button)
    - Clear statement that all downstream work is **blocked** until publish is confirmed
-2. **Do not present sandbox results as "ready"** until PO confirms the publish has been done.
-3. **After PO confirms publish:** verify the component is importable cross-file via `importComponentByKeyAsync` before proceeding. If import fails, the publish did not complete — loop back.
-4. **Once confirmed importable:** replace any local frame stand-ins in the sandbox with proper DS library instances.
+3. **Do not build local stand-ins** in the slice file as a workaround. Building local duplicates instead of waiting for publish is a protocol violation — it creates disconnected design tech debt.
+4. **Do not present sandbox results as "ready"** until PO confirms the publish has been done.
+5. **After PO confirms publish:** verify the component is importable cross-file via `importComponentByKeyAsync` before proceeding. If import fails, the publish did not complete — loop back.
+6. **Once confirmed importable:** use `importComponentByKeyAsync` to create instances in the slice file. Only then proceed with slice frame work.
 
-Skipping the publish step and leaving a note at the end is a protocol violation. The work is incomplete until the library is published and import is verified.
+Skipping the publish step and leaving a note at the end is a protocol violation. Building local duplicates as a workaround is also a protocol violation. The work is incomplete until the library is published, import is verified, and real instances are placed.
 
 ### DS Component Gap Protocol (Mandatory — No Silent Compromise)
 
@@ -308,6 +310,43 @@ If a required component does not exist in the DS library and no existing compone
 3. **Request PO authorization** to either: (a) build the component in the DS library now, or (b) explicitly accept a named compromise and document it.
 
 Do NOT proceed with a compromise unless PO explicitly names the substitute component and approves the tradeoff in writing. Visual similarity is not semantic equivalence — a compromise accepted silently becomes a design debt that compounds.
+
+### DS Component Showcase Protocol (Mandatory After Creating or Modifying Any DS Component)
+
+After every new or modified component is added to the TV DS library, a corresponding showcase entry **must** be created inside the `Component Showcase` frame (`52:24`, located at x=1000 on the TV Components page). Standalone showcase frames placed elsewhere on the canvas are a protocol violation.
+
+**Required structure — must match existing sections exactly:**
+
+```
+<Component Name> Section  (FRAME, fills=[], x=40 relative to Component Showcase)
+  ├── <Component Name>  (TEXT, Inter Semi Bold 18px, x=0, y=0)
+  └── <Component Name> Variants  (FRAME, fills=[], x=0, y=38)
+       ├── Light  (FRAME, cornerRadius=8, bg=#FAFBFF, explicit Light mode, x=0)
+       │    ├── "LIGHT THEME"  (TEXT, Inter Medium 12px, x=16, y=16)
+       │    └── <component instances at x=16, y=43>
+       └── Dark   (FRAME, cornerRadius=8, bg=#1C1B1F, explicit Dark mode, x=<Light.w+40>)
+            ├── "DARK THEME"  (TEXT, Inter Medium 12px, x=16, y=16, white fill)
+            └── <component instances at x=16, y=43>
+```
+
+**Rules:**
+
+1. **Right column only.** All new sections go inside `Component Showcase` (`52:24`) at `x=40`. Never place showcase frames at `x=0` or outside the `Component Showcase` frame.
+2. **Bottom-append.** Calculate `lastBottom = max(child.y + child.height)` over all existing children of `Component Showcase`. New section starts at `y = lastBottom + 40`.
+3. **Component instances, not raw frames.** Use `component.createInstance()` for all component references in showcase sub-frames. Never draw raw shapes as visual stand-ins.
+4. **Variable modes.** Call `f.setExplicitVariableModeForCollection(colorCollection, modeId)` on each Light/Dark sub-frame. Pass the mode **ID string** (e.g., `"4:0"`), not the mode object.
+5. **Extend frame height.** After appending all new sections, call `showcaseFrame.resizeWithoutConstraints(1200, newH)` where `newH = lastChild.y + lastChild.height + 60`.
+6. **Label style.** Title: Inter Semi Bold 18px, dark fill. Theme label: Inter Medium 12px; dark fill on Light sub-frame, white fill on Dark sub-frame.
+7. **Section naming.** Section frame name: `<Component Name> Section`. Inner themes frame name: `<Component Name> States` or `<Component Name> Variants`. Sub-frames: `Light` / `Dark`.
+
+**Icon quality rule (applies to every component with icon content):**
+
+Icons inside DS components must be M3 Material Symbols vector shapes — not text characters (`✏`, `✎`, emoji, or Unicode symbols). When creating or editing any component that contains an icon:
+
+1. Use `figma.createNodeFromSvg(svgString)` with the official M3 SVG path (from [fonts.google.com/icons](https://fonts.google.com/icons)).
+2. Resize the resulting node to 24×24 and center it in the component container (e.g., `x = (containerW - 24) / 2`, same for y).
+3. Bind all vector `fills` to the correct `on-*` token using `figma.variables.setBoundVariableForPaint`.
+4. Never use text nodes with symbol characters as icon substitutes.
 
 ## Step 5 — Baseline-Lock (Continuation Slices — Mandatory)
 

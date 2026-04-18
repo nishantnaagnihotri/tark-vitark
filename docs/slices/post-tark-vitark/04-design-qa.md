@@ -1,5 +1,57 @@
 # Design QA Verdict Package — post-tark-vitark
-## Gate 3B — 2026-04-11
+## Gate 3B — Pass 2 (Amendment A-1 FAB+Podium) — 2026-04-18
+### Protocol 3.17
+
+---
+
+## Pass 2 — Amendment A-1: FAB + Podium Flow (Section 04)
+
+**Verdict: Agent-Ready**
+
+All 9 Design QA checks pass for the 8 Section 04 frames (FAB/Podium 4-phase, 2 themes). No structural gaps. Advisory A1 (light SC native vs DS instance — build agent to unify) is non-blocking. Ready for Product Owner approval.
+
+### P2 Frame Index
+
+| Frame | Node ID | Figma URL |
+|---|---|---|
+| FAB-Collapsed/Light/Mobile | `641:362` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=641-362 |
+| FAB-Expanded/Light/Mobile | `669:197` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=669-197 |
+| Composer-Open-Tark/Light/Mobile | `704:253` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=704-253 |
+| Composer-Open-Vitark/Light/Mobile | `709:276` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=709-276 |
+| FAB-Collapsed/Dark/Mobile | `714:284` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=714-284 |
+| FAB-Expanded/Dark/Mobile | `714:346` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=714-346 |
+| Composer-Open-Tark/Dark/Mobile | `714:408` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=714-408 |
+| Composer-Open-Vitark/Dark/Mobile | `714:471` | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=714-471 |
+
+### P2 PRD Traceability (Amendment A-1)
+
+| AC | Coverage | Result |
+|---|---|---|
+| AC-19 | FAB-Collapsed/Light+Dark: collapsed `+` FAB bottom-right, no inline Composer | ✅ |
+| AC-20 | FAB-Expanded/Light+Dark: T, V, × mini-buttons visible | ✅ |
+| AC-21 | Composer-Open-Tark+Vitark/Light+Dark: Podium opens with correct SC pre-selection | ✅ |
+| AC-22 | Composer-Open frames: SegmentedControl present in Podium sheet | ✅ |
+| AC-23 | Phase 2 × button present; Phase 3/4 drag handle bar present | ✅ |
+
+**5/5 Amendment A-1 ACs covered.**
+
+### P2 Token Consistency
+
+All fills, strokes, and text on FAB, SegmentedControl, and Podium are DS token-bound. No raw hex. Both variable collections confirmed active on dark frames:
+- Local: `VariableCollectionId:65:2` → dark `65:1`
+- DS library: `VariableCollectionId:3f8bb364.../4:40` → dark `4:1`
+
+### P2 Advisory (non-blocking)
+
+**A1:** Phase 3/4 light frames use native SC construction; dark frames use DS library instance `348:196`. Both are spec-compliant. Build agent to unify to DS library instance on implementation.
+
+### P2 PO Approval Status
+
+**Pending** — PO action required at links above.
+
+---
+
+## Pass 1 — Original Design QA — 2026-04-11
 ### Protocol 3.17 | UX Agent owns all Figma writes
 
 ---
