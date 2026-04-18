@@ -1,6 +1,6 @@
 # Design QA Verdict Package — post-tark-vitark
 ## Gate 3B — Pass 2 (Amendment A-1 FAB+Podium) — 2026-04-18
-### Protocol 3.17
+### Protocol 3.17 | UX Agent owns all Figma writes
 
 ---
 
