@@ -25,6 +25,15 @@ function PodiumFabHarness({ isMobile }: PodiumFabHarnessProps) {
     );
 }
 
+async function expandComposerAndWaitUntilAccessible(user: ReturnType<typeof userEvent.setup>) {
+    await user.click(screen.getByRole('button', { name: 'Open post composer' }));
+
+    await waitFor(() => {
+        const composerGroup = screen.getByRole('group', { name: 'Post composer options' });
+        expect(composerGroup).toHaveAttribute('aria-hidden', 'false');
+    });
+}
+
 describe('PodiumFAB a11y scenarios', () => {
     it('keeps aria-label and collapsed aria-expanded contract on the closed FAB', () => {
         render(<PodiumFabHarness isMobile />);
@@ -38,19 +47,14 @@ describe('PodiumFAB a11y scenarios', () => {
         const user = userEvent.setup();
         render(<PodiumFabHarness isMobile />);
 
-        await user.click(screen.getByRole('button', { name: 'Open post composer' }));
-
-        await waitFor(() => {
-            const composerGroup = screen.getByRole('group', { name: 'Post composer options' });
-            expect(composerGroup).toHaveAttribute('aria-hidden', 'false');
-        });
+        await expandComposerAndWaitUntilAccessible(user);
     });
 
     it('exposes mini-button aria labels for side selection', async () => {
         const user = userEvent.setup();
         render(<PodiumFabHarness isMobile />);
 
-        await user.click(screen.getByRole('button', { name: 'Open post composer' }));
+        await expandComposerAndWaitUntilAccessible(user);
 
         expect(screen.getByRole('button', { name: 'Post as Tark' })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'Post as Vitark' })).toBeInTheDocument();
@@ -60,7 +64,7 @@ describe('PodiumFAB a11y scenarios', () => {
         const user = userEvent.setup();
         render(<PodiumFabHarness isMobile />);
 
-        await user.click(screen.getByRole('button', { name: 'Open post composer' }));
+        await expandComposerAndWaitUntilAccessible(user);
 
         expect(screen.getByRole('button', { name: 'Close' })).toHaveAttribute('aria-label', 'Close');
     });
