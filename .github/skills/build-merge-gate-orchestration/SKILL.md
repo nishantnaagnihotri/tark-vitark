@@ -63,10 +63,15 @@ When Gate 4 decomposes a slice into N issues, the orchestrator must evaluate ind
 
 **Parallel execution protocol (when independence check passes):**
 
-1. Use `tool_search` to discover the canonical parallel-run tools (`run_async_subagents` and `get_run_status`) before invoking — do not assume hardcoded tool IDs.
-2. Call the canonical "start async run" tool (`mcp_agent-orchest_run_async_subagents`) with all parallel dev tasks.
-3. **Immediately** write the returned `runId` to `/memories/session/active-state.md` under `## Pending Async Runs` before any other action.
-4. Poll with `mcp_agent-orchest_get_run_status` until all tasks complete.
+1. For each parallel task, launch one `run_in_terminal (mode=async)` call with staggered `--pre-sleep` to avoid simultaneous rate-limit spikes:
+   ```bash
+   set -a && source local.env && set +a
+   npx tsx scripts/run-agent.ts --pre-sleep <0|15|30…> dev "<issue-link>" 2>&1
+   ```
+   Capture the terminal ID returned by each `run_in_terminal` call.
+2. **Immediately** write all terminal IDs to `/memories/session/active-state.md` under `## Pending Async Runs` before any other action.
+3. Poll each terminal with `get_terminal_output <terminal-id>` until all agents exit.
+4. GitHub PR list is the authoritative completion signal — if a PR closing the issue is present, treat that task as done regardless of terminal poll state.
 5. Validate each task PR independently (each targets `slice/<slice-name>`). After all task PRs are merged into the slice branch, open a single `slice/<slice-name> → master` PR for PO merge.
 
 **Sequential execution (when independence check fails or issues = 1):**

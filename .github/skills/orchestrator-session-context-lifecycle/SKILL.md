@@ -56,34 +56,32 @@ After any gate transition or major owner decision:
 
 ## Async Run Tracking Protocol
 
-Any `run_async_subagents` call creates a fire-and-forget session. Without active tracking these `run-id` values get lost in chat history.
+Any parallel `run-agent.ts` dispatch via `run_in_terminal (mode=async)` creates a fire-and-forget terminal session. Without active tracking these terminal IDs get lost in chat history.
 
-**On dispatch** — immediately after `run_async_subagents` returns a `runId`, write or update `/memories/session/active-state.md` with an `## Pending Async Runs` section, recording the value as `run-id`:
+**On dispatch** — immediately after each `run_in_terminal` call returns a terminal ID, write or update `/memories/session/active-state.md` with an `## Pending Async Runs` section, recording each ID as `terminal-id`:
 
 ```
 ## Pending Async Runs
 
-| run-id | dispatched | tasks | purpose | status |
-|--------|------------|-------|---------|--------|
-| <uuid> | <ISO timestamp> | <task ids> | <one-line context> | running |
+| terminal-id | dispatched | issue | purpose | status |
+|-------------|------------|-------|---------|--------|
+| <uuid> | <ISO timestamp> | #<n> | <one-line context> | running |
 ```
 
 Do this before any other response content. If `/memories/session/active-state.md` does not exist yet, create it.
 
-**Tool naming note** — the canonical tool name is `mcp_agent-orchest_get_run_status`. References to `get_run_status` (short form) in this skill or others mean the same tool; treat both forms as equivalent and use whichever name the current environment exposes.
-
-**On resume** — as the very first action of the Resume Protocol (before returning the resume snapshot), scan `## Pending Async Runs` in session memory. For each row with status `running`, call `mcp_agent-orchest_get_run_status` immediately and update the row to reflect the current state (`running` / `done` / `pending-clarification` / `failed`). Surface any completed or blocked runs in the resume snapshot.
+**On resume** — as the very first action of the Resume Protocol (before returning the resume snapshot), scan `## Pending Async Runs` in session memory. For each row with status `running`, call `get_terminal_output <terminal-id>` immediately and update the row to reflect the current state (`running` / `done` / `failed`). Surface any completed or blocked runs in the resume snapshot.
 
 **On every turn while runs are active** — if `## Pending Async Runs` contains any row with status `running` at the start of a turn, do both of the following before processing the user message:
 
-1. **Poll `mcp_agent-orchest_get_run_status`** for each running row. If the result has moved to `done` or `pending-clarification`, surface it immediately and continue with the next gate step autonomously.
-2. **GitHub PR cross-check (parallel, always)** — list open PRs targeting the active slice branch (`slice/<slice-name>`). For each dispatched task issue number, check whether a PR that closes or references that issue is present. If a PR is found for a task that the poll still reports as `running`, treat that task as **done** regardless of poll status — GitHub PRs are ground truth. Update session memory accordingly and continue autonomously.
+1. **Poll `get_terminal_output`** for each running terminal ID. If the process has exited (exit code present), surface it immediately and continue with the next gate step autonomously.
+2. **GitHub PR cross-check (parallel, always)** — list open PRs targeting the active slice branch (`slice/<slice-name>`). For each dispatched task issue number, check whether a PR that closes or references that issue is present. If a PR is found for a task whose terminal still appears running, treat that task as **done** regardless of terminal poll state — GitHub PRs are ground truth. Update session memory accordingly and continue autonomously.
 
-**Why the cross-check is mandatory:** `mcp_agent-orchest_get_run_status` has a known reliability gap — it can remain in state `running` indefinitely even after agents have finished and opened PRs. Relying on the poll alone causes the orchestrator to stall invisibly. The GitHub PR list is authoritative because agents always open a PR as their final act and the PR timestamp is immutable evidence of completion. Both checks must run on every turn; neither alone is sufficient.
+**Why the cross-check is mandatory:** Terminal poll state is advisory — a process can exit without the shell reporting cleanly, or `get_terminal_output` can be called before the exit code is flushed. GitHub PRs are immutable timestamped evidence: agents always open a PR as their final act, so a PR closing the issue is definitive proof of completion. Both checks must run on every turn; neither alone is sufficient.
 
-**On completion** — when `mcp_agent-orchest_get_run_status` returns `done` or `pending-clarification` for a run, update its row status in session memory and record the outcome (output preview or challenge text). Do not delete the row — keep it as an audit trail for the session.
+**On completion** — when `get_terminal_output` confirms a terminal has exited or GitHub PR cross-check marks a task done, update its row status in session memory and record the outcome (output preview or error). Do not delete the row — keep it as an audit trail for the session.
 
-**Standing rule** — never leave a turn where `run_async_subagents` was called without updating session memory. This is not optional. Forgetting to write the `run-id` to session memory is a protocol violation.
+**Standing rule** — never leave a turn where parallel `run-agent.ts` agents were dispatched without updating session memory with all terminal IDs. This is not optional. Forgetting to write terminal IDs to session memory is a protocol violation.
 
 ## Log Archiving Protocol
 
