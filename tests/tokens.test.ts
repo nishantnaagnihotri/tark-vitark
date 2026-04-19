@@ -254,10 +254,10 @@ describe('tokens.css — M3 3-layer token presence', () => {
   });
 
   it('--color-scrim is not duplicated in [data-theme="dark"] override block', () => {
-    expect(darkBlock).not.toContain('--color-scrim');
+    expect(darkBlock).not.toMatch(/--color-scrim\s*:/);
   });
 
   it('--color-scrim is not duplicated in prefers-color-scheme dark fallback', () => {
-    expect(mediaFallbackBlock).not.toContain('--color-scrim');
+    expect(mediaFallbackBlock).not.toMatch(/--color-scrim\s*:/);
   });
 });
