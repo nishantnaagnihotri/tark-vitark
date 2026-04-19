@@ -108,6 +108,7 @@ function parseCliArgs() {
         repo: { type: "string" },
         pr: { type: "string" },
         "head-sha": { type: "string" },
+        "after": { type: "string" },
         "timeout-seconds": { type: "string", default: "600" },
         "interval-seconds": { type: "string", default: "15" },
       },
@@ -121,6 +122,7 @@ function parseCliArgs() {
   const repo = values.repo;
   const pr = parseInt(values.pr, 10);
   const headSha = values["head-sha"] || null;
+  const after = values["after"] || null;
   const timeoutSeconds = parseInt(values["timeout-seconds"], 10);
   const intervalSeconds = parseInt(values["interval-seconds"], 10);
 
@@ -129,6 +131,9 @@ function parseCliArgs() {
   }
   if (!Number.isInteger(pr) || pr <= 0) {
     exitError("--pr must be a positive integer");
+  }
+  if (after !== null && isNaN(Date.parse(after))) {
+    exitError("--after must be a valid ISO 8601 timestamp (e.g. 2026-04-19T12:00:00Z)");
   }
 
   if (Number.isNaN(timeoutSeconds) || timeoutSeconds <= 0) {
@@ -141,7 +146,7 @@ function parseCliArgs() {
     exitError("--interval-seconds must not exceed --timeout-seconds");
   }
 
-  return { owner, repo, pr, headSha, timeoutSeconds, intervalSeconds };
+  return { owner, repo, pr, headSha, after, timeoutSeconds, intervalSeconds };
 }
 
 function formatCheckRuns(commitNodes) {
@@ -160,14 +165,32 @@ function formatCheckRuns(commitNodes) {
 }
 
 async function main() {
-  const { owner, repo, pr, headSha, timeoutSeconds, intervalSeconds } =
+  const { owner, repo, pr, headSha, after, timeoutSeconds, intervalSeconds } =
     parseCliArgs();
   const start = Date.now();
+  // Records reviews submitted after this timestamp. Defaults to poll start time
+  // so pre-existing reviews are never returned as "new".
+  const afterMs = after ? Date.parse(after) : start;
 
-  // First query to resolve target SHA
+  // First query to resolve full target SHA (supports short-SHA prefix input).
   const initial = ghGraphQL(REVIEW_QUERY, { owner, repo, pr });
-  const targetSha =
-    headSha || initial.data.repository.pullRequest.headRefOid;
+  const liveShaInitial = initial.data.repository.pullRequest.headRefOid;
+  if (headSha && !liveShaInitial.startsWith(headSha)) {
+    console.log(
+      JSON.stringify(
+        {
+          status: "head-changed",
+          elapsed_seconds: 0,
+          expected_head_sha: headSha,
+          live_head_sha: liveShaInitial,
+        },
+        null,
+        2
+      )
+    );
+    process.exit(3);
+  }
+  const targetSha = liveShaInitial;
 
   while (true) {
     const elapsed = Math.round((Date.now() - start) / 1000);
@@ -197,7 +220,8 @@ async function main() {
           r.author?.login === BOT_LOGIN &&
           r.commit?.oid === targetSha &&
           r.state !== "PENDING" &&
-          r.submittedAt
+          r.submittedAt &&
+          Date.parse(r.submittedAt) > afterMs
       )
       .sort((a, b) => a.submittedAt.localeCompare(b.submittedAt));
 
