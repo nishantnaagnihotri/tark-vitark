@@ -69,7 +69,7 @@ Parallelizable at start: **T-1, T-2, T-6** (no dependencies).
 | Gate 4 Architecture | ❌ Not started |
 | Gate 5 Build | ❌ Not started |
 
-**Summary:** Amendment A-1 replaces the always-visible inline Podium (FR-1/FR-2, AC-1/AC-2) with a FAB-triggered bottom-sheet Podium pattern (FR-19–23, AC-19–23). The design is fully approved but no build tasks were created before the original slice closed. This work will be tracked as a dedicated new slice (`podium-fab-collapse` or similar) after PR #145 merges.
+**Summary:** Amendment A-1 replaces the always-visible inline Podium (FR-1/FR-2, AC-1/AC-2) with a FAB-triggered bottom-sheet Podium pattern (FR-19–23, AC-19–23). The design is fully approved but no build tasks were created before the original slice closed. This work is tracked as a dedicated new slice (`podium-fab-collapse` or similar) now that PR #145 has merged.
 
 ---
 
