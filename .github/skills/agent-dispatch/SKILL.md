@@ -19,6 +19,21 @@ description: "Agent dispatch workflow: run a single Copilot SDK agent via run-ag
 
 ---
 
+## Dispatch Mode Decision Rule (Mandatory)
+
+Before every agent dispatch, classify the expected output:
+
+| Output type | Example | Dispatch mode |
+|---|---|---|
+| GitHub side effect — commits, PR updates, thread replies, issue comments | Dev agent fixing review comments | `run_in_terminal (mode=async)` + `get_terminal_output` |
+| Reasoning input — analysis, verdict, pass/fail decision the orchestrator must evaluate immediately | Requirement challenger, PRD agent, design QA agent | `runSubagent` (Gates 1–4 only) |
+
+**Rule:** if the orchestrator does not need to read the agent's output to decide what to do next — because the result is a GitHub artifact verifiable via MCP or PR list — use async terminal dispatch.
+
+**Violation pattern to avoid:** using `runSubagent` to dispatch a dev agent to fix review comments. The commit SHA and thread replies are verifiable on GitHub; they do not need to flow into the orchestrator's reasoning context. Using `runSubagent` in this case blocks the chat session for the full agent duration unnecessarily.
+
+---
+
 ## Core Script
 
 `scripts/run-agent.ts` — single-shot Copilot SDK agent dispatcher.

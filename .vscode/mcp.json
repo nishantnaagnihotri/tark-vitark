@@ -20,7 +20,10 @@
             "url": "https://mcp.figma.com/mcp",
             "_toolPrefixes": [
                 "com.figma.mcp"
-            ]
+            ],
+            "_envHeaders": {
+                "Authorization": "Bearer $FIGMA_OAUTH_TOKEN"
+            }
         },
         "io.github.github/github-mcp-server": {
             "type": "http",
@@ -28,7 +31,10 @@
             "_toolPrefixes": [
                 "github",
                 "io.github.github"
-            ]
+            ],
+            "_envHeaders": {
+                "Authorization": "Bearer $GITHUB_TOKEN"
+            }
         },
         "io.github.ChromeDevTools/chrome-devtools-mcp": {
             "type": "stdio",
