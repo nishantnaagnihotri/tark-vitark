@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Argument, Side } from '../data/debate';
 import { DEBATE } from '../data/debate';
-import { validatePost } from '../lib/validatePost';
 import { Topic } from './Topic';
 import { LegendBar } from './LegendBar';
 import { Timeline } from './Timeline';
@@ -48,17 +47,12 @@ export function DebateScreen() {
     }, []);
 
     function handlePublish(text: string, side: Side): string | null {
-        const validation = validatePost(text);
-        if (!validation.valid) {
-            return validation.message;
-        }
-
         setLocalPosts((existingPosts) => [
             ...existingPosts,
             {
                 id: DEBATE.arguments.length + existingPosts.length + 1,
                 side,
-                text: text.trim(),
+                text,
             },
         ]);
 
