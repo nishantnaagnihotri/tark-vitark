@@ -30,6 +30,7 @@ export function PodiumBottomSheet({
     const [isBusy, setIsBusy] = useState(false);
     const [dragOffset, setDragOffset] = useState(0);
     const [isDragging, setIsDragging] = useState(false);
+    const [hasEntered, setHasEntered] = useState(false);
     const dragStartYRef = useRef<number | null>(null);
     const dragOffsetRef = useRef(0);
     const dialogRef = useRef<HTMLDivElement | null>(null);
@@ -50,6 +51,21 @@ export function PodiumBottomSheet({
 
         const focusableElements = getFocusableElements();
         focusableElements[0]?.focus();
+    }, [isOpen]);
+
+    useEffect(() => {
+        if (!isOpen) {
+            setHasEntered(false);
+            return;
+        }
+
+        const animationFrameId = window.requestAnimationFrame(() => {
+            setHasEntered(true);
+        });
+
+        return () => {
+            window.cancelAnimationFrame(animationFrameId);
+        };
     }, [isOpen]);
 
     const completeDrag = (endClientY?: number) => {
@@ -169,7 +185,7 @@ export function PodiumBottomSheet({
                 role="dialog"
                 aria-modal="true"
                 aria-label="Post composer"
-                className={`podium-bottom-sheet podium-bottom-sheet--open${
+                className={`podium-bottom-sheet${hasEntered ? ' podium-bottom-sheet--open' : ''}${
                     isDragging ? ' podium-bottom-sheet--dragging' : ''
                 }`}
                 style={sheetStyle}
