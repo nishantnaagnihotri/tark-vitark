@@ -130,42 +130,35 @@ describe('PodiumFAB', () => {
     });
 
     it('keeps expanded controls mounted long enough for collapse transition then unmounts', () => {
-        vi.useFakeTimers();
+        const { container, rerender } = render(
+            <PodiumFAB
+                isExpanded
+                onExpand={() => {}}
+                onSideSelect={() => {}}
+                onCollapse={() => {}}
+            />
+        );
 
-        try {
-            const { container, rerender } = render(
-                <PodiumFAB
-                    isExpanded
-                    onExpand={() => {}}
-                    onSideSelect={() => {}}
-                    onCollapse={() => {}}
-                />
-            );
+        rerender(
+            <PodiumFAB
+                isExpanded={false}
+                onExpand={() => {}}
+                onSideSelect={() => {}}
+                onCollapse={() => {}}
+            />
+        );
 
-            rerender(
-                <PodiumFAB
-                    isExpanded={false}
-                    onExpand={() => {}}
-                    onSideSelect={() => {}}
-                    onCollapse={() => {}}
-                />
-            );
+        const collapsingGroup = container.querySelector('div.podium-fab[role="group"]');
+        expect(collapsingGroup).toBeInTheDocument();
+        expect(collapsingGroup).toHaveAttribute('aria-hidden', 'true');
+        expect(collapsingGroup).not.toHaveClass('podium-fab--expanded');
+        expect(container.querySelector('.podium-fab__mini-btn')).toBeDisabled();
 
-            const collapsingGroup = container.querySelector('div.podium-fab[role="group"]');
-            expect(collapsingGroup).toBeInTheDocument();
-            expect(collapsingGroup).toHaveAttribute('aria-hidden', 'true');
-            expect(collapsingGroup).not.toHaveClass('podium-fab--expanded');
-            expect(container.querySelector('.podium-fab__mini-btn')).toBeDisabled();
-            expect(container.querySelector('.podium-fab__dismiss')).toBeDisabled();
+        fireEvent.transitionEnd(screen.getByRole('button', { name: 'Close', hidden: true }), {
+            propertyName: 'opacity',
+        });
 
-            act(() => {
-                vi.advanceTimersByTime(300);
-            });
-
-            expect(container.querySelector('div.podium-fab[role="group"]')).not.toBeInTheDocument();
-        } finally {
-            vi.useRealTimers();
-        }
+        expect(container.querySelector('div.podium-fab[role="group"]')).not.toBeInTheDocument();
     });
 
     it('defines tokenized colors and 300ms scale/opacity transitions in CSS source', () => {

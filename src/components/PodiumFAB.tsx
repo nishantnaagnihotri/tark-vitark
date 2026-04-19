@@ -9,14 +9,12 @@ export interface PodiumFABProps {
     onCollapse: () => void;
 }
 
-const FAB_TRANSITION_MS = 300;
-
 export function PodiumFAB({ isExpanded, onExpand, onSideSelect, onCollapse }: PodiumFABProps) {
     const openComposerButtonRef = useRef<HTMLButtonElement>(null);
     const tarkComposerButtonRef = useRef<HTMLButtonElement>(null);
     const wasExpandedRef = useRef(isExpanded);
     const shouldFocusExpandedControlRef = useRef(false);
-    const collapseTimeoutRef = useRef<number | null>(null);
+    const shouldUnmountComposerGroupRef = useRef(false);
     const expandFrameRef = useRef<number | null>(null);
     const [isComposerVisible, setIsComposerVisible] = useState(isExpanded);
     const [isComposerExpanded, setIsComposerExpanded] = useState(isExpanded);
@@ -25,11 +23,7 @@ export function PodiumFAB({ isExpanded, onExpand, onSideSelect, onCollapse }: Po
         const wasExpanded = wasExpandedRef.current;
 
         if (isExpanded) {
-            if (collapseTimeoutRef.current !== null) {
-                window.clearTimeout(collapseTimeoutRef.current);
-                collapseTimeoutRef.current = null;
-            }
-
+            shouldUnmountComposerGroupRef.current = false;
             setIsComposerVisible(true);
 
             if (!wasExpanded) {
@@ -62,10 +56,7 @@ export function PodiumFAB({ isExpanded, onExpand, onSideSelect, onCollapse }: Po
             setIsComposerExpanded(false);
 
             if (isComposerVisible) {
-                collapseTimeoutRef.current = window.setTimeout(() => {
-                    setIsComposerVisible(false);
-                    collapseTimeoutRef.current = null;
-                }, FAB_TRANSITION_MS);
+                shouldUnmountComposerGroupRef.current = true;
             }
         }
 
@@ -74,10 +65,6 @@ export function PodiumFAB({ isExpanded, onExpand, onSideSelect, onCollapse }: Po
 
     useEffect(
         () => () => {
-            if (collapseTimeoutRef.current !== null) {
-                window.clearTimeout(collapseTimeoutRef.current);
-            }
-
             if (expandFrameRef.current !== null) {
                 window.cancelAnimationFrame(expandFrameRef.current);
             }
@@ -91,6 +78,13 @@ export function PodiumFAB({ isExpanded, onExpand, onSideSelect, onCollapse }: Po
             shouldFocusExpandedControlRef.current = false;
         }
     }, [isComposerExpanded]);
+
+    const handleComposerCollapseTransitionEnd = () => {
+        if (!isComposerExpanded && shouldUnmountComposerGroupRef.current) {
+            setIsComposerVisible(false);
+            shouldUnmountComposerGroupRef.current = false;
+        }
+    };
 
     const shouldRenderComposerGroup = isComposerVisible || isExpanded;
 
@@ -142,6 +136,7 @@ export function PodiumFAB({ isExpanded, onExpand, onSideSelect, onCollapse }: Po
                         aria-label="Close"
                         tabIndex={isComposerExpanded ? 0 : -1}
                         disabled={!isComposerExpanded}
+                        onTransitionEnd={handleComposerCollapseTransitionEnd}
                         onClick={onCollapse}
                     >
                         ×
