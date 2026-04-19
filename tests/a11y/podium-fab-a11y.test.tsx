@@ -17,11 +17,11 @@ function PodiumFABHarness() {
     );
 }
 
-function PodiumFABMobileOnlyHarness({ isMobile }: { isMobile: boolean }) {
+function PodiumComposerSurfaceHarness({ isMobile }: { isMobile: boolean }) {
     const [isExpanded, setIsExpanded] = useState(false);
 
     if (!isMobile) {
-        return null;
+        return <section aria-label="Desktop composer surface">Desktop composer</section>;
     }
 
     return (
@@ -83,8 +83,9 @@ describe('PodiumFAB accessibility semantics', () => {
     });
 
     it('FAB is not rendered when mobile surface is disabled (desktop path)', () => {
-        render(<PodiumFABMobileOnlyHarness isMobile={false} />);
+        render(<PodiumComposerSurfaceHarness isMobile={false} />);
 
         expect(screen.queryByRole('button', { name: 'Open post composer' })).not.toBeInTheDocument();
+        expect(screen.getByLabelText('Desktop composer surface')).toBeInTheDocument();
     });
 });

@@ -118,6 +118,11 @@ describe('PodiumBottomSheet accessibility semantics', () => {
             />
         );
 
+        const closeButton = screen.getByRole('button', { name: 'Close post composer' });
+        await waitFor(() => {
+            expect(closeButton).toHaveFocus();
+        });
+
         await user.keyboard('{Escape}');
         expect(onClose).toHaveBeenCalledTimes(1);
     });
