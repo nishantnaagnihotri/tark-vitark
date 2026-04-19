@@ -9,6 +9,7 @@
  *   --pre-sleep <seconds>   Sleep before sending the prompt (useful for async demo runs)
  *   --no-intro              Skip the automatic role-introduction prefix
  *   --model <model-id>      Override the default model (default: gpt-5.3-codex)
+ *   --task-id <task-id>     Optional issue/task reference for provenance block
  *   --output-format json    Emit a JSON result record to stdout instead of human text
  *
  * Examples:
@@ -172,6 +173,7 @@ function resolveAgentMcpServers(agentTools: string[]): Record<string, MCPServerC
 let preSleepMs = 0;
 let noIntro = false;
 let model = DEFAULT_MODEL;
+let taskIdArg: string | undefined;
 let outputFormat: "text" | "json" = "text";
 const argv = process.argv.slice(2);
 
@@ -199,6 +201,9 @@ for (let i = 0; i < argv.length;) {
     } else if (argv[i] === "--model") {
         model = requireOptionValue("--model", argv[i + 1]);
         argv.splice(i, 2);
+    } else if (argv[i] === "--task-id") {
+        taskIdArg = requireOptionValue("--task-id", argv[i + 1]);
+        argv.splice(i, 2);
     } else if (argv[i] === "--output-format") {
         const format = requireOptionValue("--output-format", argv[i + 1]);
         if (format !== "json" && format !== "text") {
@@ -222,7 +227,7 @@ const [role, rawPrompt] = argv;
 if (!role || !rawPrompt) {
     console.error(
         "Usage: npx tsx scripts/run-agent.ts [--pre-sleep <s>] [--no-intro] " +
-        "[--model <id>] [--output-format json] <role> \"<prompt>\" | @<prompt-file>"
+        "[--model <id>] [--task-id <id>] [--output-format json] <role> \"<prompt>\" | @<prompt-file>"
     );
     process.exit(1);
 }
@@ -302,6 +307,7 @@ function injectDevAgentProvenanceBlock(prompt: string, runContext: {
     role: string;
     model: string;
     startedAt: string;
+    taskId: string;
 }): string {
     if (runContext.role !== "dev" || /##\s*Agent Provenance/i.test(prompt)) {
         return prompt;
@@ -312,11 +318,24 @@ function injectDevAgentProvenanceBlock(prompt: string, runContext: {
         "## Agent Provenance",
         "",
         `run-id: ${runContext.runId}`,
-        "task-id: direct-invocation",
+        `task-id: ${runContext.taskId}`,
         "role: dev",
         `dispatched: ${runContext.startedAt}`,
         `model: ${runContext.model}`,
     ].join("\n");
+}
+
+function inferTaskId(prompt: string, explicitTaskId?: string): string {
+    if (explicitTaskId && explicitTaskId.trim().length > 0) {
+        return explicitTaskId.trim();
+    }
+    const issueUrlMatch = prompt.match(/github\.com\/[^/\s]+\/[^/\s]+\/issues\/(\d+)/i);
+    if (issueUrlMatch) return `#${issueUrlMatch[1]}`;
+
+    const issueRefMatch = prompt.match(/(?:^|\s)#(\d+)(?:\b|$)/);
+    if (issueRefMatch) return `#${issueRefMatch[1]}`;
+
+    return "direct-invocation";
 }
 
 // ── Run ───────────────────────────────────────────────────────────────────────
@@ -380,7 +399,14 @@ try {
         await new Promise((resolve) => setTimeout(resolve, preSleepMs));
     }
 
-    const promptWithProvenance = injectDevAgentProvenanceBlock(prompt, { runId, role, model, startedAt });
+    const taskId = inferTaskId(prompt, taskIdArg);
+    const promptWithProvenance = injectDevAgentProvenanceBlock(prompt, {
+        runId,
+        role,
+        model,
+        startedAt,
+        taskId,
+    });
     const finalPrompt = noIntro ? promptWithProvenance : ROLE_INTRO_PREFIX + promptWithProvenance;
     const result = await withRetry(
         () => session.sendAndWait({ prompt: finalPrompt }, TIMEOUT_MS),
