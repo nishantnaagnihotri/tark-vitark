@@ -1,74 +1,61 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import type { ComponentProps } from 'react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { PodiumBottomSheet } from '../../src/components/PodiumBottomSheet';
 
-describe('PodiumBottomSheet accessibility semantics', () => {
-    it('does not render in DOM when isOpen is false', () => {
-        render(
+function renderBottomSheet(overrides?: Partial<ComponentProps<typeof PodiumBottomSheet>>) {
+    const onClose = overrides?.onClose ?? vi.fn();
+
+    const view = render(
+        <>
+            <button type="button">Outside page control</button>
             <PodiumBottomSheet
-                isOpen={false}
-                selectedSide="tark"
-                onSideChange={() => {}}
-                onPublish={() => {}}
-                onClose={() => {}}
+                isOpen={overrides?.isOpen ?? true}
+                selectedSide={overrides?.selectedSide ?? 'tark'}
+                onSideChange={overrides?.onSideChange ?? vi.fn()}
+                onPublish={overrides?.onPublish ?? vi.fn()}
+                onClose={onClose}
             />
-        );
+        </>
+    );
+
+    return { ...view, onClose };
+}
+
+describe('PodiumBottomSheet a11y scenarios', () => {
+    it('is not rendered when closed', () => {
+        renderBottomSheet({ isOpen: false });
 
         expect(screen.queryByRole('dialog', { name: 'Post composer' })).not.toBeInTheDocument();
+        expect(screen.queryByRole('dialog', { name: 'Post composer', hidden: true })).not.toBeInTheDocument();
+        expect(screen.queryByTestId('podium-sheet-scrim')).not.toBeInTheDocument();
     });
 
-    it('open state exposes dialog role, modal semantics, and label', () => {
-        render(
-            <PodiumBottomSheet
-                isOpen
-                selectedSide="tark"
-                onSideChange={() => {}}
-                onPublish={() => {}}
-                onClose={() => {}}
-            />
-        );
+    it('renders required dialog role and ARIA attributes when open', () => {
+        renderBottomSheet();
 
         const dialog = screen.getByRole('dialog', { name: 'Post composer' });
+        expect(dialog).toHaveAttribute('role', 'dialog');
         expect(dialog).toHaveAttribute('aria-modal', 'true');
         expect(dialog).toHaveAttribute('aria-label', 'Post composer');
     });
 
-    it('moves focus to first interactive element when opened', async () => {
-        render(
-            <PodiumBottomSheet
-                isOpen
-                selectedSide="tark"
-                onSideChange={() => {}}
-                onPublish={() => {}}
-                onClose={() => {}}
-            />
-        );
+    it('moves focus to the first interactive element on open', async () => {
+        renderBottomSheet();
 
-        const closeButton = screen.getByRole('button', { name: 'Close post composer' });
         await waitFor(() => {
-            expect(closeButton).toHaveFocus();
+            expect(screen.getByRole('button', { name: 'Close post composer' })).toHaveFocus();
         });
     });
 
-    it('keeps tab focus within the sheet boundary', async () => {
+    it('keeps tab navigation within the dialog boundary', async () => {
         const user = userEvent.setup();
-        render(
-            <>
-                <button type="button">Outside before</button>
-                <PodiumBottomSheet
-                    isOpen
-                    selectedSide="tark"
-                    onSideChange={() => {}}
-                    onPublish={() => {}}
-                    onClose={() => {}}
-                />
-                <button type="button">Outside after</button>
-            </>
-        );
+        renderBottomSheet();
 
         const closeButton = screen.getByRole('button', { name: 'Close post composer' });
         const publishButton = screen.getByRole('button', { name: 'Publish post' });
+        const outsidePageControl = screen.getByRole('button', { name: 'Outside page control' });
 
         await waitFor(() => {
             expect(closeButton).toHaveFocus();
@@ -78,20 +65,12 @@ describe('PodiumBottomSheet accessibility semantics', () => {
         await user.tab();
 
         expect(closeButton).toHaveFocus();
-        expect(screen.getByRole('button', { name: 'Outside after' })).not.toHaveFocus();
+        expect(outsidePageControl).not.toHaveFocus();
     });
 
-    it('Shift+Tab from first element wraps focus to last element', async () => {
+    it('moves focus from first element to last on Shift+Tab', async () => {
         const user = userEvent.setup();
-        render(
-            <PodiumBottomSheet
-                isOpen
-                selectedSide="tark"
-                onSideChange={() => {}}
-                onPublish={() => {}}
-                onClose={() => {}}
-            />
-        );
+        renderBottomSheet();
 
         const closeButton = screen.getByRole('button', { name: 'Close post composer' });
         const publishButton = screen.getByRole('button', { name: 'Publish post' });
@@ -104,76 +83,43 @@ describe('PodiumBottomSheet accessibility semantics', () => {
         expect(publishButton).toHaveFocus();
     });
 
-    it('Escape key triggers onClose', async () => {
-        const user = userEvent.setup();
-        const onClose = vi.fn();
+    it('calls onClose when Escape is pressed inside the dialog', () => {
+        const { onClose } = renderBottomSheet();
 
-        render(
-            <PodiumBottomSheet
-                isOpen
-                selectedSide="tark"
-                onSideChange={() => {}}
-                onPublish={() => {}}
-                onClose={onClose}
-            />
-        );
+        fireEvent.keyDown(screen.getByRole('dialog', { name: 'Post composer' }), { key: 'Escape' });
 
-        const closeButton = screen.getByRole('button', { name: 'Close post composer' });
-        await waitFor(() => {
-            expect(closeButton).toHaveFocus();
-        });
-
-        await user.keyboard('{Escape}');
         expect(onClose).toHaveBeenCalledTimes(1);
     });
 
-    it('scrim is hidden from assistive technologies', () => {
-        render(
-            <PodiumBottomSheet
-                isOpen
-                selectedSide="tark"
-                onSideChange={() => {}}
-                onPublish={() => {}}
-                onClose={() => {}}
-            />
-        );
+    it('marks the scrim as aria-hidden', () => {
+        renderBottomSheet();
 
-        expect(screen.getByTestId('podium-sheet-scrim')).toHaveAttribute('aria-hidden', 'true');
+        const scrim = screen.getByTestId('podium-sheet-scrim');
+        expect(scrim).toHaveAttribute('aria-hidden', 'true');
     });
 
-    it('validation error announces via alert + polite live region', async () => {
+    it('surfaces errors as polite live alerts', async () => {
         const user = userEvent.setup();
-        render(
-            <PodiumBottomSheet
-                isOpen
-                selectedSide="tark"
-                onSideChange={() => {}}
-                onPublish={() => {}}
-                onClose={() => {}}
-            />
-        );
+        renderBottomSheet();
 
+        const postTextField = screen.getByRole('textbox', { name: 'Post text' });
+        await user.type(postTextField, '   ');
         await user.click(screen.getByRole('button', { name: 'Publish post' }));
 
-        const validationAlert = screen.getByRole('alert');
-        expect(validationAlert).toHaveAttribute('aria-live', 'polite');
-        expect(validationAlert).toHaveTextContent('Text cannot be empty or whitespace only.');
+        const errorMessage = screen.getByRole('alert');
+        expect(errorMessage).toHaveAttribute('role', 'alert');
+        expect(errorMessage).toHaveAttribute('aria-live', 'polite');
+        expect(errorMessage).toHaveTextContent('Text cannot be empty or whitespace only.');
     });
 
-    it('textarea sets aria-invalid=true when validation error is present', async () => {
+    it('marks the textarea as aria-invalid when an error is present', async () => {
         const user = userEvent.setup();
-        render(
-            <PodiumBottomSheet
-                isOpen
-                selectedSide="tark"
-                onSideChange={() => {}}
-                onPublish={() => {}}
-                onClose={() => {}}
-            />
-        );
+        renderBottomSheet();
 
+        const postTextField = screen.getByRole('textbox', { name: 'Post text' });
+        await user.type(postTextField, '   ');
         await user.click(screen.getByRole('button', { name: 'Publish post' }));
 
-        expect(screen.getByRole('textbox', { name: 'Post text' })).toHaveAttribute('aria-invalid', 'true');
+        expect(postTextField).toHaveAttribute('aria-invalid', 'true');
     });
 });

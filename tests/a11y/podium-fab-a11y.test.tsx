@@ -4,24 +4,15 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { PodiumFAB } from '../../src/components/PodiumFAB';
 
-function PodiumFABHarness() {
-    const [isExpanded, setIsExpanded] = useState(false);
-
-    return (
-        <PodiumFAB
-            isExpanded={isExpanded}
-            onExpand={() => setIsExpanded(true)}
-            onSideSelect={() => setIsExpanded(false)}
-            onCollapse={() => setIsExpanded(false)}
-        />
-    );
+interface PodiumFabHarnessProps {
+    isMobile: boolean;
 }
 
-function PodiumComposerSurfaceHarness({ isMobile }: { isMobile: boolean }) {
+function PodiumFabHarness({ isMobile }: PodiumFabHarnessProps) {
     const [isExpanded, setIsExpanded] = useState(false);
 
     if (!isMobile) {
-        return <section aria-label="Desktop composer surface">Desktop composer</section>;
+        return null;
     }
 
     return (
@@ -34,58 +25,54 @@ function PodiumComposerSurfaceHarness({ isMobile }: { isMobile: boolean }) {
     );
 }
 
-describe('PodiumFAB accessibility semantics', () => {
-    it('collapsed FAB has aria-label and aria-expanded=false', () => {
-        render(<PodiumFABHarness />);
+async function expandComposerAndWaitUntilAccessible(user: ReturnType<typeof userEvent.setup>) {
+    await user.click(screen.getByRole('button', { name: 'Open post composer' }));
+
+    await waitFor(() => {
+        const composerGroup = screen.getByRole('group', { name: 'Post composer options' });
+        expect(composerGroup).toHaveAttribute('aria-hidden', 'false');
+    });
+}
+
+describe('PodiumFAB a11y scenarios', () => {
+    it('keeps aria-label and collapsed aria-expanded contract on the closed FAB', () => {
+        render(<PodiumFabHarness isMobile />);
 
         const openComposerButton = screen.getByRole('button', { name: 'Open post composer' });
         expect(openComposerButton).toHaveAttribute('aria-label', 'Open post composer');
         expect(openComposerButton).toHaveAttribute('aria-expanded', 'false');
     });
 
-    it('after expand click, composer options group is exposed for assistive tech', async () => {
+    it('shows expanded composer group state after expand interaction', async () => {
         const user = userEvent.setup();
-        render(<PodiumFABHarness />);
+        render(<PodiumFabHarness isMobile />);
 
-        await user.click(screen.getByRole('button', { name: 'Open post composer' }));
-
-        const composerOptionsGroup = await screen.findByRole('group', { name: 'Post composer options' });
-        await waitFor(() => {
-            expect(composerOptionsGroup).toHaveAttribute('aria-hidden', 'false');
-        });
+        await expandComposerAndWaitUntilAccessible(user);
     });
 
-    it('expanded mini-buttons expose correct side labels', () => {
-        render(
-            <PodiumFAB
-                isExpanded
-                onExpand={() => {}}
-                onSideSelect={() => {}}
-                onCollapse={() => {}}
-            />
-        );
+    it('exposes mini-button aria labels for side selection', async () => {
+        const user = userEvent.setup();
+        render(<PodiumFabHarness isMobile />);
+
+        await expandComposerAndWaitUntilAccessible(user);
 
         expect(screen.getByRole('button', { name: 'Post as Tark' })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'Post as Vitark' })).toBeInTheDocument();
     });
 
-    it('dismiss mini-button has aria-label Close', () => {
-        render(
-            <PodiumFAB
-                isExpanded
-                onExpand={() => {}}
-                onSideSelect={() => {}}
-                onCollapse={() => {}}
-            />
-        );
+    it('exposes aria-label="Close" for the dismiss mini-button', async () => {
+        const user = userEvent.setup();
+        render(<PodiumFabHarness isMobile />);
 
-        expect(screen.getByRole('button', { name: 'Close' })).toBeInTheDocument();
+        await expandComposerAndWaitUntilAccessible(user);
+
+        expect(screen.getByRole('button', { name: 'Close' })).toHaveAttribute('aria-label', 'Close');
     });
 
-    it('FAB is not rendered when mobile surface is disabled (desktop path)', () => {
-        render(<PodiumComposerSurfaceHarness isMobile={false} />);
+    it('does not render FAB controls when mobile mode is disabled', () => {
+        render(<PodiumFabHarness isMobile={false} />);
 
         expect(screen.queryByRole('button', { name: 'Open post composer' })).not.toBeInTheDocument();
-        expect(screen.getByLabelText('Desktop composer surface')).toBeInTheDocument();
+        expect(screen.queryByRole('group', { name: 'Post composer options' })).not.toBeInTheDocument();
     });
 });
