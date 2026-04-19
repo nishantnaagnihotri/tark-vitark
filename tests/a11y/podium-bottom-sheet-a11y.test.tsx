@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { PodiumBottomSheet } from '../../src/components/PodiumBottomSheet';
 
-function renderOpenBottomSheet(overrides?: Partial<ComponentProps<typeof PodiumBottomSheet>>) {
+function renderBottomSheet(overrides?: Partial<ComponentProps<typeof PodiumBottomSheet>>) {
     const onClose = overrides?.onClose ?? vi.fn();
 
     const view = render(
@@ -25,13 +25,15 @@ function renderOpenBottomSheet(overrides?: Partial<ComponentProps<typeof PodiumB
 
 describe('PodiumBottomSheet a11y scenarios', () => {
     it('is not rendered when closed', () => {
-        renderOpenBottomSheet({ isOpen: false });
+        renderBottomSheet({ isOpen: false });
 
         expect(screen.queryByRole('dialog', { name: 'Post composer' })).not.toBeInTheDocument();
+        expect(screen.queryByRole('dialog', { name: 'Post composer', hidden: true })).not.toBeInTheDocument();
+        expect(screen.queryByTestId('podium-sheet-scrim')).not.toBeInTheDocument();
     });
 
     it('renders required dialog role and ARIA attributes when open', () => {
-        renderOpenBottomSheet();
+        renderBottomSheet();
 
         const dialog = screen.getByRole('dialog', { name: 'Post composer' });
         expect(dialog).toHaveAttribute('role', 'dialog');
@@ -40,7 +42,7 @@ describe('PodiumBottomSheet a11y scenarios', () => {
     });
 
     it('moves focus to the first interactive element on open', async () => {
-        renderOpenBottomSheet();
+        renderBottomSheet();
 
         await waitFor(() => {
             expect(screen.getByRole('button', { name: 'Close post composer' })).toHaveFocus();
@@ -49,7 +51,7 @@ describe('PodiumBottomSheet a11y scenarios', () => {
 
     it('keeps tab navigation within the dialog boundary', async () => {
         const user = userEvent.setup();
-        renderOpenBottomSheet();
+        renderBottomSheet();
 
         const closeButton = screen.getByRole('button', { name: 'Close post composer' });
         const publishButton = screen.getByRole('button', { name: 'Publish post' });
@@ -68,7 +70,7 @@ describe('PodiumBottomSheet a11y scenarios', () => {
 
     it('moves focus from first element to last on Shift+Tab', async () => {
         const user = userEvent.setup();
-        renderOpenBottomSheet();
+        renderBottomSheet();
 
         const closeButton = screen.getByRole('button', { name: 'Close post composer' });
         const publishButton = screen.getByRole('button', { name: 'Publish post' });
@@ -82,7 +84,7 @@ describe('PodiumBottomSheet a11y scenarios', () => {
     });
 
     it('calls onClose when Escape is pressed inside the dialog', () => {
-        const { onClose } = renderOpenBottomSheet();
+        const { onClose } = renderBottomSheet();
 
         fireEvent.keyDown(screen.getByRole('dialog', { name: 'Post composer' }), { key: 'Escape' });
 
@@ -90,7 +92,7 @@ describe('PodiumBottomSheet a11y scenarios', () => {
     });
 
     it('marks the scrim as aria-hidden', () => {
-        renderOpenBottomSheet();
+        renderBottomSheet();
 
         const scrim = screen.getByTestId('podium-sheet-scrim');
         expect(scrim).toHaveAttribute('aria-hidden', 'true');
@@ -98,7 +100,7 @@ describe('PodiumBottomSheet a11y scenarios', () => {
 
     it('surfaces errors as polite live alerts', async () => {
         const user = userEvent.setup();
-        renderOpenBottomSheet();
+        renderBottomSheet();
 
         const postTextField = screen.getByRole('textbox', { name: 'Post text' });
         await user.type(postTextField, '   ');
@@ -112,7 +114,7 @@ describe('PodiumBottomSheet a11y scenarios', () => {
 
     it('marks the textarea as aria-invalid when an error is present', async () => {
         const user = userEvent.setup();
-        renderOpenBottomSheet();
+        renderBottomSheet();
 
         const postTextField = screen.getByRole('textbox', { name: 'Post text' });
         await user.type(postTextField, '   ');
