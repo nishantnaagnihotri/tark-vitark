@@ -112,7 +112,10 @@ describe('PodiumFAB', () => {
                 vi.advanceTimersByTime(16);
             });
 
-            expect(screen.getByRole('button', { name: 'Post as Tark' })).toHaveFocus();
+            const tarkButton = screen.getByRole('button', { name: 'Post as Tark' });
+            const closeButton = screen.getByRole('button', { name: 'Close' });
+            expect(tarkButton).toHaveFocus();
+            fireEvent.click(closeButton);
 
             rerender(
                 <PodiumFAB
@@ -127,6 +130,33 @@ describe('PodiumFAB', () => {
         } finally {
             vi.useRealTimers();
         }
+    });
+
+    it('does not restore open button focus after side selection collapse handoff', () => {
+        const onSideSelect = vi.fn();
+
+        const { rerender } = render(
+            <PodiumFAB
+                isExpanded
+                onExpand={() => {}}
+                onSideSelect={onSideSelect}
+                onCollapse={() => {}}
+            />
+        );
+
+        fireEvent.click(screen.getByRole('button', { name: 'Post as Tark' }));
+        expect(onSideSelect).toHaveBeenCalledWith('tark');
+
+        rerender(
+            <PodiumFAB
+                isExpanded={false}
+                onExpand={() => {}}
+                onSideSelect={onSideSelect}
+                onCollapse={() => {}}
+            />
+        );
+
+        expect(screen.getByRole('button', { name: 'Open post composer' })).not.toHaveFocus();
     });
 
     it('keeps expanded controls mounted long enough for collapse transition then unmounts', () => {

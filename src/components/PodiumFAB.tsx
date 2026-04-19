@@ -15,6 +15,7 @@ export function PodiumFAB({ isExpanded, onExpand, onSideSelect, onCollapse }: Po
     const wasExpandedRef = useRef(isExpanded);
     const shouldFocusExpandedControlRef = useRef(false);
     const shouldUnmountComposerGroupRef = useRef(false);
+    const shouldRestoreOpenComposerFocusRef = useRef(false);
     const expandFrameRef = useRef<number | null>(null);
     const [isComposerVisible, setIsComposerVisible] = useState(isExpanded);
     const [isComposerExpanded, setIsComposerExpanded] = useState(isExpanded);
@@ -24,6 +25,7 @@ export function PodiumFAB({ isExpanded, onExpand, onSideSelect, onCollapse }: Po
 
         if (isExpanded) {
             shouldUnmountComposerGroupRef.current = false;
+            shouldRestoreOpenComposerFocusRef.current = false;
             setIsComposerVisible(true);
 
             if (!wasExpanded) {
@@ -48,10 +50,11 @@ export function PodiumFAB({ isExpanded, onExpand, onSideSelect, onCollapse }: Po
                 expandFrameRef.current = null;
             }
 
-            if (wasExpanded) {
+            if (wasExpanded && shouldRestoreOpenComposerFocusRef.current) {
                 openComposerButtonRef.current?.focus();
             }
 
+            shouldRestoreOpenComposerFocusRef.current = false;
             shouldFocusExpandedControlRef.current = false;
             setIsComposerExpanded(false);
 
@@ -87,6 +90,15 @@ export function PodiumFAB({ isExpanded, onExpand, onSideSelect, onCollapse }: Po
     };
 
     const shouldRenderComposerGroup = isComposerVisible || isExpanded;
+    const handleSideSelection = (side: Side) => {
+        shouldRestoreOpenComposerFocusRef.current = false;
+        onSideSelect(side);
+    };
+
+    const handleComposerCollapse = () => {
+        shouldRestoreOpenComposerFocusRef.current = true;
+        onCollapse();
+    };
 
     return (
         <>
@@ -116,7 +128,7 @@ export function PodiumFAB({ isExpanded, onExpand, onSideSelect, onCollapse }: Po
                         aria-label="Post as Tark"
                         tabIndex={isComposerExpanded ? 0 : -1}
                         disabled={!isComposerExpanded}
-                        onClick={() => onSideSelect('tark')}
+                        onClick={() => handleSideSelection('tark')}
                     >
                         T
                     </button>
@@ -126,7 +138,7 @@ export function PodiumFAB({ isExpanded, onExpand, onSideSelect, onCollapse }: Po
                         aria-label="Post as Vitark"
                         tabIndex={isComposerExpanded ? 0 : -1}
                         disabled={!isComposerExpanded}
-                        onClick={() => onSideSelect('vitark')}
+                        onClick={() => handleSideSelection('vitark')}
                     >
                         V
                     </button>
@@ -137,7 +149,7 @@ export function PodiumFAB({ isExpanded, onExpand, onSideSelect, onCollapse }: Po
                         tabIndex={isComposerExpanded ? 0 : -1}
                         disabled={!isComposerExpanded}
                         onTransitionEnd={handleComposerCollapseTransitionEnd}
-                        onClick={onCollapse}
+                        onClick={handleComposerCollapse}
                     >
                         ×
                     </button>
