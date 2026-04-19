@@ -98,7 +98,15 @@ export function DebateScreen() {
                         isOpen={isSheetOpen}
                         selectedSide={selectedSide}
                         onSideChange={setSelectedSide}
-                        onPublish={handlePublish}
+                        onPublish={(text, side) => {
+                            const publishError = handlePublish(text, side);
+                            if (publishError) {
+                                return publishError;
+                            }
+
+                            setIsSheetOpen(false);
+                            return null;
+                        }}
                         onClose={() => {
                             if (ignoreNextSheetCloseRef.current) {
                                 ignoreNextSheetCloseRef.current = false;
