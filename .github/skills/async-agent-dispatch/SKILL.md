@@ -1,9 +1,9 @@
 ---
-name: agent-dispatch
-description: "Agent dispatch workflow: run a single Copilot SDK agent via run-agent.ts, launch parallel async agents for Gate 5 parallel dev dispatch, read prompts from files, configure MCP servers via mcp.json, and maintain Figma OAuth token lifecycle. Use when: dispatching any named agent (prd-agent, dev, design-qa-agent, etc.) from the terminal, running Gate 5 parallel dev agents as background processes, troubleshooting MCP tool access, or refreshing an expired Figma OAuth token."
+name: async-agent-dispatch
+description: "Async agent dispatch workflow: run a single Copilot SDK agent via run-agent.ts, launch parallel async agents for Gate 5 parallel dev dispatch, apply session context prefix for chat traceability, read prompts from files, configure MCP servers via mcp.json, and maintain Figma OAuth token lifecycle. Use when: dispatching any named agent (prd-agent, dev, design-qa-agent, etc.) from the terminal, running Gate 5 parallel dev agents as background processes, tracing async chat sessions back to their originating slice/gate, troubleshooting MCP tool access, or refreshing an expired Figma OAuth token."
 ---
 
-# Agent Dispatch
+# Async Agent Dispatch
 
 ## When To Use
 
@@ -114,6 +114,29 @@ wait  # or poll with get_terminal_output per async terminal ID
 When using `run_in_terminal (mode=async)`, launch each agent in a **separate** `run_in_terminal` call and capture each terminal ID. Poll them independently with `get_terminal_output`.
 
 The `--pre-sleep` flag delays the LLM call (not process startup). `--pre-sleep 0` is valid and still runs in the background.
+
+### Session Context Prefix — Mandatory for Parallel Dispatch
+
+Every prompt dispatched via `run_in_terminal (mode=async)` **must** begin with a structured context header:
+
+```
+[SLICE: <slice-name> | GATE: <N> | <role>]
+```
+
+**Why:** VS Code Copilot Chat uses the start of the first user message as the session title. Without this prefix, all concurrent agent sessions look identical and cannot be traced back to the slice or gate that spawned them.
+
+**Also pass `--task-id`** with the same `<slice-name>/<gate>/<role>` value so the run record in `logs/parallel-agents/` carries the same identifier.
+
+Example — three Gate 5 dev agents dispatched in parallel:
+```bash
+npx tsx scripts/run-agent.ts --task-id debate-screen/gate5/dev-1 dev \
+  "[SLICE: debate-screen | GATE: 5 | dev-1] Implement ArgumentCard …" 2>&1 &
+
+npx tsx scripts/run-agent.ts --task-id debate-screen/gate5/dev-2 dev \
+  "[SLICE: debate-screen | GATE: 5 | dev-2] Implement LegendBar …" 2>&1 &
+```
+
+The VS Code chat panel will show `[SLICE: debate-screen | GATE: 5 | dev-1]` and `[SLICE: debate-screen | GATE: 5 | dev-2]` as session titles, making it immediately obvious which root thread each belongs to.
 
 ### 5. Liveness check
 
