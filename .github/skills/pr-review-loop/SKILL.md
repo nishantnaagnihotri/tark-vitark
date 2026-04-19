@@ -131,3 +131,18 @@ Status: semantic-closed | semantic-open (reason)
 5. **If rebase fails** (non-trivial conflicts or history divergence): do not attempt to force-resolve. Surface the conflict summary to the Product Owner and await explicit authorization before proceeding.
 
 6. **Ongoing check frequency:** verify sync status at minimum once per review loop completion (after 0-comments clean pass). If the PR has been open for multiple sessions or large changes have landed on the base branch since the PR was opened, also check before each fix-push batch.
+
+---
+
+## 5. Pre-Completion Self-Check (Mandatory Before Declaring Done)
+
+Before declaring the PR review workflow complete or saying the PR is "merge-ready", the agent **must** answer each question below. Answering "no" to any item is a blocking condition.
+
+| # | Question | Pass condition |
+|---|---|---|
+| 1 | **Are there any open comments?** Fetch all PR review comments via `gh api repos/<owner>/<repo>/pulls/<n>/comments` and verify every thread has a disposition reply from the author. | Zero `semantic-open` threads |
+| 2 | **Did the latest Copilot review body say "generated 0 comments"?** | Yes, on the current head SHA |
+| 3 | **Is the branch up-to-date with the base?** | Branch sync check passed (Section 4) |
+| 4 | **Are all challenges resolved with Product Owner?** | No pending `Challenge` items awaiting PO disposition |
+
+**Hardening rule:** the agent must not declare "merge-ready" or call the overall task complete until it has explicitly run this self-check and confirmed all four items pass. Skipping this check is a workflow failure.
