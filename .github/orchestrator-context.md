@@ -88,7 +88,7 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). U
 15. Gate 5 default execution is local. Product Owner may opt a specific issue into cloud execution. Final build evidence is verified in local context before merge recommendation.
 16. Gate 5 implementation uses BDD discipline: behavior scenarios, test-first workflow, and scenario-to-test evidence are required before merge progression.
 17. Issue-centric handoff is supported for Gate 5: issue link/number is sufficient only when issue metadata includes acceptance criteria, slice path, and architecture reference.
-18. Gate 5 PR provenance is mandatory: PR body must include issue-closing keyword and an `## Agent Provenance` block with `run-id`, `task-id`, `role`, and `dispatched` fields. The legacy `Execution-Agent: dev` marker alone is not provenance-complete.
+18. Gate 5 PR provenance is mandatory: PR body must include issue-closing keyword and an `## Agent Provenance` block with `run-id`, `session-id`, `role`, and `dispatched` fields. The legacy `Execution-Agent: dev` marker alone is not provenance-complete.
 19. Gate 6 is orchestrator-owned and Local-only. It recommends merge or loop-back based on evidence, but Product Owner alone performs the actual merge.
 20. Design artifact is mandatory for every UX task: Gate 3A must include a valid Figma file URL before progression. Raw file keys must not appear in git-tracked artifacts — store them only in `.figma-config.local`.
 21. Orchestrator terminal policy is diagnostics-first, but explicit Product Owner requests may authorize scoped git mutating commands (including add/commit/push/branch/PR operations); destructive commands still require command-level approval.

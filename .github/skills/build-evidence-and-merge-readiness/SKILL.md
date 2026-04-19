@@ -32,7 +32,7 @@ Every Gate 5 PR must include an `## Agent Provenance` section in its body. The b
 ## Agent Provenance
 
 run-id: <uuid or direct-invocation>
-task-id: <task id or issue ref>
+session-id: <slice/gate/role or direct-invocation>
 role: dev
 dispatched: <ISO timestamp or direct-invocation>
 ```
@@ -40,9 +40,9 @@ dispatched: <ISO timestamp or direct-invocation>
 A superset block injected by the orchestrator (with additional fields such as `title`, `model`, `repo`) also satisfies this requirement; dev must copy it verbatim. This `## Agent Provenance` block replaces the legacy `Execution-Agent: dev` marker everywhere provenance completeness is evaluated; `Execution-Agent: dev` alone is not provenance-complete.
 
 1. Every Gate 5 PR must include an issue-closing keyword (for example, `Closes #123`).
-2. Every Gate 5 PR must include an `## Agent Provenance` block containing at minimum `run-id`, `task-id`, `role`, and `dispatched` fields; a superset block (e.g., orchestrator-injected) also satisfies this requirement.
+2. Every Gate 5 PR must include an `## Agent Provenance` block containing at minimum `run-id`, `session-id`, `role`, and `dispatched` fields; a superset block (e.g., orchestrator-injected) also satisfies this requirement.
 3. This `## Agent Provenance` block replaces the legacy `Execution-Agent: dev` marker everywhere provenance completeness is evaluated; `Execution-Agent: dev` alone is not provenance-complete.
-4. If `run-id` is an orchestrator-generated identifier, it must trace back to a terminal-dispatch record in `/memories/session/active-state.md` (`## Pending Async Runs` `terminal-id` entry) and the corresponding `run-agent.ts` output/log evidence; if `run-id: direct-invocation`, this session-memory linkage requirement is explicitly N/A.
+4. If `run-id` is an orchestrator-generated identifier, it must trace back to a terminal-dispatch record in `/memories/session/active-state.md` (`## Pending Async Runs` `terminal-id` entry) and the corresponding `dispatch-agent.ts` output/log evidence; if `run-id: direct-invocation`, this session-memory linkage requirement is explicitly N/A.
 5. Orchestrator verifies provenance completeness for every Gate 5 PR and verifies `/memories/session/active-state.md` linkage when the `run-id` is an orchestrator-generated identifier.
 
 ## Merge Gate Policy
@@ -61,7 +61,7 @@ A superset block injected by the orchestrator (with additional fields such as `t
 5. Domain language lock: verify code uses domain terminology and concepts (e.g., `displayBrandMessage()` not `renderDOMElement()`). Variable names, function names, and class names reflect the problem domain.
 6. Verification lock: verify required test commands passed and evidence is explicit. All tests passing is mandatory.
 7. PR lock: verify PR exists and includes explicit issue-closing reference and scenario-to-test mapping evidence.
-8. Provenance lock: verify PR body includes a full `## Agent Provenance` block with `run-id`, `task-id`, `role`, and `dispatched` fields.
+8. Provenance lock: verify PR body includes a full `## Agent Provenance` block with `run-id`, `session-id`, `role`, and `dispatched` fields.
 9. Risk lock: verify residual risks and rollback note are documented.
 10. Approval lock: verify unresolved open questions are resolved or explicitly accepted by Product Owner.
 11. Runtime QA scope lock: verify issue is classified as `UI-impacting` or `Runtime QA: Not Required` with explicit rationale.

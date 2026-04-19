@@ -66,7 +66,7 @@ When Gate 4 decomposes a slice into N issues, the orchestrator must evaluate ind
 1. For each parallel task, launch one `run_in_terminal (mode=async)` call with staggered `--pre-sleep` to avoid simultaneous rate-limit spikes:
    ```bash
    set -a && source local.env && set +a
-   npx tsx scripts/run-agent.ts --pre-sleep <0|15|30…> dev "<issue-link>" 2>&1
+   npx tsx scripts/dispatch-agent.ts --pre-sleep <0|15|30…> dev "<issue-link>" 2>&1
    ```
    Capture the terminal ID returned by each `run_in_terminal` call.
 2. **Immediately** write all terminal IDs to `/memories/session/active-state.md` under `## Pending Async Runs` before any other action.

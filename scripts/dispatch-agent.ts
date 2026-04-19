@@ -1,24 +1,24 @@
 #!/usr/bin/env tsx
 /**
- * run-agent.ts — Fire a single Copilot SDK agent session and wait for its result.
+ * dispatch-agent.ts — Fire a single Copilot SDK agent session and wait for its result.
  *
  * Usage:
- *   npx tsx scripts/run-agent.ts [options] <role> "<prompt>" OR @<prompt-file>
+ *   npx tsx scripts/dispatch-agent.ts [options] <role> "<prompt>" OR @<prompt-file>
  *
  * Options:
  *   --pre-sleep <seconds>   Sleep before sending the prompt (useful for async demo runs)
  *   --no-intro              Skip the automatic role-introduction prefix
  *   --model <model-id>      Override the default model (default: gpt-5.3-codex)
- *   --task-id <task-id>     Optional issue/task reference for provenance block
+ *   --session-id <id>       Optional slice/gate/role identifier for session traceability
  *   --allow-agent-orchestrator-mcp
  *                           Allow attaching the agent-orchestrator MCP server (disabled by default)
  *   --output-format json    Emit a JSON result record to stdout instead of human text
  *
  * Examples:
- *   npx tsx scripts/run-agent.ts prd-agent "Draft a PRD for a dark-mode toggle"
- *   npx tsx scripts/run-agent.ts dev @docs/slices/my-slice/06-tasks.md
- *   npx tsx scripts/run-agent.ts --output-format json prd-agent "Draft AC"
- *   npx tsx scripts/run-agent.ts --no-intro dev @06-tasks.md
+ *   npx tsx scripts/dispatch-agent.ts prd-agent "Draft a PRD for a dark-mode toggle"
+ *   npx tsx scripts/dispatch-agent.ts dev @docs/slices/my-slice/06-tasks.md
+ *   npx tsx scripts/dispatch-agent.ts --output-format json prd-agent "Draft AC"
+ *   npx tsx scripts/dispatch-agent.ts --no-intro dev @06-tasks.md
  *
  * Designed for async background use via run_in_terminal (mode=async):
  *   kick it off, continue chatting, get notified on completion.
@@ -88,7 +88,7 @@ function readAgentMeta(agentRole: string): AgentMeta {
             return { tools, systemMessage };
         }
     } catch (err) {
-        console.error(`[run-agent] Warning: could not parse agent file for role '${agentRole}':`, err);
+        console.error(`[dispatch-agent] Warning: could not parse agent file for role '${agentRole}':`, err);
     }
     return fallback;
 }
@@ -160,7 +160,7 @@ function resolveAgentMcpServers(
                 `resolved=[${resolvedHeaderNames.join(", ") || "none"}]`,
                 `skipped=[${skippedHeaderNames.join(", ") || "none"}]`,
             ];
-            logInfo(`[run-agent] mcp-hdrs ${serverKey}: ${logParts.join(" ")}`);
+            logInfo(`[dispatch-agent] mcp-hdrs ${serverKey}: ${logParts.join(" ")}`);
         }
 
         // Required by MCPServerConfigBase: "[]" means no tools, "*" means all.
@@ -209,8 +209,8 @@ for (let i = 0; i < argv.length;) {
     } else if (argv[i] === "--model") {
         model = requireOptionValue("--model", argv[i + 1]);
         argv.splice(i, 2);
-    } else if (argv[i] === "--task-id") {
-        taskIdArg = requireOptionValue("--task-id", argv[i + 1]);
+    } else if (argv[i] === "--session-id") {
+        taskIdArg = requireOptionValue("--session-id", argv[i + 1]);
         argv.splice(i, 2);
     } else if (argv[i] === "--allow-agent-orchestrator-mcp") {
         allowAgentOrchestratorMcp = true;
@@ -239,8 +239,8 @@ function logInfo(message: string): void {
 
 if (argv.length !== 2) {
     console.error(
-        "Usage: npx tsx scripts/run-agent.ts [--pre-sleep <s>] [--no-intro] " +
-        "[--model <id>] [--task-id <id>] [--allow-agent-orchestrator-mcp] " +
+        "Usage: npx tsx scripts/dispatch-agent.ts [--pre-sleep <s>] [--no-intro] " +
+        "[--model <id>] [--session-id <id>] [--allow-agent-orchestrator-mcp] " +
         "[--output-format json] <role> \"<prompt>\" OR @<prompt-file>"
     );
     process.exit(1);
@@ -282,7 +282,7 @@ function persistRun(record: Record<string, unknown>): void {
         const next = { ...prior, ...record };
         writeFileSync(path, JSON.stringify(next, null, 2), "utf-8");
     } catch (err) {
-        console.error("[run-agent] Warning: could not persist run log:", err);
+        console.error("[dispatch-agent] Warning: could not persist run log:", err);
     }
 }
 
@@ -302,7 +302,7 @@ async function withRetry<T>(
             lastErr = err;
             if (attempt < maxRetries && shouldRetry(err)) {
                 const delay = baseMs * Math.pow(2, attempt - 1);
-                console.error(`[run-agent] ${label} failed (attempt ${attempt}/${maxRetries}), retrying in ${delay}ms…`);
+                console.error(`[dispatch-agent] ${label} failed (attempt ${attempt}/${maxRetries}), retrying in ${delay}ms…`);
                 await new Promise((r) => setTimeout(r, delay));
             } else {
                 throw err;
@@ -333,7 +333,7 @@ function injectDevAgentProvenanceBlock(prompt: string, runContext: {
         "## Agent Provenance",
         "",
         `run-id: ${runContext.runId}`,
-        `task-id: ${runContext.taskId}`,
+        `session-id: ${runContext.taskId}`,
         "role: dev",
         `dispatched: ${runContext.startedAt}`,
         `model: ${runContext.model}`,
@@ -357,26 +357,26 @@ function inferTaskId(prompt: string, explicitTaskId?: string): string {
 
 const runId = randomUUID();
 const startedAt = new Date().toISOString();
-logInfo(`[run-agent] started  runId=${runId} role=${role} model=${model} effort=${REASONING_EFFORT} at=${startedAt}`);
-logInfo(`[run-agent] prompt   ${prompt.slice(0, 120).replace(/\n/g, " ")}${prompt.length > 120 ? "…" : ""}`);
+logInfo(`[dispatch-agent] started  runId=${runId} role=${role} model=${model} effort=${REASONING_EFFORT} at=${startedAt}`);
+logInfo(`[dispatch-agent] prompt   ${prompt.slice(0, 120).replace(/\n/g, " ")}${prompt.length > 120 ? "…" : ""}`);
 
 const { tools, systemMessage } = readAgentMeta(role);
 const mcpServers = resolveAgentMcpServers(tools, allowAgentOrchestratorMcp);
 const mcpKeys = Object.keys(mcpServers);
-logInfo(`[run-agent] tools    ${tools.length > 0 ? tools.join(", ") : "(none)"}`);
+logInfo(`[dispatch-agent] tools    ${tools.length > 0 ? tools.join(", ") : "(none)"}`);
 for (const [k, v] of Object.entries(mcpServers)) {
     const { headers, ...rest } = v as any;
     const headerKeys = headers ? Object.keys(headers as Record<string, string>) : [];
     logInfo(
-        `[run-agent] mcp-cfg  ${k} => ${JSON.stringify({
+        `[dispatch-agent] mcp-cfg  ${k} => ${JSON.stringify({
             ...rest,
             ...(headerKeys.length > 0 ? { headers: "<redacted>", headerKeys } : {}),
         })}`
     );
 }
-logInfo(`[run-agent] mcp      ${mcpKeys.length > 0 ? mcpKeys.join(", ") : "(none)"}`);
-logInfo(`[run-agent] system   ${systemMessage.slice(0, 80).replace(/\n/g, " ")}…`);
-logInfo(`[run-agent] flags    no-intro=${noIntro} output-format=${outputFormat}`);
+logInfo(`[dispatch-agent] mcp      ${mcpKeys.length > 0 ? mcpKeys.join(", ") : "(none)"}`);
+logInfo(`[dispatch-agent] system   ${systemMessage.slice(0, 80).replace(/\n/g, " ")}…`);
+logInfo(`[dispatch-agent] flags    no-intro=${noIntro} output-format=${outputFormat}`);
 
 persistRun({ runId, role, model, prompt: prompt.slice(0, 200), startedAt, status: "running" });
 
@@ -401,16 +401,16 @@ try {
         }],
         agent: role,
         ...(mcpKeys.length > 0 ? { mcpServers } : {}),
-        // Disable infinite-session compaction loops — run-agent.ts is single-shot.
+        // Disable infinite-session compaction loops — dispatch-agent.ts is single-shot.
         infiniteSessions: { enabled: false },
         // Block the SDK's built-in subagent delegation to prevent recursive spawning.
         excludedTools: ["delegate_to_agent", "spawn_agent", "create_agent", "run_agent"],
     });
 
-    logInfo(`[run-agent] session  id=${session.sessionId}`);
+    logInfo(`[dispatch-agent] session  id=${session.sessionId}`);
 
     if (preSleepMs > 0) {
-        logInfo(`[run-agent] sleeping ${preSleepMs / 1000}s before sending prompt…`);
+        logInfo(`[dispatch-agent] sleeping ${preSleepMs / 1000}s before sending prompt…`);
         await new Promise((resolve) => setTimeout(resolve, preSleepMs));
     }
 
@@ -434,7 +434,7 @@ try {
 
     const finishedAt = new Date().toISOString();
     persistRun({ runId, status: "done", finishedAt, output });
-    logInfo(`[run-agent] finished at=${finishedAt}`);
+    logInfo(`[dispatch-agent] finished at=${finishedAt}`);
 
     if (outputFormat === "json") {
         process.stdout.write(
@@ -449,7 +449,7 @@ try {
 } catch (err) {
     const finishedAt = new Date().toISOString();
     persistRun({ runId, status: "failed", finishedAt, error: err instanceof Error ? err.message : String(err) });
-    console.error(`[run-agent] failed:`, err instanceof Error ? err.message : err);
+    console.error(`[dispatch-agent] failed:`, err instanceof Error ? err.message : err);
     exitCode = 1;
 } finally {
     if (session) {

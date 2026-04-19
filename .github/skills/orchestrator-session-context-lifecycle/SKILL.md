@@ -56,7 +56,7 @@ After any gate transition or major owner decision:
 
 ## Async Run Tracking Protocol
 
-Any parallel `run-agent.ts` dispatch via `run_in_terminal (mode=async)` creates a fire-and-forget terminal session. Without active tracking these terminal IDs get lost in chat history.
+Any parallel `dispatch-agent.ts` dispatch via `run_in_terminal (mode=async)` creates a fire-and-forget terminal session. Without active tracking these terminal IDs get lost in chat history.
 
 **On dispatch** — immediately after each `run_in_terminal` call returns a terminal ID, write or update `/memories/session/active-state.md` with an `## Pending Async Runs` section, recording each ID as `terminal-id`:
 
@@ -81,7 +81,7 @@ Do this before any other response content. If `/memories/session/active-state.md
 
 **On completion** — when `get_terminal_output` confirms a terminal has exited or GitHub PR cross-check marks a task done, update its row status in session memory and record the outcome (output preview or error). Do not delete the row — keep it as an audit trail for the session.
 
-**Standing rule** — never leave a turn where parallel `run-agent.ts` agents were dispatched without updating session memory with all terminal IDs. This is not optional. Forgetting to write terminal IDs to session memory is a protocol violation.
+**Standing rule** — never leave a turn where parallel `dispatch-agent.ts` agents were dispatched without updating session memory with all terminal IDs. This is not optional. Forgetting to write terminal IDs to session memory is a protocol violation.
 
 ## Log Archiving Protocol
 

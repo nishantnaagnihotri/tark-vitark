@@ -73,7 +73,7 @@ How can this be safely undone if needed?
 
 ```
 run-id: direct-invocation
-task-id: direct-invocation
+session-id: direct-invocation
 role: dev
 dispatched: direct-invocation
 ```
