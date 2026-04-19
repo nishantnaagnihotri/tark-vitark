@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Side } from '../data/debate';
 import '../styles/components/podium-fab.css';
 
@@ -9,72 +9,132 @@ export interface PodiumFABProps {
     onCollapse: () => void;
 }
 
+const FAB_TRANSITION_MS = 300;
+
 export function PodiumFAB({ isExpanded, onExpand, onSideSelect, onCollapse }: PodiumFABProps) {
     const openComposerButtonRef = useRef<HTMLButtonElement>(null);
     const tarkComposerButtonRef = useRef<HTMLButtonElement>(null);
     const wasExpandedRef = useRef(isExpanded);
+    const collapseTimeoutRef = useRef<number | null>(null);
+    const expandFrameRef = useRef<number | null>(null);
+    const [isComposerVisible, setIsComposerVisible] = useState(isExpanded);
+    const [isComposerExpanded, setIsComposerExpanded] = useState(isExpanded);
 
     useEffect(() => {
-        if (isExpanded && !wasExpandedRef.current) {
-            tarkComposerButtonRef.current?.focus();
+        const wasExpanded = wasExpandedRef.current;
+
+        if (isExpanded) {
+            if (collapseTimeoutRef.current !== null) {
+                window.clearTimeout(collapseTimeoutRef.current);
+                collapseTimeoutRef.current = null;
+            }
+
+            setIsComposerVisible(true);
+
+            if (!wasExpanded) {
+                setIsComposerExpanded(false);
+
+                if (expandFrameRef.current !== null) {
+                    window.cancelAnimationFrame(expandFrameRef.current);
+                }
+
+                expandFrameRef.current = window.requestAnimationFrame(() => {
+                    setIsComposerExpanded(true);
+                    tarkComposerButtonRef.current?.focus();
+                });
+            } else {
+                setIsComposerExpanded(true);
+            }
         }
 
-        if (!isExpanded && wasExpandedRef.current) {
-            openComposerButtonRef.current?.focus();
+        if (!isExpanded) {
+            if (expandFrameRef.current !== null) {
+                window.cancelAnimationFrame(expandFrameRef.current);
+                expandFrameRef.current = null;
+            }
+
+            if (wasExpanded) {
+                openComposerButtonRef.current?.focus();
+            }
+
+            setIsComposerExpanded(false);
+
+            if (isComposerVisible) {
+                collapseTimeoutRef.current = window.setTimeout(() => {
+                    setIsComposerVisible(false);
+                    collapseTimeoutRef.current = null;
+                }, FAB_TRANSITION_MS);
+            }
         }
 
         wasExpandedRef.current = isExpanded;
-    }, [isExpanded]);
+    }, [isExpanded, isComposerVisible]);
+
+    useEffect(
+        () => () => {
+            if (collapseTimeoutRef.current !== null) {
+                window.clearTimeout(collapseTimeoutRef.current);
+            }
+
+            if (expandFrameRef.current !== null) {
+                window.cancelAnimationFrame(expandFrameRef.current);
+            }
+        },
+        []
+    );
+
+    const shouldRenderComposerGroup = isComposerVisible || isExpanded;
 
     return (
-        <div className={`podium-fab-shell${isExpanded ? ' podium-fab-shell--expanded' : ''}`}>
-            <button
-                ref={openComposerButtonRef}
-                type="button"
-                className="podium-fab podium-fab__trigger"
-                aria-label="Open post composer"
-                aria-expanded={isExpanded ? 'true' : 'false'}
-                aria-hidden={isExpanded}
-                tabIndex={isExpanded ? -1 : 0}
-                onClick={onExpand}
-            >
-                <span aria-hidden="true">+</span>
-            </button>
-            <div
-                className="podium-fab podium-fab--expanded"
-                role={isExpanded ? 'group' : undefined}
-                aria-label={isExpanded ? 'Post composer options' : undefined}
-                aria-hidden={!isExpanded}
-            >
+        <div className="podium-fab-shell">
+            {!isExpanded && (
                 <button
-                    ref={tarkComposerButtonRef}
+                    ref={openComposerButtonRef}
                     type="button"
-                    className="podium-fab__mini-btn podium-fab__mini-btn--tark"
-                    aria-label="Post as Tark"
-                    tabIndex={isExpanded ? 0 : -1}
-                    onClick={() => onSideSelect('tark')}
+                    className="podium-fab"
+                    aria-label="Open post composer"
+                    aria-expanded={false}
+                    onClick={onExpand}
                 >
-                    T
+                    <span aria-hidden="true">+</span>
                 </button>
-                <button
-                    type="button"
-                    className="podium-fab__mini-btn podium-fab__mini-btn--vitark"
-                    aria-label="Post as Vitark"
-                    tabIndex={isExpanded ? 0 : -1}
-                    onClick={() => onSideSelect('vitark')}
+            )}
+            {shouldRenderComposerGroup && (
+                <div
+                    className={`podium-fab-group${isComposerExpanded ? ' podium-fab-group--expanded' : ''}`}
+                    role={isComposerExpanded ? 'group' : undefined}
+                    aria-label={isComposerExpanded ? 'Post composer options' : undefined}
                 >
-                    V
-                </button>
-                <button
-                    type="button"
-                    className="podium-fab__dismiss"
-                    aria-label="Close"
-                    tabIndex={isExpanded ? 0 : -1}
-                    onClick={onCollapse}
-                >
-                    ×
-                </button>
-            </div>
+                    <button
+                        ref={tarkComposerButtonRef}
+                        type="button"
+                        className="podium-fab__mini-btn podium-fab__mini-btn--tark"
+                        aria-label="Post as Tark"
+                        tabIndex={isComposerExpanded ? 0 : -1}
+                        onClick={() => onSideSelect('tark')}
+                    >
+                        T
+                    </button>
+                    <button
+                        type="button"
+                        className="podium-fab__mini-btn podium-fab__mini-btn--vitark"
+                        aria-label="Post as Vitark"
+                        tabIndex={isComposerExpanded ? 0 : -1}
+                        onClick={() => onSideSelect('vitark')}
+                    >
+                        V
+                    </button>
+                    <button
+                        type="button"
+                        className="podium-fab__dismiss"
+                        aria-label="Close"
+                        tabIndex={isComposerExpanded ? 0 : -1}
+                        onClick={onCollapse}
+                    >
+                        ×
+                    </button>
+                </div>
+            )}
         </div>
     );
 }
