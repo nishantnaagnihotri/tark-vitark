@@ -85,19 +85,35 @@ Status: semantic-closed | semantic-open (reason)
 3. After pushing a commit that addresses PR feedback, the review-loop owner must request a fresh Copilot review and immediately begin polling. Review request and polling are a single atomic sequence — see rule 8 below.
 
    **Dev agent fix dispatch rule:** when delegating review fixes to a dev agent, dispatch via `run_in_terminal (mode=async)`, not `runSubagent`. Dev agent output (commits, thread replies) is a GitHub side effect — it does not need to flow into the orchestrator's reasoning context. Using `runSubagent` here blocks the chat session for the full agent duration unnecessarily. Capture the terminal ID and record it in `active-state.md` under `## Pending Async Runs`. Verify completion via `get_terminal_output` or GitHub PR cross-check.
-4. Once an active PR review loop has started, the review-loop owner must continue it automatically after each push and review request; it must not pause for another Product Owner prompt unless a blocker, protocol conflict, missing capability, or explicit owner-decision point is reached.
+
+   **Dev agent autonomous loop (mandatory when delegating review fixes):** the dispatch prompt for a dev agent fixing PR review comments MUST include self-directed loop instructions. The dev agent must not exit after a single fix pass. Required loop behavior for dispatched dev agents:
+   > After pushing all fixes and replying to all threads:
+   > 1. Use the GitHub MCP `request_copilot_review` tool to request a fresh Copilot review on the PR.
+   > 2. Run `node scripts/wait_for_copilot_review.js --owner <owner> --repo <repo> --pr <number>` synchronously via the execute tool (do NOT background it — wait for the JSON output).
+   > 3. If the review body says "0 comments" / "0 new comments" / "generated 0 comments" → report done and exit.
+   > 4. If there are new comments → run PR Review Intake Protocol (Accept/Challenge/Needs PO Decision), fix all Accepted items, commit, push, reply to threads, then return to step 1.
+   > 5. Only exit the loop when: (a) the review is clean, or (b) there is a genuine blocker requiring Product Owner input. For blockers, state the exact decision needed and exit.
+   >
+   > Exit condition: review body semantically indicates zero new comments. Do NOT exit based on thread resolution state alone.
+
+   Dispatch prompts that omit these loop instructions are incomplete. A dev agent dispatched without them will exit after one pass and leave the review loop to the orchestrator — which is a workflow failure when the intent is autonomous resolution. after each push and review request; it must not pause for another Product Owner prompt unless a blocker, protocol conflict, missing capability, or explicit owner-decision point is reached.
 5. The **only exit condition** from the review loop is when the latest Copilot review body semantically indicates **zero new comments**, including known variants such as **"generated 0 comments"**, **"0 new comments"**, or **"generated no new comments"**. Historical review records may remain on the PR; outdated or resolved threads do not count. The agent must not declare the loop complete based on thread-level analysis alone — the zero-comments result in the newest review is the sole pass criterion.
 6. Each new Copilot comment must go through the PR Review Intake Protocol (section 2 above) before any additional changes are proposed or made.
 7. If the loop cannot continue because of a protocol conflict, missing capability, or explicit owner-decision point, the agent must pause, discuss the issue with the Product Owner, and proceed only with the agreed position.
 8. **Review request and polling are a single atomic sequence (no gap permitted).** The tool call return value from the review request — including `(empty)` — is a trigger to begin polling immediately. It is not a completion signal, not a status, and not a reason to summarize or report. Any return value from the review request tool must be followed by polling without pause. Immediately after calling the review request tool, emit the log entry `[REVIEW REQUESTED] → [POLLING STARTED]` and begin the polling window. If this log entry is absent, the atomic sequence was broken — that is a workflow failure.
 9. Polling must use live GitHub MCP review data as the source of truth rather than relying on cached editor extension payloads.
-10. When a non-MCP polling fallback is used, launch the poll script as an **async terminal** so it does not block the chat session:
-    ```
-    # Via run_in_terminal tool — set mode=async
-    mode: async
-    command: node scripts/wait_for_copilot_review.js --owner <owner> --repo <repo> --pr <number>
-    ```
-    Capture the terminal ID returned by `run_in_terminal`. Check completion with `get_terminal_output <terminal-id>` — you will be notified automatically when the process exits. Do not launch this script in sync/foreground mode; the default timeout is 600 seconds and will block the session.
+10. When a non-MCP polling fallback is used:
+    - **Orchestrator context** (running in VS Code chat session): launch the poll script as an async terminal so it does not block the chat session:
+      ```
+      mode: async
+      command: node scripts/wait_for_copilot_review.js --owner <owner> --repo <repo> --pr <number>
+      ```
+      Capture the terminal ID. Check completion with `get_terminal_output <terminal-id>`. Do not launch in sync/foreground mode; default timeout is 600 seconds and will block.
+    - **Dev agent context** (running inside `run-agent.ts` with `execute` tool): run the poll script **synchronously** via the execute tool — the agent has a 1-hour timeout and can block on the script:
+      ```
+      node scripts/wait_for_copilot_review.js --owner <owner> --repo <repo> --pr <number>
+      ```
+      Read the JSON output directly and act on it within the same session.
 11. Review threads should normally be resolved as part of disposition execution.
 12. If no new Copilot review arrives within the bounded polling window, the agent must report that the loop is blocked on external async review completion.
 13. If a thread still remains outdated and unresolved after disposition execution, the agent must reconcile that thread state before declaring the loop complete, or explicitly record it as `semantically-closed/tooling-unresolved` when MCP lacks the required resolution capability.
