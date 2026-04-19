@@ -1,0 +1,326 @@
+#!/usr/bin/env tsx
+/**
+ * run-agent.ts — Fire a single Copilot SDK agent session and wait for its result.
+ *
+ * Usage:
+ *   npx tsx scripts/run-agent.ts [options] <role> "<prompt>" | @<prompt-file>
+ *
+ * Options:
+ *   --pre-sleep <seconds>   Sleep before sending the prompt (useful for async demo runs)
+ *   --no-intro              Skip the automatic role-introduction prefix
+ *   --model <model-id>      Override the default model (default: gpt-5.3-codex)
+ *   --output-format json    Emit a JSON result record to stdout instead of human text
+ *
+ * Examples:
+ *   npx tsx scripts/run-agent.ts prd-agent "Draft a PRD for a dark-mode toggle"
+ *   npx tsx scripts/run-agent.ts dev @docs/slices/my-slice/06-tasks.md
+ *   npx tsx scripts/run-agent.ts --output-format json prd-agent "Draft AC"
+ *   npx tsx scripts/run-agent.ts --no-intro dev @06-tasks.md
+ *
+ * Designed for async background use via run_in_terminal (mode=async):
+ *   kick it off, continue chatting, get notified on completion.
+ */
+
+import { CopilotClient, approveAll, type MCPServerConfig } from "@github/copilot-sdk";
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { join, resolve } from "node:path";
+import { randomUUID } from "node:crypto";
+
+// ── Config ────────────────────────────────────────────────────────────────────
+
+const DEFAULT_MODEL = "gpt-5.3-codex";
+const REASONING_EFFORT = "high" as const;
+const TIMEOUT_MS = 60 * 60 * 1000; // 1 hour
+const MAX_RETRIES = 3;             // Retry sendAndWait on transient failures
+const RETRY_BASE_MS = 2_000;       // Exponential backoff base (2 s → 4 s → 8 s)
+
+// Prepended to every prompt so the agent always opens with a role introduction.
+// Skipped when --no-intro flag is passed (e.g. for structured @file prompts).
+const ROLE_INTRO_PREFIX =
+    "Begin your response with a single sentence identifying your agent role and primary responsibility. " +
+    "Then respond to the following:\n\n";
+
+const RUNS_LOG_PATH = join(
+    resolve(fileURLToPath(new URL(".", import.meta.url)), ".."),
+    "logs", "parallel-agents", "run-agent-log.json"
+);
+
+const WORKSPACE_ROOT = resolve(fileURLToPath(new URL(".", import.meta.url)), "..");
+const AGENTS_DIR = join(WORKSPACE_ROOT, ".github", "agents");
+const MCP_CONFIG_PATH = join(WORKSPACE_ROOT, ".vscode", "mcp.json");
+
+// ── Agent file parsing ────────────────────────────────────────────────────────
+// Single scan per invocation: reads tools list and system message body from
+// the matching .agent.md file so we never read the same file twice.
+
+interface AgentMeta {
+    tools: string[];
+    systemMessage: string;
+}
+
+function readAgentMeta(agentRole: string): AgentMeta {
+    const fallback: AgentMeta = {
+        tools: [],
+        systemMessage: `You are a ${agentRole} agent. Follow the relevant protocol in .github/agents/.`,
+    };
+    try {
+        const files = readdirSync(AGENTS_DIR).filter((f) => f.endsWith(".agent.md"));
+        for (const file of files) {
+            const content = readFileSync(join(AGENTS_DIR, file), "utf-8");
+            const nameMatch = content.match(/^name:\s*(.+)$/m);
+            if (!nameMatch || nameMatch[1].trim() !== agentRole) continue;
+
+            const fmMatch = content.match(/^---[\s\S]*?^---/m);
+            const tools: string[] = fmMatch
+                ? (fmMatch[0].match(/^tools:\s*\[(.*)\]/m)?.[1] ?? "")
+                    .split(",")
+                    .map((t) => t.trim().replace(/^['"]/, "").replace(/['"]$/, ""))
+                    .filter(Boolean)
+                : [];
+
+            const systemMessage =
+                content.replace(/^---[\s\S]*?^---\s*/m, "").trim() || fallback.systemMessage;
+
+            return { tools, systemMessage };
+        }
+    } catch (err) {
+        console.error(`[run-agent] Warning: could not parse agent file for role '${agentRole}':`, err);
+    }
+    return fallback;
+}
+
+// ── MCP resolution ────────────────────────────────────────────────────────────
+// Matches agent tools list against .vscode/mcp.json server entries.
+
+function resolveAgentMcpServers(agentTools: string[]): Record<string, MCPServerConfig> {
+    if (agentTools.length === 0) return {};
+
+    let rawRegistry: Record<string, any> = {};
+    try {
+        rawRegistry = JSON.parse(readFileSync(MCP_CONFIG_PATH, "utf-8")).servers ?? {};
+    } catch {
+        return {};
+    }
+
+    const result: Record<string, MCPServerConfig> = {};
+    for (const [serverKey, rawConfig] of Object.entries(rawRegistry)) {
+        const { _toolPrefixes, _envHeaders, ...config } = rawConfig as {
+            _toolPrefixes?: string[];
+            _envHeaders?: Record<string, string>;
+            [k: string]: unknown;
+        };
+        const prefixes: string[] = _toolPrefixes ?? [serverKey];
+        const matched = agentTools.some((tool) =>
+            prefixes.some((p) => tool === p || tool.startsWith(p + "/"))
+        );
+        if (!matched) continue;
+
+        // Expand _envHeaders: replace $VAR_NAME with process.env[VAR_NAME].
+        // Skip the header entirely if the expanded value is an empty token (env var unset).
+        if (_envHeaders) {
+            const resolved: Record<string, string> = {};
+            for (const [header, template] of Object.entries(_envHeaders)) {
+                const expanded = template.replace(/\$([A-Z_][A-Z0-9_]*)/g, (_, name) => process.env[name] ?? "");
+                // Skip if the env var was unset (expanded value is empty or still a $VAR placeholder)
+                if (expanded && !expanded.startsWith("$")) {
+                    resolved[header] = expanded;
+                }
+            }
+            if (Object.keys(resolved).length > 0) {
+                (config as any).headers = resolved;
+                console.log(`[run-agent] mcp-hdrs ${serverKey}: headers set (${Object.keys(resolved).join(", ")}), first value prefix="${Object.values(resolved)[0].slice(0, 14)}…"`);
+            } else {
+                console.log(`[run-agent] mcp-hdrs ${serverKey}: no headers resolved (env vars missing?)`);
+            }
+        }
+
+        // Required by MCPServerConfigBase: "[]" means no tools, "*" means all.
+        // Default to exposing all tools from the server unless the mcp.json entry
+        // already specifies an explicit list.
+        if (!Array.isArray((config as any).tools)) {
+            (config as any).tools = ["*"];
+        }
+
+        result[serverKey] = config as MCPServerConfig;
+    }
+    return result;
+}
+
+// ── Args ──────────────────────────────────────────────────────────────────────
+
+let preSleepMs = 0;
+let noIntro = false;
+let model = DEFAULT_MODEL;
+let outputFormat: "text" | "json" = "text";
+const argv = process.argv.slice(2);
+
+for (let i = 0; i < argv.length;) {
+    if (argv[i] === "--pre-sleep") {
+        preSleepMs = parseInt(argv[i + 1] ?? "0", 10) * 1000;
+        argv.splice(i, 2);
+    } else if (argv[i] === "--no-intro") {
+        noIntro = true;
+        argv.splice(i, 1);
+    } else if (argv[i] === "--model") {
+        model = argv[i + 1] ?? DEFAULT_MODEL;
+        argv.splice(i, 2);
+    } else if (argv[i] === "--output-format") {
+        outputFormat = (argv[i + 1] === "json" ? "json" : "text");
+        argv.splice(i, 2);
+    } else {
+        i++;
+    }
+}
+
+const [role, rawPrompt] = argv;
+
+if (!role || !rawPrompt) {
+    console.error(
+        "Usage: npx tsx scripts/run-agent.ts [--pre-sleep <s>] [--no-intro] " +
+        "[--model <id>] [--output-format json] <role> \"<prompt>\" | @<prompt-file>"
+    );
+    process.exit(1);
+}
+
+// Support @file references: `@path/to/file.md` reads file contents as the prompt
+const prompt = rawPrompt.startsWith("@")
+    ? (() => {
+        const filePath = rawPrompt.slice(1);
+        if (!existsSync(filePath)) {
+            console.error(`Prompt file not found: ${filePath}`);
+            process.exit(1);
+        }
+        return readFileSync(filePath, "utf-8");
+    })()
+    : rawPrompt;
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+/** Persist a single run record to the JSON log file (append/update). */
+function persistRun(record: Record<string, unknown>): void {
+    try {
+        mkdirSync(resolve(RUNS_LOG_PATH, ".."), { recursive: true });
+        let log: Record<string, unknown> = {};
+        if (existsSync(RUNS_LOG_PATH)) {
+            try { log = JSON.parse(readFileSync(RUNS_LOG_PATH, "utf-8")); } catch { /* corrupt — reset */ }
+        }
+        const id = record.runId as string;
+        log[id] = { ...(log[id] as object ?? {}), ...record };
+        writeFileSync(RUNS_LOG_PATH, JSON.stringify(log, null, 2), "utf-8");
+    } catch (err) {
+        console.error("[run-agent] Warning: could not persist run log:", err);
+    }
+}
+
+/** Retry an async fn up to maxRetries times with exponential backoff. */
+async function withRetry<T>(
+    fn: () => Promise<T>,
+    maxRetries: number,
+    baseMs: number,
+    label: string
+): Promise<T> {
+    let lastErr: unknown;
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+            return await fn();
+        } catch (err) {
+            lastErr = err;
+            if (attempt < maxRetries) {
+                const delay = baseMs * Math.pow(2, attempt - 1);
+                console.error(`[run-agent] ${label} failed (attempt ${attempt}/${maxRetries}), retrying in ${delay}ms…`);
+                await new Promise((r) => setTimeout(r, delay));
+            }
+        }
+    }
+    throw lastErr;
+}
+
+// ── Run ───────────────────────────────────────────────────────────────────────
+
+const runId = randomUUID();
+const startedAt = new Date().toISOString();
+console.log(`[run-agent] started  role=${role} model=${model} effort=${REASONING_EFFORT} at=${startedAt}`);
+console.log(`[run-agent] prompt   ${prompt.slice(0, 120).replace(/\n/g, " ")}${prompt.length > 120 ? "…" : ""}`);
+
+const { tools, systemMessage } = readAgentMeta(role);
+const mcpServers = resolveAgentMcpServers(tools);
+const mcpKeys = Object.keys(mcpServers);
+console.log(`[run-agent] tools    ${tools.length > 0 ? tools.join(", ") : "(none)"}`)
+for (const [k, v] of Object.entries(mcpServers)) {
+    const { headers, ...rest } = v as any;
+    const maskedHeaders = headers
+        ? Object.fromEntries(Object.entries(headers as Record<string, string>).map(([h, val]) => [h, val.slice(0, 12) + "…"]))
+        : undefined;
+    console.log(`[run-agent] mcp-cfg  ${k} =>`, JSON.stringify({ ...rest, ...(maskedHeaders ? { headers: maskedHeaders } : {}) }));
+}
+console.log(`[run-agent] mcp      ${mcpKeys.length > 0 ? mcpKeys.join(", ") : "(none)"}`);
+console.log(`[run-agent] system   ${systemMessage.slice(0, 80).replace(/\n/g, " ")}…`);
+console.log(`[run-agent] flags    no-intro=${noIntro} output-format=${outputFormat}`);
+
+persistRun({ runId, role, model, prompt: prompt.slice(0, 200), startedAt, status: "running" });
+
+let exitCode = 0;
+
+try {
+    const client = new CopilotClient();
+    // approveAll: grants all permission requests automatically.
+    // This is safe for trusted local use where the agent roles and MCP servers
+    // are fully controlled by the repository owner. Do not use in shared/CI environments.
+    const session = await client.createSession({
+        model,
+        reasoningEffort: REASONING_EFFORT,
+        onPermissionRequest: approveAll,
+        // Register as a named custom agent so the Copilot UI shows the role identity.
+        customAgents: [{
+            name: role,
+            displayName: role,
+            prompt: systemMessage,
+        }],
+        agent: role,
+        ...(mcpKeys.length > 0 ? { mcpServers } : {}),
+        // Disable infinite-session compaction loops — run-agent.ts is single-shot.
+        infiniteSessions: { enabled: false },
+        // Block the SDK's built-in subagent delegation to prevent recursive spawning.
+        excludedTools: ["delegate_to_agent", "spawn_agent", "create_agent", "run_agent"],
+    });
+
+    console.log(`[run-agent] session  id=${session.sessionId}`);
+
+    if (preSleepMs > 0) {
+        console.log(`[run-agent] sleeping ${preSleepMs / 1000}s before sending prompt…`);
+        await new Promise((resolve) => setTimeout(resolve, preSleepMs));
+    }
+
+    const finalPrompt = noIntro ? prompt : ROLE_INTRO_PREFIX + prompt;
+    const result = await withRetry(
+        () => session.sendAndWait({ prompt: finalPrompt }, TIMEOUT_MS),
+        MAX_RETRIES,
+        RETRY_BASE_MS,
+        "sendAndWait"
+    );
+    const output = result?.data?.content ?? "(no output)";
+
+    const finishedAt = new Date().toISOString();
+    persistRun({ runId, status: "done", finishedAt, output });
+    console.log(`[run-agent] finished at=${finishedAt}`);
+
+    if (outputFormat === "json") {
+        process.stdout.write(
+            JSON.stringify({ runId, role, model, startedAt, finishedAt, status: "done", output }) + "\n"
+        );
+    } else {
+        console.log("\n── Agent output ─────────────────────────────────────────────────────────────\n");
+        console.log(output);
+        console.log("\n─────────────────────────────────────────────────────────────────────────────");
+    }
+
+    try { await session.disconnect(); } catch { /* non-fatal */ }
+} catch (err) {
+    const finishedAt = new Date().toISOString();
+    persistRun({ runId, status: "failed", finishedAt, error: err instanceof Error ? err.message : String(err) });
+    console.error(`[run-agent] failed:`, err instanceof Error ? err.message : err);
+    exitCode = 1;
+}
+
+process.exit(exitCode);
