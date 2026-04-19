@@ -11,7 +11,7 @@ const podiumFabCss = readFileSync(
 
 describe('PodiumFAB', () => {
     it('renders collapsed state with + button aria contract', () => {
-        render(
+        const { container } = render(
             <PodiumFAB
                 isExpanded={false}
                 onExpand={() => {}}
@@ -25,6 +25,7 @@ describe('PodiumFAB', () => {
         expect(openButton).toHaveAttribute('aria-expanded', 'false');
         expect(openButton).toHaveClass('podium-fab');
         expect(screen.queryByRole('group', { name: 'Post composer options' })).not.toBeInTheDocument();
+        expect(container.querySelector('.podium-fab--expanded')).toBeInTheDocument();
     });
 
     it('calls onExpand when + is clicked', () => {
@@ -83,12 +84,52 @@ describe('PodiumFAB', () => {
         expect(onCollapse).toHaveBeenCalledTimes(1);
     });
 
+    it('moves focus into composer controls on expand and restores it on collapse', () => {
+        const { rerender } = render(
+            <PodiumFAB
+                isExpanded={false}
+                onExpand={() => {}}
+                onSideSelect={() => {}}
+                onCollapse={() => {}}
+            />
+        );
+
+        const openButton = screen.getByRole('button', { name: 'Open post composer' });
+        openButton.focus();
+
+        rerender(
+            <PodiumFAB
+                isExpanded
+                onExpand={() => {}}
+                onSideSelect={() => {}}
+                onCollapse={() => {}}
+            />
+        );
+
+        expect(screen.getByRole('button', { name: 'Post as Tark' })).toHaveFocus();
+
+        rerender(
+            <PodiumFAB
+                isExpanded={false}
+                onExpand={() => {}}
+                onSideSelect={() => {}}
+                onCollapse={() => {}}
+            />
+        );
+
+        expect(screen.getByRole('button', { name: 'Open post composer' })).toHaveFocus();
+    });
+
     it('defines tokenized colors and 300ms scale/opacity transitions in CSS source', () => {
         expect(podiumFabCss).toContain('background-color: var(--color-brand-primary);');
         expect(podiumFabCss).toContain('background-color: var(--color-tark-surface);');
         expect(podiumFabCss).toContain('background-color: var(--color-vitark-surface);');
+        expect(podiumFabCss).toContain('var(--color-elevation-shadow-ambient)');
+        expect(podiumFabCss).toContain('var(--color-elevation-shadow-key)');
         expect(podiumFabCss).toContain('transition: opacity 300ms ease-out, transform 300ms ease-out;');
         expect(podiumFabCss).toContain('transform: scale(0.8);');
         expect(podiumFabCss).not.toMatch(/#[0-9a-fA-F]{3,8}/);
+        expect(podiumFabCss).not.toMatch(/\brgba?\s*\(/i);
+        expect(podiumFabCss).not.toMatch(/\bhsla?\s*\(/i);
     });
 });
