@@ -31,6 +31,12 @@ tark-vitark is a personal portfolio/product project. Current implementation is s
 - Skill hardening suggestions should be concrete: specify the skill file, the rule or checklist item to add, and the trigger condition.
 - Apply this principle after gate closures, incident reviews, and any time a protocol deviation is caught.
 
+## Code Review Specs
+
+When reviewing a pull request, Copilot must:
+
+- Always leave a review comment if any existing review thread on the PR has no response from the author. Point out the unanswered thread(s) explicitly so the author knows they need to reply before the review loop can close.
+
 ## Proprietary
 
 This repository is proprietary. All rights reserved. See `LICENSE`.
