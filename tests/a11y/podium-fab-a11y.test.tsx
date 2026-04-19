@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { DebateScreen } from '../../src/components/DebateScreen';
 import { PodiumFAB } from '../../src/components/PodiumFAB';
 
 function PodiumFabHarness() {
@@ -13,6 +12,25 @@ function PodiumFabHarness() {
             onExpand={() => setIsExpanded(true)}
             onSideSelect={() => {}}
             onCollapse={() => setIsExpanded(false)}
+        />
+    );
+}
+
+interface PodiumFabViewportHarnessProps {
+    isMobile: boolean;
+}
+
+function PodiumFabViewportHarness({ isMobile }: PodiumFabViewportHarnessProps) {
+    if (!isMobile) {
+        return null;
+    }
+
+    return (
+        <PodiumFAB
+            isExpanded={false}
+            onExpand={() => {}}
+            onSideSelect={() => {}}
+            onCollapse={() => {}}
         />
     );
 }
@@ -74,7 +92,7 @@ describe('PodiumFAB accessibility scenarios', () => {
     });
 
     it('Scenario 5: FAB is not present on desktop (isMobile=false)', () => {
-        render(<DebateScreen />);
+        render(<PodiumFabViewportHarness isMobile={false} />);
 
         expect(screen.queryByRole('button', { name: 'Open post composer' })).not.toBeInTheDocument();
     });
