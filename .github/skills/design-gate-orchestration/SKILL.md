@@ -104,3 +104,16 @@ Local-validation rule:
 1. Both substeps (UX+Design single-pass, Design QA) must pass before Gate 3 is closed.
 2. Closing Gate 3 requires `Design QA Verdict Package` and explicit Product Owner approval on record.
 3. Gate 4 (Architecture) must not begin until Gate 3 is formally closed.
+
+## Cross-Slice Continuation Rule
+
+When Gate 3 closes with a scope that cannot be built in the current slice (e.g., the original slice was already built and merged before the amendment design was complete):
+
+1. **Gate 3 is not fully closed until the continuation slice folder exists.** Closing the session or writing a session checkpoint while a "will continue as new slice" note is only a text note — without the slice folder — is a protocol violation.
+2. Before the session ends, orchestrator must:
+   a. Create `docs/slices/<new-slice-name>/` folder.
+   b. Write `01-requirement.md` for the new slice (referencing the approved amendment).
+   c. Write reference artifacts `02-prd.md`, `03-ux.md`, `04-design-qa.md` pointing to the source slice amendment.
+   d. Update the source slice's `06-tasks.md` amendment status table to reflect the continuation slice name and folder.
+3. Only after the continuation slice folder and reference artifacts are committed is Gate 3 considered formally closed for the amendment scope.
+4. The orchestrator records the continuation slice name and gate-ready state in `.github/orchestrator-context.md` before ending the session.
