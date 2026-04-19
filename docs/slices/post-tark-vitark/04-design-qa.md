@@ -49,7 +49,7 @@ All fills, strokes, and text on FAB, SegmentedControl, and Podium are DS token-b
 
 ### P2 PO Approval Status
 
-**Pending** — PO action required at links above.
+**Approved** — PO verbal approval 2026-04-18. Gate 3 closed. Continuation slice: `docs/slices/podium-fab-collapse/`.
 
 ---
 
