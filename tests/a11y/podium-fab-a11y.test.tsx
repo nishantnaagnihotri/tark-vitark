@@ -40,8 +40,8 @@ describe('PodiumFAB a11y scenarios', () => {
 
         await user.click(screen.getByRole('button', { name: 'Open post composer' }));
 
-        const composerGroup = screen.getByRole('group', { name: 'Post composer options' });
         await waitFor(() => {
+            const composerGroup = screen.getByRole('group', { name: 'Post composer options' });
             expect(composerGroup).toHaveAttribute('aria-hidden', 'false');
         });
     });

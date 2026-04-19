@@ -90,9 +90,9 @@ describe('PodiumBottomSheet a11y scenarios', () => {
     });
 
     it('marks the scrim as aria-hidden', () => {
-        const { container } = renderOpenBottomSheet();
+        renderOpenBottomSheet();
 
-        const scrim = container.querySelector('.podium-sheet-scrim');
+        const scrim = screen.getByTestId('podium-sheet-scrim');
         expect(scrim).toHaveAttribute('aria-hidden', 'true');
     });
 
@@ -107,6 +107,7 @@ describe('PodiumBottomSheet a11y scenarios', () => {
         const errorMessage = screen.getByRole('alert');
         expect(errorMessage).toHaveAttribute('role', 'alert');
         expect(errorMessage).toHaveAttribute('aria-live', 'polite');
+        expect(errorMessage).toHaveTextContent('Text cannot be empty or whitespace only.');
     });
 
     it('marks the textarea as aria-invalid when an error is present', async () => {
