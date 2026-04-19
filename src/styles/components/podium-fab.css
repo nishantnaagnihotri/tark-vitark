@@ -1,24 +1,33 @@
-.podium-fab {
+.podium-fab-shell {
     position: fixed;
     right: var(--space-4);
     bottom: var(--space-4);
     z-index: 30;
+    width: 56px;
+    height: 56px;
+}
+
+.podium-fab {
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+.podium-fab__trigger {
     display: grid;
     place-items: center;
     width: 56px;
     height: 56px;
-    border: 0;
     border-radius: 28px;
-    padding: 0;
     background-color: var(--color-brand-primary);
     color: var(--color-brand-on-primary);
     box-shadow:
-        0 4px 8px 0 rgb(0 0 0 / 15%),
-        0 1px 3px 0 rgb(0 0 0 / 30%);
-    cursor: pointer;
+        0 4px 8px 0 var(--color-elevation-shadow-ambient),
+        0 1px 3px 0 var(--color-elevation-shadow-key);
+    transition: opacity 300ms ease-out, transform 300ms ease-out;
 }
 
-.podium-fab > span {
+.podium-fab__trigger > span {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -29,10 +38,14 @@
 }
 
 .podium-fab--expanded {
+    position: absolute;
+    right: 0;
+    bottom: 0;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: 12px;
+    pointer-events: none;
 }
 
 .podium-fab__mini-btn,
@@ -50,8 +63,8 @@
     height: 40px;
     border-radius: 20px;
     box-shadow:
-        0 4px 8px 3px rgb(0 0 0 / 15%),
-        0 1px 3px 0 rgb(0 0 0 / 30%);
+        0 4px 8px 3px var(--color-elevation-shadow-ambient),
+        0 1px 3px 0 var(--color-elevation-shadow-key);
     font-size: var(--typescale-label-md-size);
     font-weight: var(--typescale-label-md-weight);
     line-height: var(--typescale-label-md-line-height);
@@ -75,20 +88,30 @@
     background-color: var(--color-brand-primary);
     color: var(--color-brand-on-primary);
     box-shadow:
-        0 4px 8px 3px rgb(0 0 0 / 15%),
-        0 1px 3px 0 rgb(0 0 0 / 30%);
+        0 4px 8px 3px var(--color-elevation-shadow-ambient),
+        0 1px 3px 0 var(--color-elevation-shadow-key);
     font-size: 1.5rem;
     line-height: 1;
 }
 
-.podium-fab--expanded .podium-fab__mini-btn,
-.podium-fab--expanded .podium-fab__dismiss {
+.podium-fab-shell--expanded .podium-fab--expanded {
+    pointer-events: auto;
+}
+
+.podium-fab-shell--expanded .podium-fab__trigger {
+    transform: scale(0.8);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.podium-fab-shell--expanded .podium-fab__mini-btn,
+.podium-fab-shell--expanded .podium-fab__dismiss {
     transform: scale(1);
     opacity: 1;
 }
 
 @media (min-width: 768px) {
-    .podium-fab {
+    .podium-fab-shell {
         display: none;
     }
 }
