@@ -41,9 +41,9 @@ const ROLE_INTRO_PREFIX =
     "Begin your response with a single sentence identifying your agent role and primary responsibility. " +
     "Then respond to the following:\n\n";
 
-const RUNS_LOG_PATH = join(
+const RUNS_LOG_DIR = join(
     resolve(fileURLToPath(new URL(".", import.meta.url)), ".."),
-    "logs", "parallel-agents", "run-agent-log.json"
+    "logs", "parallel-agents"
 );
 
 const WORKSPACE_ROOT = resolve(fileURLToPath(new URL(".", import.meta.url)), "..");
@@ -217,17 +217,26 @@ const prompt = rawPrompt.startsWith("@")
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-/** Persist a single run record to the JSON log file (append/update). */
+function runLogPath(runId: string): string {
+    return join(RUNS_LOG_DIR, `${runId}.json`);
+}
+
+/** Persist a single run record to the per-run JSON log file (append/update). */
 function persistRun(record: Record<string, unknown>): void {
     try {
-        mkdirSync(resolve(RUNS_LOG_PATH, ".."), { recursive: true });
-        let log: Record<string, unknown> = {};
-        if (existsSync(RUNS_LOG_PATH)) {
-            try { log = JSON.parse(readFileSync(RUNS_LOG_PATH, "utf-8")); } catch { /* corrupt — reset */ }
+        const id = record.runId;
+        if (typeof id !== "string" || id.length === 0) {
+            throw new Error("persistRun requires a string runId");
         }
-        const id = record.runId as string;
-        log[id] = { ...(log[id] as object ?? {}), ...record };
-        writeFileSync(RUNS_LOG_PATH, JSON.stringify(log, null, 2), "utf-8");
+
+        mkdirSync(RUNS_LOG_DIR, { recursive: true });
+        const path = runLogPath(id);
+        let prior: Record<string, unknown> = {};
+        if (existsSync(path)) {
+            try { prior = JSON.parse(readFileSync(path, "utf-8")); } catch { /* corrupt — reset */ }
+        }
+        const next = { ...prior, ...record };
+        writeFileSync(path, JSON.stringify(next, null, 2), "utf-8");
     } catch (err) {
         console.error("[run-agent] Warning: could not persist run log:", err);
     }
