@@ -297,6 +297,28 @@ function isRetryableSendAndWaitError(err: unknown): boolean {
     return /(429|rate limit|timeout|timed out|ECONNRESET|EAI_AGAIN|ENOTFOUND|ENETUNREACH|503|Service Unavailable)/i.test(message);
 }
 
+function injectDevAgentProvenanceBlock(prompt: string, runContext: {
+    runId: string;
+    role: string;
+    model: string;
+    startedAt: string;
+}): string {
+    if (runContext.role !== "dev" || /##\s*Agent Provenance/i.test(prompt)) {
+        return prompt;
+    }
+    return [
+        prompt,
+        "",
+        "## Agent Provenance",
+        "",
+        `run-id: ${runContext.runId}`,
+        "task-id: direct-invocation",
+        "role: dev",
+        `dispatched: ${runContext.startedAt}`,
+        `model: ${runContext.model}`,
+    ].join("\n");
+}
+
 // ── Run ───────────────────────────────────────────────────────────────────────
 
 const runId = randomUUID();
@@ -358,7 +380,8 @@ try {
         await new Promise((resolve) => setTimeout(resolve, preSleepMs));
     }
 
-    const finalPrompt = noIntro ? prompt : ROLE_INTRO_PREFIX + prompt;
+    const promptWithProvenance = injectDevAgentProvenanceBlock(prompt, { runId, role, model, startedAt });
+    const finalPrompt = noIntro ? promptWithProvenance : ROLE_INTRO_PREFIX + promptWithProvenance;
     const result = await withRetry(
         () => session.sendAndWait({ prompt: finalPrompt }, TIMEOUT_MS),
         MAX_RETRIES,
