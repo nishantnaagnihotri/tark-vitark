@@ -17,9 +17,14 @@ https://github.com/nishantnaagnihotri/tark-vitark/issues/127
 
 | Task | GitHub Issue | Title | Dependency | Architecture Section | Status |
 |---|---|---|---|---|---|
-| T-1 | #124 | `[debate-screen-polish] Item 1 — Widen mobile argument cards to 85% in timeline.css` | None | §2.3 | 🔲 Open |
-| T-2 | #125 | `[debate-screen-polish] Item 2 — Fix Vitark spine-cell grid-row to 1 in timeline.css` | None (sequential after T-1) | §2.4 | 🔲 Open |
-| T-3 | #126 | `[debate-screen-polish] BDD feature file and step definitions for both items` | T-1 + T-2 | §6 | 🔲 Open |
+| T-1 | #124 | `[debate-screen-polish] Item 1 — Widen mobile argument cards to 85% in timeline.css` | None | §2.3 | ✅ Complete |
+| T-2 | #125 | `[debate-screen-polish] Item 2 — Fix Vitark spine-cell grid-row to 1 in timeline.css` | None (sequential after T-1) | §2.4 | ✅ Complete |
+| T-3 | #126 | `[debate-screen-polish] BDD feature file and step definitions for both items` | T-1 + T-2 | §6 | ✅ Complete |
+---
+
+## Slice Closure
+
+**Status:** All dev tasks complete, all changes present in master, no merge or PR needed — slice fully integrated and CLOSED as of 2026-04-19.
 
 ---
 
