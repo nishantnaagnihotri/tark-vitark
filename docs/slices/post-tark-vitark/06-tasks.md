@@ -55,6 +55,22 @@ Parallelizable at start: **T-1, T-2, T-6** (no dependencies).
 
 ---
 
+## Amendment A-1 — FAB+Podium (Gate 3 complete, not yet built)
+
+**Status:** Gate 3 complete — not built. Will continue as a new slice.
+
+| Artifact | Status |
+|---|---|
+| PRD Amendment (FR-19–23 / AC-19–23) | ✅ Complete — `02-prd.md` 2026-04-18 |
+| UX Flow/State Package (8 frames, 4 phases) | ✅ Complete — `03-ux.md` Pass 5 2026-04-18 |
+| Design QA Gate 3B Pass 2 verdict | ✅ Agent-Ready — `04-design-qa.md` 2026-04-18 |
+| Gate 4 Architecture | ❌ Not started |
+| Gate 5 Build | ❌ Not started |
+
+**Summary:** Amendment A-1 replaces the always-visible inline Podium (FR-1/FR-2, AC-1/AC-2) with a FAB-triggered bottom-sheet Podium pattern (FR-19–23, AC-19–23). The design is fully approved but no build tasks were created before the original slice closed. This work will be tracked as a dedicated new slice (`podium-fab-collapse` or similar) after PR #145 merges.
+
+---
+
 ## Traceability Checklist
 
 - [x] `06-tasks.md` contains created issue numbers and architecture section references
@@ -62,3 +78,4 @@ Parallelizable at start: **T-1, T-2, T-6** (no dependencies).
 - [x] Labels: `slice`, `slice:post-tark-vitark`, `user-story` applied
 - [x] Each story issue has acceptance criteria, slice path, architecture reference, and `Slice Tracker:` backlink
 - [x] Gate 5 (Build) authorized after this file is committed
+- [⚠️] Amendment A-1 (FAB+Podium) — Gate 3 complete, Gate 4/5 pending in new slice
