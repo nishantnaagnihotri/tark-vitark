@@ -35,6 +35,7 @@
   --color-legend-surface: #F5F5F5;
   --color-legend-on-surface: #4D4D4D;
   --color-legend-separator: #999999;
+  --color-scrim: rgba(0, 0, 0, 0.32);
 
   /* ── Typography (M3 Type Scale) ── */
   --font-family-plain: Inter, "Segoe UI", Arial, sans-serif;
