@@ -2,6 +2,7 @@
 .env
 .env.local
 .env.*.local
+local.env
 
 # Local project config (private identifiers)
 .figma-config.local
