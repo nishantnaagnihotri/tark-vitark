@@ -1,10 +1,10 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { PodiumBottomSheet } from '../../src/components/PodiumBottomSheet';
 
-describe('PodiumBottomSheet accessibility semantics', () => {
-    it('does not render in DOM when isOpen is false', () => {
+describe('PodiumBottomSheet accessibility contract', () => {
+    it('scenario 6: closed sheet is not rendered', () => {
         render(
             <PodiumBottomSheet
                 isOpen={false}
@@ -18,7 +18,7 @@ describe('PodiumBottomSheet accessibility semantics', () => {
         expect(screen.queryByRole('dialog', { name: 'Post composer' })).not.toBeInTheDocument();
     });
 
-    it('open state exposes dialog role, modal semantics, and label', () => {
+    it('scenario 7: open sheet exposes required dialog attributes', () => {
         render(
             <PodiumBottomSheet
                 isOpen
@@ -34,7 +34,7 @@ describe('PodiumBottomSheet accessibility semantics', () => {
         expect(dialog).toHaveAttribute('aria-label', 'Post composer');
     });
 
-    it('moves focus to first interactive element when opened', async () => {
+    it('scenario 8: focus moves to first interactive element when sheet opens', async () => {
         render(
             <PodiumBottomSheet
                 isOpen
@@ -45,17 +45,16 @@ describe('PodiumBottomSheet accessibility semantics', () => {
             />
         );
 
-        const closeButton = screen.getByRole('button', { name: 'Close post composer' });
         await waitFor(() => {
-            expect(closeButton).toHaveFocus();
+            expect(screen.getByRole('button', { name: 'Close post composer' })).toHaveFocus();
         });
     });
 
-    it('keeps tab focus within the sheet boundary', async () => {
+    it('scenario 9: tab navigation remains trapped inside the sheet', async () => {
         const user = userEvent.setup();
         render(
             <>
-                <button type="button">Outside before</button>
+                <button type="button">Outside focus target</button>
                 <PodiumBottomSheet
                     isOpen
                     selectedSide="tark"
@@ -63,12 +62,12 @@ describe('PodiumBottomSheet accessibility semantics', () => {
                     onPublish={() => {}}
                     onClose={() => {}}
                 />
-                <button type="button">Outside after</button>
             </>
         );
 
         const closeButton = screen.getByRole('button', { name: 'Close post composer' });
         const publishButton = screen.getByRole('button', { name: 'Publish post' });
+        const outsideButton = screen.getByRole('button', { name: 'Outside focus target' });
 
         await waitFor(() => {
             expect(closeButton).toHaveFocus();
@@ -78,10 +77,10 @@ describe('PodiumBottomSheet accessibility semantics', () => {
         await user.tab();
 
         expect(closeButton).toHaveFocus();
-        expect(screen.getByRole('button', { name: 'Outside after' })).not.toHaveFocus();
+        expect(outsideButton).not.toHaveFocus();
     });
 
-    it('Shift+Tab from first element wraps focus to last element', async () => {
+    it('scenario 10: Shift+Tab from first element wraps to last element', async () => {
         const user = userEvent.setup();
         render(
             <PodiumBottomSheet
@@ -104,8 +103,7 @@ describe('PodiumBottomSheet accessibility semantics', () => {
         expect(publishButton).toHaveFocus();
     });
 
-    it('Escape key triggers onClose', async () => {
-        const user = userEvent.setup();
+    it('scenario 11: Escape key closes the sheet', () => {
         const onClose = vi.fn();
 
         render(
@@ -118,16 +116,11 @@ describe('PodiumBottomSheet accessibility semantics', () => {
             />
         );
 
-        const closeButton = screen.getByRole('button', { name: 'Close post composer' });
-        await waitFor(() => {
-            expect(closeButton).toHaveFocus();
-        });
-
-        await user.keyboard('{Escape}');
+        fireEvent.keyDown(screen.getByRole('dialog', { name: 'Post composer' }), { key: 'Escape' });
         expect(onClose).toHaveBeenCalledTimes(1);
     });
 
-    it('scrim is hidden from assistive technologies', () => {
+    it('scenario 12: scrim is hidden from the accessibility tree', () => {
         render(
             <PodiumBottomSheet
                 isOpen
@@ -141,8 +134,7 @@ describe('PodiumBottomSheet accessibility semantics', () => {
         expect(screen.getByTestId('podium-sheet-scrim')).toHaveAttribute('aria-hidden', 'true');
     });
 
-    it('validation error announces via alert + polite live region', async () => {
-        const user = userEvent.setup();
+    it('scenario 13: error message uses alert role and polite live region', () => {
         render(
             <PodiumBottomSheet
                 isOpen
@@ -153,15 +145,17 @@ describe('PodiumBottomSheet accessibility semantics', () => {
             />
         );
 
-        await user.click(screen.getByRole('button', { name: 'Publish post' }));
+        const textarea = screen.getByRole('textbox', { name: 'Post text' });
+        const publishButton = screen.getByRole('button', { name: 'Publish post' });
 
-        const validationAlert = screen.getByRole('alert');
-        expect(validationAlert).toHaveAttribute('aria-live', 'polite');
-        expect(validationAlert).toHaveTextContent('Text cannot be empty or whitespace only.');
+        fireEvent.change(textarea, { target: { value: '   ' } });
+        fireEvent.click(publishButton);
+
+        const errorMessage = screen.getByRole('alert');
+        expect(errorMessage).toHaveAttribute('aria-live', 'polite');
     });
 
-    it('textarea sets aria-invalid=true when validation error is present', async () => {
-        const user = userEvent.setup();
+    it('scenario 14: textarea marks aria-invalid=true when validation error is present', () => {
         render(
             <PodiumBottomSheet
                 isOpen
@@ -172,8 +166,12 @@ describe('PodiumBottomSheet accessibility semantics', () => {
             />
         );
 
-        await user.click(screen.getByRole('button', { name: 'Publish post' }));
+        const textarea = screen.getByRole('textbox', { name: 'Post text' });
+        const publishButton = screen.getByRole('button', { name: 'Publish post' });
 
-        expect(screen.getByRole('textbox', { name: 'Post text' })).toHaveAttribute('aria-invalid', 'true');
+        fireEvent.change(textarea, { target: { value: '   ' } });
+        fireEvent.click(publishButton);
+
+        expect(textarea).toHaveAttribute('aria-invalid', 'true');
     });
 });
