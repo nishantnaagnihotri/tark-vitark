@@ -80,4 +80,4 @@ Parallelizable at start: **T-1, T-2, T-6** (no dependencies).
 - [x] Labels: `slice`, `slice:post-tark-vitark`, `user-story` applied
 - [x] Each story issue has acceptance criteria, slice path, architecture reference, and `Slice Tracker:` backlink
 - [x] Gate 5 (Build) authorized after this file is committed
-- [⚠️] Amendment A-1 (FAB+Podium) — Gate 3 complete, Gate 4/5 pending in new slice
+- [ ] ⚠️ Amendment A-1 (FAB+Podium) — Gate 3 complete, Gate 4/5 pending in new slice
