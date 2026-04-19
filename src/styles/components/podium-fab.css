@@ -1,0 +1,94 @@
+.podium-fab {
+    position: fixed;
+    right: var(--space-4);
+    bottom: var(--space-4);
+    z-index: 30;
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border: 0;
+    border-radius: 28px;
+    padding: 0;
+    background-color: var(--color-brand-primary);
+    color: var(--color-brand-on-primary);
+    box-shadow:
+        0 4px 8px 0 rgb(0 0 0 / 15%),
+        0 1px 3px 0 rgb(0 0 0 / 30%);
+    cursor: pointer;
+}
+
+.podium-fab > span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.podium-fab--expanded {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+.podium-fab__mini-btn,
+.podium-fab__dismiss {
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    transform: scale(0.8);
+    opacity: 0;
+    transition: opacity 300ms ease-out, transform 300ms ease-out;
+}
+
+.podium-fab__mini-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    box-shadow:
+        0 4px 8px 3px rgb(0 0 0 / 15%),
+        0 1px 3px 0 rgb(0 0 0 / 30%);
+    font-size: var(--typescale-label-md-size);
+    font-weight: var(--typescale-label-md-weight);
+    line-height: var(--typescale-label-md-line-height);
+    letter-spacing: var(--typescale-label-md-tracking);
+}
+
+.podium-fab__mini-btn--tark {
+    background-color: var(--color-tark-surface);
+    color: var(--color-tark-on-surface);
+}
+
+.podium-fab__mini-btn--vitark {
+    background-color: var(--color-vitark-surface);
+    color: var(--color-vitark-on-surface);
+}
+
+.podium-fab__dismiss {
+    width: 56px;
+    height: 56px;
+    border-radius: 28px;
+    background-color: var(--color-brand-primary);
+    color: var(--color-brand-on-primary);
+    box-shadow:
+        0 4px 8px 3px rgb(0 0 0 / 15%),
+        0 1px 3px 0 rgb(0 0 0 / 30%);
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.podium-fab--expanded .podium-fab__mini-btn,
+.podium-fab--expanded .podium-fab__dismiss {
+    transform: scale(1);
+    opacity: 1;
+}
+
+@media (min-width: 768px) {
+    .podium-fab {
+        display: none;
+    }
+}
