@@ -176,6 +176,7 @@ describe('PodiumFAB', () => {
         expect(podiumFabCss).toMatch(/var\(--color-elevation-shadow-key\)/);
         expect(podiumFabCss).toMatch(/transition:\s*opacity\s+300ms\s+ease-out,\s*transform\s+300ms\s+ease-out/);
         expect(podiumFabCss).toMatch(/transform:\s*scale\(0\.8\)/);
+        expect(podiumFabCss).toMatch(/\.podium-fab--expanded\s*\{[\s\S]*pointer-events:\s*auto;/);
         expect(podiumFabCss).not.toMatch(/#[0-9a-fA-F]{3,8}/);
         expect(podiumFabCss).not.toMatch(/\brgba?\s*\(/i);
         expect(podiumFabCss).not.toMatch(/\bhsla?\s*\(/i);

@@ -45,6 +45,10 @@ button.podium-fab > span {
     pointer-events: none;
 }
 
+.podium-fab--expanded {
+    pointer-events: auto;
+}
+
 .podium-fab__mini-btn,
 .podium-fab__dismiss {
     border: 0;
