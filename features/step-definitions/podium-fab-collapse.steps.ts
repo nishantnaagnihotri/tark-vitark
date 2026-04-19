@@ -120,7 +120,9 @@ function renderDebateScreen(world: PodiumFabCollapseWorld): void {
     ensureAnimationFrameApi();
     cleanup();
     world.renderResult = render(createElement(DebateScreen));
-    world.baselineCount = activeRender(world).getAllByRole('listitem').length;
+    world.baselineCount = activeRender(world).container.querySelectorAll(
+        '.timeline__list > li'
+    ).length;
 }
 
 async function expandFab(world: PodiumFabCollapseWorld): Promise<void> {
