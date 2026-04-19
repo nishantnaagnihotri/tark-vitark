@@ -96,7 +96,7 @@ Status: semantic-closed | semantic-open (reason)
    >
    > Exit condition: review body semantically indicates zero new comments. Do NOT exit based on thread resolution state alone.
 
-   Dispatch prompts that omit these loop instructions are incomplete. A dev agent dispatched without them will exit after one pass and leave the review loop to the orchestrator — which is a workflow failure when the intent is autonomous resolution. after each push and review request; it must not pause for another Product Owner prompt unless a blocker, protocol conflict, missing capability, or explicit owner-decision point is reached.
+   Dispatch prompts that omit these loop instructions are incomplete. A dev agent dispatched without them will exit after one pass and leave the review loop to the orchestrator — which is a workflow failure when the intent is autonomous resolution.
 5. The **only exit condition** from the review loop is when the latest Copilot review body semantically indicates **zero new comments**, including known variants such as **"generated 0 comments"**, **"0 new comments"**, or **"generated no new comments"**. Historical review records may remain on the PR; outdated or resolved threads do not count. The agent must not declare the loop complete based on thread-level analysis alone — the zero-comments result in the newest review is the sole pass criterion.
 6. Each new Copilot comment must go through the PR Review Intake Protocol (section 2 above) before any additional changes are proposed or made.
 7. If the loop cannot continue because of a protocol conflict, missing capability, or explicit owner-decision point, the agent must pause, discuss the issue with the Product Owner, and proceed only with the agreed position.
