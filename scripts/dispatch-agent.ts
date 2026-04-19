@@ -10,8 +10,6 @@
  *   --no-intro              Skip the automatic role-introduction prefix
  *   --model <model-id>      Override the default model (default: gpt-5.3-codex)
  *   --session-id <id>       Optional slice/gate/role identifier for session traceability
- *   --allow-agent-orchestrator-mcp
- *                           Allow attaching the agent-orchestrator MCP server (disabled by default)
  *   --output-format json    Emit a JSON result record to stdout instead of human text
  *
  * Examples:
@@ -97,8 +95,7 @@ function readAgentMeta(agentRole: string): AgentMeta {
 // Matches agent tools list against .vscode/mcp.json server entries.
 
 function resolveAgentMcpServers(
-    agentTools: string[],
-    allowAgentOrchestratorMcp: boolean
+    agentTools: string[]
 ): Record<string, MCPServerConfig> {
     if (agentTools.length === 0) return {};
 
@@ -111,7 +108,6 @@ function resolveAgentMcpServers(
 
     const result: Record<string, MCPServerConfig> = {};
     for (const [serverKey, rawConfig] of Object.entries(rawRegistry)) {
-        if (!allowAgentOrchestratorMcp && serverKey === "agent-orchestrator") continue;
 
         const { _toolPrefixes, _envHeaders, ...config } = rawConfig as {
             _toolPrefixes?: string[];
@@ -180,8 +176,7 @@ function resolveAgentMcpServers(
 let preSleepMs = 0;
 let noIntro = false;
 let model = DEFAULT_MODEL;
-let taskIdArg: string | undefined;
-let allowAgentOrchestratorMcp = false;
+let sessionIdArg: string | undefined;
 let outputFormat: "text" | "json" = "text";
 const argv = process.argv.slice(2);
 
@@ -210,11 +205,8 @@ for (let i = 0; i < argv.length;) {
         model = requireOptionValue("--model", argv[i + 1]);
         argv.splice(i, 2);
     } else if (argv[i] === "--session-id") {
-        taskIdArg = requireOptionValue("--session-id", argv[i + 1]);
+        sessionIdArg = requireOptionValue("--session-id", argv[i + 1]);
         argv.splice(i, 2);
-    } else if (argv[i] === "--allow-agent-orchestrator-mcp") {
-        allowAgentOrchestratorMcp = true;
-        argv.splice(i, 1);
     } else if (argv[i] === "--output-format") {
         const format = requireOptionValue("--output-format", argv[i + 1]);
         if (format !== "json" && format !== "text") {
@@ -240,7 +232,7 @@ function logInfo(message: string): void {
 if (argv.length !== 2) {
     console.error(
         "Usage: npx tsx scripts/dispatch-agent.ts [--pre-sleep <s>] [--no-intro] " +
-        "[--model <id>] [--session-id <id>] [--allow-agent-orchestrator-mcp] " +
+        "[--model <id>] [--session-id <id>] " +
         "[--output-format json] <role> \"<prompt>\" OR @<prompt-file>"
     );
     process.exit(1);
@@ -322,7 +314,7 @@ function injectDevAgentProvenanceBlock(prompt: string, runContext: {
     role: string;
     model: string;
     startedAt: string;
-    taskId: string;
+    sessionId: string;
 }): string {
     if (runContext.role !== "dev" || /##\s*Agent Provenance/i.test(prompt)) {
         return prompt;
@@ -333,16 +325,16 @@ function injectDevAgentProvenanceBlock(prompt: string, runContext: {
         "## Agent Provenance",
         "",
         `run-id: ${runContext.runId}`,
-        `session-id: ${runContext.taskId}`,
+        `session-id: ${runContext.sessionId}`,
         "role: dev",
         `dispatched: ${runContext.startedAt}`,
         `model: ${runContext.model}`,
     ].join("\n");
 }
 
-function inferTaskId(prompt: string, explicitTaskId?: string): string {
-    if (explicitTaskId && explicitTaskId.trim().length > 0) {
-        return explicitTaskId.trim();
+function inferSessionId(prompt: string, explicitSessionId?: string): string {
+    if (explicitSessionId && explicitSessionId.trim().length > 0) {
+        return explicitSessionId.trim();
     }
     const issueUrlMatch = prompt.match(/github\.com\/[^/\s]+\/[^/\s]+\/issues\/(\d+)/i);
     if (issueUrlMatch) return `#${issueUrlMatch[1]}`;
@@ -361,7 +353,7 @@ logInfo(`[dispatch-agent] started  runId=${runId} role=${role} model=${model} ef
 logInfo(`[dispatch-agent] prompt   ${prompt.slice(0, 120).replace(/\n/g, " ")}${prompt.length > 120 ? "…" : ""}`);
 
 const { tools, systemMessage } = readAgentMeta(role);
-const mcpServers = resolveAgentMcpServers(tools, allowAgentOrchestratorMcp);
+const mcpServers = resolveAgentMcpServers(tools);
 const mcpKeys = Object.keys(mcpServers);
 logInfo(`[dispatch-agent] tools    ${tools.length > 0 ? tools.join(", ") : "(none)"}`);
 for (const [k, v] of Object.entries(mcpServers)) {
@@ -414,13 +406,13 @@ try {
         await new Promise((resolve) => setTimeout(resolve, preSleepMs));
     }
 
-    const taskId = inferTaskId(prompt, taskIdArg);
+    const sessionId = inferSessionId(prompt, sessionIdArg);
     const promptWithProvenance = injectDevAgentProvenanceBlock(prompt, {
         runId,
         role,
         model,
         startedAt,
-        taskId,
+        sessionId,
     });
     const finalPrompt = noIntro ? promptWithProvenance : ROLE_INTRO_PREFIX + promptWithProvenance;
     const result = await withRetry(
