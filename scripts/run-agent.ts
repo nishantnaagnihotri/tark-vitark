@@ -3,7 +3,7 @@
  * run-agent.ts — Fire a single Copilot SDK agent session and wait for its result.
  *
  * Usage:
- *   npx tsx scripts/run-agent.ts [options] <role> "<prompt>" | @<prompt-file>
+ *   npx tsx scripts/run-agent.ts [options] <role> "<prompt>" OR @<prompt-file>
  *
  * Options:
  *   --pre-sleep <seconds>   Sleep before sending the prompt (useful for async demo runs)
@@ -241,7 +241,7 @@ if (argv.length !== 2) {
     console.error(
         "Usage: npx tsx scripts/run-agent.ts [--pre-sleep <s>] [--no-intro] " +
         "[--model <id>] [--task-id <id>] [--allow-agent-orchestrator-mcp] " +
-        "[--output-format json] <role> \"<prompt>\" | @<prompt-file>"
+        "[--output-format json] <role> \"<prompt>\" OR @<prompt-file>"
     );
     process.exit(1);
 }
