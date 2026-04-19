@@ -35,14 +35,14 @@ jobs:
             missing_provenance=true
           fi
 
-          for key in 'run-id:' 'task-id:' 'role:' 'dispatched:'; do
+          for key in 'run-id:' 'session-id:' 'role:' 'dispatched:'; do
             if ! printf '%s\n' "$PR_BODY" | grep -qE "^[[:space:]]*${key}[[:space:]]*"; then
               missing_provenance=true
             fi
           done
 
           if [ "$missing_provenance" = true ]; then
-            echo "::warning::PR body missing ## Agent Provenance block or required provenance fields (run-id:, task-id:, role:, dispatched:)"
+            echo "::warning::PR body missing ## Agent Provenance block or required provenance fields (run-id:, session-id:, role:, dispatched:)"
           fi
 
       - name: Check PR body for issue-closing keyword
