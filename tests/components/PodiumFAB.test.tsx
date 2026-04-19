@@ -54,8 +54,8 @@ describe('PodiumFAB', () => {
         );
 
         const group = screen.getByRole('group', { name: 'Post composer options' });
-        expect(group).toHaveClass('podium-fab-group');
-        expect(group).toHaveClass('podium-fab-group--expanded');
+        expect(group).toHaveClass('podium-fab');
+        expect(group).toHaveClass('podium-fab--expanded');
         expect(screen.getByRole('button', { name: 'Post as Tark' })).toHaveTextContent('T');
         expect(screen.getByRole('button', { name: 'Post as Vitark' })).toHaveTextContent('V');
         expect(screen.getByRole('button', { name: 'Close' })).toHaveTextContent('×');
@@ -151,15 +151,18 @@ describe('PodiumFAB', () => {
                 />
             );
 
-            const collapsingGroup = container.querySelector('.podium-fab-group');
+            const collapsingGroup = container.querySelector('.podium-fab--group');
             expect(collapsingGroup).toBeInTheDocument();
-            expect(collapsingGroup).not.toHaveClass('podium-fab-group--expanded');
+            expect(collapsingGroup).toHaveAttribute('aria-hidden', 'true');
+            expect(collapsingGroup).not.toHaveClass('podium-fab--expanded');
+            expect(container.querySelector('.podium-fab__mini-btn')).toBeDisabled();
+            expect(container.querySelector('.podium-fab__dismiss')).toBeDisabled();
 
             act(() => {
                 vi.advanceTimersByTime(300);
             });
 
-            expect(container.querySelector('.podium-fab-group')).not.toBeInTheDocument();
+            expect(container.querySelector('.podium-fab--group')).not.toBeInTheDocument();
         } finally {
             vi.useRealTimers();
         }
