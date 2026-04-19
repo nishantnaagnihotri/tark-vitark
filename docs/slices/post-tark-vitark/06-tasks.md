@@ -57,6 +57,8 @@ Parallelizable at start: **T-1, T-2, T-6** (no dependencies).
 
 ## Amendment A-1 — FAB+Podium (Gate 3 complete, not yet built)
 
+> **Note on timeline:** The "Gate 4 End — 2026-04-16" header above refers to the original slice's Gate 4 close date. Amendment A-1 was a post-closure Gate 3 design change approved on 2026-04-18 — after the original tasks were already built and merged. Gate 4/5 for Amendment A-1 were never started before the slice closed.
+
 **Status:** Gate 3 complete — not built. Will continue as a new slice.
 
 | Artifact | Status |
