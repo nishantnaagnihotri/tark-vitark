@@ -8,26 +8,23 @@
 }
 
 .podium-fab {
-    border: 0;
-    padding: 0;
-    cursor: pointer;
-}
-
-.podium-fab__trigger {
     display: grid;
     place-items: center;
     width: 56px;
     height: 56px;
+    border: 0;
     border-radius: 28px;
+    padding: 0;
     background-color: var(--color-brand-primary);
     color: var(--color-brand-on-primary);
     box-shadow:
         0 4px 8px 0 var(--color-elevation-shadow-ambient),
         0 1px 3px 0 var(--color-elevation-shadow-key);
-    transition: opacity 300ms ease-out, transform 300ms ease-out;
+    font: inherit;
+    cursor: pointer;
 }
 
-.podium-fab__trigger > span {
+.podium-fab > span {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -37,7 +34,7 @@
     line-height: 1;
 }
 
-.podium-fab--expanded {
+.podium-fab-group {
     position: absolute;
     right: 0;
     bottom: 0;
@@ -52,6 +49,7 @@
 .podium-fab__dismiss {
     border: 0;
     padding: 0;
+    font: inherit;
     cursor: pointer;
     transform: scale(0.8);
     opacity: 0;
@@ -94,20 +92,17 @@
     line-height: 1;
 }
 
-.podium-fab-shell--expanded .podium-fab--expanded {
-    pointer-events: auto;
-}
-
-.podium-fab-shell--expanded .podium-fab__trigger {
-    transform: scale(0.8);
-    opacity: 0;
-    pointer-events: none;
-}
-
-.podium-fab-shell--expanded .podium-fab__mini-btn,
-.podium-fab-shell--expanded .podium-fab__dismiss {
+.podium-fab-group--expanded .podium-fab__mini-btn,
+.podium-fab-group--expanded .podium-fab__dismiss {
     transform: scale(1);
     opacity: 1;
+}
+
+.podium-fab:focus-visible,
+.podium-fab__mini-btn:focus-visible,
+.podium-fab__dismiss:focus-visible {
+    outline: 2px solid var(--color-on-surface);
+    outline-offset: 2px;
 }
 
 @media (min-width: 768px) {

@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { PodiumFAB } from '../../src/components/PodiumFAB';
 
@@ -11,7 +11,7 @@ const podiumFabCss = readFileSync(
 
 describe('PodiumFAB', () => {
     it('renders collapsed state with + button aria contract', () => {
-        const { container } = render(
+        render(
             <PodiumFAB
                 isExpanded={false}
                 onExpand={() => {}}
@@ -25,7 +25,6 @@ describe('PodiumFAB', () => {
         expect(openButton).toHaveAttribute('aria-expanded', 'false');
         expect(openButton).toHaveClass('podium-fab');
         expect(screen.queryByRole('group', { name: 'Post composer options' })).not.toBeInTheDocument();
-        expect(container.querySelector('.podium-fab--expanded')).toBeInTheDocument();
     });
 
     it('calls onExpand when + is clicked', () => {
@@ -55,8 +54,8 @@ describe('PodiumFAB', () => {
         );
 
         const group = screen.getByRole('group', { name: 'Post composer options' });
-        expect(group).toHaveClass('podium-fab');
-        expect(group).toHaveClass('podium-fab--expanded');
+        expect(group).toHaveClass('podium-fab-group');
+        expect(group).toHaveClass('podium-fab-group--expanded');
         expect(screen.getByRole('button', { name: 'Post as Tark' })).toHaveTextContent('T');
         expect(screen.getByRole('button', { name: 'Post as Vitark' })).toHaveTextContent('V');
         expect(screen.getByRole('button', { name: 'Close' })).toHaveTextContent('×');
@@ -85,49 +84,95 @@ describe('PodiumFAB', () => {
     });
 
     it('moves focus into composer controls on expand and restores it on collapse', () => {
-        const { rerender } = render(
-            <PodiumFAB
-                isExpanded={false}
-                onExpand={() => {}}
-                onSideSelect={() => {}}
-                onCollapse={() => {}}
-            />
-        );
+        vi.useFakeTimers();
 
-        const openButton = screen.getByRole('button', { name: 'Open post composer' });
-        openButton.focus();
+        try {
+            const { rerender } = render(
+                <PodiumFAB
+                    isExpanded={false}
+                    onExpand={() => {}}
+                    onSideSelect={() => {}}
+                    onCollapse={() => {}}
+                />
+            );
 
-        rerender(
-            <PodiumFAB
-                isExpanded
-                onExpand={() => {}}
-                onSideSelect={() => {}}
-                onCollapse={() => {}}
-            />
-        );
+            const openButton = screen.getByRole('button', { name: 'Open post composer' });
+            openButton.focus();
 
-        expect(screen.getByRole('button', { name: 'Post as Tark' })).toHaveFocus();
+            rerender(
+                <PodiumFAB
+                    isExpanded
+                    onExpand={() => {}}
+                    onSideSelect={() => {}}
+                    onCollapse={() => {}}
+                />
+            );
 
-        rerender(
-            <PodiumFAB
-                isExpanded={false}
-                onExpand={() => {}}
-                onSideSelect={() => {}}
-                onCollapse={() => {}}
-            />
-        );
+            act(() => {
+                vi.advanceTimersByTime(16);
+            });
 
-        expect(screen.getByRole('button', { name: 'Open post composer' })).toHaveFocus();
+            expect(screen.getByRole('button', { name: 'Post as Tark' })).toHaveFocus();
+
+            rerender(
+                <PodiumFAB
+                    isExpanded={false}
+                    onExpand={() => {}}
+                    onSideSelect={() => {}}
+                    onCollapse={() => {}}
+                />
+            );
+
+            expect(screen.getByRole('button', { name: 'Open post composer' })).toHaveFocus();
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+
+    it('keeps expanded controls mounted long enough for collapse transition then unmounts', () => {
+        vi.useFakeTimers();
+
+        try {
+            const { container, rerender } = render(
+                <PodiumFAB
+                    isExpanded
+                    onExpand={() => {}}
+                    onSideSelect={() => {}}
+                    onCollapse={() => {}}
+                />
+            );
+
+            rerender(
+                <PodiumFAB
+                    isExpanded={false}
+                    onExpand={() => {}}
+                    onSideSelect={() => {}}
+                    onCollapse={() => {}}
+                />
+            );
+
+            const collapsingGroup = container.querySelector('.podium-fab-group');
+            expect(collapsingGroup).toBeInTheDocument();
+            expect(collapsingGroup).not.toHaveClass('podium-fab-group--expanded');
+
+            act(() => {
+                vi.advanceTimersByTime(300);
+            });
+
+            expect(container.querySelector('.podium-fab-group')).not.toBeInTheDocument();
+        } finally {
+            vi.useRealTimers();
+        }
     });
 
     it('defines tokenized colors and 300ms scale/opacity transitions in CSS source', () => {
-        expect(podiumFabCss).toContain('background-color: var(--color-brand-primary);');
-        expect(podiumFabCss).toContain('background-color: var(--color-tark-surface);');
-        expect(podiumFabCss).toContain('background-color: var(--color-vitark-surface);');
-        expect(podiumFabCss).toContain('var(--color-elevation-shadow-ambient)');
-        expect(podiumFabCss).toContain('var(--color-elevation-shadow-key)');
-        expect(podiumFabCss).toContain('transition: opacity 300ms ease-out, transform 300ms ease-out;');
-        expect(podiumFabCss).toContain('transform: scale(0.8);');
+        expect(podiumFabCss).toMatch(/background-color:\s*var\(--color-brand-primary\)/);
+        expect(podiumFabCss).toMatch(/background-color:\s*var\(--color-tark-surface\)/);
+        expect(podiumFabCss).toMatch(/background-color:\s*var\(--color-vitark-surface\)/);
+        expect(podiumFabCss).toMatch(/var\(--color-elevation-shadow-ambient\)/);
+        expect(podiumFabCss).toMatch(/var\(--color-elevation-shadow-key\)/);
+        expect(podiumFabCss).toMatch(/transition:\s*opacity\s+300ms\s+ease-out,\s*transform\s+300ms\s+ease-out/);
+        expect(podiumFabCss).toMatch(/transform:\s*scale\(0\.8\)/);
         expect(podiumFabCss).not.toMatch(/#[0-9a-fA-F]{3,8}/);
         expect(podiumFabCss).not.toMatch(/\brgba?\s*\(/i);
         expect(podiumFabCss).not.toMatch(/\bhsla?\s*\(/i);
