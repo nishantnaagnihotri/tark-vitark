@@ -89,7 +89,13 @@ Status: semantic-closed | semantic-open (reason)
 7. If the loop cannot continue because of a protocol conflict, missing capability, or explicit owner-decision point, the agent must pause, discuss the issue with the Product Owner, and proceed only with the agreed position.
 8. **Review request and polling are a single atomic sequence (no gap permitted).** The tool call return value from the review request — including `(empty)` — is a trigger to begin polling immediately. It is not a completion signal, not a status, and not a reason to summarize or report. Any return value from the review request tool must be followed by polling without pause. Immediately after calling the review request tool, emit the log entry `[REVIEW REQUESTED] → [POLLING STARTED]` and begin the polling window. If this log entry is absent, the atomic sequence was broken — that is a workflow failure.
 9. Polling must use live GitHub MCP review data as the source of truth rather than relying on cached editor extension payloads.
-10. When a non-MCP polling fallback is used, prefer `node scripts/wait_for_copilot_review.js --owner <owner> --repo <repo> --pr <number>`.
+10. When a non-MCP polling fallback is used, launch the poll script as an **async terminal** so it does not block the chat session:
+    ```
+    # Via run_in_terminal tool — set mode=async
+    mode: async
+    command: node scripts/wait_for_copilot_review.js --owner <owner> --repo <repo> --pr <number>
+    ```
+    Capture the terminal ID returned by `run_in_terminal`. Check completion with `get_terminal_output <terminal-id>` — you will be notified automatically when the process exits. Do not launch this script in sync/foreground mode; the default timeout is 600 seconds and will block the session.
 11. Review threads should normally be resolved as part of disposition execution.
 12. If no new Copilot review arrives within the bounded polling window, the agent must report that the loop is blocked on external async review completion.
 13. If a thread still remains outdated and unresolved after disposition execution, the agent must reconcile that thread state before declaring the loop complete, or explicitly record it as `semantically-closed/tooling-unresolved` when MCP lacks the required resolution capability.
