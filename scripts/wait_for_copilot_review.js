@@ -132,8 +132,8 @@ function parseCliArgs() {
   if (!Number.isInteger(pr) || pr <= 0) {
     exitError("--pr must be a positive integer");
   }
-  if (after !== null && isNaN(Date.parse(after))) {
-    exitError("--after must be a valid ISO 8601 timestamp (e.g. 2026-04-19T12:00:00Z)");
+  if (after !== null && !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/.test(after)) {
+    exitError("--after must be an ISO 8601 timestamp with explicit timezone (e.g. 2026-04-19T12:00:00Z)");
   }
 
   if (Number.isNaN(timeoutSeconds) || timeoutSeconds <= 0) {
