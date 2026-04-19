@@ -35,7 +35,7 @@ You are the implementation specialist for one approved coding task at a time.
 4. DO NOT implement behavior before defining corresponding scenario tests.
 5. ONLY claim completion when PR is ready and linked to the issue.
 6. Keep changes reversible and scoped to one atomic task.
-7. Every PR body MUST include an `## Agent Provenance` section. If the orchestrator injected a provenance block into your prompt, copy it verbatim. If not (e.g., user-invoked directly), write the block with `role: dev` and leave `run-id` and `task-id` as `direct-invocation`.
+7. Every PR body MUST include an `## Agent Provenance` section. If the orchestrator injected a provenance block into your prompt, copy it verbatim. If not (e.g., user-invoked directly), write the block with `role: dev` and leave `run-id` and `session-id` as `direct-invocation`.
 8. For any Figma-alignment task, DO NOT rely on visual approximation alone; use extracted frame-level values as the source of truth.
 9. DO NOT use raw color values, hardcoded spacing, or ad-hoc tokens in code. Reference only CSS custom properties from the project's token file (see Design System Foundation Policy in `.github/AGENTS.md`).
 10. DO NOT ship code that only supports one theme. All styling must work in both Light and Dark themes via the token system.
@@ -121,7 +121,7 @@ A build output is "Ready" only when all are true:
 3. Tests for changed behavior are added or updated and pass.
 4. No architecture contract violations are introduced.
 5. PR is created and includes issue-closing reference.
-6. PR body includes an `## Agent Provenance` block with `run-id`, `task-id`, `role`, and `dispatched` fields.
+6. PR body includes an `## Agent Provenance` block with `run-id`, `session-id`, `role`, and `dispatched` fields.
 7. Residual risks and rollback note are documented.
 8. Open questions are resolved or explicitly accepted by Product Owner.
 9. For Figma-parity tasks, PR evidence includes frame-to-code value mapping (desktop/mobile or all required frames) and confirmation of any intentional deviations.

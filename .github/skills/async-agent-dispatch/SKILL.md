@@ -1,6 +1,6 @@
 ---
 name: async-agent-dispatch
-description: "Async agent dispatch workflow: run a single Copilot SDK agent via run-agent.ts, launch parallel async agents for Gate 5 parallel dev dispatch, apply session context prefix for chat traceability, read prompts from files, configure MCP servers via mcp.json, and maintain Figma OAuth token lifecycle. Use when: dispatching any named agent (prd-agent, dev, design-qa-agent, etc.) from the terminal, running Gate 5 parallel dev agents as background processes, tracing async chat sessions back to their originating slice/gate, troubleshooting MCP tool access, or refreshing an expired Figma OAuth token."
+description: "Async agent dispatch workflow: run a single Copilot SDK agent via dispatch-agent.ts, launch parallel async agents for Gate 5 parallel dev dispatch, apply session context prefix for chat traceability, read prompts from files, configure MCP servers via mcp.json, and maintain Figma OAuth token lifecycle. Use when: dispatching any named agent (prd-agent, dev, design-qa-agent, etc.) from the terminal, running Gate 5 parallel dev agents as background processes, tracing async chat sessions back to their originating slice/gate, troubleshooting MCP tool access, or refreshing an expired Figma OAuth token."
 ---
 
 # Async Agent Dispatch
@@ -36,9 +36,9 @@ Before every agent dispatch, classify the expected output:
 
 ## Core Script
 
-`scripts/run-agent.ts` — single-shot Copilot SDK agent dispatcher.
+`scripts/dispatch-agent.ts` — single-shot Copilot SDK agent dispatcher.
 
-**Location**: `scripts/run-agent.ts` in the workspace root.
+**Location**: `scripts/dispatch-agent.ts` in the workspace root.
 
 **Dependencies**:
 - `@github/copilot-sdk` (consumed from `node_modules`)
@@ -51,7 +51,7 @@ Before every agent dispatch, classify the expected output:
 
 ## Usage Patterns
 
-> **For terminal-dispatched agents (`scripts/run-agent.ts`, especially Gate 5), always run as async background processes.**
+> **For terminal-dispatched agents (`scripts/dispatch-agent.ts`, especially Gate 5), always run as async background processes.**
 > This callout applies to terminal dispatch only; it does **not** override the Gates 1–4 `runSubagent` sync path in the decision rule above.
 > Agent calls take 10–60+ seconds. Running them in the foreground blocks the chat session.
 > Use `run_in_terminal (mode=async)` from the agent tool, or append `&` in a shell script.
@@ -62,28 +62,28 @@ Before every agent dispatch, classify the expected output:
 ```bash
 # Via shell — background with &
 set -a && source local.env && set +a
-npx tsx scripts/run-agent.ts <role> "<prompt>" 2>&1 &
+npx tsx scripts/dispatch-agent.ts <role> "<prompt>" 2>&1 &
 echo "[bg] PID=$!"
 ```
 
 ```
 # Via run_in_terminal tool — set mode=async
 mode: async
-command: set -a && source local.env && set +a && npx tsx scripts/run-agent.ts <role> "<prompt>" 2>&1
+command: set -a && source local.env && set +a && npx tsx scripts/dispatch-agent.ts <role> "<prompt>" 2>&1
 ```
 
 Examples:
 ```bash
-npx tsx scripts/run-agent.ts prd-agent "Draft a PRD for a dark-mode toggle" 2>&1 &
-npx tsx scripts/run-agent.ts requirement-challenger "Challenge this requirement: …" 2>&1 &
-npx tsx scripts/run-agent.ts design-qa-agent "Review the ThemeToggle component for a11y issues" 2>&1 &
+npx tsx scripts/dispatch-agent.ts prd-agent "Draft a PRD for a dark-mode toggle" 2>&1 &
+npx tsx scripts/dispatch-agent.ts requirement-challenger "Challenge this requirement: …" 2>&1 &
+npx tsx scripts/dispatch-agent.ts design-qa-agent "Review the ThemeToggle component for a11y issues" 2>&1 &
 ```
 
 ### 2. Prompt from file
 
 Prefix the prompt argument with `@` to read from a file:
 ```bash
-npx tsx scripts/run-agent.ts dev @docs/slices/my-slice/06-tasks.md
+npx tsx scripts/dispatch-agent.ts dev @docs/slices/my-slice/06-tasks.md
 ```
 
 The file path is relative to the current working directory. The file's full contents become the prompt.
@@ -93,10 +93,10 @@ The file path is relative to the current working directory. The file's full cont
 Source `local.env` first so `_envHeaders` env-var substitution works:
 ```bash
 set -a && source local.env && set +a
-npx tsx scripts/run-agent.ts design-qa-agent "Call the Figma MCP whoami tool."
+npx tsx scripts/dispatch-agent.ts design-qa-agent "Call the Figma MCP whoami tool."
 ```
 
-The script expands `$FIGMA_OAUTH_TOKEN` and `$GITHUB_TOKEN` into request headers at runtime. If an env var is unset, the header is skipped **and logged** in `[run-agent] mcp-hdrs … skipped=[…]`, and MCP tool calls will fail with auth errors.
+The script expands `$FIGMA_OAUTH_TOKEN` and `$GITHUB_TOKEN` into request headers at runtime. If an env var is unset, the header is skipped **and logged** in `[dispatch-agent] mcp-hdrs … skipped=[…]`, and MCP tool calls will fail with auth errors.
 
 ### 4. Parallel async agents
 
@@ -105,9 +105,9 @@ Launch multiple agents concurrently — each as an independent background proces
 ```bash
 # Each agent runs in its own background process
 set -a && source local.env && set +a
-npx tsx scripts/run-agent.ts --pre-sleep 0  requirement-challenger "…" 2>&1 &
-npx tsx scripts/run-agent.ts --pre-sleep 15 prd-agent "…" 2>&1 &
-npx tsx scripts/run-agent.ts --pre-sleep 30 design-qa-agent "…" 2>&1 &
+npx tsx scripts/dispatch-agent.ts --pre-sleep 0  requirement-challenger "…" 2>&1 &
+npx tsx scripts/dispatch-agent.ts --pre-sleep 15 prd-agent "…" 2>&1 &
+npx tsx scripts/dispatch-agent.ts --pre-sleep 30 design-qa-agent "…" 2>&1 &
 wait  # or poll with get_terminal_output per async terminal ID
 ```
 
@@ -125,14 +125,14 @@ Every prompt dispatched via `run_in_terminal (mode=async)` **must** begin with a
 
 **Why:** VS Code Copilot Chat uses the start of the first user message as the session title. Without this prefix, all concurrent agent sessions look identical and cannot be traced back to the slice or gate that spawned them.
 
-**Also pass `--task-id`** with the same `<slice-name>/<gate>/<role>` value so the run record in `logs/parallel-agents/` carries the same identifier.
+**Also pass `--session-id`** with the same `<slice-name>/<gate>/<role>` value so the run record in `logs/parallel-agents/` carries the same identifier.
 
 Example — three Gate 5 dev agents dispatched in parallel:
 ```bash
-npx tsx scripts/run-agent.ts --task-id debate-screen/gate5/dev-1 dev \
+npx tsx scripts/dispatch-agent.ts --session-id debate-screen/gate5/dev-1 dev \
   "[SLICE: debate-screen | GATE: 5 | dev-1] Implement ArgumentCard …" 2>&1 &
 
-npx tsx scripts/run-agent.ts --task-id debate-screen/gate5/dev-2 dev \
+npx tsx scripts/dispatch-agent.ts --session-id debate-screen/gate5/dev-2 dev \
   "[SLICE: debate-screen | GATE: 5 | dev-2] Implement LegendBar …" 2>&1 &
 ```
 
@@ -142,21 +142,21 @@ The VS Code chat panel will show `[SLICE: debate-screen | GATE: 5 | dev-1]` and 
 
 Useful for verifying rate-limit headroom before a long parallel run:
 ```bash
-npx tsx scripts/run-agent.ts requirement-challenger "Reply with exactly: ALIVE"
+npx tsx scripts/dispatch-agent.ts requirement-challenger "Reply with exactly: ALIVE"
 ```
 
 ---
 
 ## How MCP Servers Are Wired
 
-`resolveAgentMcpServers()` in `run-agent.ts` cross-references the agent's `tools` list (parsed from its `.agent.md` frontmatter) against `.vscode/mcp.json`:
+`resolveAgentMcpServers()` in `dispatch-agent.ts` cross-references the agent's `tools` list (parsed from its `.agent.md` frontmatter) against `.vscode/mcp.json`:
 
 1. Each `mcp.json` entry may have two private extensions:
    - `_toolPrefixes`: `string[]` — prefixes used to match agent tool names (e.g. `["com.figma.mcp"]`). If omitted, the server key itself is used.
    - `_envHeaders`: `Record<string,string>` — HTTP headers with `$VAR_NAME` placeholders expanded from `process.env`.
 2. A server is included for an agent only if at least one of the agent's tools starts with a `_toolPrefixes` entry.
 3. `tools: ["*"]` is injected automatically so all tools on the matched server are available.
-4. Resolved headers are logged as `[run-agent] mcp-hdrs <server>: resolved=[…] skipped=[…]` — check this line to confirm auth is flowing and to see which headers were skipped due to missing/invalid env substitutions.
+4. Resolved headers are logged as `[dispatch-agent] mcp-hdrs <server>: resolved=[…] skipped=[…]` — check this line to confirm auth is flowing and to see which headers were skipped due to missing/invalid env substitutions.
 
 ### Adding a new MCP server
 
@@ -182,7 +182,7 @@ npx tsx scripts/run-agent.ts requirement-challenger "Reply with exactly: ALIVE"
 ### When to refresh
 
 - Any Figma MCP call returns `401 Unauthorized` or `403 Forbidden`
-- `[run-agent] mcp-hdrs` log line shows `resolved=[none] skipped=[Authorization]` (token missing or invalid after substitution)
+- `[dispatch-agent] mcp-hdrs` log line shows `resolved=[none] skipped=[Authorization]` (token missing or invalid after substitution)
 - More than ~85 days since last refresh (proactive)
 
 ### How to refresh
@@ -205,7 +205,7 @@ The script (`scripts/refresh-figma-token.ts`):
 
 ```bash
 set -a && source local.env && set +a
-npx tsx scripts/run-agent.ts design-qa-agent "Call the Figma MCP whoami tool and return exactly what it gives you."
+npx tsx scripts/dispatch-agent.ts design-qa-agent "Call the Figma MCP whoami tool and return exactly what it gives you."
 ```
 
 Expected output includes `"email": "…"` and `"handle": "…"`. Any error at this step means the token exchange failed — check `local.env` manually.
@@ -231,7 +231,7 @@ VS Code's Figma extension stores the OAuth token in VS Code's safeStorage. **Lin
 ### When to refresh
 
 - Any GitHub MCP call returns `401 Unauthorized` or `403 Forbidden`
-- `[run-agent] mcp-hdrs` log line shows `resolved=[none] skipped=[Authorization]` for the GitHub server (the `GITHUB_TOKEN` env var is empty, unset, or invalid)
+- `[dispatch-agent] mcp-hdrs` log line shows `resolved=[none] skipped=[Authorization]` for the GitHub server (the `GITHUB_TOKEN` env var is empty, unset, or invalid)
 
 ### How to refresh
 
@@ -251,7 +251,7 @@ set -a && source local.env && set +a
 
 ```bash
 set -a && source local.env && set +a
-npx tsx scripts/run-agent.ts dev "Call the GitHub MCP get_me tool and return exactly what it gives you."
+npx tsx scripts/dispatch-agent.ts dev "Call the GitHub MCP get_me tool and return exactly what it gives you."
 ```
 
 Expected output includes your GitHub `login`. Any auth error at this step means `GITHUB_TOKEN` is still invalid or unset.
@@ -262,19 +262,19 @@ Expected output includes your GitHub `login`. Any auth error at this step means 
 
 | Log prefix | Meaning |
 |---|---|
-| `[run-agent] started` | Process launched; shows role, model, timestamp |
-| `[run-agent] mcp-hdrs <server>: resolved=[Authorization] skipped=[none]` | Auth header resolved from env — MCP server will receive it |
-| `[run-agent] mcp-hdrs <server>: resolved=[none] skipped=[Authorization]` | `_envHeaders` env var is unset/invalid; source `local.env` |
-| `[run-agent] tools` | Full list of tools the agent declared in its `.agent.md` |
-| `[run-agent] mcp-cfg` | Resolved MCP server config (`headers` logged as `"<redacted>"` with `headerKeys`) |
-| `[run-agent] session` | Session ID from Copilot SDK |
-| `[run-agent] finished` | Agent completed; output follows in `── Agent output ──` block |
+| `[dispatch-agent] started` | Process launched; shows role, model, timestamp |
+| `[dispatch-agent] mcp-hdrs <server>: resolved=[Authorization] skipped=[none]` | Auth header resolved from env — MCP server will receive it |
+| `[dispatch-agent] mcp-hdrs <server>: resolved=[none] skipped=[Authorization]` | `_envHeaders` env var is unset/invalid; source `local.env` |
+| `[dispatch-agent] tools` | Full list of tools the agent declared in its `.agent.md` |
+| `[dispatch-agent] mcp-cfg` | Resolved MCP server config (`headers` logged as `"<redacted>"` with `headerKeys`) |
+| `[dispatch-agent] session` | Session ID from Copilot SDK |
+| `[dispatch-agent] finished` | Agent completed; output follows in `── Agent output ──` block |
 
 ---
 
 ## Known Limits and Anti-Patterns
 
-- **Do not nest agents**: `delegate_to_agent`, `spawn_agent`, `create_agent`, and `run_agent` are excluded tools. `run-agent.ts` also excludes the `agent-orchestrator` MCP server by default; only enable it with `--allow-agent-orchestrator-mcp` when explicitly required.
+- **Do not nest agents**: `delegate_to_agent`, `spawn_agent`, `create_agent`, and `run_agent` are excluded tools. `dispatch-agent.ts` also excludes the `agent-orchestrator` MCP server by default; only enable it with `--allow-agent-orchestrator-mcp` when explicitly required.
 - **Single-shot only**: `infiniteSessions: { enabled: false }` — the session ends after one turn. For multi-turn workflows, invoke the script multiple times.
 - **Timeout and retries**: `sendAndWait` uses a 1-hour timeout per attempt with up to 3 attempts (plus retry backoff and optional `--pre-sleep`), so worst-case runtime can exceed 1 hour.
 - **No stdin**: The script does not accept interactive input. The full prompt must be in the argument or a file.

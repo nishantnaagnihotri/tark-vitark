@@ -1,20 +1,5 @@
 {
     "servers": {
-        "agent-orchestrator": {
-            "type": "stdio",
-            "command": "npx",
-            "args": [
-                "--yes",
-                "--package",
-                "@github/copilot-sdk@^0.2.2",
-                "--package",
-                "@modelcontextprotocol/sdk@^1.10.2",
-                "--package",
-                "tsx",
-                "tsx",
-                "${workspaceFolder}/scripts/mcp-dev-orchestrator.ts"
-            ]
-        },
         "com.figma.mcp/mcp": {
             "type": "http",
             "url": "https://mcp.figma.com/mcp",

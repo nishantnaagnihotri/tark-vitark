@@ -109,7 +109,7 @@ Status: semantic-closed | semantic-open (reason)
       command: node scripts/wait_for_copilot_review.js --owner <owner> --repo <repo> --pr <number>
       ```
       Capture the terminal ID. Check completion with `get_terminal_output <terminal-id>`. Do not launch in sync/foreground mode; default timeout is 600 seconds and will block.
-    - **Dev agent context** (running inside `run-agent.ts` with `execute` tool): run the poll script **synchronously** via the execute tool — the agent has a 1-hour timeout and can block on the script:
+    - **Dev agent context** (running inside `dispatch-agent.ts` with `execute` tool): run the poll script **synchronously** via the execute tool — the agent has a 1-hour timeout and can block on the script:
       ```
       node scripts/wait_for_copilot_review.js --owner <owner> --repo <repo> --pr <number>
       ```
