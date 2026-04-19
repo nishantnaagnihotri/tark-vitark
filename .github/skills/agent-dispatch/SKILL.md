@@ -208,7 +208,7 @@ VS Code's Figma extension stores the OAuth token in VS Code's safeStorage. **Lin
 ### When to refresh
 
 - Any GitHub MCP call returns `401 Unauthorized` or `403 Forbidden`
-- `[run-agent] mcp-hdrs` log line shows `first value prefix="Bearer "` (token is empty/unset)
+- `[run-agent] mcp-hdrs` log line shows `resolved=[none] skipped=[Authorization]` for the GitHub server (the `GITHUB_TOKEN` env var is empty, unset, or invalid)
 
 ### How to refresh
 
