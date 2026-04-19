@@ -246,4 +246,18 @@ describe('tokens.css — M3 3-layer token presence', () => {
   it('divider-thickness is 1px', () => {
     expect(lightBlock).toContain('--divider-thickness: 1px');
   });
+
+  // ── Scrim token (theme-invariant) ──
+
+  it('defines --color-scrim in light/default block with exact value', () => {
+    expect(lightBlock).toContain('--color-scrim: rgba(0, 0, 0, 0.32)');
+  });
+
+  it('--color-scrim is not duplicated in [data-theme="dark"] override block', () => {
+    expect(darkBlock).not.toContain('--color-scrim');
+  });
+
+  it('--color-scrim is not duplicated in prefers-color-scheme dark fallback', () => {
+    expect(mediaFallbackBlock).not.toContain('--color-scrim');
+  });
 });
