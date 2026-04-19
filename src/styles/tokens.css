@@ -38,6 +38,8 @@
 
   /* Scrim */
   --color-scrim: rgba(0, 0, 0, 0.32);
+  --color-elevation-shadow-ambient: rgba(0, 0, 0, 0.15);
+  --color-elevation-shadow-key: rgba(0, 0, 0, 0.3);
 
   /* ── Typography (M3 Type Scale) ── */
   --font-family-plain: Inter, "Segoe UI", Arial, sans-serif;
