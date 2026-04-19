@@ -1,6 +1,12 @@
 :root {
-    --podium-height: calc(109px + env(safe-area-inset-bottom, 0px));
+    --podium-height: 0px;
     --podium-inline-padding: var(--space-4);
+}
+
+@media (min-width: 768px) {
+    :root {
+        --podium-height: calc(109px + env(safe-area-inset-bottom, 0px));
+    }
 }
 
 .podium {

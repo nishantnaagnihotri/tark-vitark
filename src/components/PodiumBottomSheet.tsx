@@ -9,7 +9,7 @@ export interface PodiumBottomSheetProps {
     isOpen: boolean;
     selectedSide: Side;
     onSideChange: (side: Side) => void;
-    onPublish: (text: string, side: Side) => void;
+    onPublish: (text: string, side: Side) => string | null | void | Promise<string | null | void>;
     onClose: () => void;
 }
 
@@ -183,7 +183,12 @@ export function PodiumBottomSheet({
         setIsBusy(true);
 
         try {
-            await Promise.resolve(onPublish(text.trim(), selectedSide));
+            const publishError = await Promise.resolve(onPublish(text.trim(), selectedSide));
+            if (publishError) {
+                setError(publishError);
+                return;
+            }
+
             setText('');
         } finally {
             setIsBusy(false);
