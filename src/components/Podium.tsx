@@ -7,7 +7,7 @@ import '../styles/components/podium.css';
 interface PodiumProps {
     selectedSide: Side;
     onSideChange: (side: Side) => void;
-    onPublish: (text: string, side: Side) => void;
+    onPublish: (text: string, side: Side) => string | null | void | Promise<string | null | void>;
 }
 
 export function Podium({ selectedSide, onSideChange, onPublish }: PodiumProps) {
@@ -32,7 +32,12 @@ export function Podium({ selectedSide, onSideChange, onPublish }: PodiumProps) {
         setIsBusy(true);
 
         try {
-            await Promise.resolve(onPublish(text.trim(), selectedSide));
+            const publishError = await Promise.resolve(onPublish(text.trim(), selectedSide));
+            if (publishError) {
+                setError(publishError);
+                return;
+            }
+
             setText('');
         } finally {
             setIsBusy(false);

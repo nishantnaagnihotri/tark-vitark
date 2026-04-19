@@ -41,7 +41,7 @@ div.podium-fab[role="group"] {
     pointer-events: none;
 }
 
-.podium-fab--expanded {
+div.podium-fab[role='group'].podium-fab--expanded {
     pointer-events: auto;
 }
 
@@ -103,10 +103,4 @@ div.podium-fab[role="group"] {
 .podium-fab__dismiss:focus-visible {
     outline: 2px solid currentColor;
     outline-offset: 2px;
-}
-
-@media (min-width: 768px) {
-    .podium-fab {
-        display: none;
-    }
 }
