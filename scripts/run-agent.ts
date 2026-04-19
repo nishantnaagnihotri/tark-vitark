@@ -10,6 +10,8 @@
  *   --no-intro              Skip the automatic role-introduction prefix
  *   --model <model-id>      Override the default model (default: gpt-5.3-codex)
  *   --task-id <task-id>     Optional issue/task reference for provenance block
+ *   --allow-agent-orchestrator-mcp
+ *                           Allow attaching the agent-orchestrator MCP server (disabled by default)
  *   --output-format json    Emit a JSON result record to stdout instead of human text
  *
  * Examples:
@@ -94,7 +96,10 @@ function readAgentMeta(agentRole: string): AgentMeta {
 // ── MCP resolution ────────────────────────────────────────────────────────────
 // Matches agent tools list against .vscode/mcp.json server entries.
 
-function resolveAgentMcpServers(agentTools: string[]): Record<string, MCPServerConfig> {
+function resolveAgentMcpServers(
+    agentTools: string[],
+    allowAgentOrchestratorMcp: boolean
+): Record<string, MCPServerConfig> {
     if (agentTools.length === 0) return {};
 
     let rawRegistry: Record<string, any> = {};
@@ -106,6 +111,8 @@ function resolveAgentMcpServers(agentTools: string[]): Record<string, MCPServerC
 
     const result: Record<string, MCPServerConfig> = {};
     for (const [serverKey, rawConfig] of Object.entries(rawRegistry)) {
+        if (!allowAgentOrchestratorMcp && serverKey === "agent-orchestrator") continue;
+
         const { _toolPrefixes, _envHeaders, ...config } = rawConfig as {
             _toolPrefixes?: string[];
             _envHeaders?: Record<string, string>;
@@ -174,6 +181,7 @@ let preSleepMs = 0;
 let noIntro = false;
 let model = DEFAULT_MODEL;
 let taskIdArg: string | undefined;
+let allowAgentOrchestratorMcp = false;
 let outputFormat: "text" | "json" = "text";
 const argv = process.argv.slice(2);
 
@@ -204,6 +212,9 @@ for (let i = 0; i < argv.length;) {
     } else if (argv[i] === "--task-id") {
         taskIdArg = requireOptionValue("--task-id", argv[i + 1]);
         argv.splice(i, 2);
+    } else if (argv[i] === "--allow-agent-orchestrator-mcp") {
+        allowAgentOrchestratorMcp = true;
+        argv.splice(i, 1);
     } else if (argv[i] === "--output-format") {
         const format = requireOptionValue("--output-format", argv[i + 1]);
         if (format !== "json" && format !== "text") {
@@ -229,7 +240,8 @@ function logInfo(message: string): void {
 if (argv.length !== 2) {
     console.error(
         "Usage: npx tsx scripts/run-agent.ts [--pre-sleep <s>] [--no-intro] " +
-        "[--model <id>] [--task-id <id>] [--output-format json] <role> \"<prompt>\" | @<prompt-file>"
+        "[--model <id>] [--task-id <id>] [--allow-agent-orchestrator-mcp] " +
+        "[--output-format json] <role> \"<prompt>\" | @<prompt-file>"
     );
     process.exit(1);
 }
@@ -349,7 +361,7 @@ logInfo(`[run-agent] started  runId=${runId} role=${role} model=${model} effort=
 logInfo(`[run-agent] prompt   ${prompt.slice(0, 120).replace(/\n/g, " ")}${prompt.length > 120 ? "…" : ""}`);
 
 const { tools, systemMessage } = readAgentMeta(role);
-const mcpServers = resolveAgentMcpServers(tools);
+const mcpServers = resolveAgentMcpServers(tools, allowAgentOrchestratorMcp);
 const mcpKeys = Object.keys(mcpServers);
 logInfo(`[run-agent] tools    ${tools.length > 0 ? tools.join(", ") : "(none)"}`);
 for (const [k, v] of Object.entries(mcpServers)) {

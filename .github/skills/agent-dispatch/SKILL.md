@@ -96,7 +96,7 @@ set -a && source local.env && set +a
 npx tsx scripts/run-agent.ts design-qa-agent "Call the Figma MCP whoami tool."
 ```
 
-The script expands `$FIGMA_OAUTH_TOKEN` and `$GITHUB_TOKEN` into request headers at runtime. If an env var is unset, the header is silently dropped and the MCP tool calls will fail with auth errors.
+The script expands `$FIGMA_OAUTH_TOKEN` and `$GITHUB_TOKEN` into request headers at runtime. If an env var is unset, the header is skipped **and logged** in `[run-agent] mcp-hdrs … skipped=[…]`, and MCP tool calls will fail with auth errors.
 
 ### 4. Parallel async agents
 
@@ -209,7 +209,7 @@ VS Code's Figma extension stores the OAuth token in VS Code's safeStorage (AES-1
 
 ## Known Limits and Anti-Patterns
 
-- **Do not nest agents**: `delegate_to_agent`, `spawn_agent`, `create_agent`, and `run_agent` are excluded tools — the SDK will not recursively spawn sub-agents.
+- **Do not nest agents**: `delegate_to_agent`, `spawn_agent`, `create_agent`, and `run_agent` are excluded tools. `run-agent.ts` also excludes the `agent-orchestrator` MCP server by default; only enable it with `--allow-agent-orchestrator-mcp` when explicitly required.
 - **Single-shot only**: `infiniteSessions: { enabled: false }` — the session ends after one turn. For multi-turn workflows, invoke the script multiple times.
 - **Timeout and retries**: `sendAndWait` uses a 1-hour timeout per attempt with up to 3 attempts (plus retry backoff and optional `--pre-sleep`), so worst-case runtime can exceed 1 hour.
 - **No stdin**: The script does not accept interactive input. The full prompt must be in the argument or a file.

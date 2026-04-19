@@ -65,7 +65,7 @@ Any parallel `run-agent.ts` dispatch via `run_in_terminal (mode=async)` creates 
 
 | terminal-id | dispatched | issue | purpose | status |
 |-------------|------------|-------|---------|--------|
-| <uuid> | <ISO timestamp> | #<n> | <one-line context> | running |
+| <terminal-id> | <ISO timestamp> | #<n> | <one-line context> | running |
 ```
 
 Do this before any other response content. If `/memories/session/active-state.md` does not exist yet, create it.
