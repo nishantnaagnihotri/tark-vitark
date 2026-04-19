@@ -188,5 +188,6 @@ describe('PodiumBottomSheet', () => {
         expect(podiumBottomSheetCss).toContain('will-change: transform;');
         expect(podiumBottomSheetCss).toContain('touch-action: none;');
         expect(podiumBottomSheetCss).toContain('touch-action: pan-y;');
+        expect(podiumBottomSheetCss).toContain('env(safe-area-inset-bottom)');
     });
 });
