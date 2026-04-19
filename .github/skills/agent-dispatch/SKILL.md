@@ -176,7 +176,7 @@ The script (`scripts/refresh-figma-token.ts`):
 - POSTs `grant_type=refresh_token` to `https://api.figma.com/v1/oauth/token`
 - Patches `FIGMA_OAUTH_TOKEN` in `local.env` in-place
 - Patches `FIGMA_REFRESH_TOKEN` in `local.env` if the server rotates it
-- Prints the new token prefix and expiry
+- Prints the new token expiry
 
 ### Verify after refresh
 
@@ -201,7 +201,7 @@ VS Code's Figma extension stores the OAuth token in VS Code's safeStorage (AES-1
 | `[run-agent] mcp-hdrs <server>: resolved=[Authorization] skipped=[none]` | Auth header resolved from env — MCP server will receive it |
 | `[run-agent] mcp-hdrs <server>: resolved=[none] skipped=[Authorization]` | `_envHeaders` env var is unset/invalid; source `local.env` |
 | `[run-agent] tools` | Full list of tools the agent declared in its `.agent.md` |
-| `[run-agent] mcp-cfg` | Resolved MCP server config (headers masked to 12 chars) |
+| `[run-agent] mcp-cfg` | Resolved MCP server config (`headers` logged as `"<redacted>"` with `headerKeys`) |
 | `[run-agent] session` | Session ID from Copilot SDK |
 | `[run-agent] finished` | Agent completed; output follows in `── Agent output ──` block |
 
@@ -211,6 +211,6 @@ VS Code's Figma extension stores the OAuth token in VS Code's safeStorage (AES-1
 
 - **Do not nest agents**: `delegate_to_agent`, `spawn_agent`, `create_agent`, and `run_agent` are excluded tools — the SDK will not recursively spawn sub-agents.
 - **Single-shot only**: `infiniteSessions: { enabled: false }` — the session ends after one turn. For multi-turn workflows, invoke the script multiple times.
-- **Timeout**: 1 hour hard limit. Long tasks must complete within this window.
+- **Timeout and retries**: `sendAndWait` uses a 1-hour timeout per attempt with up to 3 attempts (plus retry backoff and optional `--pre-sleep`), so worst-case runtime can exceed 1 hour.
 - **No stdin**: The script does not accept interactive input. The full prompt must be in the argument or a file.
 - **`local.env` is gitignored**: Never commit it. If secrets are lost, re-extract from VS Code safeStorage or re-authorize via the extension GUI.

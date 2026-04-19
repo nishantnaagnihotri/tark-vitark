@@ -152,7 +152,7 @@ function resolveAgentMcpServers(agentTools: string[]): Record<string, MCPServerC
                 `resolved=[${resolvedHeaderNames.join(", ") || "none"}]`,
                 `skipped=[${skippedHeaderNames.join(", ") || "none"}]`,
             ];
-            console.log(`[run-agent] mcp-hdrs ${serverKey}: ${logParts.join(" ")}`);
+            logInfo(`[run-agent] mcp-hdrs ${serverKey}: ${logParts.join(" ")}`);
         }
 
         // Required by MCPServerConfigBase: "[]" means no tools, "*" means all.
@@ -191,6 +191,11 @@ for (let i = 0; i < argv.length;) {
     } else {
         i++;
     }
+}
+
+function logInfo(message: string): void {
+    const out = outputFormat === "json" ? process.stderr : process.stdout;
+    out.write(`${message}\n`);
 }
 
 const [role, rawPrompt] = argv;
@@ -269,27 +274,26 @@ async function withRetry<T>(
 
 const runId = randomUUID();
 const startedAt = new Date().toISOString();
-console.log(`[run-agent] started  role=${role} model=${model} effort=${REASONING_EFFORT} at=${startedAt}`);
-console.log(`[run-agent] prompt   ${prompt.slice(0, 120).replace(/\n/g, " ")}${prompt.length > 120 ? "…" : ""}`);
+logInfo(`[run-agent] started  runId=${runId} role=${role} model=${model} effort=${REASONING_EFFORT} at=${startedAt}`);
+logInfo(`[run-agent] prompt   ${prompt.slice(0, 120).replace(/\n/g, " ")}${prompt.length > 120 ? "…" : ""}`);
 
 const { tools, systemMessage } = readAgentMeta(role);
 const mcpServers = resolveAgentMcpServers(tools);
 const mcpKeys = Object.keys(mcpServers);
-console.log(`[run-agent] tools    ${tools.length > 0 ? tools.join(", ") : "(none)"}`)
+logInfo(`[run-agent] tools    ${tools.length > 0 ? tools.join(", ") : "(none)"}`);
 for (const [k, v] of Object.entries(mcpServers)) {
     const { headers, ...rest } = v as any;
     const headerKeys = headers ? Object.keys(headers as Record<string, string>) : [];
-    console.log(
-        `[run-agent] mcp-cfg  ${k} =>`,
-        JSON.stringify({
+    logInfo(
+        `[run-agent] mcp-cfg  ${k} => ${JSON.stringify({
             ...rest,
             ...(headerKeys.length > 0 ? { headers: "<redacted>", headerKeys } : {}),
-        }),
+        })}`
     );
 }
-console.log(`[run-agent] mcp      ${mcpKeys.length > 0 ? mcpKeys.join(", ") : "(none)"}`);
-console.log(`[run-agent] system   ${systemMessage.slice(0, 80).replace(/\n/g, " ")}…`);
-console.log(`[run-agent] flags    no-intro=${noIntro} output-format=${outputFormat}`);
+logInfo(`[run-agent] mcp      ${mcpKeys.length > 0 ? mcpKeys.join(", ") : "(none)"}`);
+logInfo(`[run-agent] system   ${systemMessage.slice(0, 80).replace(/\n/g, " ")}…`);
+logInfo(`[run-agent] flags    no-intro=${noIntro} output-format=${outputFormat}`);
 
 persistRun({ runId, role, model, prompt: prompt.slice(0, 200), startedAt, status: "running" });
 
@@ -320,10 +324,10 @@ try {
         excludedTools: ["delegate_to_agent", "spawn_agent", "create_agent", "run_agent"],
     });
 
-    console.log(`[run-agent] session  id=${session.sessionId}`);
+    logInfo(`[run-agent] session  id=${session.sessionId}`);
 
     if (preSleepMs > 0) {
-        console.log(`[run-agent] sleeping ${preSleepMs / 1000}s before sending prompt…`);
+        logInfo(`[run-agent] sleeping ${preSleepMs / 1000}s before sending prompt…`);
         await new Promise((resolve) => setTimeout(resolve, preSleepMs));
     }
 
@@ -338,16 +342,16 @@ try {
 
     const finishedAt = new Date().toISOString();
     persistRun({ runId, status: "done", finishedAt, output });
-    console.log(`[run-agent] finished at=${finishedAt}`);
+    logInfo(`[run-agent] finished at=${finishedAt}`);
 
     if (outputFormat === "json") {
         process.stdout.write(
             JSON.stringify({ runId, role, model, startedAt, finishedAt, status: "done", output }) + "\n"
         );
     } else {
-        console.log("\n── Agent output ─────────────────────────────────────────────────────────────\n");
-        console.log(output);
-        console.log("\n─────────────────────────────────────────────────────────────────────────────");
+        logInfo("\n── Agent output ─────────────────────────────────────────────────────────────\n");
+        logInfo(output);
+        logInfo("\n─────────────────────────────────────────────────────────────────────────────");
     }
 
 } catch (err) {
