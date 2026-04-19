@@ -7,7 +7,7 @@
     height: 56px;
 }
 
-.podium-fab {
+button.podium-fab {
     display: grid;
     place-items: center;
     width: 56px;
@@ -24,7 +24,7 @@
     cursor: pointer;
 }
 
-.podium-fab > span {
+button.podium-fab > span {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -34,7 +34,7 @@
     line-height: 1;
 }
 
-.podium-fab-group {
+.podium-fab--group {
     position: absolute;
     right: 0;
     bottom: 0;
@@ -92,8 +92,8 @@
     line-height: 1;
 }
 
-.podium-fab-group--expanded .podium-fab__mini-btn,
-.podium-fab-group--expanded .podium-fab__dismiss {
+.podium-fab--expanded .podium-fab__mini-btn,
+.podium-fab--expanded .podium-fab__dismiss {
     transform: scale(1);
     opacity: 1;
 }
@@ -101,7 +101,7 @@
 .podium-fab:focus-visible,
 .podium-fab__mini-btn:focus-visible,
 .podium-fab__dismiss:focus-visible {
-    outline: 2px solid var(--color-on-surface);
+    outline: 2px solid currentColor;
     outline-offset: 2px;
 }
 

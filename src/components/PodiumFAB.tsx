@@ -101,9 +101,10 @@ export function PodiumFAB({ isExpanded, onExpand, onSideSelect, onCollapse }: Po
             )}
             {shouldRenderComposerGroup && (
                 <div
-                    className={`podium-fab-group${isComposerExpanded ? ' podium-fab-group--expanded' : ''}`}
+                    className={`podium-fab podium-fab--group${isComposerExpanded ? ' podium-fab--expanded' : ''}`}
                     role={isComposerExpanded ? 'group' : undefined}
                     aria-label={isComposerExpanded ? 'Post composer options' : undefined}
+                    aria-hidden={!isComposerExpanded}
                 >
                     <button
                         ref={tarkComposerButtonRef}
@@ -111,6 +112,7 @@ export function PodiumFAB({ isExpanded, onExpand, onSideSelect, onCollapse }: Po
                         className="podium-fab__mini-btn podium-fab__mini-btn--tark"
                         aria-label="Post as Tark"
                         tabIndex={isComposerExpanded ? 0 : -1}
+                        disabled={!isComposerExpanded}
                         onClick={() => onSideSelect('tark')}
                     >
                         T
@@ -120,6 +122,7 @@ export function PodiumFAB({ isExpanded, onExpand, onSideSelect, onCollapse }: Po
                         className="podium-fab__mini-btn podium-fab__mini-btn--vitark"
                         aria-label="Post as Vitark"
                         tabIndex={isComposerExpanded ? 0 : -1}
+                        disabled={!isComposerExpanded}
                         onClick={() => onSideSelect('vitark')}
                     >
                         V
@@ -129,6 +132,7 @@ export function PodiumFAB({ isExpanded, onExpand, onSideSelect, onCollapse }: Po
                         className="podium-fab__dismiss"
                         aria-label="Close"
                         tabIndex={isComposerExpanded ? 0 : -1}
+                        disabled={!isComposerExpanded}
                         onClick={onCollapse}
                     >
                         ×
