@@ -51,7 +51,8 @@ Before every agent dispatch, classify the expected output:
 
 ## Usage Patterns
 
-> **Always run agents as async background processes.**
+> **For terminal-dispatched agents (`scripts/run-agent.ts`, especially Gate 5), always run as async background processes.**
+> This callout applies to terminal dispatch only; it does **not** override the Gates 1–4 `runSubagent` sync path in the decision rule above.
 > Agent calls take 10–60+ seconds. Running them in the foreground blocks the chat session.
 > Use `run_in_terminal (mode=async)` from the agent tool, or append `&` in a shell script.
 > Check completion with `get_terminal_output` — you will be notified automatically when the process exits.
@@ -132,7 +133,7 @@ npx tsx scripts/run-agent.ts requirement-challenger "Reply with exactly: ALIVE"
    - `_envHeaders`: `Record<string,string>` — HTTP headers with `$VAR_NAME` placeholders expanded from `process.env`.
 2. A server is included for an agent only if at least one of the agent's tools starts with a `_toolPrefixes` entry.
 3. `tools: ["*"]` is injected automatically so all tools on the matched server are available.
-4. Resolved headers are logged as `[run-agent] mcp-hdrs <server>: headers set (…), first value prefix="…"` — check this line to confirm auth is flowing.
+4. Resolved headers are logged as `[run-agent] mcp-hdrs <server>: resolved=[…] skipped=[…]` — check this line to confirm auth is flowing and to see which headers were skipped due to missing/invalid env substitutions.
 
 ### Adding a new MCP server
 
@@ -158,7 +159,7 @@ npx tsx scripts/run-agent.ts requirement-challenger "Reply with exactly: ALIVE"
 ### When to refresh
 
 - Any Figma MCP call returns `401 Unauthorized` or `403 Forbidden`
-- `[run-agent] mcp-hdrs` log line shows `first value prefix="Bearer "` (token is empty/unset)
+- `[run-agent] mcp-hdrs` log line shows `resolved=[none] skipped=[Authorization]` (token missing or invalid after substitution)
 - More than ~85 days since last refresh (proactive)
 
 ### How to refresh
@@ -197,8 +198,8 @@ VS Code's Figma extension stores the OAuth token in VS Code's safeStorage (AES-1
 | Log prefix | Meaning |
 |---|---|
 | `[run-agent] started` | Process launched; shows role, model, timestamp |
-| `[run-agent] mcp-hdrs <server>: headers set (…)` | Auth header resolved from env — MCP server will receive it |
-| `[run-agent] mcp-hdrs <server>: no headers resolved` | `_envHeaders` env var is unset; source `local.env` |
+| `[run-agent] mcp-hdrs <server>: resolved=[Authorization] skipped=[none]` | Auth header resolved from env — MCP server will receive it |
+| `[run-agent] mcp-hdrs <server>: resolved=[none] skipped=[Authorization]` | `_envHeaders` env var is unset/invalid; source `local.env` |
 | `[run-agent] tools` | Full list of tools the agent declared in its `.agent.md` |
 | `[run-agent] mcp-cfg` | Resolved MCP server config (headers masked to 12 chars) |
 | `[run-agent] session` | Session ID from Copilot SDK |
