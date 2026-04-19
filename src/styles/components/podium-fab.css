@@ -41,7 +41,7 @@ div.podium-fab[role="group"] {
     pointer-events: none;
 }
 
-div.podium-fab[role='group'].podium-fab--expanded {
+.podium-fab--expanded {
     pointer-events: auto;
 }
 
