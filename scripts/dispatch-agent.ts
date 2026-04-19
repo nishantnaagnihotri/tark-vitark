@@ -370,7 +370,8 @@ logInfo(`[dispatch-agent] mcp      ${mcpKeys.length > 0 ? mcpKeys.join(", ") : "
 logInfo(`[dispatch-agent] system   ${systemMessage.slice(0, 80).replace(/\n/g, " ")}…`);
 logInfo(`[dispatch-agent] flags    no-intro=${noIntro} output-format=${outputFormat}`);
 
-persistRun({ runId, role, model, prompt: prompt.slice(0, 200), startedAt, status: "running" });
+const sessionId = inferSessionId(prompt, sessionIdArg);
+persistRun({ runId, role, model, sessionId, prompt: prompt.slice(0, 200), startedAt, status: "running" });
 
 let exitCode = 0;
 const client = new CopilotClient();
@@ -406,7 +407,6 @@ try {
         await new Promise((resolve) => setTimeout(resolve, preSleepMs));
     }
 
-    const sessionId = inferSessionId(prompt, sessionIdArg);
     const promptWithProvenance = injectDevAgentProvenanceBlock(prompt, {
         runId,
         role,
@@ -425,7 +425,7 @@ try {
     const output = result?.data?.content ?? "(no output)";
 
     const finishedAt = new Date().toISOString();
-    persistRun({ runId, status: "done", finishedAt, output });
+    persistRun({ runId, sessionId, status: "done", finishedAt, output });
     logInfo(`[dispatch-agent] finished at=${finishedAt}`);
 
     if (outputFormat === "json") {
@@ -440,7 +440,7 @@ try {
 
 } catch (err) {
     const finishedAt = new Date().toISOString();
-    persistRun({ runId, status: "failed", finishedAt, error: err instanceof Error ? err.message : String(err) });
+    persistRun({ runId, sessionId, status: "failed", finishedAt, error: err instanceof Error ? err.message : String(err) });
     console.error(`[dispatch-agent] failed:`, err instanceof Error ? err.message : err);
     exitCode = 1;
 } finally {
