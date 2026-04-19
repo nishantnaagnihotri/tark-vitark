@@ -117,22 +117,42 @@ function resolveAgentMcpServers(agentTools: string[]): Record<string, MCPServerC
         if (!matched) continue;
 
         // Expand _envHeaders: replace $VAR_NAME with process.env[VAR_NAME].
-        // Skip the header entirely if the expanded value is an empty token (env var unset).
+        // Skip any header with missing/empty env substitutions or invalid empty tokens.
         if (_envHeaders) {
             const resolved: Record<string, string> = {};
+            const resolvedHeaderNames: string[] = [];
+            const skippedHeaderNames: string[] = [];
+            const envVarPattern = /\$([A-Z_][A-Z0-9_]*)/g;
             for (const [header, template] of Object.entries(_envHeaders)) {
-                const expanded = template.replace(/\$([A-Z_][A-Z0-9_]*)/g, (_, name) => process.env[name] ?? "");
-                // Skip if the env var was unset (expanded value is empty or still a $VAR placeholder)
-                if (expanded && !expanded.startsWith("$")) {
-                    resolved[header] = expanded;
+                const referencedEnvVars = Array.from(template.matchAll(envVarPattern), (match) => match[1]);
+                const hasMissingEnvSubstitution = referencedEnvVars.some((name) => {
+                    const value = process.env[name];
+                    return value === undefined || value.trim() === "";
+                });
+                if (hasMissingEnvSubstitution) {
+                    skippedHeaderNames.push(header);
+                    continue;
                 }
+
+                const expanded = template.replace(envVarPattern, (_, name) => process.env[name] ?? "");
+                const expandedTokens = expanded.trim().split(/\s+/).filter(Boolean);
+                const hasSchemeWithoutToken = template.includes(" ") && expandedTokens.length < 2;
+                if (expandedTokens.length === 0 || hasSchemeWithoutToken) {
+                    skippedHeaderNames.push(header);
+                    continue;
+                }
+
+                resolved[header] = expanded;
+                resolvedHeaderNames.push(header);
             }
             if (Object.keys(resolved).length > 0) {
                 (config as any).headers = resolved;
-                console.log(`[run-agent] mcp-hdrs ${serverKey}: headers set (${Object.keys(resolved).join(", ")}), first value prefix="${Object.values(resolved)[0].slice(0, 14)}…"`);
-            } else {
-                console.log(`[run-agent] mcp-hdrs ${serverKey}: no headers resolved (env vars missing?)`);
             }
+            const logParts = [
+                `resolved=[${resolvedHeaderNames.join(", ") || "none"}]`,
+                `skipped=[${skippedHeaderNames.join(", ") || "none"}]`,
+            ];
+            console.log(`[run-agent] mcp-hdrs ${serverKey}: ${logParts.join(" ")}`);
         }
 
         // Required by MCPServerConfigBase: "[]" means no tools, "*" means all.
@@ -249,10 +269,14 @@ const mcpKeys = Object.keys(mcpServers);
 console.log(`[run-agent] tools    ${tools.length > 0 ? tools.join(", ") : "(none)"}`)
 for (const [k, v] of Object.entries(mcpServers)) {
     const { headers, ...rest } = v as any;
-    const maskedHeaders = headers
-        ? Object.fromEntries(Object.entries(headers as Record<string, string>).map(([h, val]) => [h, val.slice(0, 12) + "…"]))
-        : undefined;
-    console.log(`[run-agent] mcp-cfg  ${k} =>`, JSON.stringify({ ...rest, ...(maskedHeaders ? { headers: maskedHeaders } : {}) }));
+    const headerKeys = headers ? Object.keys(headers as Record<string, string>) : [];
+    console.log(
+        `[run-agent] mcp-cfg  ${k} =>`,
+        JSON.stringify({
+            ...rest,
+            ...(headerKeys.length > 0 ? { headers: "<redacted>", headerKeys } : {}),
+        }),
+    );
 }
 console.log(`[run-agent] mcp      ${mcpKeys.length > 0 ? mcpKeys.join(", ") : "(none)"}`);
 console.log(`[run-agent] system   ${systemMessage.slice(0, 80).replace(/\n/g, " ")}…`);
@@ -261,13 +285,15 @@ console.log(`[run-agent] flags    no-intro=${noIntro} output-format=${outputForm
 persistRun({ runId, role, model, prompt: prompt.slice(0, 200), startedAt, status: "running" });
 
 let exitCode = 0;
+const client = new CopilotClient();
+let session: Awaited<ReturnType<CopilotClient["createSession"]>> | undefined;
 
 try {
-    const client = new CopilotClient();
+    await client.start();
     // approveAll: grants all permission requests automatically.
     // This is safe for trusted local use where the agent roles and MCP servers
     // are fully controlled by the repository owner. Do not use in shared/CI environments.
-    const session = await client.createSession({
+    session = await client.createSession({
         model,
         reasoningEffort: REASONING_EFFORT,
         onPermissionRequest: approveAll,
@@ -315,12 +341,16 @@ try {
         console.log("\n─────────────────────────────────────────────────────────────────────────────");
     }
 
-    try { await session.disconnect(); } catch { /* non-fatal */ }
 } catch (err) {
     const finishedAt = new Date().toISOString();
     persistRun({ runId, status: "failed", finishedAt, error: err instanceof Error ? err.message : String(err) });
     console.error(`[run-agent] failed:`, err instanceof Error ? err.message : err);
     exitCode = 1;
+} finally {
+    if (session) {
+        try { await session.disconnect(); } catch { /* non-fatal */ }
+    }
+    try { await client.stop(); } catch { /* non-fatal */ }
 }
 
 process.exit(exitCode);

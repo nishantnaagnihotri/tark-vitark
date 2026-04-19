@@ -1,8 +1,20 @@
+#!/usr/bin/env tsx
+/**
+ * list-models.ts — print available Copilot model IDs for the current auth context.
+ *
+ * Usage:
+ *   npx tsx scripts/list-models.ts
+ */
+
 import { CopilotClient } from "@github/copilot-sdk";
+
 const client = new CopilotClient();
 await client.start();
-const models = await client.listModels();
-for (const m of models) {
-  console.log(m.id, "|", m.displayName ?? "(no displayName)");
+try {
+  const models = await client.listModels();
+  for (const m of models) {
+    console.log(m.id, "|", m.displayName ?? "(no displayName)");
+  }
+} finally {
+  await client.stop();
 }
-await client.stop();

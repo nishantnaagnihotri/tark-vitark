@@ -17,7 +17,7 @@
  *   FIGMA_REFRESH_TOKEN   — new refresh token if the server rotates it
  */
 
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -79,6 +79,14 @@ if (!data.access_token) {
 
 // ── Patch local.env in place ───────────────────────────────────────────────────
 
+if (!existsSync(LOCAL_ENV_PATH)) {
+    console.error(
+        `[refresh-figma-token] Missing ${LOCAL_ENV_PATH}.\n` +
+        "Create local.env (or copy from your secure template), source it, then rerun this script."
+    );
+    process.exit(1);
+}
+
 let envText = readFileSync(LOCAL_ENV_PATH, "utf-8");
 
 function setEnvVar(text: string, key: string, value: string): string {
@@ -100,4 +108,3 @@ const expiresInDays = Math.round(data.expires_in / 86400);
 console.log(
     `[refresh-figma-token] Done. New access token written to local.env (expires in ~${expiresInDays} days).`
 );
-console.log(`[refresh-figma-token] Token prefix: ${data.access_token.slice(0, 12)}…`);
