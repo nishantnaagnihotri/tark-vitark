@@ -260,4 +260,19 @@ describe('tokens.css — M3 3-layer token presence', () => {
   it('--color-scrim is not duplicated in prefers-color-scheme dark fallback', () => {
     expect(mediaFallbackBlock).not.toMatch(/--color-scrim\s*:/);
   });
+
+  it('defines elevation shadow tokens in light/default block with exact values', () => {
+    expect(lightBlock).toContain('--color-elevation-shadow-ambient: rgba(0, 0, 0, 0.15);');
+    expect(lightBlock).toContain('--color-elevation-shadow-key: rgba(0, 0, 0, 0.3);');
+  });
+
+  it('elevation shadow tokens are not duplicated in [data-theme="dark"] override block', () => {
+    expect(darkBlock).not.toMatch(/--color-elevation-shadow-ambient\s*:/);
+    expect(darkBlock).not.toMatch(/--color-elevation-shadow-key\s*:/);
+  });
+
+  it('elevation shadow tokens are not duplicated in prefers-color-scheme dark fallback', () => {
+    expect(mediaFallbackBlock).not.toMatch(/--color-elevation-shadow-ambient\s*:/);
+    expect(mediaFallbackBlock).not.toMatch(/--color-elevation-shadow-key\s*:/);
+  });
 });

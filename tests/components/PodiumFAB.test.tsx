@@ -151,7 +151,7 @@ describe('PodiumFAB', () => {
                 />
             );
 
-            const collapsingGroup = container.querySelector('.podium-fab--group');
+            const collapsingGroup = container.querySelector('div.podium-fab[role="group"]');
             expect(collapsingGroup).toBeInTheDocument();
             expect(collapsingGroup).toHaveAttribute('aria-hidden', 'true');
             expect(collapsingGroup).not.toHaveClass('podium-fab--expanded');
@@ -162,7 +162,7 @@ describe('PodiumFAB', () => {
                 vi.advanceTimersByTime(300);
             });
 
-            expect(container.querySelector('.podium-fab--group')).not.toBeInTheDocument();
+            expect(container.querySelector('div.podium-fab[role="group"]')).not.toBeInTheDocument();
         } finally {
             vi.useRealTimers();
         }

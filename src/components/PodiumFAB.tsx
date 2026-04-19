@@ -15,6 +15,7 @@ export function PodiumFAB({ isExpanded, onExpand, onSideSelect, onCollapse }: Po
     const openComposerButtonRef = useRef<HTMLButtonElement>(null);
     const tarkComposerButtonRef = useRef<HTMLButtonElement>(null);
     const wasExpandedRef = useRef(isExpanded);
+    const shouldFocusExpandedControlRef = useRef(false);
     const collapseTimeoutRef = useRef<number | null>(null);
     const expandFrameRef = useRef<number | null>(null);
     const [isComposerVisible, setIsComposerVisible] = useState(isExpanded);
@@ -38,9 +39,9 @@ export function PodiumFAB({ isExpanded, onExpand, onSideSelect, onCollapse }: Po
                     window.cancelAnimationFrame(expandFrameRef.current);
                 }
 
+                shouldFocusExpandedControlRef.current = true;
                 expandFrameRef.current = window.requestAnimationFrame(() => {
                     setIsComposerExpanded(true);
-                    tarkComposerButtonRef.current?.focus();
                 });
             } else {
                 setIsComposerExpanded(true);
@@ -57,6 +58,7 @@ export function PodiumFAB({ isExpanded, onExpand, onSideSelect, onCollapse }: Po
                 openComposerButtonRef.current?.focus();
             }
 
+            shouldFocusExpandedControlRef.current = false;
             setIsComposerExpanded(false);
 
             if (isComposerVisible) {
@@ -83,10 +85,17 @@ export function PodiumFAB({ isExpanded, onExpand, onSideSelect, onCollapse }: Po
         []
     );
 
+    useEffect(() => {
+        if (isComposerExpanded && shouldFocusExpandedControlRef.current) {
+            tarkComposerButtonRef.current?.focus();
+            shouldFocusExpandedControlRef.current = false;
+        }
+    }, [isComposerExpanded]);
+
     const shouldRenderComposerGroup = isComposerVisible || isExpanded;
 
     return (
-        <div className="podium-fab-shell">
+        <>
             {!isExpanded && (
                 <button
                     ref={openComposerButtonRef}
@@ -101,9 +110,9 @@ export function PodiumFAB({ isExpanded, onExpand, onSideSelect, onCollapse }: Po
             )}
             {shouldRenderComposerGroup && (
                 <div
-                    className={`podium-fab podium-fab--group${isComposerExpanded ? ' podium-fab--expanded' : ''}`}
-                    role={isComposerExpanded ? 'group' : undefined}
-                    aria-label={isComposerExpanded ? 'Post composer options' : undefined}
+                    className={`podium-fab${isComposerExpanded ? ' podium-fab--expanded' : ''}`}
+                    role="group"
+                    aria-label="Post composer options"
                     aria-hidden={!isComposerExpanded}
                 >
                     <button
@@ -139,6 +148,6 @@ export function PodiumFAB({ isExpanded, onExpand, onSideSelect, onCollapse }: Po
                     </button>
                 </div>
             )}
-        </div>
+        </>
     );
 }
