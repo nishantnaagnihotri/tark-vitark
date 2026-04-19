@@ -22,7 +22,7 @@
     flex-direction: column;
     gap: 12px;
     align-items: stretch;
-    padding: 12px 16px 20px;
+    padding: 12px 16px calc(20px + env(safe-area-inset-bottom));
     border-radius: 28px 28px 0 0;
     background: var(--color-surface-container-high);
     transform: translateY(calc(var(--podium-sheet-offset, 100%) + var(--podium-sheet-drag-offset, 0px)));

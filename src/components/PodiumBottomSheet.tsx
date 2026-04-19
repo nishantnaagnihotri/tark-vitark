@@ -33,6 +33,8 @@ export function PodiumBottomSheet({
     const [hasEntered, setHasEntered] = useState(false);
     const dragStartYRef = useRef<number | null>(null);
     const dragOffsetRef = useRef(0);
+    const pendingDragOffsetRef = useRef(0);
+    const dragAnimationFrameRef = useRef<number | null>(null);
     const dialogRef = useRef<HTMLDivElement | null>(null);
 
     const getFocusableElements = (): HTMLElement[] => {
@@ -68,10 +70,23 @@ export function PodiumBottomSheet({
         };
     }, [isOpen]);
 
+    useEffect(() => {
+        return () => {
+            if (dragAnimationFrameRef.current !== null) {
+                window.cancelAnimationFrame(dragAnimationFrameRef.current);
+            }
+        };
+    }, []);
+
     const completeDrag = (endClientY?: number) => {
         const startClientY = dragStartYRef.current;
         if (startClientY === null) {
             return;
+        }
+
+        if (dragAnimationFrameRef.current !== null) {
+            window.cancelAnimationFrame(dragAnimationFrameRef.current);
+            dragAnimationFrameRef.current = null;
         }
 
         setIsDragging(false);
@@ -81,6 +96,7 @@ export function PodiumBottomSheet({
                 ? dragOffsetRef.current
                 : Math.max(0, endClientY - startClientY);
         dragOffsetRef.current = 0;
+        pendingDragOffsetRef.current = 0;
 
         if (resolvedDragOffset > DISMISS_DRAG_THRESHOLD) {
             onClose();
@@ -94,6 +110,7 @@ export function PodiumBottomSheet({
         dragStartYRef.current = event.clientY;
         setIsDragging(true);
         dragOffsetRef.current = 0;
+        pendingDragOffsetRef.current = 0;
         setDragOffset(0);
         event.currentTarget.setPointerCapture?.(event.pointerId);
     };
@@ -105,7 +122,16 @@ export function PodiumBottomSheet({
 
         const deltaY = Math.max(0, event.clientY - dragStartYRef.current);
         dragOffsetRef.current = deltaY;
-        setDragOffset(deltaY);
+        pendingDragOffsetRef.current = deltaY;
+
+        if (dragAnimationFrameRef.current !== null) {
+            return;
+        }
+
+        dragAnimationFrameRef.current = window.requestAnimationFrame(() => {
+            dragAnimationFrameRef.current = null;
+            setDragOffset(pendingDragOffsetRef.current);
+        });
     };
 
     const handleDialogKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
