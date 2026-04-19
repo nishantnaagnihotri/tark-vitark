@@ -42,6 +42,7 @@ At session end:
 1. Record done, next, blockers.
 2. Record unresolved assumptions.
 3. Record the exact next handoff packet.
+4. **Pending slice-creation check (blocking):** Before writing the checkpoint, verify no gate closure in the current session declared "will continue as new slice" without a corresponding slice folder in `docs/slices/`. If a deferred slice folder is missing, create it (with at minimum `01-requirement.md`) before the checkpoint is written. Skipping this step is a protocol violation.
 
 ## Context Maintenance Protocol
 
