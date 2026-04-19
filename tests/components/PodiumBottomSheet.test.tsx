@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { PodiumBottomSheet } from '../../src/components/PodiumBottomSheet';
 import type { Side } from '../../src/data/debate';
 
@@ -34,6 +34,10 @@ function renderBottomSheet(options: RenderBottomSheetOptions = {}) {
 }
 
 describe('PodiumBottomSheet', () => {
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
     it('does not render when isOpen is false', () => {
         renderBottomSheet({ isOpen: false });
 
@@ -142,13 +146,19 @@ describe('PodiumBottomSheet', () => {
         expect(onClose).toHaveBeenCalledTimes(1);
     });
 
+    it('applies open-state class after mount so enter transition can run', async () => {
+        renderBottomSheet();
+
+        const dialog = screen.getByRole('dialog', { name: 'Post composer' });
+
+        expect(dialog).not.toHaveClass('podium-bottom-sheet--open');
+        await waitFor(() => {
+            expect(dialog).toHaveClass('podium-bottom-sheet--open');
+        });
+    });
+
     it('dismisses when dragged beyond threshold and snaps back otherwise', () => {
-        if (!window.PointerEvent) {
-            Object.defineProperty(window, 'PointerEvent', {
-                value: MouseEvent,
-                writable: true,
-            });
-        }
+        vi.stubGlobal('PointerEvent', window.PointerEvent ?? MouseEvent);
 
         const onClose = vi.fn();
         const { container } = renderBottomSheet({ onClose });

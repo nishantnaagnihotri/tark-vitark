@@ -15,7 +15,7 @@
     bottom: 0;
     width: 100%;
     max-width: 390px;
-    max-height: 232px;
+    max-height: 90dvh;
     margin: 0 auto;
     box-sizing: border-box;
     display: flex;
@@ -28,6 +28,7 @@
     transform: translateY(calc(var(--podium-sheet-offset, 100%) + var(--podium-sheet-drag-offset, 0px)));
     transition: transform 300ms ease-out;
     will-change: transform;
+    overflow-y: auto;
     z-index: 121;
 }
 
