@@ -139,6 +139,10 @@ async function expandFab(world: PodiumFabCollapseWorld): Promise<void> {
 }
 
 After(function (this: PodiumFabCollapseWorld) {
+    this.renderResult?.unmount();
+    this.renderResult = null;
+    cleanup();
+
     if (this.originalMatchMedia) {
         window.matchMedia = this.originalMatchMedia;
     }
