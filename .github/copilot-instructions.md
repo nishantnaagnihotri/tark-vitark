@@ -35,7 +35,8 @@ tark-vitark is a personal portfolio/product project. Current implementation is s
 
 When reviewing a pull request, Copilot must:
 
-- Always leave a review comment if any existing review thread on the PR has no response from the author. Point out the unanswered thread(s) explicitly so the author knows they need to reply before the review loop can close.
+- If the provided PR context includes existing review threads and their reply state, leave a review comment when any review thread has no response from the author. Point out the unanswered thread(s) explicitly so the author knows they need to reply before the review loop can close.
+- If the provided review context does not include existing review threads or their reply state, explicitly say that thread status is unavailable and do not guess, infer, or fabricate unanswered threads.
 
 ## Proprietary
 
