@@ -83,17 +83,21 @@ describe('PodiumBottomSheet accessibility contract', () => {
     it('scenario 10: Shift+Tab from first element wraps to last element', async () => {
         const user = userEvent.setup();
         render(
-            <PodiumBottomSheet
-                isOpen
-                selectedSide="tark"
-                onSideChange={() => {}}
-                onPublish={() => {}}
-                onClose={() => {}}
-            />
+            <>
+                <button type="button">Outside focus target</button>
+                <PodiumBottomSheet
+                    isOpen
+                    selectedSide="tark"
+                    onSideChange={() => {}}
+                    onPublish={() => {}}
+                    onClose={() => {}}
+                />
+            </>
         );
 
         const closeButton = screen.getByRole('button', { name: 'Close post composer' });
         const publishButton = screen.getByRole('button', { name: 'Publish post' });
+        const outsideButton = screen.getByRole('button', { name: 'Outside focus target' });
 
         await waitFor(() => {
             expect(closeButton).toHaveFocus();
@@ -101,6 +105,7 @@ describe('PodiumBottomSheet accessibility contract', () => {
 
         await user.tab({ shift: true });
         expect(publishButton).toHaveFocus();
+        expect(outsideButton).not.toHaveFocus();
     });
 
     it('scenario 11: Escape key closes the sheet', () => {
@@ -153,6 +158,7 @@ describe('PodiumBottomSheet accessibility contract', () => {
 
         const errorMessage = screen.getByRole('alert');
         expect(errorMessage).toHaveAttribute('aria-live', 'polite');
+        expect(errorMessage).toHaveTextContent('Text cannot be empty or whitespace only.');
     });
 
     it('scenario 14: textarea marks aria-invalid=true when validation error is present', () => {

@@ -6,7 +6,7 @@ import { PodiumFAB } from '../../src/components/PodiumFAB';
 
 function MobileComposerHarness({ isMobile }: { isMobile: boolean }) {
     if (!isMobile) {
-        return null;
+        return <section aria-label="Desktop composer surface">Desktop composer</section>;
     }
 
     return (
@@ -93,5 +93,6 @@ describe('PodiumFAB accessibility contract', () => {
 
         expect(screen.queryByRole('button', { name: 'Open post composer' })).not.toBeInTheDocument();
         expect(screen.queryByRole('group', { name: 'Post composer options', hidden: true })).not.toBeInTheDocument();
+        expect(screen.getByLabelText('Desktop composer surface')).toBeInTheDocument();
     });
 });
