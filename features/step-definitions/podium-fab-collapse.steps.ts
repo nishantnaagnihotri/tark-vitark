@@ -1,5 +1,5 @@
 import { After, Given, Then, When, World } from '@cucumber/cucumber';
-import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import type { RenderResult } from '@testing-library/react';
 import * as assert from 'assert';
 import { createElement } from 'react';
@@ -154,14 +154,16 @@ Given('I am on the debate screen', function (this: PodiumFabCollapseWorld) {
 
 Given(/^the viewport is mobile \(width < 768px\)$/, function (this: PodiumFabCollapseWorld) {
     assert.ok(this.viewportController, 'Expected viewport controller to be configured.');
-    this.viewportController.setIsMobile(true);
-    renderDebateScreen(this);
+    act(() => {
+        this.viewportController?.setIsMobile(true);
+    });
 });
 
 Given(/^the viewport is desktop \(width >= 768px\)$/, function (this: PodiumFabCollapseWorld) {
     assert.ok(this.viewportController, 'Expected viewport controller to be configured.');
-    this.viewportController.setIsMobile(false);
-    renderDebateScreen(this);
+    act(() => {
+        this.viewportController?.setIsMobile(false);
+    });
 });
 
 Then('I see the Podium FAB button', function (this: PodiumFabCollapseWorld) {
