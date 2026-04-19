@@ -193,6 +193,48 @@ VS Code's Figma extension stores the OAuth token in VS Code's safeStorage. **Lin
 
 ---
 
+## MCP Auth Maintenance — GitHub Token
+
+### Token facts
+
+| Property | Value |
+|---|---|
+| Token type | Personal access token-style bearer (`gho_…`) |
+| Source | `gh` CLI OAuth login (`gh auth login`) |
+| Refresh model | No built-in auto-refresh; re-authentication mints a new token |
+| Storage | `local.env` as `GITHUB_TOKEN` |
+| Consumer | GitHub MCP `_envHeaders` expansion in `.vscode/mcp.json` |
+
+### When to refresh
+
+- Any GitHub MCP call returns `401 Unauthorized` or `403 Forbidden`
+- `[run-agent] mcp-hdrs` log line shows `first value prefix="Bearer "` (token is empty/unset)
+
+### How to refresh
+
+```bash
+gh auth login      # re-authenticate via browser
+gh auth token      # print new token
+# then update local.env: GITHUB_TOKEN=<new token>
+```
+
+After updating `local.env`, re-source env vars before dispatching agents:
+
+```bash
+set -a && source local.env && set +a
+```
+
+### Verify after refresh
+
+```bash
+set -a && source local.env && set +a
+npx tsx scripts/run-agent.ts dev "Call the GitHub MCP get_me tool and return exactly what it gives you."
+```
+
+Expected output includes your GitHub `login`. Any auth error at this step means `GITHUB_TOKEN` is still invalid or unset.
+
+---
+
 ## Log Reference
 
 | Log prefix | Meaning |
