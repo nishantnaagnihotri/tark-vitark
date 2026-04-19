@@ -250,7 +250,7 @@ describe('tokens.css — M3 3-layer token presence', () => {
   // ── Scrim token (theme-invariant) ──
 
   it('defines --color-scrim in light/default block with exact value', () => {
-    expect(lightBlock).toContain('--color-scrim: rgba(0, 0, 0, 0.32)');
+    expect(lightBlock).toContain('--color-scrim: rgba(0, 0, 0, 0.32);');
   });
 
   it('--color-scrim is not duplicated in [data-theme="dark"] override block', () => {
