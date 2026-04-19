@@ -248,9 +248,10 @@ describe('SegmentedControl', () => {
         expect(segmentedControlCss).toContain('var(--color-brand-on-primary)');
     });
 
-    it('uses defined spacing tokens and state-aware focus color in segmented-control CSS', () => {
-        expect(segmentedControlCss).not.toContain('var(--space-2)');
-        expect(segmentedControlCss).toContain('padding: var(--space-4) var(--space-4);');
+    it('uses Figma-derived segmented-control sizing and state-aware focus color in CSS', () => {
+        expect(segmentedControlCss).toContain('height: 40px;');
+        expect(segmentedControlCss).toContain('border-radius: 20px;');
+        expect(segmentedControlCss).toContain('padding: 0 12px;');
         expect(segmentedControlCss).toContain('outline: 2px solid currentColor;');
     });
 });
