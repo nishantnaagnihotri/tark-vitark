@@ -1,10 +1,9 @@
-.podium-fab-shell {
+button.podium-fab,
+div.podium-fab[role="group"] {
     position: fixed;
     right: var(--space-4);
     bottom: var(--space-4);
     z-index: 30;
-    width: 56px;
-    height: 56px;
 }
 
 button.podium-fab {
@@ -34,10 +33,7 @@ button.podium-fab > span {
     line-height: 1;
 }
 
-.podium-fab--group {
-    position: absolute;
-    right: 0;
-    bottom: 0;
+div.podium-fab[role="group"] {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
@@ -110,7 +106,7 @@ button.podium-fab > span {
 }
 
 @media (min-width: 768px) {
-    .podium-fab-shell {
+    .podium-fab {
         display: none;
     }
 }
