@@ -101,7 +101,32 @@ function resolveAgentMcpServers(role: string): Record<string, MCPServerConfig> {
         const matched = agentTools.some((tool) =>
             prefixes.some((p) => tool === p || tool.startsWith(p + "/"))
         );
-        if (matched) result[serverKey] = config as MCPServerConfig;
+        if (!matched) continue;
+
+        if (_envHeaders) {
+            const resolved: Record<string, string> = {};
+            const envVarPattern = /\$([A-Z_][A-Z0-9_]*)/g;
+            for (const [header, template] of Object.entries(_envHeaders)) {
+                const referencedEnvVars = Array.from(template.matchAll(envVarPattern), (match) => match[1]);
+                const hasMissingEnvSubstitution = referencedEnvVars.some((name) => {
+                    const value = process.env[name];
+                    return value === undefined || value.trim() === "";
+                });
+                if (hasMissingEnvSubstitution) continue;
+
+                const expanded = template.replace(envVarPattern, (_, name) => process.env[name] ?? "");
+                const expandedTokens = expanded.trim().split(/\s+/).filter(Boolean);
+                const hasSchemeWithoutToken = template.includes(" ") && expandedTokens.length < 2;
+                if (expandedTokens.length === 0 || hasSchemeWithoutToken) continue;
+
+                resolved[header] = expanded;
+            }
+            if (Object.keys(resolved).length > 0) {
+                (config as any).headers = resolved;
+            }
+        }
+
+        result[serverKey] = config as MCPServerConfig;
     }
     return result;
 }
