@@ -42,7 +42,7 @@ A superset block injected by the orchestrator (with additional fields such as `t
 1. Every Gate 5 PR must include an issue-closing keyword (for example, `Closes #123`).
 2. Every Gate 5 PR must include an `## Agent Provenance` block containing at minimum `run-id`, `task-id`, `role`, and `dispatched` fields; a superset block (e.g., orchestrator-injected) also satisfies this requirement.
 3. This `## Agent Provenance` block replaces the legacy `Execution-Agent: dev` marker everywhere provenance completeness is evaluated; `Execution-Agent: dev` alone is not provenance-complete.
-4. If `run-id` is an orchestrator-generated identifier, it must trace back to the `run_async_subagents` call recorded in `/memories/session/active-state.md`; if `run-id: direct-invocation`, this session-memory linkage requirement is explicitly N/A.
+4. If `run-id` is an orchestrator-generated identifier, it must trace back to a terminal-dispatch record in `/memories/session/active-state.md` (`## Pending Async Runs` `terminal-id` entry) and the corresponding `run-agent.ts` output/log evidence; if `run-id: direct-invocation`, this session-memory linkage requirement is explicitly N/A.
 5. Orchestrator verifies provenance completeness for every Gate 5 PR and verifies `/memories/session/active-state.md` linkage when the `run-id` is an orchestrator-generated identifier.
 
 ## Merge Gate Policy
@@ -71,7 +71,7 @@ A superset block injected by the orchestrator (with additional fields such as `t
 
 1. Scope lock: verify PR still maps cleanly to the intended Issue and approved slice boundaries.
 2. Verification lock: verify required tests passed and Build evidence remains sufficient.
-3. Provenance lock: verify PR includes issue-closing keyword and a full `## Agent Provenance` block with `run-id` tracing back to session memory.
+3. Provenance lock: verify PR includes issue-closing keyword and a full `## Agent Provenance` block with `run-id` tracing back to session memory terminal-dispatch records.
 4. Review lock: verify review comments are resolved or explicitly accepted by Product Owner.
 5. Copilot review loop lock: verify the latest Copilot review on the latest commit reports zero comments in its review body, including known phrasings such as **"generated 0 comments"**, **"0 new comments"**, or **"generated no new comments"**. This is the only exit condition. Historical outdated threads do not count. If the latest review still reports >0 comments, the loop must continue. `semantically-closed/tooling-unresolved` items must be reported explicitly and do not block merge unless Product Owner decides otherwise.
 6. Runtime QA lock: for `UI-impacting` issues, verify latest Runtime QA verdict is `Pass`, or explicit Product Owner risk acceptance is documented via `vscode_askQuestions` (unilateral agent declaration is not valid — see `build-merge-gate-orchestration` Explicit PO Acceptance Enforcement rule).

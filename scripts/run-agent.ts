@@ -175,18 +175,37 @@ let model = DEFAULT_MODEL;
 let outputFormat: "text" | "json" = "text";
 const argv = process.argv.slice(2);
 
+function requireOptionValue(option: string, value: string | undefined): string {
+    if (!value || value.startsWith("--")) {
+        console.error(`Missing value for ${option}`);
+        process.exit(1);
+    }
+    return value;
+}
+
 for (let i = 0; i < argv.length;) {
     if (argv[i] === "--pre-sleep") {
-        preSleepMs = parseInt(argv[i + 1] ?? "0", 10) * 1000;
+        const rawSeconds = requireOptionValue("--pre-sleep", argv[i + 1]);
+        const seconds = parseInt(rawSeconds, 10);
+        if (!Number.isFinite(seconds) || seconds < 0) {
+            console.error(`Invalid value for --pre-sleep: ${rawSeconds}`);
+            process.exit(1);
+        }
+        preSleepMs = seconds * 1000;
         argv.splice(i, 2);
     } else if (argv[i] === "--no-intro") {
         noIntro = true;
         argv.splice(i, 1);
     } else if (argv[i] === "--model") {
-        model = argv[i + 1] ?? DEFAULT_MODEL;
+        model = requireOptionValue("--model", argv[i + 1]);
         argv.splice(i, 2);
     } else if (argv[i] === "--output-format") {
-        outputFormat = (argv[i + 1] === "json" ? "json" : "text");
+        const format = requireOptionValue("--output-format", argv[i + 1]);
+        if (format !== "json" && format !== "text") {
+            console.error(`Invalid value for --output-format: ${format}. Use \"text\" or \"json\".`);
+            process.exit(1);
+        }
+        outputFormat = format;
         argv.splice(i, 2);
     } else {
         i++;
@@ -252,7 +271,8 @@ async function withRetry<T>(
     fn: () => Promise<T>,
     maxRetries: number,
     baseMs: number,
-    label: string
+    label: string,
+    shouldRetry: (err: unknown) => boolean
 ): Promise<T> {
     let lastErr: unknown;
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
@@ -260,14 +280,21 @@ async function withRetry<T>(
             return await fn();
         } catch (err) {
             lastErr = err;
-            if (attempt < maxRetries) {
+            if (attempt < maxRetries && shouldRetry(err)) {
                 const delay = baseMs * Math.pow(2, attempt - 1);
                 console.error(`[run-agent] ${label} failed (attempt ${attempt}/${maxRetries}), retrying in ${delay}ms…`);
                 await new Promise((r) => setTimeout(r, delay));
+            } else {
+                throw err;
             }
         }
     }
     throw lastErr;
+}
+
+function isRetryableSendAndWaitError(err: unknown): boolean {
+    const message = err instanceof Error ? err.message : String(err);
+    return /(429|rate limit|timeout|timed out|ECONNRESET|EAI_AGAIN|ENOTFOUND|ENETUNREACH|503|Service Unavailable)/i.test(message);
 }
 
 // ── Run ───────────────────────────────────────────────────────────────────────
@@ -336,7 +363,8 @@ try {
         () => session.sendAndWait({ prompt: finalPrompt }, TIMEOUT_MS),
         MAX_RETRIES,
         RETRY_BASE_MS,
-        "sendAndWait"
+        "sendAndWait",
+        isRetryableSendAndWaitError
     );
     const output = result?.data?.content ?? "(no output)";
 
