@@ -213,6 +213,10 @@ for (let i = 0; i < argv.length;) {
         outputFormat = format;
         argv.splice(i, 2);
     } else {
+        if (argv[i].startsWith("--")) {
+            console.error(`Unknown option: ${argv[i]}`);
+            process.exit(1);
+        }
         i++;
     }
 }
@@ -222,15 +226,14 @@ function logInfo(message: string): void {
     out.write(`${message}\n`);
 }
 
-const [role, rawPrompt] = argv;
-
-if (!role || !rawPrompt) {
+if (argv.length !== 2) {
     console.error(
         "Usage: npx tsx scripts/run-agent.ts [--pre-sleep <s>] [--no-intro] " +
         "[--model <id>] [--task-id <id>] [--output-format json] <role> \"<prompt>\" | @<prompt-file>"
     );
     process.exit(1);
 }
+const [role, rawPrompt] = argv;
 
 // Support @file references: `@path/to/file.md` reads file contents as the prompt
 const prompt = rawPrompt.startsWith("@")
