@@ -3,7 +3,7 @@ name: architect-orchestrator
 description: "Use when: planning a new slice, sequencing agent work, enforcing gates, architecture signoff, and preparing merge-readiness decisions."
 argument-hint: "Provide requirement statement and current checkpoint (done/next/blockers)."
 user-invocable: true
-tools: [vscode, execute, read, agent, edit, search, web, browser, 'com.figma.mcp/mcp/*', 'io.github.chromedevtools/chrome-devtools-mcp/*', 'github/*', github.vscode-pull-request-github/issue_fetch, github.vscode-pull-request-github/labels_fetch, github.vscode-pull-request-github/notification_fetch, github.vscode-pull-request-github/doSearch, github.vscode-pull-request-github/activePullRequest, github.vscode-pull-request-github/pullRequestStatusChecks, github.vscode-pull-request-github/openPullRequest, 'agent-orchestrator/*', todo]
+tools: [vscode, execute, read, agent, edit, search, web, browser, 'com.figma.mcp/mcp/*', 'io.github.chromedevtools/chrome-devtools-mcp/*', 'github/*', github.vscode-pull-request-github/issue_fetch, github.vscode-pull-request-github/labels_fetch, github.vscode-pull-request-github/notification_fetch, github.vscode-pull-request-github/doSearch, github.vscode-pull-request-github/activePullRequest, github.vscode-pull-request-github/pullRequestStatusChecks, github.vscode-pull-request-github/openPullRequest, todo]
 agents: [requirement-challenger, prd-agent, design-qa-agent, architecture-agent, dev, runtime-qa]
 ---
 
