@@ -245,24 +245,31 @@ describe('DebateScreen', () => {
         expect(screen.queryByRole('dialog', { name: 'Post composer' })).not.toBeInTheDocument();
     });
 
-    it('opens bottom sheet immediately with selected side after mobile FAB side selection', () => {
+    it('opens bottom sheet immediately with selected side after mobile FAB side selection', async () => {
         mockViewportQuery(true);
         render(<DebateScreen />);
 
         fireEvent.click(screen.getByRole('button', { name: 'Open post composer' }));
         const vitarkAction = screen.getByRole('button', { name: 'Post as Vitark' });
+        await waitFor(() => {
+            expect(vitarkAction).toBeEnabled();
+        });
         fireEvent.click(vitarkAction);
 
         expect(screen.getByRole('dialog', { name: 'Post composer' })).toBeInTheDocument();
         expect(screen.getByRole('radio', { name: 'Vitark' })).toHaveAttribute('aria-checked', 'true');
     });
 
-    it('resets FAB and sheet state on resize from mobile to desktop', () => {
+    it('resets FAB and sheet state on resize from mobile to desktop', async () => {
         const mediaController = mockViewportQuery(true);
         render(<DebateScreen />);
 
         fireEvent.click(screen.getByRole('button', { name: 'Open post composer' }));
-        fireEvent.click(screen.getByRole('button', { name: 'Post as Tark' }));
+        const tarkAction = screen.getByRole('button', { name: 'Post as Tark' });
+        await waitFor(() => {
+            expect(tarkAction).toBeEnabled();
+        });
+        fireEvent.click(tarkAction);
         expect(screen.getByRole('dialog', { name: 'Post composer' })).toBeInTheDocument();
 
         act(() => {
