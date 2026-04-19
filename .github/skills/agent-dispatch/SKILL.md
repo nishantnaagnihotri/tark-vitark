@@ -189,7 +189,7 @@ Expected output includes `"email": "…"` and `"handle": "…"`. Any error at th
 
 ### How the original token was obtained
 
-VS Code's Figma extension stores the OAuth token in VS Code's safeStorage (AES-128-CBC, Chromium Safe Storage key from GNOME keyring). The DB is at `~/.config/Code/User/globalStorage/state.vscdb`. If a full re-authentication is needed (e.g. both access and refresh tokens are invalid), the simplest path is to re-authorize via the VS Code Figma extension in the GUI and then re-extract.
+VS Code's Figma extension stores the OAuth token in VS Code's safeStorage. **Linux-specific note:** one common location is `~/.config/Code/User/globalStorage/state.vscdb` (with keys managed via the desktop keyring). On macOS/Windows, storage paths and keychain mechanisms differ. If a full re-authentication is needed (e.g. both access and refresh tokens are invalid), the simplest path is to re-authorize via the VS Code Figma extension in the GUI and then re-extract.
 
 ---
 

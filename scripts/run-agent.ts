@@ -458,4 +458,4 @@ try {
     try { await client.stop(); } catch { /* non-fatal */ }
 }
 
-process.exit(exitCode);
+process.exitCode = exitCode;
