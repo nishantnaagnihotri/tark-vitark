@@ -36,17 +36,22 @@ git fetch origin
 git checkout <branch>
 
 # 2. Background the dev server — do NOT run it in the foreground
-npm run dev &
+# --port 5173 --strictPort ensures a deterministic URL; the server fails fast if 5173 is in use
+npm run dev -- --port 5173 --strictPort &
 
-# 3. Wait for Vite to be ready before connecting Chrome
-sleep 8
+# 3. Poll until Vite is ready (up to 15 s) before connecting Chrome
+for i in $(seq 1 15); do
+  curl -s -o /dev/null -w "%{http_code}" http://localhost:5173 | grep -q 200 && break
+  sleep 1
+done
 ```
 
 **Critical rules:**
 - Always background with `&`. Running `npm run dev` in the foreground blocks the agent and eventually exits when the agent process ends.
 - Do NOT use `nohup`, `disown`, or detached shells — the process must stay as a child of the agent's execute shell so it remains alive during the full browser session.
-- Wait at least 8 seconds after launching before navigating Chrome to `http://localhost:5173`.
-- If the browser fails to connect, confirm the server is still running: `curl -s -o /dev/null -w "%{http_code}" http://localhost:5173` should return `200`.
+- Always pass `--port 5173 --strictPort` so the dev-server URL is deterministic (`http://localhost:5173`). If port 5173 is already in use, Vite exits immediately — free the port and retry.
+- The poll loop waits up to 15 s for the server to respond with HTTP 200; if still unreachable after 15 s, abort and report `Blocked`.
+- If the browser fails to connect mid-session, confirm the server is still running: `curl -s -o /dev/null -w "%{http_code}" http://localhost:5173` should return `200`.
 - If the server exits unexpectedly during testing, re-launch and re-run the failing check before reporting `Blocked`.
 
 ## Figma Frame Fidelity Protocol
