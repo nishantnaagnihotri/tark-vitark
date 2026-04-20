@@ -40,7 +40,7 @@ You are the implementation specialist for one approved coding task at a time.
 9. DO NOT use raw color values, hardcoded spacing, or ad-hoc tokens in code. Reference only CSS custom properties from the project's token file (see Design System Foundation Policy in `.github/AGENTS.md`).
 10. DO NOT ship code that only supports one theme. All styling must work in both Light and Dark themes via the token system.
 11. For GitHub issue, pull request, review, comment, label, and status interactions, use GitHub MCP tools as the required interface. Only use a non-MCP fallback if the GitHub MCP server lacks the capability and Product Owner approves the exception.
-12. In `Orchestrator-Managed Stacked Review Mode`, DO NOT independently start or continue the PR review loop unless orchestrator explicitly delegates that action.
+12. In `Orchestrator-Managed Stacked Review Mode`, always complete your own PR review loop to review-clean before returning handback. The orchestrator owns stack sequencing (merge order, retarget, base-to-tip progression); you own your assigned PR's review loop. Do not trigger merges or retarget other PRs.
 13. For UI-impacting issues, provide the full Runtime QA handoff package evidence (journey map, route list, expected states, setup notes, setup/test data, and known-risk notes); this complements coded tests and does not replace them.
 
 ## Domain Language Policy
@@ -57,7 +57,7 @@ Follow the `pr-review-loop` skill (`.github/skills/pr-review-loop/SKILL.md`) for
 
 For dependent PR chains, follow the `stacked-pr-review-loop` skill (`.github/skills/stacked-pr-review-loop/SKILL.md`) for efficient sequencing, base-to-tip fix order, and retarget/sync flow.
 
-In `Orchestrator-Managed Stacked Review Mode`, dev scope is code-only for the assigned issue: implement requested changes, push commits, and return handback status. Unless explicitly delegated by orchestrator, dev does not independently request Copilot review, poll review status, classify review comments, or advance stack sequencing.
+In `Orchestrator-Managed Stacked Review Mode`, dev owns its assigned PR's full review loop: implement, push, request Copilot review, poll to review-clean, fix `Accept` comments, escalate `Challenge` / `Needs Product Owner Decision` items to orchestrator, and return a review-clean handback. Dev does not advance stack sequencing, trigger merges, or retarget PR bases.
 
 Dev-specific note:
 
@@ -110,7 +110,7 @@ Expected input from Architect + Orchestrator:
 13. For UI-impacting issues, prepare a Runtime QA handoff package: acceptance-criterion journey mapping, route list, required setup/test data, expected states, and known-risk notes.
 14. Prepare PR that references and closes the issue and includes scenario-to-test traceability.
 15. Return build package with code/test/PR evidence and residual risks.
-16. If handoff specifies `Orchestrator-Managed Stacked Review Mode`, stop after push + handback package and wait for orchestrator-supplied fix instructions for any review feedback.
+16. If handoff specifies `Orchestrator-Managed Stacked Review Mode`, complete your own PR review loop to review-clean (implement → push → request review → poll → fix `Accept` items → escalate others → repeat until clean), then return handback with review-clean evidence. Do not trigger stack merges or retarget other PRs.
 
 ## Build Quality Checks
 
@@ -129,6 +129,7 @@ A build output is "Ready" only when all are true:
 11. Domain language compliance: all domain-facing identifiers (variable names, function names, class names, component names, CSS class names) use glossary-derived terms from `05-architecture.md` §2.3. Infrastructure terms (`div`, `span`, `render`, `component`) appear only in framework-required positions.
 12. For UI-impacting issues, runtime QA handoff package is included and sufficient for Gate 5.5 validation.
 13. For UI-impacting issues, browser screenshot evidence (at all required viewports and themes) paired with Figma reference screenshots is attached to the PR body; any intentional deviation is explicitly noted with justification.
+14. PR description accuracy: before opening the PR, run `git diff --stat origin/<base-branch>` and verify every file in the diff is listed in the PR body's `Files Changed` section, and every file listed in `Files Changed` appears in the diff. No fabricated entries, no silent omissions.
 
 ## Output Format
 

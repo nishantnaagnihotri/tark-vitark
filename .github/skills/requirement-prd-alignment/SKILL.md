@@ -19,6 +19,11 @@ Use this skill to prevent Gate 1 to Gate 2 drift and to standardize PRD validati
 1. `01-requirement.md` and the `Requirement Context Package` are immutable source contracts for Gate 2.
 2. Requirement statement, in-scope and out-of-scope boundaries, and acceptance-criteria intent (including IDs) carry forward unchanged unless Product Owner explicitly approves a change.
 3. Any owner-approved change must be called out explicitly in PRD outputs and context updates.
+4. **AC prose must not be copied into `02-prd.md`.** The PRD must reference AC IDs (e.g., `AC-19`) and link to the canonical feature file:
+   ```md
+   **Acceptance Criteria:** canonical source is [`features/<slice>.feature`](../../../features/<slice>.feature)
+   ```
+   User stories in the PRD reference AC IDs for traceability but do not restate AC text. This prevents AC drift across artifacts.
 
 ## Mandatory Alignment Evidence
 

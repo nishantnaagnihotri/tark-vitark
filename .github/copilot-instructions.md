@@ -6,11 +6,13 @@ tark-vitark is a personal portfolio/product project. Current implementation is s
 
 ## Coding Conventions
 
-- Use CSS custom properties from the token system for colors, spacing, and shared style values.
-- Canonical token file path is `src/styles/tokens.css`.
-- Support both Light and Dark themes via `[data-theme]` selectors and `prefers-color-scheme` fallback.
-- Use domain-oriented naming in code and tests.
+- Use domain-oriented naming in code, tests, and PR descriptions.
 - Follow test-first behavior-driven development when feasible.
+- Language- and technology-specific rules live in `.github/instructions/`:
+  - React/TSX → `.github/instructions/react.instructions.md`
+  - CSS → `.github/instructions/css.instructions.md`
+  - Tests → `.github/instructions/tests.instructions.md`
+- To add or update instruction files, follow `.github/skills/coding-standards/SKILL.md`.
 
 ## Branching
 

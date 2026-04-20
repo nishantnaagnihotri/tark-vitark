@@ -26,8 +26,8 @@ On-demand workflow for handling PR reviews end-to-end: intake triage, dispositio
 ## Review Loop Ownership
 
 1. By default, the implementing agent for a PR is the review-loop owner and runs this workflow.
-2. For dependent PR chains explicitly declared as `Orchestrator-Managed Stacked Review Mode`, the orchestrator is the review-loop owner for those PRs.
-3. In `Orchestrator-Managed Stacked Review Mode`, dev agents execute assigned code changes and push handback commits only; they do not independently request Copilot review, poll review state, or advance stack sequencing unless explicitly delegated by orchestrator.
+2. For dependent PR chains explicitly declared as `Orchestrator-Managed Stacked Review Mode`, ownership is split: each dev agent owns the full review loop for its own assigned PR; the orchestrator owns stack sequencing (merge order, base-to-tip progression, PR retargeting).
+3. In `Orchestrator-Managed Stacked Review Mode`, dev agents run this full review loop per-PR and exit with a formal Review Loop Exit Status package (see section 6). They do not advance stack sequencing, trigger merges, or retarget PR bases.
 
 ---
 
@@ -103,19 +103,25 @@ Status: semantic-closed | semantic-open (reason)
 7. **Review request and polling are a single atomic sequence (no gap permitted).** The tool call return value from the review request — including `(empty)` — is a trigger to begin polling immediately. It is not a completion signal, not a status, and not a reason to summarize or report. Any return value from the review request tool must be followed by polling without pause. Immediately after calling the review request tool, emit the log entry `[REVIEW REQUESTED] → [POLLING STARTED]` and begin the polling window. If this log entry is absent, the atomic sequence was broken — that is a workflow failure.
 8. Polling must use live GitHub MCP review data as the source of truth rather than relying on cached editor extension payloads.
 9. When a non-MCP polling fallback is used:
-    - **Orchestrator context** (running in VS Code chat session): launch the poll script as an async terminal so it does not block the chat session:
-      ```
-      mode: async
-      command: node scripts/wait_for_copilot_review.js --owner <owner> --repo <repo> --pr <number>
-      ```
-      Capture the terminal ID. Check completion with `get_terminal_output <terminal-id>`. Do not launch in sync/foreground mode; default timeout is 600 seconds and will block.
+    - **Orchestrator context** (running in VS Code chat session): use the alarm skill (180 s interval) instead of the poll script. On each alarm wake:
+      1. Call `get_reviews` on the PR via GitHub MCP.
+      2. If latest Copilot review body says "generated 0 comments" / "0 new comments" / "generated no new comments" → review-clean; proceed.
+      3. If new comments are present → run PR Review Intake Protocol, address, push, re-request review, re-arm alarm.
+      4. If no review yet → apply rule 11 (1-hour retry ladder): re-request and re-arm if within 60 min of `T0`; escalate if `≥ 60 min`.
     - **Dev agent context** (running inside `run-agent.ts` with `execute` tool): run the poll script **synchronously** via the execute tool — the agent has a 1-hour timeout and can block on the script:
       ```
       node scripts/wait_for_copilot_review.js --owner <owner> --repo <repo> --pr <number>
       ```
       Read the JSON output directly and act on it within the same session.
 10. Review threads should normally be resolved as part of disposition execution.
-11. If no new Copilot review arrives within the bounded polling window, the agent must report that the loop is blocked on external async review completion.
+11. **Review timeout and retry ladder.** If no Copilot review arrives within the bounded polling window, do NOT immediately report blocked. Retry until 1 hour has elapsed since the head SHA was pushed (commit timestamp), then escalate:
+
+    1. Record `T0` = the UTC timestamp of the head SHA push (obtain via `gh api repos/<owner>/<repo>/git/commits/<sha> --jq '.committer.date'` or equivalent).
+    2. On each polling timeout: check `now − T0`. If `< 60 min` → re-request Copilot review via MCP → restart polling window → emit `[REVIEW REQUESTED] → [POLLING STARTED]` → continue.
+    3. If `now − T0 ≥ 60 min` and still no review → escalate: report blocked to Product Owner with PR link, head SHA, `T0`, elapsed time, and number of re-request attempts.
+
+    After each re-request, emit `[REVIEW REQUESTED] → [POLLING STARTED]` as required by rule 7. Do not escalate while within the 1-hour window.
+
 12. If a thread still remains outdated and unresolved after disposition execution, the agent must reconcile that thread state before declaring the loop complete, or explicitly record it as `semantically-closed/tooling-unresolved` when MCP lacks the required resolution capability.
 
 ## 4. Branch Sync Protocol
@@ -146,3 +152,34 @@ Before declaring the PR review workflow complete or saying the PR is "merge-read
 | 4 | **Are all challenges resolved with Product Owner?** | No pending `Challenge` items awaiting PO disposition |
 
 **Hardening rule:** the agent must not declare "merge-ready" or call the overall task complete until it has explicitly run this self-check and confirmed all four items pass. Skipping this check is a workflow failure.
+---
+
+## 6. Review Loop Exit Status (Mandatory — Emit On Every Exit)
+
+Every agent must emit one of the two exit status packages below when completing its review loop. Exiting without a status package is a workflow failure.
+
+### `REVIEW_CLEAN`
+
+Condition: latest Copilot review body indicates zero new comments **and** no `Challenge` or `Needs Product Owner Decision` items are open.
+
+Required package fields:
+- `status: REVIEW_CLEAN`
+- `pr`: PR link
+- `head_sha`: head SHA of the reviewed commit
+- `copilot_review_excerpt`: verbatim opening line of the latest Copilot review body
+
+### `REVIEW_CLEAN_WITH_ESCALATIONS`
+
+Condition: latest Copilot review body indicates zero new comments **but** ≥ 1 `Challenge` or `Needs Product Owner Decision` items remain open (posted as thread replies, awaiting PO resolution).
+
+Required package fields:
+- `status: REVIEW_CLEAN_WITH_ESCALATIONS`
+- `pr`: PR link
+- `head_sha`: head SHA of the reviewed commit
+- `copilot_review_excerpt`: verbatim opening line of the latest Copilot review body
+- `escalations`: list — one entry per deferred item:
+  - `thread_link`: GitHub PR thread URL
+  - `classification`: `Challenge` or `Needs Product Owner Decision`
+  - `summary`: one-line description of the open item
+
+**Routing rule:** `REVIEW_CLEAN` → proceed to merge-ready declaration. `REVIEW_CLEAN_WITH_ESCALATIONS` → return package to orchestrator (stacked mode) or Product Owner (standalone mode) and wait for resolution before proceeding.

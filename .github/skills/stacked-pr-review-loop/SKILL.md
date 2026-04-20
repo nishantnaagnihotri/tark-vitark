@@ -17,28 +17,38 @@ Use this skill to run stacked pull requests efficiently without sacrificing revi
 ## Execution Ownership (Orchestrated Stacks)
 
 1. For multi-task dependent chains delegated by orchestrator, run in `Orchestrator-Managed Stacked Review Mode`.
-2. In this mode, orchestrator owns review-loop control for every PR in the chain: review requests, polling, disposition triage, and base-to-tip progression.
-3. Dev agents are code-only executors for assigned issues: implement changes, push commits, and return handback status.
-4. Dev agents do not independently start or continue review loops in this mode unless orchestrator explicitly delegates a specific review action.
+2. In this mode, orchestrator owns stack sequencing: merge order, base-to-tip progression, and PR retargeting.
+3. Dev agents own their assigned PR's full review loop: implement, push, request Copilot review, poll to review-clean, fix `Accept` comments, escalate `Challenge` / `Needs Product Owner Decision` items to orchestrator, and return a review-clean handback.
+4. Dev agents do not advance stack sequencing, trigger merges, or retarget PR bases.
 
 ## Efficient Sequence (Pipeline First)
 
-1. Assigned dev agents open `PR1` (base: `master`), `PR2` (base: `PR1` branch), `PR3` (base: `PR2` branch), and deeper PRs as needed, then hand back to orchestrator.
-2. Orchestrator requests Copilot review immediately on each opened PR; do not wait for lower PR review completion before requesting upper PR reviews.
-3. Orchestrator polls and triages comments as they arrive, then executes fix progression from base to tip.
+1. Assigned dev agents open `PR1` (base: `master`), `PR2` (base: `PR1` branch), `PR3` (base: `PR2` branch), and deeper PRs as needed, each running their own review loop in parallel.
+2. Each dev agent requests Copilot review immediately after opening its PR and polls to review-clean independently.
+3. Orchestrator monitors dev handbacks and executes stack sequencing (merge order, retarget) once lower PRs are review-clean.
 
 ## Disposition And Fix Sequence (Base To Tip)
 
-1. Orchestrator classifies each comment using `Accept | Challenge | Needs Product Owner Decision` per `pr-review-loop`.
-2. Orchestrator dispatches fix instructions to the owning dev agent on the lowest open PR in the stack first.
-3. Dev agent applies code changes, pushes commits, and hands back without running an independent review loop unless delegated.
-4. After each fix push, orchestrator requests a fresh Copilot review immediately on that PR.
-5. Consider that PR review-clean only when the latest Copilot review body indicates zero new comments.
-6. Move to the next PR in the stack only after the lower PR reaches review-clean state.
+1. Dev agent classifies each Copilot comment using `Accept | Challenge | Needs Product Owner Decision` per `pr-review-loop`.
+2. For `Accept` items: dev agent applies fixes, pushes, and requests a fresh Copilot review on its own PR immediately — no orchestrator involvement required.
+3. For `Challenge` or `Needs Product Owner Decision` items: dev agent sends a disposition report to the orchestrator and waits for resolution before pushing any fix.
+4. Consider a PR review-clean only when the latest Copilot review body indicates zero new comments.
+5. Orchestrator does not dispatch fix instructions for `Accept` items — dev handles them directly.
+6. Orchestrator advances stack sequencing only after the lower PR reaches review-clean state.
+
+## Post-Loop Orchestrator Challenge Consolidation
+
+After all dev agents have returned their exit status packages (per `pr-review-loop` section 6):
+
+1. Orchestrator collects every `REVIEW_CLEAN_WITH_ESCALATIONS` package across all PRs in the stack.
+2. If any escalations exist, orchestrator presents them to the Product Owner as a single consolidated cross-PR challenge list before advancing any stack sequencing. Group items by PR for clarity.
+3. For each escalation the PO resolves (accept / fix), orchestrator dispatches the fix to the owning dev agent. Dev implements, pushes, re-runs its review loop, and returns a new exit status package.
+4. Stack sequencing (merge order, retarget) does not advance until all escalations across all PRs are either resolved by PO or explicitly deferred by PO with a recorded rationale.
+5. If all packages are `REVIEW_CLEAN`, orchestrator proceeds directly to merge sequencing.
 
 ## Merge And Retarget Sequence (Base To Tip)
 
-1. Product Owner merges the lowest ready PR first.
+1. Product Owner merges the lowest ready PR first. While waiting: arm an alarm (300 s interval, alarm skill). On each alarm wake, call `get` on the base PR via GitHub MCP and check `state=closed` + `merged=true`. If merged → proceed to step 2. If not → re-arm.
 2. Orchestrator retargets the next PR base to `master`.
 3. Rebase the next PR branch onto current `master`, resolve conflicts during rebase, avoid merge commits in PR head history, and hand back to orchestrator.
 4. Orchestrator requests a fresh Copilot review on the rebased head.
