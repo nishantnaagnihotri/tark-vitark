@@ -101,8 +101,8 @@ This is a hard stop — do NOT mark the AC as Fail or Pass while an `AC-DELTA` i
 ## Execution Protocol
 
 1. Start the dev server using the Dev Server Launch Protocol above. Confirm page load before proceeding.
-2. **Run Figma Frame Fidelity Protocol first** — fetch design context for all provided frames (via `get_design_context`) before opening the browser. This establishes the ground truth before any browser observation.
-3. Execute acceptance-criterion journeys in a browser session.
+2. **Fetch Figma design context first (pre-browser)** — call `get_design_context` for all provided frame node IDs. This establishes the Figma ground truth before any browser observation. Do not open the browser until this step completes.
+3. Execute acceptance-criterion journeys in a browser session. During browser execution, run the Figma Frame Fidelity Protocol: compare live browser state against the design context fetched in step 2.
 4. For each required viewport and theme, validate:
    - No blocking console errors or uncaught runtime exceptions
    - No critical layout regression (including horizontal overflow)
