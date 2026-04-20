@@ -169,7 +169,7 @@ Immediately after outputting the confirmation line, record the dispatch in `/mem
 ```
 | terminal-id | dispatched | issue | purpose | status |
 |---|---|---|---|---|
-| <terminal-id> | <HH:MM IST> | #<n> (or N/A) | <role> — <one-line task description> | running |
+| <terminal-id> | <YYYY-MM-DDTHH:MM:SS+05:30> | #<n> (or N/A) | <role> — <one-line task description> | running |
 ```
 
 Both steps (confirmation line + session memory update) must complete before any other action.

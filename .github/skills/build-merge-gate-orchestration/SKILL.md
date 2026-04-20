@@ -146,7 +146,8 @@ Proceeding rule:
    - `Runtime QA: Not Required` is explicitly recorded for a non-UI issue with rationale; in this case, no runtime QA verdict is required.
 2. If runtime QA runs and verdict is `Fail`, return findings to Dev and loop implementation.
 3. If runtime QA runs and verdict is `Blocked`, apply `gate-recovery-and-resume` and pause progression.
-4. Product Owner may explicitly accept residual runtime risk to proceed from `Fail` or `Blocked`; this must be recorded in merge evidence.
+4. If runtime QA runs and verdict is `AC-DELTA` (blocking): stop Gate 5.5 progression. Route the flagged AC IDs to the Orchestrator for AC writeback in `02-prd.md` (amending each affected AC to match the approved behavior). After writeback is confirmed, re-invoke `runtime-qa` and obtain a new verdict. Gate 5.5 remains `semantic-open` until the re-run returns `Pass` or Product Owner explicitly accepts residual risk via `vscode_askQuestions`.
+5. Product Owner may explicitly accept residual runtime risk to proceed from `Fail`, `Blocked`, or `AC-DELTA`; this must be recorded in merge evidence.
 
 **Explicit PO Acceptance Enforcement (blocking):** The phrase "explicitly accept residual runtime risk" is only satisfied when the orchestrator has invoked `vscode_askQuestions` presenting the specific risk to Product Owner and received an explicit in-session confirmation. An agent unilaterally declaring "PO accepted residual runtime risk" in a gate closure summary — without a `vscode_askQuestions` call in that session — is a workflow failure and an invalid skip path. Gate 5.5 remains `semantic-open` until either a passing verdict is attached or a `vscode_askQuestions` confirmation is on record.
 
