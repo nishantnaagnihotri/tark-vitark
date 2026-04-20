@@ -107,20 +107,20 @@ Status: semantic-closed | semantic-open (reason)
       1. Call `get_reviews` on the PR via GitHub MCP.
       2. If latest Copilot review body says "generated 0 comments" / "0 new comments" / "generated no new comments" → review-clean; proceed.
       3. If new comments are present → run PR Review Intake Protocol, address, push, then immediately re-request review and re-arm the alarm so polling restarts atomically after the new review request.
-      4. If no review yet → apply rule 11 (1-hour retry ladder): re-request and immediately re-arm if within 60 min of `T0`; escalate if `≥ 60 min`.
+      4. If no review yet → re-arm the alarm and continue polling. **Do NOT re-request on each wake** — the review was already requested; repeated re-requests flood Copilot's queue. Only re-request again after pushing a new commit. Escalate to PO if no review arrives within 60 min of `T0`.
     - **Dev agent context** (running inside `run-agent.ts` with `execute` tool): run the poll script **synchronously** via the execute tool — the agent has a 1-hour timeout and can block on the script:
       ```
       node scripts/wait_for_copilot_review.js --owner <owner> --repo <repo> --pr <number>
       ```
       Read the JSON output directly and act on it within the same session.
 10. Review threads should normally be resolved as part of disposition execution.
-11. **Review timeout — keep retrying for 1 hour.** If Copilot hasn't posted a review yet, don't stop immediately. Keep re-requesting and re-polling for up to 1 hour from when the last push happened, then escalate.
+11. **Review timeout — keep polling for 1 hour.** If Copilot hasn't posted a review yet, don't stop immediately. Keep polling for up to 1 hour from when the last push happened, then escalate. **Do not re-request on each wake** — re-requesting repeatedly floods Copilot's queue and does not speed up delivery. The review was already requested once when the polling window opened; that is sufficient.
 
     How to track the 1-hour window:
 
     - **Clock start (push time):** Call `pull_request_read` with `method=get` and read `updated_at`. This tells you when the PR head ref last changed — i.e., the actual push wall-clock time. Don't use the git commit's author/committer date; on rebases or cherry-picks that can be much earlier than the real push. If `pull_request_read` isn't available, fall back to `gh api repos/<owner>/<repo>/pulls/<number> --jq '.updated_at'` — only after confirming the MCP gap and getting Product Owner approval.
-    - **On each wake with no review yet:** Check how long it's been since the push. If it's under 1 hour → re-request Copilot review, re-arm the alarm, emit `[REVIEW REQUESTED] → [POLLING STARTED]`, and keep going.
-    - **Once 1 hour has passed with still no review:** Stop retrying. Report to the Product Owner: PR link, head SHA, push time, how long you've been waiting, and how many re-request attempts were made. Something is stuck on GitHub's side.
+    - **On each wake with no review yet:** Check how long it's been since the push. If it's under 1 hour → re-arm the alarm and continue polling. Do not re-request.
+    - **Once 1 hour has passed with still no review:** Stop retrying. Report to the Product Owner: PR link, head SHA, push time, how long you've been waiting. Something is stuck on GitHub's side.
 
     Do not escalate while still within the 1-hour window.
 
