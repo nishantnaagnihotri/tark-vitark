@@ -147,7 +147,7 @@ npx tsx scripts/run-agent.ts requirement-challenger "Reply with exactly: ALIVE"
 
 ---
 
-## Post-Dispatch Confirmation (Mandatory)
+## Post-Dispatch Banner (Mandatory)
 
 After every async agent dispatch via `run_in_terminal (mode=async)`, immediately output a dispatch banner.
 
