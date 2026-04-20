@@ -87,7 +87,7 @@ Rules:
 5. Domain language lock: verify code uses domain terminology and concepts (e.g., `displayBrandMessage()` not `renderDOMElement()`). Variable names, function names, and class names reflect the problem domain.
 6. Verification lock: verify required test commands passed and evidence is explicit. All tests passing is mandatory.
 7. PR lock: verify PR exists and includes explicit issue-closing reference and scenario-to-test mapping evidence.
-7a. Description accuracy lock: verify the PR body's `Files Changed` section matches `git diff --stat <base>` — every changed file must appear in the description and no file may be listed that was not changed. A mismatch is a Build Gate loop-back condition.
+7a. Description accuracy lock: verify the PR body's `Files Changed` section matches `git diff --stat origin/<base-branch>` (where `<base-branch>` is the PR target branch) — every changed file must appear in the description and no file may be listed that was not changed. A mismatch is a Build Gate loop-back condition.
 8. Provenance lock: verify PR body includes a full `## Agent Provenance` block with `run-id`, `task-id`, `role`, and `dispatched` fields.
 9. Risk lock: verify residual risks and rollback note are documented.
 10. Approval lock: verify unresolved open questions are resolved or explicitly accepted by Product Owner.

@@ -129,7 +129,7 @@ The following instruction types are **not supported** by the code review agent a
   instructions/
     react.instructions.md          ← applyTo: **/*.tsx
     css.instructions.md            ← applyTo: **/*.css
-    tests.instructions.md          ← applyTo: **/tests/**
+    tests.instructions.md          ← applyTo: **/tests/**, **/features/**/*.feature, **/features/step-definitions/**/*.ts
 ```
 
 ### What belongs in `copilot-instructions.md` (global)
