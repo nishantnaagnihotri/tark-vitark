@@ -110,8 +110,9 @@ Status: semantic-closed | semantic-open (reason)
            --json databaseId,name,status,conclusion,createdAt,headBranch \
            --jq '[.[] | select(.name == "Copilot code review")] | sort_by(.createdAt) | reverse | .[0] | {id: .databaseId, status: .status, conclusion: .conclusion}'
          ```
+         > **Note:** "Copilot code review" is a GitHub-managed workflow. It is **not** defined in `.github/workflows/` but it does appear in `gh run list` output whenever a Copilot review is requested. This filter will return an empty result only if no Copilot review has been triggered yet.
          - If `status == "in_progress"` → the reviewer bot is still running. Re-arm the alarm immediately; skip steps 1–4 for this wake.
-         - If `status == "completed"` or no matching run found → proceed to step 1.
+         - If `status == "completed"`, the command returns empty (no Copilot review triggered yet), or no matching run is found → proceed to step 1.
 
          **Why this matters:** the reviews API lags significantly after the review workflow completes. Checking workflow status first avoids false "no review yet" conclusions while the bot is still processing and prevents unnecessary reviews API calls.
       1. Call `get_reviews` on the PR via GitHub MCP.
