@@ -15,7 +15,7 @@ color: #1a1a1a;
 background: rgba(0, 0, 0, 0.5);
 
 /* Prefer */
-color: var(--color-text-primary);
+color: var(--color-on-surface);
 background: var(--color-scrim);
 ```
 
@@ -25,11 +25,21 @@ Theme variants must use `[data-theme]` attribute selectors. Always include a
 `prefers-color-scheme` fallback at the `:root` level for users without JS.
 
 ```css
-/* Prefer */
-:root { --color-bg: #fff; }
-@media (prefers-color-scheme: dark) { :root { --color-bg: #0d0d0d; } }
-[data-theme="dark"] { --color-bg: #0d0d0d; }
-[data-theme="light"] { --color-bg: #fff; }
+/* Prefer: keep color token definitions in src/styles/tokens.css */
+:root { color-scheme: light; }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) { color-scheme: dark; }
+}
+
+[data-theme="dark"] { color-scheme: dark; }
+[data-theme="light"] { color-scheme: light; }
+
+/* Component CSS should consume shared tokens rather than redefine them */
+.theme-demo {
+  color: var(--color-on-surface);
+  background: var(--color-scrim);
+}
 ```
 
 ## Safe-Area / Viewport
@@ -39,5 +49,5 @@ Use `env(safe-area-inset-*)` with a fallback for all bottom-anchored elements
 
 ```css
 /* Prefer */
-padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+padding-bottom: max(var(--space-4), env(safe-area-inset-bottom, 0px));
 ```

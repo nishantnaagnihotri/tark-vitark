@@ -15,8 +15,8 @@ validates once internally.
 ```tsx
 // Avoid: double validation
 function handleSubmit(text: string) {
-  const errors = validatePost(text); // ← form component already did this
-  if (errors.length) return;
+  const validation = validatePost(text); // ← form component already did this
+  if (!validation.valid) return;
   onPublish(text);
 }
 

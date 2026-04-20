@@ -31,7 +31,7 @@ Use this skill to run stacked pull requests efficiently without sacrificing revi
 
 1. Dev agent classifies each Copilot comment using `Accept | Challenge | Needs Product Owner Decision` per `pr-review-loop`.
 2. For `Accept` items: dev agent applies fixes, pushes, and requests a fresh Copilot review on its own PR immediately — no orchestrator involvement required.
-3. For `Challenge` or `Needs Product Owner Decision` items: dev agent sends a disposition report to the orchestrator and waits for resolution before pushing any fix.
+3. For `Challenge` or `Needs Product Owner Decision` items: dev agent sends a disposition report to the orchestrator and waits for resolution before pushing the challenged change itself. Unrelated `Accept` fixes on the same PR may still be applied, pushed, and re-reviewed immediately — only the challenged change is paused.
 4. Consider a PR review-clean only when the latest Copilot review body indicates zero new comments.
 5. Orchestrator does not dispatch fix instructions for `Accept` items — dev handles them directly.
 6. Orchestrator advances stack sequencing only after the lower PR reaches review-clean state.
