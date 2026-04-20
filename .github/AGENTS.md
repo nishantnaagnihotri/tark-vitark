@@ -157,7 +157,7 @@ The full PR review workflow — Strict Accept-vs-Challenge Lens, PR Review Intak
 
 The stacked PR review-loop workflow - pipelined review requests, base-to-tip disposition sequencing, retarget/sync order, and rebase-compatibility recovery - is defined in the `stacked-pr-review-loop` skill (`.github/skills/stacked-pr-review-loop/SKILL.md`). Agents must follow this skill when handling dependent PR chains.
 
-For orchestrator-managed dependent PR chains, ownership is split: orchestrator owns stack sequencing (merge order, base-to-tip progression, PR retargeting); dev agents own their assigned PR's full review loop (request Copilot review, poll to review-clean, triage and fix `Accept` comments, escalate `Challenge` / `Needs Product Owner Decision` items to orchestrator, return review-clean handback). Dev agents do not advance stack sequencing, trigger merges, or retarget PR bases.
+For orchestrator-managed dependent PR chains, ownership is split: orchestrator owns stack sequencing (merge order, base-to-tip progression, PR retargeting); dev agents own their assigned PR's full review loop (request Copilot review, poll to review-clean, triage and fix `Accept` comments, escalate `Challenge` / `Needs Product Owner Decision` items to orchestrator, return a `REVIEW_CLEAN` or `REVIEW_CLEAN_WITH_ESCALATIONS` exit-status handback). Dev agents do not advance stack sequencing, trigger merges, or retarget PR bases.
 
 ## Gate Recovery And Resume Workflow
 
