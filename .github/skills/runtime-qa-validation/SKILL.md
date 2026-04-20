@@ -40,10 +40,19 @@ git checkout <branch>
 npm run dev -- --port 5173 --strictPort &
 
 # 3. Poll until Vite is ready (up to 15 s) before connecting Chrome
+server_ready=false
 for i in $(seq 1 15); do
-  curl -s -o /dev/null -w "%{http_code}" http://localhost:5173 | grep -q 200 && break
+  if curl -s -o /dev/null -w "%{http_code}" http://localhost:5173 | grep -q 200; then
+    server_ready=true
+    break
+  fi
   sleep 1
 done
+
+if [ "$server_ready" != true ]; then
+  echo "Blocked: Vite dev server did not become reachable at http://localhost:5173 within 15 seconds."
+  exit 1
+fi
 ```
 
 **Critical rules:**
