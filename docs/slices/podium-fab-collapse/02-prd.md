@@ -22,7 +22,7 @@
 
 Amendment A-1 replaces the always-visible inline `Podium` composer bar (FR-1 / FR-2, AC-1 / AC-2) with a FAB-triggered bottom-sheet `Podium` pattern. All other requirements (FR-3–FR-18, AC-3–AC-18) are unchanged.
 
-### Functional Requirements (canonical)
+### Functional Requirements (non-canonical excerpt — canonical source: [`post-tark-vitark/02-prd.md`](../post-tark-vitark/02-prd.md))
 
 | ID | Requirement |
 |---|---|
@@ -33,7 +33,7 @@ Amendment A-1 replaces the always-visible inline `Podium` composer bar (FR-1 / F
 | FR-23 | FAB and bottom sheet are mobile-only (≤ 767 px); on ≥ 768 px the inline Podium remains |
 | FR-24 | Re-tapping the expanded FAB, or tapping outside the expanded FAB, collapses it back to the single `+` icon state |
 
-### Acceptance Criteria (canonical)
+### Acceptance Criteria (non-canonical excerpt — canonical source: [`post-tark-vitark/02-prd.md`](../post-tark-vitark/02-prd.md))
 
 | ID | Criterion |
 |---|---|
