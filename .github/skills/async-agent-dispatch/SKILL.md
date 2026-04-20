@@ -149,9 +149,9 @@ npx tsx scripts/run-agent.ts requirement-challenger "Reply with exactly: ALIVE"
 
 ## Post-Dispatch Confirmation (Mandatory)
 
-After every async agent dispatch via `run_in_terminal (mode=async)`, immediately output a confirmation line.
+After every async agent dispatch via `run_in_terminal (mode=async)`, immediately output a dispatch banner.
 
-**Immediately before dispatching, run two commands to capture the timestamps needed for both the confirmation line and the session-memory table:**
+**Immediately before dispatching, run two commands to capture the timestamps needed for both the dispatch banner and the session-memory table:**
 
 ```
 TZ=Asia/Kolkata date "+%H:%M %Z"       # HH:MM IST — for the dispatch banner
