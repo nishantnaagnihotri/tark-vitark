@@ -46,3 +46,16 @@ Context transfer rule:
 2. Persist it as the slice context source of truth for Gate 2.
 3. Use this package as the primary input to PRD drafting handoff.
 4. Freeze the Gate 1 contract for Gate 2: requirement statement, scope boundaries, and AC intent cannot change without explicit Product Owner decision recorded in context.
+
+## AC Single Source of Truth Rule
+
+At Gate 1 freeze:
+
+1. `01-requirement.md` defines acceptance criteria (AC-N IDs and text) as the seed — this is the only place AC prose is authored.
+2. The `.feature` file is generated from `01-requirement.md` and becomes the **canonical AC source** from that point forward.
+3. All subsequent gate artifacts (`02-prd.md`, `05-architecture.md`, `06-tasks.md`) must reference AC IDs only (e.g., `AC-19`, `AC-20`) and link to the feature file:
+   ```md
+   **Acceptance Criteria:** canonical source is [`features/<slice>.feature`](../../../features/<slice>.feature)
+   ```
+4. AC prose must NOT be copied into any gate artifact other than `01-requirement.md`.
+5. Rationale: duplicated AC text drifts independently across artifacts and generates spurious review noise on every PR that touches those files.

@@ -52,6 +52,32 @@ A superset block injected by the orchestrator (with additional fields such as `t
 3. Product Owner remains the only authority who performs the actual merge.
 4. If merge readiness evidence is incomplete, the PR must loop back with explicit remediation items.
 
+## Architecture Delta Protocol (Dev-owned, Gate 5)
+
+During Gate 5 implementation, if any task:
+- changes an interface contract documented in `05-architecture.md` (e.g., prop types, return types, callback signatures), or
+- touches a component listed as "No changes" in `05-architecture.md`,
+
+then the dev agent **must** append an `## Architecture Delta` section to `05-architecture.md` before opening the PR. Format:
+
+```md
+## Architecture Delta
+
+### <Task ID> — <short title> (<date>)
+
+**Trigger:** <brief reason the deviation was necessary>
+
+| Item | Architecture doc says | What shipped | Justification |
+|---|---|---|---|
+| `ComponentName.prop` | `type A` | `type B` | <reason> |
+| `OtherComponent.tsx` | No changes | Modified | <reason> |
+```
+
+Rules:
+1. The original `05-architecture.md` content is **never rewritten** — the delta section is append-only.
+2. The delta is not a bug report. Justified deviations are expected; they just need to be recorded.
+3. If no interface contracts or "no-changes" components were touched, no delta section is needed — the dev agent explicitly states `Architecture Delta: none` in the PR description.
+
 ## Build Gate Checklist (Orchestrator-owned)
 
 1. Scope lock: verify implementation stayed within assigned Issue scope and architecture boundaries.
@@ -61,6 +87,7 @@ A superset block injected by the orchestrator (with additional fields such as `t
 5. Domain language lock: verify code uses domain terminology and concepts (e.g., `displayBrandMessage()` not `renderDOMElement()`). Variable names, function names, and class names reflect the problem domain.
 6. Verification lock: verify required test commands passed and evidence is explicit. All tests passing is mandatory.
 7. PR lock: verify PR exists and includes explicit issue-closing reference and scenario-to-test mapping evidence.
+7a. Description accuracy lock: verify the PR body's `Files Changed` section matches `git diff --stat <base>` — every changed file must appear in the description and no file may be listed that was not changed. A mismatch is a Build Gate loop-back condition.
 8. Provenance lock: verify PR body includes a full `## Agent Provenance` block with `run-id`, `task-id`, `role`, and `dispatched` fields.
 9. Risk lock: verify residual risks and rollback note are documented.
 10. Approval lock: verify unresolved open questions are resolved or explicitly accepted by Product Owner.
@@ -78,6 +105,8 @@ A superset block injected by the orchestrator (with additional fields such as `t
 7. Documentation lock: verify docs and release notes are updated when applicable.
 8. Rollback lock: verify rollback note is documented and feasible.
 9. Risk acceptance lock: verify residual risks are visible and explicitly accepted when required.
+10. AC SSoT lock: verify `02-prd.md`, `05-architecture.md`, and `06-tasks.md` do not contain copied AC prose — they must reference AC IDs and link to the canonical `.feature` file. Flag any artifact that re-states AC text as a drift risk.
+11. Architecture delta lock: verify the PR description includes either an `## Architecture Delta` section (for any task that changed an interface contract or a "no-changes" component) or an explicit `Architecture Delta: none` statement. Missing this is a Build Gate loop-back condition.
 
 ## Merge Gate Output Contract
 

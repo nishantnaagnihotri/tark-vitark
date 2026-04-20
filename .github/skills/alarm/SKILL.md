@@ -40,25 +40,9 @@ Use the table as the default. If urgency justifies a shorter interval, caller ma
 
 When the alarm fires, VS Code sends a turn-start notification. On that turn:
 
-1. Check the condition that triggered the wait (see below by situation).
+1. Check the condition that triggered the wait (caller's skill defines what to check).
 2. Act on findings autonomously without waiting for PO.
 3. If the wait state has not resolved, re-arm immediately with the same interval.
-
-### Situation: PR review pending
-
-On wake, call `get_reviews` on the PR via GitHub MCP. Check the latest Copilot review body:
-- **"generated 0 comments" / "generated no new comments" / "0 new comments"** → review-clean, proceed to next step autonomously.
-- **New comments present** → run PR Review Intake Protocol, address, push, re-request review, re-arm alarm.
-
-Do **not** run `wait_for_copilot_review.js` or any blocking script. The alarm replaces script-based polling entirely.
-
-### Situation: Agent build in progress
-
-On wake, run the GitHub PR cross-check: list open PRs on the active slice branch and look for a PR closing the task issue. GitHub PR presence is ground truth — if found, treat agent as done regardless of process state. If not found, re-arm.
-
-### Situation: Merge sequencing block
-
-On wake, verify the base PR has merged (`get` on the base PR, check `state=closed` + `merged=true`). If merged, retarget the dependent PR and continue. If not, re-arm.
 
 ## Re-Arm Rule
 
@@ -71,4 +55,3 @@ When the wait state resolves, let the existing alarm expire harmlessly (do not a
 ## Disallowed Alternatives
 
 - Do **not** use sync `sleep` — it blocks the chat session.
-- Do **not** run `wait_for_copilot_review.js` or any blocking polling script in orchestrator context. Script-based polling is for dev-agent context only (inside `run-agent.ts` with the `execute` tool).
