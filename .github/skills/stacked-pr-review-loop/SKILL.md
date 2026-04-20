@@ -18,14 +18,14 @@ Use this skill to run stacked pull requests efficiently without sacrificing revi
 
 1. For multi-task dependent chains delegated by orchestrator, run in `Orchestrator-Managed Stacked Review Mode`.
 2. In this mode, orchestrator owns stack sequencing: merge order, base-to-tip progression, and PR retargeting.
-3. Dev agents own their assigned PR's full review loop: implement, push, request Copilot review, poll to review-clean, fix `Accept` comments, escalate `Challenge` / `Needs Product Owner Decision` items to orchestrator, and return the `pr-review-loop` section-6 exit status package, where review-clean outcomes include both `REVIEW_CLEAN` and `REVIEW_CLEAN_WITH_ESCALATIONS`.
+3. Dev agents own their assigned PR's full review loop: implement, push, request Copilot review, poll to review-clean, fix `Accept` comments, escalate `Challenge` / `Needs Product Owner Decision` items to orchestrator, and return the `pr-review-loop` section-6 exit status package — either `REVIEW_CLEAN` (zero new comments, no open escalations) or `REVIEW_CLEAN_WITH_ESCALATIONS` (zero new comments but escalations pending).
 4. Dev agents do not advance stack sequencing, trigger merges, or retarget PR bases.
 
 ## Efficient Sequence (Pipeline First)
 
 1. Assigned dev agents open `PR1` (base: `master`), `PR2` (base: `PR1` branch), `PR3` (base: `PR2` branch), and deeper PRs as needed, each running their own review loop in parallel.
 2. Each dev agent requests Copilot review immediately after opening its PR and polls to review-clean independently.
-3. Orchestrator monitors dev handbacks and executes stack sequencing (merge order, retarget) once lower PRs are review-clean.
+3. Orchestrator monitors dev handbacks and executes stack sequencing (merge order, retarget) once lower PRs reach `REVIEW_CLEAN` status. `REVIEW_CLEAN_WITH_ESCALATIONS` does not unblock sequencing — escalations must be resolved first.
 
 ## Disposition And Fix Sequence (Base To Tip)
 

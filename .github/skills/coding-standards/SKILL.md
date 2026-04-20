@@ -88,19 +88,19 @@ Common patterns for this repo:
 - **Bullet points** for rules that can be scanned independently.
 - **Concrete code examples** showing correct and incorrect patterns.
 
-```
+````
 ## Naming Conventions
 
 Use descriptive, intention-revealing names.
 
-\`\`\`ts
+```ts
 // Avoid
 const d = new Date();
 
 // Prefer
 const currentDate = new Date();
-\`\`\`
 ```
+````
 
 - **Start minimal** — 10–20 specific instructions, then iterate based on actual review results.
 - **One purpose per file** — React rules in React file, CSS rules in CSS file; don't mix.
@@ -150,7 +150,7 @@ The following instruction types are **not supported** by the code review agent a
 
 ## Recommended Template for a Scoped File
 
-```markdown
+````markdown
 ---
 applyTo: "**/*.{ts,tsx}"
 ---
@@ -165,19 +165,19 @@ One sentence: what this file covers and when it applies.
 - Rule 1
 - Rule 2
 
-\`\`\`ts
+```ts
 // Avoid
 ...
 
 // Prefer
 ...
-\`\`\`
+```
 
 ## [Topic 2]
 
 - Rule 1
 - Rule 2
-```
+````
 
 ---
 
