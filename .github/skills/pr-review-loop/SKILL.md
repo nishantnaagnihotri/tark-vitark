@@ -103,11 +103,11 @@ Status: semantic-closed | semantic-open (reason)
 7. **Review request and polling are a single atomic sequence (no gap permitted).** The tool call return value from the review request — including `(empty)` — is a trigger to begin polling immediately. It is not a completion signal, not a status, and not a reason to summarize or report. Any return value from the review request tool must be followed by polling without pause. Immediately after calling the review request tool, emit the log entry `[REVIEW REQUESTED] → [POLLING STARTED]` and begin the polling window. If this log entry is absent, the atomic sequence was broken — that is a workflow failure.
 8. Polling must use live GitHub MCP review data as the source of truth rather than relying on cached editor extension payloads.
 9. When synchronous polling is not possible (orchestrator context — no blocking execute tool):
-    - **Orchestrator context** (running in VS Code chat session): use the alarm skill (180 s interval) instead of the poll script. On each alarm wake:
+    - **Orchestrator context** (running in VS Code chat session): use the alarm skill (180 s interval) instead of the poll script. Immediately after `request_copilot_review` returns, arm the alarm and emit the required log entry `[REVIEW REQUESTED] → [POLLING STARTED]` at that moment. In orchestrator context, arming the alarm counts as polling having started for rule 7; alarm wakes are the polling mechanism. On each alarm wake:
       1. Call `get_reviews` on the PR via GitHub MCP.
       2. If latest Copilot review body says "generated 0 comments" / "0 new comments" / "generated no new comments" → review-clean; proceed.
-      3. If new comments are present → run PR Review Intake Protocol, address, push, re-request review, re-arm alarm.
-      4. If no review yet → apply rule 11 (1-hour retry ladder): re-request and re-arm if within 60 min of `T0`; escalate if `≥ 60 min`.
+      3. If new comments are present → run PR Review Intake Protocol, address, push, then immediately re-request review and re-arm the alarm so polling restarts atomically after the new review request.
+      4. If no review yet → apply rule 11 (1-hour retry ladder): re-request and immediately re-arm if within 60 min of `T0`; escalate if `≥ 60 min`.
     - **Dev agent context** (running inside `run-agent.ts` with `execute` tool): run the poll script **synchronously** via the execute tool — the agent has a 1-hour timeout and can block on the script:
       ```
       node scripts/wait_for_copilot_review.js --owner <owner> --repo <repo> --pr <number>
