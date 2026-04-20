@@ -84,7 +84,7 @@ Expected outcome:
 | AC-27 | All existing Debate Screen behavior on viewports ≤767 px (mobile tier) is fully preserved and unchanged by this slice. |
 | AC-28 | The existing 481 px CSS breakpoint rule is annotated with a comment identifying it as a mobile-internal implementation detail; no new design tier is introduced for 481–767 px. |
 
-> **Note — Gate 3 UX deferred ACs:** Two acceptance criteria covering (a) tablet Podium entry pattern and (b) desktop Podium entry pattern are deliberately absent here. Per the hardened `design-gate-orchestration` skill (Gate 3A step 12 + Completion Rule step 4), Gate 3 UX must draft and append these ACs to `02-prd.md` annotated with `*(Added at Gate 3 — resolves OQ-1/OQ-2 deferred from Gate 1; <date>)*`. Gate 3 cannot close until both exist.
+> **Note — Gate 3 UX deferred ACs:** Two acceptance criteria covering (a) tablet Podium entry pattern and (b) desktop Podium entry pattern are deliberately absent here. Per the hardened `design-gate-orchestration` skill (Gate 3A step 12 + Completion Rule step 4), Gate 3 UX must author the AC prose as amendments to this file (`01-requirement.md`), annotated with `*(Added at Gate 3 — resolves OQ-1/OQ-2 deferred from Gate 1; <date>)*`, then add only the resulting AC ID references to `02-prd.md` under `## Amendments`. Gate 3 cannot close until both AC prose entries exist in this file and their IDs are recorded in `02-prd.md`.
 
 ---
 
