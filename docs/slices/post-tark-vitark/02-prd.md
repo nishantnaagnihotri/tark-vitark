@@ -335,7 +335,7 @@ The following items are explicitly **not affected** by Amendment A-1 and remain 
 | FR-2 / AC-2 | Amendment A-1 | FR-21 / AC-21 |
 | FR-3 – FR-18 / AC-3 – AC-18 | Not superseded | Unchanged, still binding |
 
-Additive scope introduced by A-1: FR-19, FR-20, FR-21, FR-22, FR-23 / AC-19, AC-20, AC-21, AC-22, AC-23.
+Additive scope introduced by A-1: FR-19, FR-20, FR-21, FR-22, FR-23, FR-24 / AC-19, AC-20, AC-21, AC-22, AC-23, AC-24.
 
 ---
 
