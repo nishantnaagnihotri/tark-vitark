@@ -131,11 +131,16 @@
 }
 
 .podium-bottom-sheet__error {
+    display: none;
     margin: 0;
-    min-height: 1rem;
     color: var(--color-error);
     font-size: 0.75rem;
     line-height: 1rem;
+}
+
+.podium-bottom-sheet__error:not(:empty) {
+    display: block;
+    min-height: 1rem;
 }
 
 @keyframes podium-scrim-fade-in {
