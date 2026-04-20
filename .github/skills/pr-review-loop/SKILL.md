@@ -146,7 +146,7 @@ Before declaring the PR review workflow complete or saying the PR is "merge-read
 
 | # | Question | Pass condition |
 |---|---|---|
-| 1 | **Are there any open comments?** Fetch both PR review comments via `gh api repos/<owner>/<repo>/pulls/<n>/comments` and top-level PR conversation comments via `gh api repos/<owner>/<repo>/issues/<n>/comments`, then verify there are no unresolved review comments or PR conversation comments that still require a disposition reply from the **PR author**. | Zero unresolved review comments or PR conversation comments awaiting PR-author reply |
+| 1 | **Are there any open comments?** Fetch both PR review comments via GitHub MCP `pull_request_read` with `method=get_review_comments` and top-level PR conversation comments via GitHub MCP `issue_read` with `method=get_comments`, then verify there are no unresolved review comments or PR conversation comments that still require a disposition reply from the **PR author**. (`gh api` is a confirmed-gap fallback only — requires PO approval before use.) | Zero unresolved review comments or PR conversation comments awaiting PR-author reply |
 | 2 | **Did the latest Copilot review body indicate zero new comments (for example, "generated 0 comments", "0 new comments", or equivalent wording)?** | Yes — any semantically equivalent zero-comments wording, on the current head SHA |
 | 3 | **Is the branch up-to-date with the base?** | Branch sync check passed (Section 4) |
 | 4 | **Are all challenges resolved with Product Owner?** | No pending `Challenge` items awaiting PO disposition |
