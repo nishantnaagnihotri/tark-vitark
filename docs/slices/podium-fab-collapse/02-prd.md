@@ -31,6 +31,7 @@ Amendment A-1 replaces the always-visible inline `Podium` composer bar (FR-1 / F
 | FR-21 | The bottom sheet can be dismissed by dragging it down. *(Amended at Gate 5.5 — canonical AC-23 in post-tark-vitark/02-prd.md specifies drag-down as the only remaining dismissal path; outside-tap and close-affordance paths removed; 2026-04-20)* |
 | FR-22 | FAB and bottom sheet respect both light and dark themes |
 | FR-23 | FAB and bottom sheet are mobile-only (≤ 767 px); on ≥ 768 px the inline Podium remains |
+| FR-24 | Re-tapping the expanded FAB, or tapping outside the expanded FAB, collapses it back to the single `+` icon state |
 
 ### Acceptance Criteria (canonical)
 
@@ -41,6 +42,7 @@ Amendment A-1 replaces the always-visible inline `Podium` composer bar (FR-1 / F
 | AC-21 | Bottom sheet closes on drag-down; FAB remains visible. *(Amended at Gate 5.5 — outside-tap and close-affordance dismissal removed; drag-down is the only path, per canonical AC-23 in post-tark-vitark/02-prd.md; 2026-04-20)* |
 | AC-22 | FAB and bottom sheet use correct theme tokens in light and dark mode |
 | AC-23 | On ≥ 768 px breakpoint, FAB and bottom sheet are absent; inline Podium is present |
+| AC-24 | When the FAB is expanded to show Tark/Vitark side-select options, re-tapping the FAB or tapping outside the expanded options collapses the FAB back to its default state |
 
 ---
 

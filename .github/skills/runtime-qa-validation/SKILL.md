@@ -38,6 +38,7 @@ git checkout <branch>
 # 2. Background the dev server — do NOT run it in the foreground
 # --port 5173 --strictPort ensures a deterministic URL; the server fails fast if 5173 is in use
 npm run dev -- --port 5173 --strictPort &
+DEV_SERVER_PID=$!  # capture PID for cleanup after QA completes
 
 # 3. Poll until Vite is ready (up to 15 s) before connecting Chrome
 server_ready=false
@@ -62,6 +63,7 @@ fi
 - The poll loop waits up to 15 s for the server to respond with HTTP 200; if still unreachable after 15 s, abort and report `Blocked`.
 - If the browser fails to connect mid-session, confirm the server is still running: `curl -s -o /dev/null -w "%{http_code}" http://localhost:5173` should return `200`.
 - If the server exits unexpectedly during testing, re-launch and re-run the failing check before reporting `Blocked`.
+- After QA completes (Pass, Fail, or Blocked), stop the dev server to free the port: `kill $DEV_SERVER_PID 2>/dev/null || true`. This prevents port-conflict `Blocked` verdicts on consecutive runs.
 
 ## Figma Frame Fidelity Protocol
 
@@ -126,10 +128,10 @@ This is a hard stop — do NOT mark the AC as Fail or Pass while an `AC-DELTA` i
    - Non-UI skip package when orchestrator has recorded `Runtime QA: Not Required` with rationale.
 2. Executed runtime QA package:
    - `Runtime QA Verdict: Pass | Fail | Blocked | AC-DELTA` (use `AC-DELTA` when a Figma-vs-AC conflict was found and must be resolved before a verdict can be issued).
-   - `Coverage Matrix`: journey × viewport × theme × Figma Fidelity status table.
-   - `Figma Frames Consulted`: list of node IDs fetched, paired to the AC state they cover.
+   - `Coverage Matrix`: journey × viewport × theme × Figma Fidelity status table. When no Figma frame node IDs were provided, still emit the full matrix and set `Figma Fidelity` to `Not Consulted` for every row.
+   - `Figma Frames Consulted`: list of node IDs fetched, paired to the AC state they cover. When no Figma frame node IDs were provided, output `none`.
    - `Findings`: defects, severity, and reproducibility notes. `AC-DELTA` conflicts listed separately before any Pass/Fail findings.
-   - `Evidence`: command list, route list, captured runtime observations, paired browser screenshots + Figma frame design context (node IDs) where available.
+   - `Evidence`: command list, route list, captured runtime observations, paired browser screenshots, plus Figma frame design context (node IDs) when available. If no Figma frame node IDs were provided, include the runtime evidence only and record that design context was not consulted.
    - `Gate Recommendation`: proceed to Gate 6 | loop back to Dev | AC-DELTA — orchestrator must amend AC before verdict | blocked pending owner action.
 3. Non-UI skip package:
    - `Runtime QA: Not Required`.
