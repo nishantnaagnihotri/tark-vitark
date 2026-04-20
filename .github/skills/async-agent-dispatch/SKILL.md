@@ -154,7 +154,7 @@ After every async agent dispatch via `run_in_terminal (mode=async)`, immediately
 **Immediately before dispatching, run two commands to capture the timestamps needed for both the confirmation line and the session-memory table:**
 
 ```
-TZ=Asia/Kolkata date "+%H:%M %Z"       # HH:MM IST — for the confirmation line
+TZ=Asia/Kolkata date "+%H:%M %Z"       # HH:MM IST — for the dispatch banner
 TZ=Asia/Kolkata date "+%Y-%m-%dT%H:%M:%S+05:30"   # ISO timestamp — for the dispatched column
 ```
 
