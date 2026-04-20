@@ -106,7 +106,7 @@ Rules:
 8. Rollback lock: verify rollback note is documented and feasible.
 9. Risk acceptance lock: verify residual risks are visible and explicitly accepted when required.
 10. AC SSoT lock: verify `02-prd.md`, `05-architecture.md`, and `06-tasks.md` do not contain copied AC prose — they must reference AC IDs and link to the canonical `.feature` file. Flag any artifact that re-states AC text as a drift risk.
-11. Architecture delta lock: verify the PR description includes either an `## Architecture Delta` section (for any task that changed an interface contract or a "no-changes" component) or an explicit `Architecture Delta: none` statement. Missing this is a Build Gate loop-back condition.
+11. Architecture delta lock: if the task changed an interface contract or a previously "no-changes" component, verify `05-architecture.md` includes an appended `## Architecture Delta` section as the canonical record; the PR description may link to or summarize that delta, but is not the source of truth. If there is no architecture delta, verify the PR description includes an explicit `Architecture Delta: none` statement. Missing the required evidence is a Build Gate loop-back condition.
 
 ## Merge Gate Output Contract
 
