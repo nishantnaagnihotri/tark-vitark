@@ -109,8 +109,9 @@ Status: semantic-closed | semantic-open (reason)
       3. If new comments are present → run PR Review Intake Protocol, address, push, then immediately re-request review and re-arm the alarm so polling restarts atomically after the new review request.
       4. If no review yet → re-arm the alarm and continue polling. **Do NOT re-request on each wake** — the review was already requested; repeated re-requests flood Copilot's queue. Only re-request again after pushing a new commit. **Staleness heuristic:** if `get_reviews` has returned no review on the current head SHA for **3 or more consecutive wakes** (≈9 min), the MCP tool may be serving stale data. At this threshold, fall back to the GitHub REST API to get the latest review directly — bypassing the MCP cache:
       ```
-      gh api repos/<owner>/<repo>/pulls/<number>/reviews --jq '[.[] | select(.user.login == "copilot-pull-request-reviewer")] | last'
+      gh api repos/<owner>/<repo>/pulls/<number>/reviews --paginate --jq '.[] | select(.user.login == "copilot-pull-request-reviewer[bot]") | {id: .id, body: .body[0:120], submitted_at: .submitted_at}' | tail -1
       ```
+      Note: `--paginate` is required — without it the response is truncated to the first 30 reviews, silently dropping recent ones. Use `tail -1` to get the chronologically last Copilot review.
       If the REST response shows a review body indicating zero new comments on the current head SHA → treat as `REVIEW_CLEAN` and proceed to the Pre-Completion Self-Check (section 5). If the REST response also returns nothing on the current head SHA → surface a staleness alert to the Product Owner (state head SHA, elapsed time, ask them to confirm GitHub). Escalate to PO if no review arrives within 60 min of `T0`.
     - **Dev agent context** (running inside `run-agent.ts` with `execute` tool): run the poll script **synchronously** via the execute tool — the agent has a 1-hour timeout and can block on the script:
       ```
