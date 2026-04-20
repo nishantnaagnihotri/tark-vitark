@@ -37,7 +37,7 @@ Amendment A-1 replaces the always-visible inline `Podium` composer bar (FR-1 / F
 | ID | Criterion |
 |---|---|
 | AC-19 | FAB renders at bottom-right on mobile; not visible on tablet/desktop |
-| AC-20 | Tapping FAB opens bottom sheet containing the Podium composer |
+| AC-20 | Tapping FAB expands side-select options (Post as Tark / Post as Vitark); tapping a side option opens the bottom-sheet composer with that side pre-selected. *(Amended at Gate 5.5 — PO approved two-tap side-select UX over single-tap, 2026-04-20)* |
 | AC-21 | Bottom sheet closes on outside tap or close affordance; FAB remains visible |
 | AC-22 | FAB and bottom sheet use correct theme tokens in light and dark mode |
 | AC-23 | On ≥ 768 px breakpoint, FAB and bottom sheet are absent; inline Podium is present |

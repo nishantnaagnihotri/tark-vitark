@@ -130,7 +130,12 @@ When Gate 5 implementation output is ready, run Runtime QA before Gate 6 for UI-
 
 Execution rule:
 
-1. If issue scope is UI-impacting, invoke `runtime-qa` with PR link, issue reference, acceptance-criterion journey mapping, route list, expected states, test data/setup notes, and known-risk notes.
+1. If issue scope is UI-impacting, invoke `runtime-qa` with:
+   - PR link and issue reference
+   - Acceptance-criterion journey mapping (AC IDs and literal AC text)
+   - **Figma frame index from `04-design-qa.md`** — include the full node-ID-to-AC mapping table so the QA agent can run Figma Frame Fidelity checks against the live browser. This is mandatory for UI-impacting issues. Without it, QA can only validate against AC text and will miss Figma-vs-AC drift.
+   - Route list and expected states
+   - Test data/setup notes and known-risk notes
 2. If issue scope is non-UI, orchestrator may mark `Runtime QA: Not Required` with explicit rationale.
 3. Runtime QA execution is Local by default.
 

@@ -147,6 +147,33 @@ npx tsx scripts/run-agent.ts requirement-challenger "Reply with exactly: ALIVE"
 
 ---
 
+## Post-Dispatch Confirmation (Mandatory)
+
+After every async agent dispatch via `run_in_terminal (mode=async)`, immediately output a confirmation line.
+
+**Immediately before dispatching, run `date` to get the real current time.** Then dispatch the agent. Then output the confirmation line — no exceptions:
+
+```
+Agent dispatched — role=<role>, terminal=<id>, dispatched at <HH:MM IST>.
+```
+
+All three values must be real:
+- `role`: the agent role argument passed to `run-agent.ts`
+- `terminal`: the exact UUID returned by `run_in_terminal` — not fabricated, not guessed
+- `dispatched at`: derived from the actual `date` output — not calculated from context
+
+**Fabricating the terminal ID or time is a protocol violation. Omitting the confirmation line is a protocol violation.**
+
+Immediately after outputting the confirmation line, record the dispatch in `/memories/session/active-state.md` under `## Pending Async Runs`:
+
+```
+| <terminal-id> | <role> — <one-line task description> | running |
+```
+
+Both steps (confirmation line + session memory update) must complete before any other action.
+
+---
+
 ## How MCP Servers Are Wired
 
 `resolveAgentMcpServers()` in `run-agent.ts` cross-references the agent's `tools` list (parsed from its `.agent.md` frontmatter) against `.vscode/mcp.json`:

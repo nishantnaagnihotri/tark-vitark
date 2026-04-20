@@ -26,17 +26,76 @@ Use this skill to validate runtime behavior in a real browser session when manua
 2. Themes: Light and Dark for themed UI surfaces; Light-only is acceptable only when the issue has no theme-affecting surface.
 3. Routes and states: all acceptance-criterion journeys plus relevant loading, empty, and error states.
 
+## Dev Server Launch Protocol
+
+The runtime QA agent is responsible for starting the dev server. Follow this exact sequence:
+
+```bash
+# 1. Checkout the correct branch first
+git fetch origin
+git checkout <branch>
+
+# 2. Background the dev server — do NOT run it in the foreground
+npm run dev &
+
+# 3. Wait for Vite to be ready before connecting Chrome
+sleep 8
+```
+
+**Critical rules:**
+- Always background with `&`. Running `npm run dev` in the foreground blocks the agent and eventually exits when the agent process ends.
+- Do NOT use `nohup`, `disown`, or detached shells — the process must stay as a child of the agent's execute shell so it remains alive during the full browser session.
+- Wait at least 8 seconds after launching before navigating Chrome to `http://localhost:5173`.
+- If the browser fails to connect, confirm the server is still running: `curl -s -o /dev/null -w "%{http_code}" http://localhost:5173` should return `200`.
+- If the server exits unexpectedly during testing, re-launch and re-run the failing check before reporting `Blocked`.
+
+## Figma Frame Fidelity Protocol
+
+Figma frames are the **canonical design authority** for all visual and interaction intent. Runtime QA must cross-reference the live browser against Figma frames, not just AC text. AC text is a compressed summary — Figma frames are the full contract.
+
+**When Figma frame node IDs are provided in the handoff prompt:**
+
+1. Before executing browser journeys, call Figma MCP `get_screenshot` (or `get_design_context`) for each AC-mapped frame.
+2. For each state in the Coverage Matrix, record which Figma frame was consulted (`Frame: <node-id>`).
+3. Compare the live browser screenshot against the Figma frame for:
+   - **Component presence and placement** — FAB position, sheet anchor point, handle bar, close affordance, scrim
+   - **Interaction flow and tap sequence** — if AC text says "single tap → sheet" but Figma frame shows a two-step expansion → side-select → sheet, the Figma frame is correct; flag the discrepancy as `AC-DELTA` (see below) and do NOT auto-Fail based on the stale AC text
+   - **Color token resolution** — use `getComputedStyle` to resolve CSS custom property values; verify they match the Figma-specified token names and computed hex values
+   - **Layout dimensions** — spot-check component sizes (FAB diameter, sheet height, handle dimensions, scrim opacity) against Figma frame measurements
+   - **Typography** — font size, weight, line-height against Figma text styles
+4. Add a `Figma Fidelity` column to the Coverage Matrix: `Pass | Delta | Not Consulted`.
+
+**AC-Delta Escalation (blocking — do not issue a verdict until resolved):**
+
+If AC text and Figma frame conflict, halt the verdict and surface the conflict immediately:
+
+```
+AC-DELTA: <AC-ID>
+- AC text says: "<literal AC wording>"
+- Figma frame <node-id> shows: <what the frame actually depicts>
+- Recommendation: AC text must be amended by orchestrator before a QA verdict is issued
+```
+
+This is a hard stop — do NOT mark the AC as Fail or Pass while an `AC-DELTA` is unresolved. Report it to the orchestrator and await instruction.
+
+**When no Figma frame node IDs are provided in the handoff:**
+
+- Record `Figma fidelity check: skipped — no frame node IDs in handoff` in Evidence.
+- Validate against AC text only.
+- Add a finding: `[Medium] Figma fidelity check was not possible — orchestrator must include 04-design-qa.md frame index in future QA handoffs.`
+
 ## Execution Protocol
 
-1. Start the app from the PR branch or exact head SHA being validated for Gate 5.5 in local mode and confirm page load.
-2. Execute acceptance-criterion journeys in a browser session.
-3. For each required viewport and theme, validate:
+1. Start the dev server using the Dev Server Launch Protocol above. Confirm page load before proceeding.
+2. **Run Figma Frame Fidelity Protocol first** — fetch all provided frame screenshots and read each frame's design context before opening the browser. This establishes the ground truth before any browser observation.
+3. Execute acceptance-criterion journeys in a browser session.
+4. For each required viewport and theme, validate:
    - No blocking console errors or uncaught runtime exceptions
    - No critical layout regression (including horizontal overflow)
-   - Primary interactions are functional and map to acceptance criteria
-   - Expected content and state transitions appear correctly
-4. Capture concise evidence per journey, per required viewport, and per required theme when the surface is theme-affecting.
-5. If execution fails due to infrastructure/tooling issues, follow `gate-recovery-and-resume` before progression.
+   - Primary interactions are functional and map to Figma frame states (not just AC text)
+   - Expected content and state transitions appear correctly and match Figma frame composition
+5. Capture concise evidence per journey, per required viewport, and per required theme when the surface is theme-affecting. Include the Figma frame node ID alongside each browser screenshot as a paired reference.
+6. If execution fails due to infrastructure/tooling issues, follow `gate-recovery-and-resume` before progression.
 
 ## Verdict Rules
 
@@ -51,11 +110,12 @@ Use this skill to validate runtime behavior in a real browser session when manua
    - Executed runtime QA package for UI-impacting issues.
    - Non-UI skip package when orchestrator has recorded `Runtime QA: Not Required` with rationale.
 2. Executed runtime QA package:
-   - `Runtime QA Verdict: Pass | Fail | Blocked`.
-   - `Coverage Matrix`: journey x viewport x theme status table.
-   - `Findings`: defects, severity, and reproducibility notes.
-   - `Evidence`: command list, route list, and captured runtime observations.
-   - `Gate Recommendation`: proceed to Gate 6 | loop back to Dev | blocked pending owner action.
+   - `Runtime QA Verdict: Pass | Fail | Blocked | AC-Delta` (use `AC-Delta` when a Figma-vs-AC conflict was found and must be resolved before a verdict can be issued).
+   - `Coverage Matrix`: journey × viewport × theme × Figma Fidelity status table.
+   - `Figma Frames Consulted`: list of node IDs fetched, paired to the AC state they cover.
+   - `Findings`: defects, severity, and reproducibility notes. AC-Delta conflicts listed separately before any Pass/Fail findings.
+   - `Evidence`: command list, route list, captured runtime observations, paired browser screenshots + Figma frame screenshots where available.
+   - `Gate Recommendation`: proceed to Gate 6 | loop back to Dev | AC-Delta — orchestrator must amend AC before verdict | blocked pending owner action.
 3. Non-UI skip package:
    - `Runtime QA: Not Required`.
    - `Rationale`: concise explanation of why the issue is non-UI and does not require live browser validation.
