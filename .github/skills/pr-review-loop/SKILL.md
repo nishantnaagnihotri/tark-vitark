@@ -107,7 +107,11 @@ Status: semantic-closed | semantic-open (reason)
       1. Call `get_reviews` on the PR via GitHub MCP.
       2. If latest Copilot review body says "generated 0 comments" / "0 new comments" / "generated no new comments" → review-clean; proceed.
       3. If new comments are present → run PR Review Intake Protocol, address, push, then immediately re-request review and re-arm the alarm so polling restarts atomically after the new review request.
-      4. If no review yet → re-arm the alarm and continue polling. **Do NOT re-request on each wake** — the review was already requested; repeated re-requests flood Copilot's queue. Only re-request again after pushing a new commit. **Staleness heuristic:** if `get_reviews` has returned no review on the current head SHA for **3 or more consecutive wakes** (≈9 min), the MCP tool may be serving stale data. At this threshold, surface a staleness alert to the Product Owner: state the head SHA, elapsed time since review was requested, and ask them to confirm visually whether a Copilot review is present on GitHub. Do not silently continue polling for the full 1-hour window when the tool is clearly lagging. If PO confirms the review is clean → treat as `REVIEW_CLEAN` and proceed to the Pre-Completion Self-Check (section 5). Escalate to PO if no review arrives within 60 min of `T0`.
+      4. If no review yet → re-arm the alarm and continue polling. **Do NOT re-request on each wake** — the review was already requested; repeated re-requests flood Copilot's queue. Only re-request again after pushing a new commit. **Staleness heuristic:** if `get_reviews` has returned no review on the current head SHA for **3 or more consecutive wakes** (≈9 min), the MCP tool may be serving stale data. At this threshold, fall back to the GitHub REST API to get the latest review directly — bypassing the MCP cache:
+      ```
+      gh api repos/<owner>/<repo>/pulls/<number>/reviews --jq '[.[] | select(.user.login == "copilot-pull-request-reviewer")] | last'
+      ```
+      If the REST response shows a review body indicating zero new comments on the current head SHA → treat as `REVIEW_CLEAN` and proceed to the Pre-Completion Self-Check (section 5). If the REST response also returns nothing on the current head SHA → surface a staleness alert to the Product Owner (state head SHA, elapsed time, ask them to confirm GitHub). Escalate to PO if no review arrives within 60 min of `T0`.
     - **Dev agent context** (running inside `run-agent.ts` with `execute` tool): run the poll script **synchronously** via the execute tool — the agent has a 1-hour timeout and can block on the script:
       ```
       node scripts/wait_for_copilot_review.js --owner <owner> --repo <repo> --pr <number>
@@ -119,7 +123,7 @@ Status: semantic-closed | semantic-open (reason)
     How to track the 1-hour window:
 
     - **Clock start (push time):** Call `pull_request_read` with `method=get` and read `updated_at`. This tells you when the PR head ref last changed — i.e., the actual push wall-clock time. Don't use the git commit's author/committer date; on rebases or cherry-picks that can be much earlier than the real push. If `pull_request_read` isn't available, fall back to `gh api repos/<owner>/<repo>/pulls/<number> --jq '.updated_at'` — only after confirming the MCP gap and getting Product Owner approval.
-    - **On each wake with no review yet:** Check how long it's been since the push. If it's under 1 hour → re-arm the alarm and continue polling. Do not re-request. **If this is the 3rd or later consecutive wake with no review on the current head SHA**, apply the staleness heuristic in Rule 9, step 4 — surface a staleness alert to the Product Owner rather than silently continuing.
+    - **On each wake with no review yet:** Check how long it's been since the push. If it's under 1 hour → re-arm the alarm and continue polling. Do not re-request. **If this is the 3rd or later consecutive wake with no review on the current head SHA**, apply the staleness heuristic in Rule 9, step 4 — fall back to the GitHub REST API before escalating to the Product Owner.
     - **Once 1 hour has passed with still no review:** Stop retrying. Report to the Product Owner: PR link, head SHA, push time, how long you've been waiting. Something is stuck on GitHub's side.
 
     Do not escalate while still within the 1-hour window.
