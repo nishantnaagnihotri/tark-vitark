@@ -123,7 +123,7 @@ Status: semantic-closed | semantic-open (reason)
 
     How to track the 1-hour window:
 
-    - **Clock start (push time):** Call `pull_request_read` with `method=get` and read `updated_at`. This tells you when the PR head ref last changed — i.e., the actual push wall-clock time. Don't use the git commit's author/committer date; on rebases or cherry-picks that can be much earlier than the real push. If `pull_request_read` isn't available, fall back to `gh api repos/<owner>/<repo>/pulls/<number> --jq '.updated_at'` — only after confirming the MCP gap and getting Product Owner approval.
+    - **Clock start (push time):** Record T0 yourself immediately after `git push` completes — read the wall clock at that moment (e.g., `TZ=Asia/Kolkata date`). Do not use `updated_at` from the PR API: it resets on non-push events (new comments, label changes, review activity) and can silently extend or reset the 1-hour window. Do not use the git commit's author/committer date; on rebases or cherry-picks that can be much earlier than the real push.
     - **On each wake with no review yet:** Check how long it's been since the push. If it's under 1 hour → re-arm the alarm and continue polling. Do not re-request. **If this is the 3rd or later consecutive wake with no review on the current head SHA**, apply the staleness heuristic in Rule 9, step 4 — fall back to the GitHub REST API before escalating to the Product Owner.
     - **Once 1 hour has passed with still no review:** Stop retrying. Report to the Product Owner: PR link, head SHA, push time, how long you've been waiting. Something is stuck on GitHub's side.
 

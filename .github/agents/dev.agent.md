@@ -57,7 +57,7 @@ Follow the `pr-review-loop` skill (`.github/skills/pr-review-loop/SKILL.md`) for
 
 For dependent PR chains, follow the `stacked-pr-review-loop` skill (`.github/skills/stacked-pr-review-loop/SKILL.md`) for efficient sequencing, base-to-tip fix order, and retarget/sync flow.
 
-In `Orchestrator-Managed Stacked Review Mode`, dev owns its assigned PR's full review loop: implement, push, request Copilot review, poll to review-clean, fix `Accept` comments, escalate `Challenge` / `Needs Product Owner Decision` items to orchestrator, and return a review-clean handback. Dev does not advance stack sequencing, trigger merges, or retarget PR bases.
+In `Orchestrator-Managed Stacked Review Mode`, dev owns its assigned PR's full review loop: implement, push, request Copilot review, poll to review-clean, fix `Accept` comments, escalate `Challenge` / `Needs Product Owner Decision` items to orchestrator, and return a `REVIEW_CLEAN` or `REVIEW_CLEAN_WITH_ESCALATIONS` exit-status handback. Dev does not advance stack sequencing, trigger merges, or retarget PR bases.
 
 Dev-specific note:
 
