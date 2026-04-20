@@ -75,7 +75,7 @@ Common patterns for this repo:
 |---|---|
 | `react.instructions.md` | `"**/*.tsx"` |
 | `css.instructions.md` | `"**/*.css"` |
-| `tests.instructions.md` | `"**/tests/**"` |
+| `tests.instructions.md` | `["**/tests/**", "**/features/**/*.feature", "**/features/step-definitions/**/*.ts"]` |
 
 ---
 
@@ -114,10 +114,10 @@ The following instruction types are **not supported** by the code review agent a
 | UX/formatting changes | `Use bold text for critical issues` |
 | PR overview modifications | `Add a testing checklist to the PR overview` |
 | Core function changes | `Block PR merging unless all comments addressed` |
-| External link references | `Review code per standards at https://example.com` |
+| External links used as rules in instruction files | `In .github/*instructions*.md: review code per standards at https://example.com` |
 | Vague quality improvements | `Be more accurate`, `Don't miss any issues` |
 
-> Workaround for external links: copy the relevant content directly into the instruction file instead of linking.
+> Workaround for external links: if an instruction rule would otherwise point to an external standard, copy the relevant content directly into the instruction file instead of linking.
 
 ---
 
