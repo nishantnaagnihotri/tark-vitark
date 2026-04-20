@@ -306,7 +306,7 @@ Artifact:
 | ID | Acceptance Criterion |
 |---|---|
 | AC-19 | The FAB is visible collapsed (single `+` icon, bottom-right) at all times on the Debate Screen. |
-| AC-20 | Tapping the collapsed FAB expands it with M3 animation (300 ms ease-out) to show T, V, and × mini-buttons. |
+| AC-20 | Tapping the collapsed FAB expands it with M3 animation (300 ms ease-out) to show T, V, and × mini-buttons. *(Amended at Gate 5.5 — PO approved two-tap side-select UX: tapping FAB expands side-select options; tapping a side opens the bottom-sheet composer with that side pre-selected; 2026-04-20)* |
 | AC-21 | Tapping T opens the Podium bottom sheet with Tark pre-selected; tapping V opens it with Vitark pre-selected. |
 | AC-22 | The Podium bottom sheet includes a SegmentedControl (Tark \| Vitark) for switching side without dismissing the sheet. |
 | AC-23 | Tapping × collapses the FAB to Phase 1; dragging the Podium sheet down dismisses the sheet and returns to FAB expanded state. |

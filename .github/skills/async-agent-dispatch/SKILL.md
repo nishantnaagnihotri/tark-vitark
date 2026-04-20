@@ -151,7 +151,7 @@ npx tsx scripts/run-agent.ts requirement-challenger "Reply with exactly: ALIVE"
 
 After every async agent dispatch via `run_in_terminal (mode=async)`, immediately output a confirmation line.
 
-**Immediately before dispatching, run `date` to get the real current time.** Then dispatch the agent. Then output the confirmation line — no exceptions:
+**Immediately before dispatching, run `TZ=Asia/Kolkata date "+%H:%M %Z"` to get the real current time.** Then dispatch the agent. Then output the confirmation line — no exceptions:
 
 ```
 Agent dispatched — role=<role>, terminal=<id>, dispatched at <HH:MM IST>.
