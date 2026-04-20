@@ -55,7 +55,7 @@ Figma frames are the **canonical design authority** for all visual and interacti
 
 **When Figma frame node IDs are provided in the handoff prompt:**
 
-1. Before executing browser journeys, call Figma MCP `get_screenshot` (or `get_design_context`) for each AC-mapped frame.
+1. Before executing browser journeys, call Figma MCP `get_design_context` for each AC-mapped frame.
 2. For each state in the Coverage Matrix, record which Figma frame was consulted (`Frame: <node-id>`).
 3. Compare the live browser screenshot against the Figma frame for:
    - **Component presence and placement** — FAB position, sheet anchor point, handle bar, close affordance, scrim
@@ -102,7 +102,8 @@ This is a hard stop — do NOT mark the AC as Fail or Pass while an `AC-DELTA` i
 1. `Pass` only when all required checks pass for all required journeys, viewports, and themes.
 2. `Fail` when any acceptance-criterion journey fails or a blocking runtime error/regression is detected.
 3. `Blocked` when app startup, environment setup, or MCP/browser tooling prevents valid execution.
-4. `Fail` or `Blocked` halts progression by default; continuation requires explicit Product Owner risk acceptance.
+4. `AC-Delta` is a **held verdict state** — not a final verdict. It means a Figma-vs-AC conflict was detected that prevents issuing any Pass or Fail. The QA agent halts, surfaces the conflict to the orchestrator, and awaits AC amendment. Once the AC is amended, the verdict is re-issued based on the corrected AC and the Figma frame ground truth.
+5. `Fail` or `Blocked` halts progression by default; continuation requires explicit Product Owner risk acceptance.
 
 ## Runtime QA Output Contract
 
