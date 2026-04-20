@@ -63,10 +63,10 @@ No new user types are introduced. Podium entry pattern on wider viewports is a G
 | FR-2 | The Debate Screen shall render the desktop-tier layout — columns, card widths, gutters, Podium panel width, and Spine position as specified in Gate 3 Figma desktop frames — when the viewport width is ≥1024 px. | Must | AC-26 |
 | FR-3 | No layout rule, CSS class, component behavior, or interaction active at ≤767 px (mobile tier) shall be changed by this slice. | Must | AC-27 |
 | FR-4 | The existing 481 px CSS breakpoint rule shall be annotated in source with a comment identifying it as a mobile-internal implementation detail; no new design tier shall be introduced or implied for the 481–767 px range. | Must | AC-28 |
-| FR-5 *(Gate-3-deferred placeholder)* | The Debate Screen shall implement the tablet-tier Podium entry pattern (FAB behavior or equivalent) on viewports 768–1023 px, as defined by Gate 3 UX Figma frames and the AC authored by Gate 3 UX. | Must | AC-TBD-1 *(resolves OQ-1; AC prose to be authored by Gate 3 UX as an amendment in `01-requirement.md`; only AC ID referenced in `## Amendments` of this PRD)* |
-| FR-6 *(Gate-3-deferred placeholder)* | The Debate Screen shall implement the desktop-tier Podium entry pattern (FAB behavior or equivalent) on viewports ≥1024 px, as defined by Gate 3 UX Figma frames and the AC authored by Gate 3 UX. | Must | AC-TBD-2 *(resolves OQ-2; AC prose to be authored by Gate 3 UX as an amendment in `01-requirement.md`; only AC ID referenced in `## Amendments` of this PRD)* |
+| FR-5 *(Gate-3-deferred placeholder)* | The Debate Screen shall implement the tablet-tier Podium entry pattern (FAB behavior or equivalent) on viewports 768–1023 px, as defined by Gate 3 UX Figma frames and the AC authored by Gate 3 UX. | Must | AC-TBD-1 *(resolves OQ-1; AC prose to be authored by Gate 3 UX as an amendment in `01-requirement.md`; only AC ID referenced in `## Deferred Gate 3 AC IDs` of this PRD)* |
+| FR-6 *(Gate-3-deferred placeholder)* | The Debate Screen shall implement the desktop-tier Podium entry pattern (FAB behavior or equivalent) on viewports ≥1024 px, as defined by Gate 3 UX Figma frames and the AC authored by Gate 3 UX. | Must | AC-TBD-2 *(resolves OQ-2; AC prose to be authored by Gate 3 UX as an amendment in `01-requirement.md`; only AC ID referenced in `## Deferred Gate 3 AC IDs` of this PRD)* |
 
-> **Gate 3 instruction:** When Gate 3 UX writes the deferred ACs for OQ-1 and OQ-2, author the AC prose as amendments to `01-requirement.md` (annotated with `*(Added at Gate 3 — resolves OQ-1/OQ-2 deferred from Gate 1; <date>)*`), then add only the resulting AC ID references to the `## Amendments` section of this PRD and update FR-5/FR-6 `Traced To` fields accordingly. AC prose must not be copied into this PRD.
+> **Gate 3 instruction:** When Gate 3 UX writes the deferred ACs for OQ-1 and OQ-2, author the AC prose as amendments to `01-requirement.md` (annotated with `*(Added at Gate 3 — resolves OQ-1/OQ-2 deferred from Gate 1; <date>)*`), then add only the resulting AC ID references to the `## Deferred Gate 3 AC IDs` section of this PRD and update FR-5/FR-6 `Traced To` fields accordingly. AC prose must not be copied into this PRD.
 
 ---
 
@@ -107,8 +107,8 @@ No new user types are introduced. Podium entry pattern on wider viewports is a G
 | AC-26 | Seeded at Gate 1 — canonical |
 | AC-27 | Seeded at Gate 1 — canonical |
 | AC-28 | Seeded at Gate 1 — canonical |
-| AC-TBD-1 | Placeholder — Gate 3 UX will author prose as amendment to `01-requirement.md`; ID recorded in `## Amendments` of this PRD *(resolves OQ-1)* |
-| AC-TBD-2 | Placeholder — Gate 3 UX will author prose as amendment to `01-requirement.md`; ID recorded in `## Amendments` of this PRD *(resolves OQ-2)* |
+| AC-TBD-1 | Placeholder — Gate 3 UX will author prose as amendment to `01-requirement.md`; ID recorded in `## Deferred Gate 3 AC IDs` of this PRD *(resolves OQ-1)* |
+| AC-TBD-2 | Placeholder — Gate 3 UX will author prose as amendment to `01-requirement.md`; ID recorded in `## Deferred Gate 3 AC IDs` of this PRD *(resolves OQ-2)* |
 
 ---
 
@@ -117,7 +117,7 @@ No new user types are introduced. Podium entry pattern on wider viewports is a G
 | Type | Description | Mitigation |
 |---|---|---|
 | Dependency — blocking | Gate 3 UX Figma tablet and desktop frames must exist before any layout implementation (FR-1, FR-2). | Gate 3 closes only when frames are approved; Gate 5 build cannot start without them. |
-| Dependency — blocking | Gate 3 UX must author AC-TBD-1 and AC-TBD-2, append their prose in amendments to `01-requirement.md`, and record their IDs in this file's `## Amendments` before Gate 3 can close. | Hardened in `design-gate-orchestration` skill (Gate 3A step 12 + Completion Rule step 4). |
+| Dependency — blocking | Gate 3 UX must author AC-TBD-1 and AC-TBD-2, append their prose in amendments to `01-requirement.md`, and record their IDs in this file's `## Deferred Gate 3 AC IDs` before Gate 3 can close. | Hardened in `design-gate-orchestration` skill (Gate 3A step 12 + Completion Rule step 4). |
 | Dependency — non-blocking | OQ-3: Gate 3 UX must determine if AC-1/AC-2 (post/reply button triggers) need extension for wider viewports. | Gate 3 UX will assess and extend if needed; non-blocking for Gate 2 progression. |
 | Risk | Mobile regression introduced by new breakpoint CSS. | Explicit 767 px and 320 px runtime QA checks; AC-27 is a hard pass criterion. |
 | Risk | Spine position or column layout mismatches Figma frames at boundary viewports (768, 1024). | Runtime QA must test boundary viewpoints exactly; Figma frame pixel-truth is the acceptance bar. |
@@ -167,19 +167,19 @@ No new user types are introduced. Podium entry pattern on wider viewports is a G
 | AC-26 | `01-requirement.md` §Acceptance Criteria | §7 | FR-2 | Covered; Gate 3 UX supplies exact frame-defined layout values |
 | AC-27 | `01-requirement.md` §Acceptance Criteria | §7 | FR-3 | Covered; this slice is additive above 767 px — no mobile changes |
 | AC-28 | `01-requirement.md` §Acceptance Criteria | §7 | FR-4 | Covered; OQ-4 resolved at Gate 1 |
-| AC-TBD-1 | Gate 3 UX will author *(resolves OQ-1)* | §7 (placeholder), §Amendments | FR-5 | Deferred by design; must be present before Gate 3 closes |
-| AC-TBD-2 | Gate 3 UX will author *(resolves OQ-2)* | §7 (placeholder), §Amendments | FR-6 | Deferred by design; must be present before Gate 3 closes |
+| AC-TBD-1 | Gate 3 UX will author *(resolves OQ-1)* | §7 (placeholder), §Deferred Gate 3 AC IDs | FR-5 | Deferred by design; must be present before Gate 3 closes |
+| AC-TBD-2 | Gate 3 UX will author *(resolves OQ-2)* | §7 (placeholder), §Deferred Gate 3 AC IDs | FR-6 | Deferred by design; must be present before Gate 3 closes |
 
 ### Alignment Summary
 
 - All 5 Gate 1 in-scope items (IS-1 through IS-5) are represented by FR-1 through FR-6 in this PRD.
 - All 4 Gate 1-seeded ACs (AC-25 through AC-28) have direct PRD coverage in §4 (FR Traced To), §6 (SM), and §7.
-- 2 ACs deferred to Gate 3 UX (AC-TBD-1, AC-TBD-2) are carried as explicit placeholders in §7 and will be appended to `## Amendments` when Gate 3 closes.
+- 2 ACs deferred to Gate 3 UX (AC-TBD-1, AC-TBD-2) are carried as explicit placeholders in §7 and will be recorded in `## Deferred Gate 3 AC IDs` when Gate 3 closes.
 - No Gate 1 requirement IDs or AC IDs are unaccounted for.
 - Gate 2 closure authorized: `PRD Readiness: Ready | Gate Decision: can proceed to design`.
 
 ---
 
-## Amendments
+## Deferred Gate 3 AC IDs
 
-*(Empty at Gate 2. Gate 3 UX will append AC-TBD-1 and AC-TBD-2 here, annotated with `*(Added at Gate 3 — resolves OQ-1/OQ-2 deferred from Gate 1; <date>)*`.)*
+*(Empty at Gate 2. Gate 3 UX will record AC-TBD-1 and AC-TBD-2 here with a short provenance note such as `Added at Gate 3 — resolves OQ-1/OQ-2 deferred from Gate 1; <date>`. This section tracks deferred AC IDs only and is not the PRD amendment log; any future PRD amendments must follow the repository PRD Amendment Protocol using versioned amendment entries.)*
