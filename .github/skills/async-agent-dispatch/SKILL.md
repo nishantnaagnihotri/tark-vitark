@@ -176,7 +176,7 @@ All values must be real:
 
 **Fabricating the terminal ID or time is a protocol violation. Omitting the banner is a protocol violation.**
 
-Immediately after outputting the confirmation line, record the dispatch in `/memories/session/active-state.md` under `## Pending Async Runs`:
+Immediately after outputting the dispatch banner, record the dispatch in `/memories/session/active-state.md` under `## Pending Async Runs`:
 
 ```
 | terminal-id | dispatched | issue | purpose | status |
@@ -184,7 +184,7 @@ Immediately after outputting the confirmation line, record the dispatch in `/mem
 | <terminal-id> | <YYYY-MM-DDTHH:MM:SS+05:30> | #<n> (or N/A) | <role> — <one-line task description> | running |
 ```
 
-Both steps (confirmation line + session memory update) must complete before any other action.
+Both steps (dispatch banner + session memory update) must complete before any other action.
 
 ---
 

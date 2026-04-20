@@ -99,16 +99,16 @@ No new user types are introduced. Podium entry pattern on wider viewports is a G
 
 ## 7. Acceptance Criteria
 
-**Acceptance Criteria:** canonical source is [`features/podium-responsive-layout.feature`](../../../features/podium-responsive-layout.feature) (to be generated at Gate 5). PRD references AC IDs only; prose lives in the feature file.
+**Acceptance Criteria:** current prose source is [`01-requirement.md`](./01-requirement.md). Gherkin canonical source will be [`features/podium-responsive-layout.feature`](../../../features/podium-responsive-layout.feature) (generated at Gate 5). PRD references AC IDs and status only — prose is not duplicated here per the `requirement-prd-alignment` skill.
 
-| ID | Reference | Status |
-|---|---|---|
-| AC-25 | Tablet-tier layout at 768–1023 px — matches Gate 3 Figma tablet frames | Seeded at Gate 1 — canonical |
-| AC-26 | Desktop-tier layout at ≥1024 px — matches Gate 3 Figma desktop frames | Seeded at Gate 1 — canonical |
-| AC-27 | All mobile-tier (≤767 px) behavior fully preserved and unchanged | Seeded at Gate 1 — canonical |
-| AC-28 | 481 px CSS breakpoint annotated as mobile-internal detail; no new design tier introduced | Seeded at Gate 1 — canonical |
-| AC-TBD-1 | Tablet Podium entry pattern — to be written by Gate 3 UX *(resolves OQ-1)* | Placeholder — Gate 3 will author and append |
-| AC-TBD-2 | Desktop Podium entry pattern — to be written by Gate 3 UX *(resolves OQ-2)* | Placeholder — Gate 3 will author and append |
+| ID | Status |
+|---|---|
+| AC-25 | Seeded at Gate 1 — canonical |
+| AC-26 | Seeded at Gate 1 — canonical |
+| AC-27 | Seeded at Gate 1 — canonical |
+| AC-28 | Seeded at Gate 1 — canonical |
+| AC-TBD-1 | Placeholder — Gate 3 UX will author and append *(resolves OQ-1)* |
+| AC-TBD-2 | Placeholder — Gate 3 UX will author and append *(resolves OQ-2)* |
 
 ---
 
@@ -121,7 +121,7 @@ No new user types are introduced. Podium entry pattern on wider viewports is a G
 | Dependency — non-blocking | OQ-3: Gate 3 UX must determine if AC-1/AC-2 (post/reply button triggers) need extension for wider viewports. | Gate 3 UX will assess and extend if needed; non-blocking for Gate 2 progression. |
 | Risk | Mobile regression introduced by new breakpoint CSS. | Explicit 767 px and 320 px runtime QA checks; AC-27 is a hard pass criterion. |
 | Risk | Spine position or column layout mismatches Figma frames at boundary viewports (768, 1024). | Runtime QA must test boundary viewpoints exactly; Figma frame pixel-truth is the acceptance bar. |
-| Risk — non-blocking | Cross-slice AC numbering collision (QG-1). | Per-slice namespace is the default; PO acknowledgement closes this gap. |
+| Risk — non-blocking | Cross-slice AC numbering collision (QG-1). | Mitigated — ACs reseeded to globally unique range AC-25–AC-28 per PO decision (Option B, 2026-04-20); see `orchestrator-context.md` Known Rule #82. |
 
 ---
 
@@ -142,6 +142,41 @@ No new user types are introduced. Podium entry pattern on wider viewports is a G
 | ID | Gap | Severity | Recommended Resolution |
 |---|---|---|---|
 | QG-1 | ~~Cross-slice AC numbering collision.~~ **Resolved — 2026-04-20.** ACs reseeded to globally unique range AC-25–AC-28 per PO decision (Option B). Global AC counter rule added to `orchestrator-context.md` Known Rule #82. No residual collision. | Resolved | No action required. |
+
+---
+
+## Requirement-to-PRD Alignment Check
+
+*Gate 2 traceability artifact — required by `requirement-prd-alignment` skill.*
+
+### In-Scope Item Mapping
+
+| Gate 1 ID | Gate 1 Statement | PRD Coverage |
+|---|---|---|
+| IS-1 | Tablet-tier responsive layout for the Debate Screen (768–1023 px) | FR-1; §1 Expected Outcome; §2 Tablet visitor scenario; SM-1 |
+| IS-2 | Desktop-tier responsive layout for the Debate Screen (≥1024 px) | FR-2; §1 Expected Outcome; §2 Desktop visitor scenario; SM-2 |
+| IS-3 | Reclassify existing 481 px CSS breakpoint as mobile-internal detail | FR-4; §1 Expected Outcome; C-3; OQ-4 (resolved) |
+| IS-4 | All exact layout values defined by Gate 3 UX in Figma frames | FR-1, FR-2 (Figma-reference requirement); C-1 |
+| IS-5 | Tablet and desktop Podium entry pattern defined by Gate 3 UX | FR-5, FR-6 (Gate-3-deferred placeholders); OQ-1, OQ-2 (unresolved, non-blocking) |
+
+### Acceptance Criteria Mapping
+
+| AC ID | Prose Source | PRD Section | FR | Coverage Notes |
+|---|---|---|---|---|
+| AC-25 | `01-requirement.md` §Acceptance Criteria | §7 | FR-1 | Covered; Gate 3 UX supplies exact frame-defined layout values |
+| AC-26 | `01-requirement.md` §Acceptance Criteria | §7 | FR-2 | Covered; Gate 3 UX supplies exact frame-defined layout values |
+| AC-27 | `01-requirement.md` §Acceptance Criteria | §7 | FR-3 | Covered; this slice is additive above 767 px — no mobile changes |
+| AC-28 | `01-requirement.md` §Acceptance Criteria | §7 | FR-4 | Covered; OQ-4 resolved at Gate 1 |
+| AC-TBD-1 | Gate 3 UX will author *(resolves OQ-1)* | §7 (placeholder), §Amendments | FR-5 | Deferred by design; must be present before Gate 3 closes |
+| AC-TBD-2 | Gate 3 UX will author *(resolves OQ-2)* | §7 (placeholder), §Amendments | FR-6 | Deferred by design; must be present before Gate 3 closes |
+
+### Alignment Summary
+
+- All 5 Gate 1 in-scope items (IS-1 through IS-5) are represented by FR-1 through FR-6 in this PRD.
+- All 4 Gate 1-seeded ACs (AC-25 through AC-28) have direct PRD coverage in §4 (FR Traced To), §6 (SM), and §7.
+- 2 ACs deferred to Gate 3 UX (AC-TBD-1, AC-TBD-2) are carried as explicit placeholders in §7 and will be appended to `## Amendments` when Gate 3 closes.
+- No Gate 1 requirement IDs or AC IDs are unaccounted for.
+- Gate 2 closure authorized: `PRD Readiness: Ready | Gate Decision: can proceed to design`.
 
 ---
 
