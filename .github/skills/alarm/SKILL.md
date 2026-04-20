@@ -14,7 +14,7 @@ The orchestrator has no built-in signal when background agents finish or when a 
 Step 1 — Run `date` to get the real current time (sync terminal call, before arming):
 
 ```bash
-date "+%H:%M IST" --date="TZ=\"Asia/Kolkata\" now"
+TZ=Asia/Kolkata date "+%H:%M %Z"
 ```
 
 Step 2 — Arm the alarm (async):

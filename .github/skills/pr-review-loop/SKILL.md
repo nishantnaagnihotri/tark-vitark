@@ -116,7 +116,7 @@ Status: semantic-closed | semantic-open (reason)
 10. Review threads should normally be resolved as part of disposition execution.
 11. **Review timeout and retry ladder.** If no Copilot review arrives within the bounded polling window, do NOT immediately report blocked. Retry until 1 hour has elapsed since the head SHA was pushed (commit timestamp), then escalate:
 
-    1. Record `T0` = the UTC timestamp of the head SHA push (obtain via `gh api repos/<owner>/<repo>/git/commits/<sha> --jq '.committer.date'` or equivalent).
+    1. Record `T0` = the UTC timestamp of the head SHA push. Obtain via GitHub MCP: call `get_commit` with the head SHA and read `committer.date`. Only if that MCP capability is unavailable may you fall back to `gh api repos/<owner>/<repo>/git/commits/<sha> --jq '.committer.date'` — and only after explicitly confirming the MCP gap and obtaining Product Owner approval for the exception.
     2. On each polling timeout: check `now − T0`. If `< 60 min` → re-request Copilot review via MCP → restart polling window → emit `[REVIEW REQUESTED] → [POLLING STARTED]` → continue.
     3. If `now − T0 ≥ 60 min` and still no review → escalate: report blocked to Product Owner with PR link, head SHA, `T0`, elapsed time, and number of re-request attempts.
 
