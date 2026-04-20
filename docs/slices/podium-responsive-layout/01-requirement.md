@@ -61,7 +61,7 @@ Expected outcome:
 | IS-2 | Desktop-tier responsive layout for the Debate Screen (≥1024 px) |
 | IS-3 | Reclassify existing 481 px CSS breakpoint as a mobile-internal detail (add comment; no design-tier change) |
 | IS-4 | All exact layout values (columns, widths, gutters, spine) defined by Gate 3 UX in Figma frames |
-| IS-5 | Tablet and desktop Podium entry pattern (FAB behaviour on wider viewports) defined by Gate 3 UX |
+| IS-5 | Tablet and desktop Podium entry pattern (FAB behavior on wider viewports) defined by Gate 3 UX |
 
 ## Out-of-Scope
 
