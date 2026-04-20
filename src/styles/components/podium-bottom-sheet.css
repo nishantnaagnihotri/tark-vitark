@@ -138,7 +138,7 @@
     line-height: 1rem;
 }
 
-.podium-bottom-sheet__error:not(:empty) {
+.podium-bottom-sheet__textarea[aria-invalid='true'] ~ .podium-bottom-sheet__error {
     display: block;
     min-height: 1rem;
 }
