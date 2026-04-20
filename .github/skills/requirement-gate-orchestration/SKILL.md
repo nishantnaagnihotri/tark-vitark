@@ -55,7 +55,7 @@ At Gate 1 freeze:
 2. The `.feature` file is generated from `01-requirement.md` and becomes the **canonical AC source** from that point forward.
 3. All subsequent gate artifacts (`02-prd.md`, `05-architecture.md`, `06-tasks.md`) must reference AC IDs only (e.g., `AC-19`, `AC-20`) and link to the feature file:
    ```md
-   **Acceptance Criteria:** canonical source is [`features/<slice>.feature`](../../../features/<slice>.feature)
+   **Acceptance Criteria:** canonical source is [`features/{slice}.feature`](../../../features/{slice}.feature)
    ```
 4. AC prose must NOT be copied into any gate artifact other than `01-requirement.md`.
 5. Rationale: duplicated AC text drifts independently across artifacts and generates spurious review noise on every PR that touches those files.

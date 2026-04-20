@@ -102,7 +102,7 @@ Status: semantic-closed | semantic-open (reason)
 6. If the loop cannot continue because of a protocol conflict, missing capability, or explicit owner-decision point, the agent must pause, discuss the issue with the Product Owner, and proceed only with the agreed position.
 7. **Review request and polling are a single atomic sequence (no gap permitted).** The tool call return value from the review request — including `(empty)` — is a trigger to begin polling immediately. It is not a completion signal, not a status, and not a reason to summarize or report. Any return value from the review request tool must be followed by polling without pause. Immediately after calling the review request tool, emit the log entry `[REVIEW REQUESTED] → [POLLING STARTED]` and begin the polling window. If this log entry is absent, the atomic sequence was broken — that is a workflow failure.
 8. Polling must use live GitHub MCP review data as the source of truth rather than relying on cached editor extension payloads.
-9. When a non-MCP polling fallback is used:
+9. When synchronous polling is not possible (orchestrator context — no blocking execute tool):
     - **Orchestrator context** (running in VS Code chat session): use the alarm skill (180 s interval) instead of the poll script. On each alarm wake:
       1. Call `get_reviews` on the PR via GitHub MCP.
       2. If latest Copilot review body says "generated 0 comments" / "0 new comments" / "generated no new comments" → review-clean; proceed.
