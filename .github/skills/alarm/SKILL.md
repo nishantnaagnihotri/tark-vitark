@@ -11,13 +11,21 @@ The orchestrator has no built-in signal when background agents finish or when a 
 
 ## How To Arm
 
+Step 1 — Run `date` to get the real current time (sync terminal call, before arming):
+
+```bash
+date "+%H:%M IST" --date="TZ=\"Asia/Kolkata\" now"
+```
+
+Step 2 — Arm the alarm (async):
+
 ```bash
 sleep <SECONDS> && echo "ORCHESTRATOR WAKE CHECK: <one-line context>"
 ```
 
 Run with `mode=async`. Record the terminal ID.
 
-**Immediately before arming, run `date` to get the real current time.** Then arm the alarm. Then output the confirmation line — no exceptions:
+Step 3 — Immediately output the confirmation line — no exceptions:
 
 ```
 Alarm armed — terminal <id>, armed at <HH:MM IST>, ETA <HH:MM IST>.
