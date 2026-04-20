@@ -114,13 +114,15 @@ Status: semantic-closed | semantic-open (reason)
       ```
       Read the JSON output directly and act on it within the same session.
 10. Review threads should normally be resolved as part of disposition execution.
-11. **Review timeout and retry ladder.** If no Copilot review arrives within the bounded polling window, do NOT immediately report blocked. Retry until 1 hour has elapsed since the head SHA was pushed (push wall-clock time), then escalate:
+11. **Review timeout — keep retrying for 1 hour.** If Copilot hasn't posted a review yet, don't stop immediately. Keep re-requesting and re-polling for up to 1 hour from when the last push happened, then escalate.
 
-    1. Record `T0` = the UTC timestamp of the head SHA push. Use the PR's `updated_at` field as a push-time proxy: call `pull_request_read` with `method=get` and read `updated_at`. This reflects when the PR head ref last changed (i.e., the push time), not the git commit author/committer date — which can be arbitrarily earlier on rebases or cherry-picks. Only if that MCP capability is unavailable may you fall back to `gh api repos/<owner>/<repo>/pulls/<number> --jq '.updated_at'` — and only after explicitly confirming the MCP gap and obtaining Product Owner approval for the exception.
-    2. On each polling timeout: check `now − T0`. If `< 60 min` → re-request Copilot review via MCP → restart polling window → emit `[REVIEW REQUESTED] → [POLLING STARTED]` → continue.
-    3. If `now − T0 ≥ 60 min` and still no review → escalate: report blocked to Product Owner with PR link, head SHA, `T0`, elapsed time, and number of re-request attempts.
+    How to track the 1-hour window:
 
-    After each re-request, emit `[REVIEW REQUESTED] → [POLLING STARTED]` as required by rule 7. Do not escalate while within the 1-hour window.
+    - **Clock start (push time):** Call `pull_request_read` with `method=get` and read `updated_at`. This tells you when the PR head ref last changed — i.e., the actual push wall-clock time. Don't use the git commit's author/committer date; on rebases or cherry-picks that can be much earlier than the real push. If `pull_request_read` isn't available, fall back to `gh api repos/<owner>/<repo>/pulls/<number> --jq '.updated_at'` — only after confirming the MCP gap and getting Product Owner approval.
+    - **On each wake with no review yet:** Check how long it's been since the push. If it's under 1 hour → re-request Copilot review, re-arm the alarm, emit `[REVIEW REQUESTED] → [POLLING STARTED]`, and keep going.
+    - **Once 1 hour has passed with still no review:** Stop retrying. Report to the Product Owner: PR link, head SHA, push time, how long you've been waiting, and how many re-request attempts were made. Something is stuck on GitHub's side.
+
+    Do not escalate while still within the 1-hour window.
 
 12. If a thread still remains outdated and unresolved after disposition execution, the agent must reconcile that thread state before declaring the loop complete, or explicitly record it as `semantically-closed/tooling-unresolved` when MCP lacks the required resolution capability.
 
