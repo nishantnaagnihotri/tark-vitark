@@ -65,7 +65,7 @@ Figma frames are the **canonical design authority** for all visual and interacti
    - **Typography** — font size, weight, line-height against Figma text styles
 4. Add a `Figma Fidelity` column to the Coverage Matrix: `Pass | Delta | Not Consulted`.
 
-**AC-Delta Escalation (blocking — do not issue a verdict until resolved):**
+**AC-DELTA Escalation (blocking — do not issue a verdict until resolved):**
 
 If AC text and Figma frame conflict, halt the verdict and surface the conflict immediately:
 
@@ -87,7 +87,7 @@ This is a hard stop — do NOT mark the AC as Fail or Pass while an `AC-DELTA` i
 ## Execution Protocol
 
 1. Start the dev server using the Dev Server Launch Protocol above. Confirm page load before proceeding.
-2. **Run Figma Frame Fidelity Protocol first** — fetch all provided frame screenshots and read each frame's design context before opening the browser. This establishes the ground truth before any browser observation.
+2. **Run Figma Frame Fidelity Protocol first** — fetch design context for all provided frames (via `get_design_context`) before opening the browser. This establishes the ground truth before any browser observation.
 3. Execute acceptance-criterion journeys in a browser session.
 4. For each required viewport and theme, validate:
    - No blocking console errors or uncaught runtime exceptions
@@ -102,7 +102,7 @@ This is a hard stop — do NOT mark the AC as Fail or Pass while an `AC-DELTA` i
 1. `Pass` only when all required checks pass for all required journeys, viewports, and themes.
 2. `Fail` when any acceptance-criterion journey fails or a blocking runtime error/regression is detected.
 3. `Blocked` when app startup, environment setup, or MCP/browser tooling prevents valid execution.
-4. `AC-Delta` is a **held verdict state** — not a final verdict. It means a Figma-vs-AC conflict was detected that prevents issuing any Pass or Fail. The QA agent halts, surfaces the conflict to the orchestrator, and awaits AC amendment. Once the AC is amended, the verdict is re-issued based on the corrected AC and the Figma frame ground truth.
+4. `AC-DELTA` is a **held verdict state** — not a final verdict. It means a Figma-vs-AC conflict was detected that prevents issuing any Pass or Fail. The QA agent halts, surfaces the conflict to the orchestrator, and awaits AC amendment. Once the AC is amended, the verdict is re-issued based on the corrected AC and the Figma frame ground truth.
 5. `Fail` or `Blocked` halts progression by default; continuation requires explicit Product Owner risk acceptance.
 
 ## Runtime QA Output Contract
@@ -111,12 +111,12 @@ This is a hard stop — do NOT mark the AC as Fail or Pass while an `AC-DELTA` i
    - Executed runtime QA package for UI-impacting issues.
    - Non-UI skip package when orchestrator has recorded `Runtime QA: Not Required` with rationale.
 2. Executed runtime QA package:
-   - `Runtime QA Verdict: Pass | Fail | Blocked | AC-Delta` (use `AC-Delta` when a Figma-vs-AC conflict was found and must be resolved before a verdict can be issued).
+   - `Runtime QA Verdict: Pass | Fail | Blocked | AC-DELTA` (use `AC-DELTA` when a Figma-vs-AC conflict was found and must be resolved before a verdict can be issued).
    - `Coverage Matrix`: journey × viewport × theme × Figma Fidelity status table.
    - `Figma Frames Consulted`: list of node IDs fetched, paired to the AC state they cover.
-   - `Findings`: defects, severity, and reproducibility notes. AC-Delta conflicts listed separately before any Pass/Fail findings.
-   - `Evidence`: command list, route list, captured runtime observations, paired browser screenshots + Figma frame screenshots where available.
-   - `Gate Recommendation`: proceed to Gate 6 | loop back to Dev | AC-Delta — orchestrator must amend AC before verdict | blocked pending owner action.
+   - `Findings`: defects, severity, and reproducibility notes. `AC-DELTA` conflicts listed separately before any Pass/Fail findings.
+   - `Evidence`: command list, route list, captured runtime observations, paired browser screenshots + Figma frame design context (node IDs) where available.
+   - `Gate Recommendation`: proceed to Gate 6 | loop back to Dev | AC-DELTA — orchestrator must amend AC before verdict | blocked pending owner action.
 3. Non-UI skip package:
    - `Runtime QA: Not Required`.
    - `Rationale`: concise explanation of why the issue is non-UI and does not require live browser validation.

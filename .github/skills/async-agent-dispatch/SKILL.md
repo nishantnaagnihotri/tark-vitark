@@ -167,7 +167,9 @@ All three values must be real:
 Immediately after outputting the confirmation line, record the dispatch in `/memories/session/active-state.md` under `## Pending Async Runs`:
 
 ```
-| <terminal-id> | <role> — <one-line task description> | running |
+| terminal-id | dispatched | issue | purpose | status |
+|---|---|---|---|---|
+| <terminal-id> | <HH:MM IST> | #<n> (or N/A) | <role> — <one-line task description> | running |
 ```
 
 Both steps (confirmation line + session memory update) must complete before any other action.
