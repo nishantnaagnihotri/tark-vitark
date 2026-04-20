@@ -71,10 +71,11 @@ When Gate 4 decomposes a slice into N issues, the orchestrator must evaluate ind
    Capture the terminal ID returned by each `run_in_terminal` call.
 2. **Immediately** write all terminal IDs to `/memories/session/active-state.md` under `## Pending Async Runs` before any other action.
 3. Arm an alarm (600 s interval, alarm skill) immediately after all terminals are launched. On each alarm wake:
-   - Check `get_terminal_output <terminal-id>` for each running agent. If the terminal has exited **and** its output contains a review-clean handback package, treat that task as done.
-   - If the terminal has exited but no review-clean signal is present, inspect the handback for errors or escalation notes and act accordingly.
+   - Check `get_terminal_output <terminal-id>` for each running agent. If the terminal has exited **and** its output reports `REVIEW_CLEAN`, treat that task as done.
+   - If the terminal has exited **and** its output reports `REVIEW_CLEAN_WITH_ESCALATIONS`, do **not** treat the task as done; route it to the Post-Loop Orchestrator Challenge Consolidation step and block sequencing until all escalations are resolved by PO.
+   - If the terminal has exited but no review status is present, inspect the handback for errors or escalation notes and act accordingly.
    - If still running, re-arm and wait.
-4. Terminal exit **combined with** a review-clean handback package in the output is the authoritative task-done signal. A review-clean package present in output before terminal exit is preliminary evidence only — wait for process exit to confirm. Dev agents run their own full review loop before returning; a PR being open is evidence of progress, not completion.
+4. Terminal exit **combined with** `REVIEW_CLEAN` in the output is the authoritative task-done signal. `REVIEW_CLEAN_WITH_ESCALATIONS` is not a completion signal — it must remain blocked until escalations are resolved. A review status present in output before terminal exit is preliminary evidence only — wait for process exit to confirm. Dev agents run their own full review loop before returning; a PR being open is evidence of progress, not completion.
 5. Validate each task PR independently (each targets `slice/<slice-name>`). After all task PRs are merged into the slice branch, open a single `slice/<slice-name> → master` PR for PO merge.
 
 **Sequential execution (when independence check fails or issues = 1):**

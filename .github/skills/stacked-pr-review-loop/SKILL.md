@@ -48,7 +48,7 @@ After all dev agents have returned their exit status packages (per `pr-review-lo
 
 ## Merge And Retarget Sequence (Base To Tip)
 
-1. Product Owner merges the lowest ready PR first. While waiting: arm an alarm (300 s interval, alarm skill). On each alarm wake, call `get` on the base PR via GitHub MCP and check `state=closed` + `merged=true`. If merged → proceed to step 2. If not → re-arm.
+1. Product Owner merges the lowest ready PR first. While waiting: arm an alarm (300 s interval, alarm skill). On each alarm wake, call GitHub MCP `pull_request_read` with `method=get` for the base PR; read response fields `state` and `merged`. If `state=closed` and `merged=true` → proceed to step 2. If not → re-arm.
 2. Orchestrator retargets the next PR base to `master`.
 3. Rebase the next PR branch onto current `master`, resolve conflicts during rebase, avoid merge commits in PR head history, and hand back to orchestrator.
 4. Orchestrator requests a fresh Copilot review on the rebased head.
