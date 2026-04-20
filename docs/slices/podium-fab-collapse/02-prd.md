@@ -27,7 +27,7 @@ Amendment A-1 replaces the always-visible inline `Podium` composer bar (FR-1 / F
 | ID | Requirement |
 |---|---|
 | FR-19 | A floating action button (FAB) is persistently visible in the lower-right corner of the Debate Screen on mobile |
-| FR-20 | Tapping the FAB opens a bottom sheet containing the full Podium composer |
+| FR-20 | Tapping the FAB opens a bottom sheet containing the full Podium composer *(Amended at Gate 5.5 — PO approved two-tap UX: FAB expands to Tark/Vitark side-select options first; tapping a side opens the composer bottom sheet; 2026-04-20)* |
 | FR-21 | The bottom sheet can be dismissed by tapping outside or a close affordance |
 | FR-22 | FAB and bottom sheet respect both light and dark themes |
 | FR-23 | FAB and bottom sheet are mobile-only (≤ 767 px); on ≥ 768 px the inline Podium remains |

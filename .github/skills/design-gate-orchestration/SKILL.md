@@ -76,7 +76,7 @@ Local-validation rule:
 8. Validate `Design Review Access` is present with node-targeted Figma URL(s) (`?node-id=`) containing actual node IDs — not placeholders. Missing node IDs are a loop-back condition.
 9. Validate no top-level frames on the Design page have overlapping bounding boxes. Any overlap must be fixed before review-ready status is claimed.
 10. For continuation slices, validate baseline provenance (source node ID + clone node ID) is present in `Design Review Access`.
-11. **AC Delta Check:** Review every AC in `02-prd.md` against the finalized UX flows and states. Identify any AC whose text describes behavior that the UX phase has refined or superseded (e.g., interaction step count changed, component type changed, a state was split). Flag all deltas as `AC-DELTA: <AC-ID> — <brief description of discrepancy>` in the Gate 3A status output. Flagged deltas must be resolved (AC updated in `02-prd.md`) before Gate 3 closes per the AC Writeback Check in the Gate 3 Completion Rule.
+11. **AC-DELTA Check:** Review every AC in `02-prd.md` against the finalized UX flows and states. Identify any AC whose text describes behavior that the UX phase has refined or superseded (e.g., interaction step count changed, component type changed, a state was split). Flag all deltas as `AC-DELTA: <AC-ID> — <brief description of discrepancy>` in the Gate 3A status output. Flagged deltas must be resolved (AC updated in `02-prd.md`) before Gate 3 closes per the AC Writeback Check in the Gate 3 Completion Rule.
 
 ## Substep B: Design QA Handoff Trigger (Gate 3B)
 
