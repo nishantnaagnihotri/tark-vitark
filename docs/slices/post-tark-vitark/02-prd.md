@@ -294,8 +294,8 @@ Artifact:
 | ID | Requirement | Priority | Traced To |
 |---|---|---|---|
 | FR-19 | FAB/Menu shall be always-visible bottom-right on the Debate Screen in collapsed state (single `+` icon). | Must | AC-19 |
-| FR-20 | Tapping the collapsed FAB shall expand it to show three mini-buttons — T (Tark), V (Vitark), and × (close) — with M3 expansion animation (Smart Animate, 300 ms ease-out). | Must | AC-20 |
-| FR-21 | Tapping T or V in the expanded FAB shall open the Podium as a Material 3 bottom sheet (300 ms ease-out) with the corresponding side pre-selected in the SegmentedControl. | Must | AC-21 |
+| FR-20 | Tapping the collapsed FAB shall expand it to show three mini-buttons — T (Tark), V (Vitark), and × (close) — with M3 expansion animation (Smart Animate, 300 ms ease-out). *(Amended at Gate 5.5 — PO approved two-tap side-select UX: FAB expands to side-select options (Tark \| Vitark) without a × mini-button; 2026-04-20)* | Must | AC-20 |
+| FR-21 | Tapping T or V in the expanded FAB shall open the Podium as a Material 3 bottom sheet (300 ms ease-out) with the corresponding side pre-selected in the SegmentedControl. *(Amended at Gate 5.5 — "T or V" now refers to the Tark or Vitark side-select option in the expanded FAB; behavior otherwise unchanged; 2026-04-20)* | Must | AC-21 |
 | FR-22 | The Podium bottom sheet shall include a SegmentedControl (Tark \| Vitark) allowing in-sheet side switching without dismissing the sheet. | Must | AC-22 |
 | FR-23 | Tapping × in the expanded FAB shall collapse the FAB back to Phase 1 (single `+`). Dragging down on the Podium sheet shall dismiss the sheet and return to FAB expanded state (Phase 2). | Must | AC-23 |
 
