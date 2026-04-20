@@ -107,8 +107,8 @@ No new user types are introduced. Podium entry pattern on wider viewports is a G
 | AC-26 | Seeded at Gate 1 — canonical |
 | AC-27 | Seeded at Gate 1 — canonical |
 | AC-28 | Seeded at Gate 1 — canonical |
-| AC-TBD-1 | Placeholder — Gate 3 UX will author and append *(resolves OQ-1)* |
-| AC-TBD-2 | Placeholder — Gate 3 UX will author and append *(resolves OQ-2)* |
+| AC-TBD-1 | Placeholder — Gate 3 UX will author prose as amendment to `01-requirement.md`; ID recorded in `## Amendments` of this PRD *(resolves OQ-1)* |
+| AC-TBD-2 | Placeholder — Gate 3 UX will author prose as amendment to `01-requirement.md`; ID recorded in `## Amendments` of this PRD *(resolves OQ-2)* |
 
 ---
 
@@ -117,7 +117,7 @@ No new user types are introduced. Podium entry pattern on wider viewports is a G
 | Type | Description | Mitigation |
 |---|---|---|
 | Dependency — blocking | Gate 3 UX Figma tablet and desktop frames must exist before any layout implementation (FR-1, FR-2). | Gate 3 closes only when frames are approved; Gate 5 build cannot start without them. |
-| Dependency — blocking | Gate 3 UX must author and append AC-TBD-1 and AC-TBD-2 before Gate 3 can close. | Hardened in `design-gate-orchestration` skill (Gate 3A step 12 + Completion Rule step 4). |
+| Dependency — blocking | Gate 3 UX must author AC-TBD-1 and AC-TBD-2, append their prose in amendments to `01-requirement.md`, and record their IDs in this file's `## Amendments` before Gate 3 can close. | Hardened in `design-gate-orchestration` skill (Gate 3A step 12 + Completion Rule step 4). |
 | Dependency — non-blocking | OQ-3: Gate 3 UX must determine if AC-1/AC-2 (post/reply button triggers) need extension for wider viewports. | Gate 3 UX will assess and extend if needed; non-blocking for Gate 2 progression. |
 | Risk | Mobile regression introduced by new breakpoint CSS. | Explicit 767 px and 320 px runtime QA checks; AC-27 is a hard pass criterion. |
 | Risk | Spine position or column layout mismatches Figma frames at boundary viewports (768, 1024). | Runtime QA must test boundary viewpoints exactly; Figma frame pixel-truth is the acceptance bar. |
