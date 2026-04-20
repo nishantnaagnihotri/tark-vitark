@@ -104,6 +104,16 @@ Status: semantic-closed | semantic-open (reason)
 8. Polling must use live GitHub MCP review data as the source of truth rather than relying on cached editor extension payloads.
 9. When synchronous polling is not possible (orchestrator context — no blocking execute tool):
     - **Orchestrator context** (running in VS Code chat session): use the alarm skill (180 s interval) instead of the poll script. Immediately after `request_copilot_review` returns, arm the alarm and emit the required log entry `[REVIEW REQUESTED] → [POLLING STARTED]` at that moment. In orchestrator context, arming the alarm counts as polling having started for rule 7; alarm wakes are the polling mechanism. On each alarm wake:
+      0. **Workflow pre-check (run first, before any reviews API call).** Query the GitHub Actions workflow status for this PR:
+         ```bash
+         gh run list --repo <owner>/<repo> --limit 10 \
+           --json databaseId,name,status,conclusion,createdAt,headBranch \
+           --jq '[.[] | select(.name == "Copilot code review")] | sort_by(.createdAt) | reverse | .[0] | {id: .databaseId, status: .status, conclusion: .conclusion}'
+         ```
+         - If `status == "in_progress"` → the reviewer bot is still running. Re-arm the alarm immediately; skip steps 1–4 for this wake.
+         - If `status == "completed"` or no matching run found → proceed to step 1.
+
+         **Why this matters:** the reviews API lags significantly after the review workflow completes. Checking workflow status first avoids false "no review yet" conclusions while the bot is still processing and prevents unnecessary reviews API calls.
       1. Call `get_reviews` on the PR via GitHub MCP.
       2. If latest Copilot review body says "generated 0 comments" / "0 new comments" / "generated no new comments" → review-clean; proceed.
       3. If new comments are present → run PR Review Intake Protocol, address, push, then immediately re-request review and re-arm the alarm so polling restarts atomically after the new review request.
