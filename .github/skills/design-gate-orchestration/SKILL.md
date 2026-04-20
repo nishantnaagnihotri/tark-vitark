@@ -76,6 +76,7 @@ Local-validation rule:
 8. Validate `Design Review Access` is present with node-targeted Figma URL(s) (`?node-id=`) containing actual node IDs — not placeholders. Missing node IDs are a loop-back condition.
 9. Validate no top-level frames on the Design page have overlapping bounding boxes. Any overlap must be fixed before review-ready status is claimed.
 10. For continuation slices, validate baseline provenance (source node ID + clone node ID) is present in `Design Review Access`.
+11. **AC Delta Check:** Review every AC in `02-prd.md` against the finalized UX flows and states. Identify any AC whose text describes behavior that the UX phase has refined or superseded (e.g., interaction step count changed, component type changed, a state was split). Flag all deltas as `AC-DELTA: <AC-ID> — <brief description of discrepancy>` in the Gate 3A status output. Flagged deltas must be resolved (AC updated in `02-prd.md`) before Gate 3 closes per the AC Writeback Check in the Gate 3 Completion Rule.
 
 ## Substep B: Design QA Handoff Trigger (Gate 3B)
 
@@ -103,7 +104,8 @@ Local-validation rule:
 
 1. Both substeps (UX+Design single-pass, Design QA) must pass before Gate 3 is closed.
 2. Closing Gate 3 requires `Design QA Verdict Package` and explicit Product Owner approval on record.
-3. Gate 4 (Architecture) must not begin until Gate 3 is formally closed.
+3. **AC Writeback Check (mandatory before Gate 3 closes):** Compare every AC in `02-prd.md` against the finalized UX Flow/State Package. For any AC where the UX phase refined, amended, or replaced the originally-stated interaction model (e.g., single-tap became multi-step, a component changed type, a flow added a state not reflected in the AC text), the orchestrator MUST update that AC in `02-prd.md` to match the approved UX behavior before Gate 3 closes. Each amended AC must carry an inline note: `*(Amended at Gate 3 — UX refinement: <one-line description>)*`. Gate 3 must not be declared closed while any AC in `02-prd.md` describes behavior that contradicts the approved UX flow.
+4. Gate 4 (Architecture) must not begin until Gate 3 is formally closed and the AC Writeback Check is complete.
 
 ## Cross-Slice Continuation Rule
 
