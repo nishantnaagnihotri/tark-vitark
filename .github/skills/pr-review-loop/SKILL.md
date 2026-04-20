@@ -48,7 +48,7 @@ For every review comment actioned in a pass, execute these steps **in order**. N
 
 1. **Fix** — implement the code or content change (Accept path) or document the rationale (Challenge path). Push is deferred until all comments in this pass have completed steps 1 and 2.
 2. **Reply** — post a reply on the GitHub PR review thread for this comment stating:
-   - Disposition: `Accept` / `Challenge` / `Needs PO Decision`
+   - Disposition: `Accept` / `Challenge` / `Needs Product Owner Decision`
    - What changed (Accept): brief description of the fix, or
    - Why no change (Challenge): rationale, safer alternative, and citation of grounding rule/decision
    - **This reply must be posted before the fix commit is pushed.** Pushing first and replying later is not permitted — the reply may be forgotten if the session ends between push and reply.
@@ -91,7 +91,7 @@ Status: semantic-closed | semantic-open (reason)
    > 1. Use the GitHub MCP `request_copilot_review` tool to request a fresh Copilot review on the PR.
    > 2. Run `node scripts/wait_for_copilot_review.js --owner <owner> --repo <repo> --pr <number>` synchronously via the execute tool (do NOT background it — wait for the JSON output).
    > 3. If the review body says "0 comments" / "0 new comments" / "generated 0 comments" → report done and exit.
-   > 4. If there are new comments → run PR Review Intake Protocol (Accept/Challenge/Needs PO Decision), fix all Accepted items, commit, push, reply to threads, then return to step 1.
+   > 4. If there are new comments → run PR Review Intake Protocol (Accept/Challenge/Needs Product Owner Decision), fix all Accepted items, commit, push, reply to threads, then return to step 1.
    > 5. Only exit the loop when: (a) the review is clean, or (b) there is a genuine blocker requiring Product Owner input. For blockers, state the exact decision needed and exit.
    >
    > Exit condition: review body semantically indicates zero new comments. Do NOT exit based on thread resolution state alone.
