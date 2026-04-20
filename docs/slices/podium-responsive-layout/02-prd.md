@@ -39,7 +39,7 @@ No new user types are introduced. Podium entry pattern on wider viewports is a G
 | IS-2 | Desktop-tier responsive layout for the Debate Screen (≥1024 px) |
 | IS-3 | Reclassify existing 481 px CSS breakpoint as a mobile-internal detail (add comment; no design-tier change) |
 | IS-4 | All exact layout values (columns, widths, gutters, spine) defined by Gate 3 UX in Figma frames |
-| IS-5 | Tablet and desktop Podium entry pattern (FAB behaviour on wider viewports) defined by Gate 3 UX |
+| IS-5 | Tablet and desktop Podium entry pattern (FAB behavior on wider viewports) defined by Gate 3 UX |
 
 ### Out-of-Scope
 
@@ -120,7 +120,7 @@ No new user types are introduced. Podium entry pattern on wider viewports is a G
 | Dependency — blocking | Gate 3 UX must author AC-TBD-1 and AC-TBD-2, append their prose in amendments to `01-requirement.md`, and record their IDs in this file's `## Deferred Gate 3 AC IDs` before Gate 3 can close. | Hardened in `design-gate-orchestration` skill (Gate 3A step 12 + Completion Rule step 4). |
 | Dependency — non-blocking | OQ-3: Gate 3 UX must determine if AC-1/AC-2 (post/reply button triggers) need extension for wider viewports. | Gate 3 UX will assess and extend if needed; non-blocking for Gate 2 progression. |
 | Risk | Mobile regression introduced by new breakpoint CSS. | Explicit 767 px and 320 px runtime QA checks; AC-27 is a hard pass criterion. |
-| Risk | Spine position or column layout mismatches Figma frames at boundary viewports (768, 1024). | Runtime QA must test boundary viewpoints exactly; Figma frame pixel-truth is the acceptance bar. |
+| Risk | Spine position or column layout mismatches Figma frames at boundary viewports (768, 1024). | Runtime QA must test boundary viewports exactly; Figma frame pixel-truth is the acceptance bar. |
 | Risk — non-blocking | Cross-slice AC numbering collision (QG-1). | Mitigated — ACs reseeded to globally unique range AC-25–AC-28 per PO decision (Option B, 2026-04-20); see `orchestrator-context.md` Known Rule #82. |
 
 ---
