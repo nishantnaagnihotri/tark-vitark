@@ -1,5 +1,8 @@
 ---
-applyTo: "**/tests/**"
+applyTo:
+  - "**/tests/**"
+  - "**/features/**/*.feature"
+  - "**/features/step-definitions/**/*.ts"
 ---
 # Test Standards
 
