@@ -158,18 +158,23 @@ TZ=Asia/Kolkata date "+%H:%M %Z"       # HH:MM IST — for the confirmation line
 TZ=Asia/Kolkata date "+%Y-%m-%dT%H:%M:%S+05:30"   # ISO timestamp — for the dispatched column
 ```
 
-Then dispatch the agent. Then output the confirmation line — no exceptions:
+Then dispatch the agent. Then output the dispatch banner — no exceptions:
 
 ```
-Agent dispatched — role=<role>, terminal=<id>, dispatched at <HH:MM IST>.
+---
+🤖 AGENT DISPATCHED — <role>
+Gate <N> | Slice: <slice-name>
+Terminal: <terminal-id> | <HH:MM IST>
+---
 ```
 
-All three values must be real:
+All values must be real:
 - `role`: the agent role argument passed to `run-agent.ts`
+- `Gate <N> | Slice: <slice-name>`: the current gate number and slice being worked on; use `N/A` if dispatched outside a gate context
 - `terminal`: the exact UUID returned by `run_in_terminal` — not fabricated, not guessed
-- `dispatched at`: derived from the actual `date` output — not calculated from context
+- `HH:MM IST`: derived from the actual `date` output — not calculated from context
 
-**Fabricating the terminal ID or time is a protocol violation. Omitting the confirmation line is a protocol violation.**
+**Fabricating the terminal ID or time is a protocol violation. Omitting the banner is a protocol violation.**
 
 Immediately after outputting the confirmation line, record the dispatch in `/memories/session/active-state.md` under `## Pending Async Runs`:
 

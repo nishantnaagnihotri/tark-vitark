@@ -25,13 +25,16 @@ sleep <SECONDS> && echo "ORCHESTRATOR WAKE CHECK: <one-line context>"
 
 Run with `mode=async`. Record the terminal ID.
 
-Step 3 — Immediately output the confirmation line — no exceptions:
+Step 3 — Immediately output the alarm banner — no exceptions:
 
 ```
-Alarm armed — terminal <id>, armed at <HH:MM IST>, ETA <HH:MM IST>.
+---
+⏰ ALARM ARMED — <one-line reason, e.g. "waiting for Copilot review on PR #176">
+Terminal: <id> | Armed: <HH:MM IST> | ETA: <HH:MM IST>
+---
 ```
 
-Both times must be derived from the actual `date` output — not guessed or calculated from context. Fabricating times is a protocol violation. Omitting either time is a protocol violation.
+Both times must be derived from the actual `date` output — not guessed or calculated from context. Fabricating times is a protocol violation. Omitting the banner is a protocol violation.
 
 ## Interval Reference
 
