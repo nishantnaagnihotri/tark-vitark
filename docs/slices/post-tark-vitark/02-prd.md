@@ -293,11 +293,12 @@ Artifact:
 
 | ID | Requirement | Priority | Traced To |
 |---|---|---|---|
-| FR-19 | FAB/Menu shall be always-visible bottom-right on the Debate Screen in collapsed state (single `+` icon). | Must | AC-19 |
+| FR-19 | FAB/Menu shall be always-visible bottom-right on the Debate Screen; the FAB default state is collapsed (single `+` icon). | Must | AC-19 |
 | FR-20 | Tapping the collapsed FAB shall expand it to show two side-select options — Tark and Vitark — with M3 expansion animation (Smart Animate, 300 ms ease-out). No × mini-button is shown in the expanded state. *(Amended at Gate 5.5 — PO approved two-tap side-select UX; 2026-04-20)* | Must | AC-20 |
 | FR-21 | Tapping the Tark or Vitark side-select option in the expanded FAB shall open the Podium as a Material 3 bottom sheet (300 ms ease-out) with the corresponding side pre-selected in the SegmentedControl. *(Amended at Gate 5.5 — updated from "T or V mini-button" to "Tark or Vitark side-select option"; 2026-04-20)* | Must | AC-21 |
 | FR-22 | The Podium bottom sheet shall include a SegmentedControl (Tark \| Vitark) allowing in-sheet side switching without dismissing the sheet. | Must | AC-22 |
 | FR-23 | Dragging down on the Podium sheet shall dismiss the sheet and return to FAB expanded state (Phase 2). *(Amended at Gate 5.5 — × mini-button close removed; only sheet drag-down dismissal remains; 2026-04-20)* | Must | AC-23 |
+| FR-24 | Re-tapping the expanded FAB, or tapping outside the expanded FAB, shall collapse it back to the single `+` icon state. | Must | AC-24 |
 
 ---
 
@@ -310,6 +311,7 @@ Artifact:
 | AC-21 | Tapping the expanded Tark side-select option opens the Podium bottom sheet with Tark pre-selected; tapping the expanded Vitark side-select option opens it with Vitark pre-selected. *(Amended at Gate 5.5 — updated from "T/V mini-button" to side-select option; 2026-04-20)* |
 | AC-22 | The Podium bottom sheet includes a SegmentedControl (Tark \| Vitark) for switching side without dismissing the sheet. |
 | AC-23 | Dragging the Podium sheet down dismisses the sheet and returns to FAB expanded state. *(Amended at Gate 5.5 — × FAB close removed; only sheet drag-down dismissal remains; 2026-04-20)* |
+| AC-24 | Tapping the expanded FAB again, or tapping outside the expanded FAB, collapses it back to the single `+` icon state. |
 
 ---
 
