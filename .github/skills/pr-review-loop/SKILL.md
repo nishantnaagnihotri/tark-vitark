@@ -114,9 +114,9 @@ Status: semantic-closed | semantic-open (reason)
       ```
       Read the JSON output directly and act on it within the same session.
 10. Review threads should normally be resolved as part of disposition execution.
-11. **Review timeout and retry ladder.** If no Copilot review arrives within the bounded polling window, do NOT immediately report blocked. Retry until 1 hour has elapsed since the head SHA was pushed (commit timestamp), then escalate:
+11. **Review timeout and retry ladder.** If no Copilot review arrives within the bounded polling window, do NOT immediately report blocked. Retry until 1 hour has elapsed since the head SHA was pushed (push wall-clock time), then escalate:
 
-    1. Record `T0` = the UTC timestamp of the head SHA push. Obtain via GitHub MCP: call `get_commit` with the head SHA and read `committer.date`. Only if that MCP capability is unavailable may you fall back to `gh api repos/<owner>/<repo>/git/commits/<sha> --jq '.committer.date'` — and only after explicitly confirming the MCP gap and obtaining Product Owner approval for the exception.
+    1. Record `T0` = the UTC timestamp of the head SHA push. Use the PR's `updated_at` field as a push-time proxy: call `pull_request_read` with `method=get` and read `updated_at`. This reflects when the PR head ref last changed (i.e., the push time), not the git commit author/committer date — which can be arbitrarily earlier on rebases or cherry-picks. Only if that MCP capability is unavailable may you fall back to `gh api repos/<owner>/<repo>/pulls/<number> --jq '.updated_at'` — and only after explicitly confirming the MCP gap and obtaining Product Owner approval for the exception.
     2. On each polling timeout: check `now − T0`. If `< 60 min` → re-request Copilot review via MCP → restart polling window → emit `[REVIEW REQUESTED] → [POLLING STARTED]` → continue.
     3. If `now − T0 ≥ 60 min` and still no review → escalate: report blocked to Product Owner with PR link, head SHA, `T0`, elapsed time, and number of re-request attempts.
 
