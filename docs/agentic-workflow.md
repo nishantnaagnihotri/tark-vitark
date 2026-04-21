@@ -16,7 +16,7 @@ flowchart TD
     D55 -->|no| G6
     D55 -->|yes| G55["Gate 5.5\nRuntime QA\n🤖 Runtime QA Agent"]
     G55 -->|pass| G6["Gate 6\nMerge Readiness\n🤖 Orchestrator"]
-    G6 -->|recommend| MERGE(["👤 PO merges PR"])
+    G6 -->|recommend| MERGE(["Merge\nPO: default branch\nOrchestrator: slice/*"])
     MERGE --> DONE(["✅ Shipped"])
 
     G1 -->|needs work| G1
@@ -52,4 +52,4 @@ flowchart TD
 | 6 — Merge Readiness | Orchestrator | Merge recommendation |
 
 > **Trivial slices** (copy, config, favicon) skip Gates 2, 3, and 4.
-> **Merge** is always performed by the Product Owner — never by an agent.
+> **Default-branch merges** are performed by the Product Owner directly. For PRs targeting `slice/*` integration branches, the Orchestrator may merge under the documented exception.

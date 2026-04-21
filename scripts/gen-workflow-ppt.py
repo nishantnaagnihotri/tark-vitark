@@ -205,13 +205,13 @@ for (bx, fill, border, lines) in blocks_r1:
     set_text(s, lines)
     centre_v(s)
 
-# ── Row 2 blocks (right→left: Build, CodeReview, RuntimeQA, MergeReady, POMerge, Done) ──
+# ── Row 2 blocks (right→left: Build, CodeReview, RuntimeQA, MergeReadiness, Merge, Done) ──
 blocks_r2 = [
     (R2X[5], CARD_BG,  BORDER_BLUE, [("Build", 11, False, TEXT_BLUE), ("Dev Agent", 9, False, SUB_BLUE)]),
     (R2X[4], CARD_BG,  BORDER_BLUE, [("Code Review", 11, False, TEXT_BLUE), ("Code Reviewer", 9, False, SUB_BLUE)]),
     (R2X[3], CARD_BG,  BORDER_BLUE, [("Runtime QA", 11, False, TEXT_BLUE), ("Runtime QA Agent", 9, False, SUB_BLUE)]),
     (R2X[2], CARD_BG,  BORDER_BLUE, [("Merge Readiness", 10, False, TEXT_BLUE), ("Gate 6", 9, False, SUB_BLUE)]),
-    (R2X[1], FILL_PRP, BORDER_PRP,  [("👤 PO", 12, True, TITLE_PRP), ("Merges PR", 10, False, TEXT_PRP), ("PO-only", 9, False, RGBColor(0xb0, 0x7c, 0xc0))]),
+    (R2X[1], FILL_PRP, BORDER_PRP,  [("Merge", 12, True, TITLE_PRP), ("PO: default branch", 8, False, TEXT_PRP), ("Orch: slice/*", 9, False, RGBColor(0xb0, 0x7c, 0xc0))]),
     (R2X[0], FILL_GRN, BORDER_GRN,  [("✅ Done", 13, True, TEXT_GRN), ("Shipped", 10, False, SUB_GRN)]),
 ]
 
@@ -288,7 +288,7 @@ gates = [
     ("Gate 5", "Build",       "Dev Agent implements and tests against acceptance criteria on a feature branch."),
     ("Code Review", "",       "Code Reviewer (Copilot) reviews the PR; feedback loop until the latest Copilot review body says 'generated 0 comments' (or equivalent)."),
     ("Gate 5.5", "Runtime QA","Runtime QA Agent validates live behaviour across viewport × theme matrix."),
-    ("Gate 6", "Merge Readiness", "Orchestrator confirms all evidence; Product Owner merges the PR."),
+    ("Gate 6", "Merge Readiness", "Orchestrator confirms all evidence; Product Owner merges default-branch PRs, while the Orchestrator may merge qualifying slice/* integration-branch PRs under the documented exception."),
 ]
 
 ROW_H = Inches(0.62)
