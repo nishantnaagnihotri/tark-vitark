@@ -8,7 +8,7 @@
  * Options:
  *   --pre-sleep <seconds>   Sleep before sending the prompt (useful for async demo runs)
  *   --no-intro              Skip the automatic role-introduction prefix
- *   --model <model-id>      Override the default model (default: gpt-5.3-codex)
+ *   --model <model-id>      Override the role default model (fallback: gpt-5.4)
  *   --task-id <task-id>     Optional issue/task reference for provenance block
  *   --allow-agent-orchestrator-mcp
  *                           Allow attaching the agent-orchestrator MCP server (disabled by default)
@@ -29,10 +29,10 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 
 import { fileURLToPath } from "node:url";
 import { join, resolve } from "node:path";
 import { randomUUID } from "node:crypto";
+import { defaultModelForRole } from "./agent-model-routing.ts";
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
-const DEFAULT_MODEL = "gpt-5.3-codex";
 const REASONING_EFFORT = "high" as const;
 const TIMEOUT_MS = 60 * 60 * 1000; // 1 hour
 const MAX_RETRIES = 3;             // Retry sendAndWait on transient failures
@@ -179,7 +179,7 @@ function resolveAgentMcpServers(
 
 let preSleepMs = 0;
 let noIntro = false;
-let model = DEFAULT_MODEL;
+let modelOverride: string | undefined;
 let taskIdArg: string | undefined;
 let allowAgentOrchestratorMcp = false;
 let outputFormat: "text" | "json" = "text";
@@ -207,7 +207,7 @@ for (let i = 0; i < argv.length;) {
         noIntro = true;
         argv.splice(i, 1);
     } else if (argv[i] === "--model") {
-        model = requireOptionValue("--model", argv[i + 1]);
+        modelOverride = requireOptionValue("--model", argv[i + 1]);
         argv.splice(i, 2);
     } else if (argv[i] === "--task-id") {
         taskIdArg = requireOptionValue("--task-id", argv[i + 1]);
@@ -246,6 +246,9 @@ if (argv.length !== 2) {
     process.exit(1);
 }
 const [role, rawPrompt] = argv;
+const roleDefaultModel = defaultModelForRole(role);
+const model = modelOverride ?? roleDefaultModel;
+const modelSource = modelOverride ? "--model override" : "role default";
 
 // Support @file references: `@path/to/file.md` reads file contents as the prompt
 const prompt = rawPrompt.startsWith("@")
@@ -358,6 +361,7 @@ function inferTaskId(prompt: string, explicitTaskId?: string): string {
 const runId = randomUUID();
 const startedAt = new Date().toISOString();
 logInfo(`[run-agent] started  runId=${runId} role=${role} model=${model} effort=${REASONING_EFFORT} at=${startedAt}`);
+logInfo(`[run-agent] routing  role-default=${roleDefaultModel} model-source=${modelSource}`);
 logInfo(`[run-agent] prompt   ${prompt.slice(0, 120).replace(/\n/g, " ")}${prompt.length > 120 ? "…" : ""}`);
 
 const { tools, systemMessage } = readAgentMeta(role);

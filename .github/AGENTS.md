@@ -1,5 +1,5 @@
-<!-- Protocol-Version: 3.19 -->
-<!-- Last-Updated: 2026-04-11 -->
+<!-- Protocol-Version: 3.20 -->
+<!-- Last-Updated: 2026-04-21 -->
 
 # Shared Agent Protocol
 
@@ -94,6 +94,25 @@ The full Gate 5, Gate 5.5 Runtime QA, and Gate 6 orchestration workflow - issue-
 2. Product Owner may opt a specific gate invocation into cloud mode by explicitly requesting cloud execution.
 3. Gate 3 design work is always local-only.
 4. Final verification and merge readiness decisions are always local.
+
+## Model Routing Policy
+
+1. Repository-standard role defaults are:
+
+| Role | Default model | Default use |
+|---|---|---|
+| `architect-orchestrator` | `gpt-5.4` | coordination, gate decisions, merge-readiness reasoning |
+| `requirement-challenger` | `claude-sonnet-4.6` | requirement challenge and ambiguity reduction |
+| `prd-agent` | `claude-sonnet-4.6` | PRD drafting and acceptance-criteria quality checks |
+| `design-qa-agent` | `claude-sonnet-4.6` | design coverage and UX/design critique |
+| `architecture-agent` | `gpt-5.4` | architecture planning and dependency/risk reasoning |
+| `dev` | `gpt-5.3-codex` | issue-scoped implementation and code editing |
+| `runtime-qa` | `gpt-5.4` | browser-verdict synthesis and runtime triage |
+
+2. For sync handoffs via `runSubagent`, orchestrator must pass an explicit `model` argument for Gate 1, Gate 2, Gate 3B, Gate 4, and Gate 5.5. Do not rely on platform default selection.
+3. For terminal-dispatched agents via `scripts/run-agent.ts` and parallel async runs via `scripts/mcp-dev-orchestrator.ts`, omit `--model` unless deliberately overriding; both scripts resolve the role default automatically from `scripts/agent-model-routing.ts`.
+4. Any override must be deliberate, called out in the handoff or dispatch note, and used only when the task clearly needs a non-default reasoning lane.
+5. Before a new role is used in live orchestration, add its default model to `scripts/agent-model-routing.ts` and document it in `.github/skills/async-agent-dispatch/SKILL.md` in the same change.
 
 ## Terminal Mutation Override Policy
 
