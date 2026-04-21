@@ -6,6 +6,20 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { PodiumBottomSheet } from '../../src/components/PodiumBottomSheet';
 import type { Side } from '../../src/data/debate';
 
+function mediaBlock(css: string, mediaQuery: string, occurrence = 1): string {
+    let startIndex = -1;
+    let searchFrom = 0;
+
+    for (let count = 0; count < occurrence; count += 1) {
+        startIndex = css.indexOf(mediaQuery, searchFrom);
+        expect(startIndex).toBeGreaterThan(-1);
+        searchFrom = startIndex + mediaQuery.length;
+    }
+
+    const nextMediaIndex = css.indexOf('@media', startIndex + mediaQuery.length);
+    return nextMediaIndex === -1 ? css.slice(startIndex) : css.slice(startIndex, nextMediaIndex);
+}
+
 const podiumBottomSheetCss = readFileSync(
     resolve(process.cwd(), 'src/styles/components/podium-bottom-sheet.css'),
     'utf-8'
@@ -194,23 +208,33 @@ describe('PodiumBottomSheet', () => {
     it('applies tablet and desktop podium sheet width and scrim breakpoint rules for the expanded podium composer', () => {
         // BDD traceability note: responsive podium sheet AC-25/26/29/30 are covered by
         // features/podium-responsive-layout.feature and its linked step definitions.
-        expect(podiumBottomSheetCss).toMatch(
-            /@media\s*\(min-width:\s*768px\)\s*\{[\s\S]*?\.podium-bottom-sheet\s*\{[\s\S]*?max-width:\s*600px;[\s\S]*?\}[\s\S]*?\}/
-        );
-        expect(podiumBottomSheetCss).toMatch(
-            /@media\s*\(min-width:\s*1024px\)\s*\{[\s\S]*?\.podium-bottom-sheet\s*\{[\s\S]*?max-width:\s*720px;[\s\S]*?\}[\s\S]*?\}/
-        );
-        expect(podiumBottomSheetCss).toMatch(
-            /@media\s*\(min-width:\s*768px\)\s*and\s*\(max-width:\s*1023px\)\s*\{[\s\S]*?\[data-theme="dark"\]\s+\.podium-sheet-scrim\s*\{[\s\S]*?background:\s*rgba\(0,\s*0,\s*0,\s*0\.48\);[\s\S]*?background:\s*rgb\(from\s+var\(--color-scrim\)\s+r\s+g\s+b\s*\/\s*0\.48\);[\s\S]*?\}[\s\S]*?\}/
-        );
-        expect(podiumBottomSheetCss).toMatch(
-            /@media\s*\(prefers-color-scheme:\s*dark\)\s*and\s*\(min-width:\s*768px\)\s*and\s*\(max-width:\s*1023px\)\s*\{[\s\S]*?:root:not\(\[data-theme\]\)\s+\.podium-sheet-scrim\s*\{[\s\S]*?background:\s*rgba\(0,\s*0,\s*0,\s*0\.48\);[\s\S]*?background:\s*rgb\(from\s+var\(--color-scrim\)\s+r\s+g\s+b\s*\/\s*0\.48\);[\s\S]*?\}[\s\S]*?\}/
-        );
-        expect(podiumBottomSheetCss).toMatch(
-            /\/\*\s*──\s*Scrim opacity:\s*desktop\s*\(light and dark theme\)\s*──\s*\*\/[\s\S]*?@media\s*\(min-width:\s*1024px\)\s*\{[\s\S]*?\.podium-sheet-scrim\s*\{[\s\S]*?background:\s*rgba\(0,\s*0,\s*0,\s*0\.36\);[\s\S]*?background:\s*rgb\(from\s+var\(--color-scrim\)\s+r\s+g\s+b\s*\/\s*0\.36\);[\s\S]*?\}[\s\S]*?\[data-theme="dark"\]\s+\.podium-sheet-scrim\s*\{[\s\S]*?background:\s*rgba\(0,\s*0,\s*0,\s*0\.52\);[\s\S]*?background:\s*rgb\(from\s+var\(--color-scrim\)\s+r\s+g\s+b\s*\/\s*0\.52\);[\s\S]*?\}[\s\S]*?\}/
-        );
-        expect(podiumBottomSheetCss).toMatch(
-            /@media\s*\(prefers-color-scheme:\s*dark\)\s*and\s*\(min-width:\s*1024px\)\s*\{[\s\S]*?:root:not\(\[data-theme\]\)\s+\.podium-sheet-scrim\s*\{[\s\S]*?background:\s*rgba\(0,\s*0,\s*0,\s*0\.52\);[\s\S]*?background:\s*rgb\(from\s+var\(--color-scrim\)\s+r\s+g\s+b\s*\/\s*0\.52\);[\s\S]*?\}[\s\S]*?\}/
-        );
+        const tabletWidthBlock = mediaBlock(podiumBottomSheetCss, '@media (min-width: 768px)');
+        const desktopWidthBlock = mediaBlock(podiumBottomSheetCss, '@media (min-width: 1024px)');
+        const tabletDarkScrimBlock = mediaBlock(podiumBottomSheetCss, '@media (min-width: 768px) and (max-width: 1023px)');
+        const tabletSystemDarkScrimBlock = mediaBlock(podiumBottomSheetCss, '@media (prefers-color-scheme: dark) and (min-width: 768px) and (max-width: 1023px)');
+        const desktopScrimBlock = mediaBlock(podiumBottomSheetCss, '@media (min-width: 1024px)', 2);
+        const desktopSystemDarkScrimBlock = mediaBlock(podiumBottomSheetCss, '@media (prefers-color-scheme: dark) and (min-width: 1024px)');
+
+        expect(tabletWidthBlock).toContain('max-width: 600px;');
+        expect(desktopWidthBlock).toContain('max-width: 720px;');
+
+        expect(tabletDarkScrimBlock).toContain('[data-theme="dark"] .podium-sheet-scrim');
+        expect(tabletDarkScrimBlock).toContain('rgba(0, 0, 0, 0.48)');
+        expect(tabletDarkScrimBlock).toContain('rgb(from var(--color-scrim) r g b / 0.48)');
+
+        expect(tabletSystemDarkScrimBlock).toContain(':root:not([data-theme]) .podium-sheet-scrim');
+        expect(tabletSystemDarkScrimBlock).toContain('rgba(0, 0, 0, 0.48)');
+        expect(tabletSystemDarkScrimBlock).toContain('rgb(from var(--color-scrim) r g b / 0.48)');
+
+        expect(desktopScrimBlock).toContain('.podium-sheet-scrim');
+        expect(desktopScrimBlock).toContain('rgba(0, 0, 0, 0.36)');
+        expect(desktopScrimBlock).toContain('rgb(from var(--color-scrim) r g b / 0.36)');
+        expect(desktopScrimBlock).toContain('[data-theme="dark"] .podium-sheet-scrim');
+        expect(desktopScrimBlock).toContain('rgba(0, 0, 0, 0.52)');
+        expect(desktopScrimBlock).toContain('rgb(from var(--color-scrim) r g b / 0.52)');
+
+        expect(desktopSystemDarkScrimBlock).toContain(':root:not([data-theme]) .podium-sheet-scrim');
+        expect(desktopSystemDarkScrimBlock).toContain('rgba(0, 0, 0, 0.52)');
+        expect(desktopSystemDarkScrimBlock).toContain('rgb(from var(--color-scrim) r g b / 0.52)');
     });
 });
