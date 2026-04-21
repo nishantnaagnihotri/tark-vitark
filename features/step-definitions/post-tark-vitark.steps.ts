@@ -18,20 +18,61 @@ import * as assert from 'assert';
 import { createElement } from 'react';
 import { DebateScreen } from '../../src/components/DebateScreen';
 import { Podium } from '../../src/components/Podium';
-import { DEBATE } from '../../src/data/debate';
+import { DEBATE, type Side } from '../../src/data/debate';
 
 function activeRender(world: PostTarkVitarkWorld): RenderResult {
   assert.ok(world.renderResult, 'Expected an active rendered view.');
   return world.renderResult;
 }
 
+function toSideLabel(side: Side): string {
+  return side === 'tark' ? 'Tark' : 'Vitark';
+}
+
+function ensureBottomSheetOpen(world: PostTarkVitarkWorld, side: Side = 'tark'): void {
+  const view = activeRender(world);
+
+  if (!view.queryByRole('dialog', { name: 'Post composer' })) {
+    fireEvent.click(view.getByRole('button', { name: 'Open post composer' }));
+    fireEvent.click(
+      view.getByRole('button', {
+        name: side === 'tark' ? 'Post as Tark' : 'Post as Vitark',
+      })
+    );
+    return;
+  }
+
+  const sideToggle = view.getByRole('radio', { name: toSideLabel(side) });
+  if (sideToggle.getAttribute('aria-checked') !== 'true') {
+    fireEvent.click(sideToggle);
+  }
+}
+
 function composerInput(world: PostTarkVitarkWorld): HTMLTextAreaElement {
+  const view = activeRender(world);
+  const existingComposerInput = view.queryByRole('textbox', {
+    name: 'Post text',
+  });
+  if (existingComposerInput) {
+    return existingComposerInput as HTMLTextAreaElement;
+  }
+
+  ensureBottomSheetOpen(world);
   return activeRender(world).getByRole('textbox', {
     name: 'Post text',
   }) as HTMLTextAreaElement;
 }
 
 function publishButton(world: PostTarkVitarkWorld): HTMLButtonElement {
+  const view = activeRender(world);
+  const existingPublishButton = view.queryByRole('button', {
+    name: 'Publish post',
+  });
+  if (existingPublishButton) {
+    return existingPublishButton as HTMLButtonElement;
+  }
+
+  ensureBottomSheetOpen(world);
   return activeRender(world).getByRole('button', {
     name: 'Publish post',
   }) as HTMLButtonElement;
@@ -93,31 +134,27 @@ Given('the debate screen is loaded', function (this: PostTarkVitarkWorld) {
 Then('the composer controls are visible', function (this: PostTarkVitarkWorld) {
   const view = activeRender(this);
 
-  assert.ok(view.getByRole('switch', { name: 'Post as Tark' }));
-  assert.ok(composerInput(this));
-  assert.ok(publishButton(this));
+  assert.ok(view.getByRole('button', { name: 'Open post composer' }));
   assert.equal(view.queryByRole('button', { name: /sign in|log in/i }), null);
   assert.equal(view.queryByLabelText(/image|media|upload/i), null);
 });
 
 Then('Tark is selected by default', function (this: PostTarkVitarkWorld) {
-  const view = activeRender(this);
+  ensureBottomSheetOpen(this, 'tark');
 
-  const chip = view.getByRole('switch', { name: 'Post as Tark' });
+  const chip = activeRender(this).getByRole('radio', { name: 'Tark' });
   assert.ok(chip);
   assert.equal(chip.getAttribute('aria-checked'), 'true');
 });
 
 When('the visitor selects the Vitark side', function (this: PostTarkVitarkWorld) {
-  fireEvent.click(activeRender(this).getByRole('switch', { name: 'Post as Tark' }));
+  ensureBottomSheetOpen(this, 'vitark');
 });
 
 Then('Vitark remains selected', function (this: PostTarkVitarkWorld) {
-  const view = activeRender(this);
-
-  const chip = view.getByRole('switch', { name: 'Post as Vitark' });
+  const chip = activeRender(this).getByRole('radio', { name: 'Vitark' });
   assert.ok(chip);
-  assert.equal(chip.getAttribute('aria-checked'), 'false');
+  assert.equal(chip.getAttribute('aria-checked'), 'true');
 });
 
 When('the visitor enters whitespace-only post text', function (this: PostTarkVitarkWorld) {

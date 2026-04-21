@@ -46,6 +46,20 @@ defineGlobalValue(
 );
 defineGlobalValue('IS_REACT_ACT_ENVIRONMENT', true);
 
+if (!win.requestAnimationFrame) {
+  Object.defineProperty(win, 'requestAnimationFrame', {
+    writable: true,
+    value: globalThis.requestAnimationFrame,
+  });
+}
+
+if (!win.cancelAnimationFrame) {
+  Object.defineProperty(win, 'cancelAnimationFrame', {
+    writable: true,
+    value: globalThis.cancelAnimationFrame,
+  });
+}
+
 if (!win.matchMedia) {
   Object.defineProperty(win, 'matchMedia', {
     writable: true,
