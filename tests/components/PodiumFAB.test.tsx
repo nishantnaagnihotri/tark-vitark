@@ -210,6 +210,9 @@ describe('PodiumFAB', () => {
         const desktopMediaMatch = /@media\s*\(min-width:\s*1024px\)/.exec(podiumFabCss);
         const tabletBreakpointIndex = tabletMediaMatch?.index ?? -1;
         const desktopBreakpointIndex = desktopMediaMatch?.index ?? -1;
+
+        expect(tabletBreakpointIndex).toBeGreaterThan(-1);
+        expect(desktopBreakpointIndex).toBeGreaterThan(tabletBreakpointIndex);
         const tabletBlock = podiumFabCss.slice(tabletBreakpointIndex, desktopBreakpointIndex);
         const desktopBlock = podiumFabCss.slice(desktopBreakpointIndex);
         const tabletRule = tabletBlock.match(
@@ -220,9 +223,6 @@ describe('PodiumFAB', () => {
         );
         const tabletDeclarations = tabletRule?.[2] ?? '';
         const desktopDeclarations = desktopRule?.[2] ?? '';
-
-        expect(tabletBreakpointIndex).toBeGreaterThan(-1);
-        expect(desktopBreakpointIndex).toBeGreaterThan(tabletBreakpointIndex);
         expect(tabletRule).not.toBeNull();
         expect(desktopRule).not.toBeNull();
         expect(tabletDeclarations).toMatch(
