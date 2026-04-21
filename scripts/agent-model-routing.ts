@@ -8,8 +8,6 @@ export const ROLE_DEFAULT_MODELS = {
     "architecture-agent": "gpt-5.4",
     dev: "gpt-5.3-codex",
     "runtime-qa": "gpt-5.4",
-    "ux-agent": "claude-sonnet-4.6",
-    "figma-agent": "gpt-5.4",
 } as const satisfies Record<string, string>;
 
 export function defaultModelForRole(role: string): string {

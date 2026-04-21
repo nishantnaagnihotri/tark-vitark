@@ -246,18 +246,40 @@ function persistRuns(): void {
     }
 }
 
+function hydratePersistedResults(results: Array<PersistedTaskResult & { model?: string }>): {
+    results: TaskResult[];
+    changed: boolean;
+} {
+    let changed = false;
+    const hydratedResults = results.map((result) => {
+        if (typeof result.model === "string" && result.model.length > 0) {
+            return result as TaskResult;
+        }
+
+        changed = true;
+        return {
+            ...result,
+            model: defaultModelForRole(result.role),
+        } as TaskResult;
+    });
+
+    return { results: hydratedResults, changed };
+}
+
 function loadPersistedRuns(): void {
     try {
         if (!existsSync(RUNS_FILE)) return;
         let mutated = false;
         const raw = JSON.parse(readFileSync(RUNS_FILE, "utf-8")) as Record<string, PersistedRun>;
         for (const [id, persisted] of Object.entries(raw)) {
+            const { results, changed } = hydratePersistedResults(persisted.results);
             // Hydrate the lossy persisted shape back to a full Run before mutating.
             const run: Run = {
                 ...persisted,
                 _tasks: [],
-                results: persisted.results as TaskResult[],
+                results,
             };
+            if (changed) mutated = true;
             // Mark any run that was "running" at crash time as failed
             if (run.status === "running") {
                 run.status = "failed";
@@ -614,12 +636,13 @@ server.tool(
                 const raw = JSON.parse(readFileSync(RUNS_FILE, "utf-8")) as Record<string, PersistedRun>;
                 const diskRun = raw[runId];
                 if (diskRun) {
+                    const { results } = hydratePersistedResults(diskRun.results);
                     // Hydrate the lossy persisted shape back to Run: restore _tasks from
                     // memory (disk never has it) and keep results typed correctly.
                     const hydratedDisk: Run = {
                         ...diskRun,
                         _tasks: runs.get(runId)?._tasks ?? [],
-                        results: diskRun.results as TaskResult[],
+                        results,
                     };
                     runs.set(runId, mergeRunState(runs.get(runId), hydratedDisk));
                 }
