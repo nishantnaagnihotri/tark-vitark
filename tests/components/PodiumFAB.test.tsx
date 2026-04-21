@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { PodiumFAB } from '../../src/components/PodiumFAB';
+import { mediaBlock } from '../lib/css-test-utils';
 
 const podiumFabCss = readFileSync(
     resolve(process.cwd(), 'src/styles/components/podium-fab.css'),
@@ -206,15 +207,8 @@ describe('PodiumFAB', () => {
     });
 
     it('maps AC-25 AC-26 AC-29 and AC-30 to tokenized tablet and desktop FAB margins', () => {
-        const tabletMediaMatch = /@media\s*\(min-width:\s*768px\)/.exec(podiumFabCss);
-        const desktopMediaMatch = /@media\s*\(min-width:\s*1024px\)/.exec(podiumFabCss);
-        const tabletBreakpointIndex = tabletMediaMatch?.index ?? -1;
-        const desktopBreakpointIndex = desktopMediaMatch?.index ?? -1;
-
-        expect(tabletBreakpointIndex).toBeGreaterThan(-1);
-        expect(desktopBreakpointIndex).toBeGreaterThan(tabletBreakpointIndex);
-        const tabletBlock = podiumFabCss.slice(tabletBreakpointIndex, desktopBreakpointIndex);
-        const desktopBlock = podiumFabCss.slice(desktopBreakpointIndex);
+        const tabletBlock = mediaBlock(podiumFabCss, '@media (min-width: 768px)');
+        const desktopBlock = mediaBlock(podiumFabCss, '@media (min-width: 1024px)');
         const tabletRule = tabletBlock.match(
             /button\.podium-fab,\s*div\.podium-fab\[role=(['"])group\1\]\s*\{([^}]*)\}/
         );
