@@ -206,26 +206,20 @@ describe('PodiumFAB', () => {
     });
 
     it('maps AC-25 AC-26 AC-29 and AC-30 to tokenized tablet and desktop FAB margins', () => {
-        const tabletBreakpointIndex = podiumFabCss.indexOf('@media (min-width: 768px)');
-        const desktopBreakpointIndex = podiumFabCss.indexOf('@media (min-width: 1024px)');
+        const tabletMediaMatch = /@media\s*\(min-width:\s*768px\)/.exec(podiumFabCss);
+        const desktopMediaMatch = /@media\s*\(min-width:\s*1024px\)/.exec(podiumFabCss);
+        const tabletBreakpointIndex = tabletMediaMatch?.index ?? -1;
+        const desktopBreakpointIndex = desktopMediaMatch?.index ?? -1;
         const tabletBlock = podiumFabCss.slice(tabletBreakpointIndex, desktopBreakpointIndex);
         const desktopBlock = podiumFabCss.slice(desktopBreakpointIndex);
 
         expect(tabletBreakpointIndex).toBeGreaterThan(-1);
         expect(desktopBreakpointIndex).toBeGreaterThan(tabletBreakpointIndex);
-        expect(tabletBlock).toMatch(/button\.podium-fab,\s*div\.podium-fab\[role="group"\]/);
         expect(tabletBlock).toMatch(
-            /right:\s*max\(var\(--space-8\),\s*env\(safe-area-inset-right,\s*0px\)\);/
-        );
-        expect(tabletBlock).toMatch(
-            /bottom:\s*max\(var\(--space-8\),\s*env\(safe-area-inset-bottom,\s*0px\)\);/
-        );
-        expect(desktopBlock).toMatch(/button\.podium-fab,\s*div\.podium-fab\[role="group"\]/);
-        expect(desktopBlock).toMatch(
-            /right:\s*max\(var\(--space-12\),\s*env\(safe-area-inset-right,\s*0px\)\);/
+            /button\.podium-fab,\s*div\.podium-fab\[role="group"\]\s*\{[\s\S]*right:\s*max\(var\(--space-8\),\s*env\(safe-area-inset-right,\s*0px\)\);[\s\S]*bottom:\s*max\(var\(--space-8\),\s*env\(safe-area-inset-bottom,\s*0px\)\);[\s\S]*\}/
         );
         expect(desktopBlock).toMatch(
-            /bottom:\s*max\(var\(--space-12\),\s*env\(safe-area-inset-bottom,\s*0px\)\);/
+            /button\.podium-fab,\s*div\.podium-fab\[role="group"\]\s*\{[\s\S]*right:\s*max\(var\(--space-12\),\s*env\(safe-area-inset-right,\s*0px\)\);[\s\S]*bottom:\s*max\(var\(--space-12\),\s*env\(safe-area-inset-bottom,\s*0px\)\);[\s\S]*\}/
         );
     });
 });
