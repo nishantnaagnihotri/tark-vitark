@@ -30,12 +30,42 @@ function mediaBlock(css: string, mediaQuery: string, occurrence = 1): string {
 
   for (let count = 0; count < occurrence; count += 1) {
     startIndex = css.indexOf(mediaQuery, searchFrom);
-    assert.ok(startIndex >= 0, `Expected media query "${mediaQuery}" occurrence ${occurrence} to be present.`);
+    assert.ok(
+      startIndex >= 0,
+      `Expected media query "${mediaQuery}" occurrence ${count + 1} to be present; found ${count} occurrence${count === 1 ? '' : 's'}.`
+    );
     searchFrom = startIndex + mediaQuery.length;
   }
 
   const nextMediaIndex = css.indexOf('@media', startIndex + mediaQuery.length);
   return nextMediaIndex === -1 ? css.slice(startIndex) : css.slice(startIndex, nextMediaIndex);
+}
+
+function tabletFabBlock(world: PodiumResponsiveLayoutWorld): string {
+  return mediaBlock(activeStyles(world).podiumFabCss, '@media (min-width: 768px)');
+}
+
+function desktopFabBlock(world: PodiumResponsiveLayoutWorld): string {
+  return mediaBlock(activeStyles(world).podiumFabCss, '@media (min-width: 1024px)');
+}
+
+function tabletSheetWidthBlock(world: PodiumResponsiveLayoutWorld): string {
+  return mediaBlock(activeStyles(world).podiumBottomSheetCss, '@media (min-width: 768px)', 1);
+}
+
+function desktopSheetWidthBlock(world: PodiumResponsiveLayoutWorld): string {
+  return mediaBlock(activeStyles(world).podiumBottomSheetCss, '@media (min-width: 1024px)', 1);
+}
+
+function tabletDarkScrimBlock(world: PodiumResponsiveLayoutWorld): string {
+  return mediaBlock(
+    activeStyles(world).podiumBottomSheetCss,
+    '@media (min-width: 768px) and (max-width: 1023px)'
+  );
+}
+
+function desktopScrimBlock(world: PodiumResponsiveLayoutWorld): string {
+  return mediaBlock(activeStyles(world).podiumBottomSheetCss, '@media (min-width: 1024px)', 2);
 }
 
 Before(function (this: PodiumResponsiveLayoutWorld) {
@@ -75,133 +105,209 @@ Given('the podium responsive stylesheet sources are loaded', function (this: Pod
   };
 });
 
-Then('AC-25 tablet-tier podium layout values are present', function (this: PodiumResponsiveLayoutWorld) {
-  const { podiumFabCss, podiumBottomSheetCss } = activeStyles(this);
+Then(
+  'AC-25 tablet-tier podium FAB spacing values are present',
+  function (this: PodiumResponsiveLayoutWorld) {
+    const tabletFabStyles = tabletFabBlock(this);
+    assert.match(
+      tabletFabStyles,
+      /right:\s*(?:max\([^;]*var\(--space-8\)[^;]*\)|var\(--space-8\))\s*;/
+    );
+    assert.match(
+      tabletFabStyles,
+      /bottom:\s*(?:max\([^;]*var\(--space-8\)[^;]*\)|var\(--space-8\))\s*;/
+    );
+  }
+);
 
-  const tabletFabBlock = mediaBlock(podiumFabCss, '@media (min-width: 768px)');
-  const tabletSheetBlock = mediaBlock(podiumBottomSheetCss, '@media (min-width: 768px)');
-  const tabletDarkScrimBlock = mediaBlock(
-    podiumBottomSheetCss,
-    '@media (min-width: 768px) and (max-width: 1023px)'
-  );
+Then(
+  'AC-25 tablet-tier podium sheet width value is present',
+  function (this: PodiumResponsiveLayoutWorld) {
+    assert.ok(tabletSheetWidthBlock(this).includes('max-width: 600px;'));
+  }
+);
 
-  assert.match(
-    tabletFabBlock,
-    /right:\s*(?:max\([^;]*var\(--space-8\)[^;]*\)|var\(--space-8\))\s*;/
-  );
-  assert.match(
-    tabletFabBlock,
-    /bottom:\s*(?:max\([^;]*var\(--space-8\)[^;]*\)|var\(--space-8\))\s*;/
-  );
-  assert.ok(tabletSheetBlock.includes('max-width: 600px;'));
-  assert.ok(tabletDarkScrimBlock.includes('[data-theme="dark"] .podium-sheet-scrim'));
-  assert.ok(tabletDarkScrimBlock.includes('rgba(0, 0, 0, 0.48)'));
-});
+Then(
+  'AC-25 tablet-tier podium dark scrim values are present',
+  function (this: PodiumResponsiveLayoutWorld) {
+    const tabletDarkScrimStyles = tabletDarkScrimBlock(this);
+    assert.ok(tabletDarkScrimStyles.includes('[data-theme="dark"] .podium-sheet-scrim'));
+    assert.ok(tabletDarkScrimStyles.includes('rgba(0, 0, 0, 0.48)'));
+  }
+);
 
-Then('AC-26 desktop-tier podium layout values are present', function (this: PodiumResponsiveLayoutWorld) {
-  const { podiumFabCss, podiumBottomSheetCss } = activeStyles(this);
+Then(
+  'AC-26 desktop-tier podium FAB spacing values are present',
+  function (this: PodiumResponsiveLayoutWorld) {
+    const desktopFabStyles = desktopFabBlock(this);
+    assert.match(
+      desktopFabStyles,
+      /right:\s*(?:max\([^;]*var\(--space-12\)[^;]*\)|var\(--space-12\))\s*;/
+    );
+    assert.match(
+      desktopFabStyles,
+      /bottom:\s*(?:max\([^;]*var\(--space-12\)[^;]*\)|var\(--space-12\))\s*;/
+    );
+  }
+);
 
-  const desktopFabBlock = mediaBlock(podiumFabCss, '@media (min-width: 1024px)');
-  const desktopSheetWidthBlock = mediaBlock(
-    podiumBottomSheetCss,
-    '@media (min-width: 1024px)',
-    1
-  );
-  const desktopScrimBlock = mediaBlock(
-    podiumBottomSheetCss,
-    '@media (min-width: 1024px)',
-    2
-  );
+Then(
+  'AC-26 desktop-tier podium sheet width value is present',
+  function (this: PodiumResponsiveLayoutWorld) {
+    assert.ok(desktopSheetWidthBlock(this).includes('max-width: 720px;'));
+  }
+);
 
-  assert.match(
-    desktopFabBlock,
-    /right:\s*(?:max\([^;]*var\(--space-12\)[^;]*\)|var\(--space-12\))\s*;/
-  );
-  assert.match(
-    desktopFabBlock,
-    /bottom:\s*(?:max\([^;]*var\(--space-12\)[^;]*\)|var\(--space-12\))\s*;/
-  );
-  assert.ok(desktopSheetWidthBlock.includes('max-width: 720px;'));
-  assert.ok(desktopScrimBlock.includes('.podium-sheet-scrim'));
-  assert.ok(desktopScrimBlock.includes('[data-theme="dark"] .podium-sheet-scrim'));
-  assert.ok(desktopScrimBlock.includes('rgba(0, 0, 0, 0.36)'));
-  assert.ok(desktopScrimBlock.includes('rgba(0, 0, 0, 0.52)'));
-});
+Then(
+  'AC-26 desktop-tier podium scrim values are present',
+  function (this: PodiumResponsiveLayoutWorld) {
+    const desktopScrimStyles = desktopScrimBlock(this);
+    assert.ok(desktopScrimStyles.includes('.podium-sheet-scrim'));
+    assert.ok(desktopScrimStyles.includes('[data-theme="dark"] .podium-sheet-scrim'));
+    assert.ok(desktopScrimStyles.includes('rgba(0, 0, 0, 0.36)'));
+    assert.ok(desktopScrimStyles.includes('rgba(0, 0, 0, 0.52)'));
+  }
+);
 
-Then('AC-27 mobile-tier podium baseline values remain unchanged', function (this: PodiumResponsiveLayoutWorld) {
-  const { podiumFabCss, podiumBottomSheetCss } = activeStyles(this);
+Then(
+  'AC-27 mobile-tier podium FAB baseline spacing remains unchanged',
+  function (this: PodiumResponsiveLayoutWorld) {
+    const { podiumFabCss } = activeStyles(this);
+    assert.ok(podiumFabCss.includes('right: var(--space-4);'));
+    assert.ok(podiumFabCss.includes('bottom: var(--space-4);'));
+  }
+);
 
-  assert.ok(podiumFabCss.includes('right: var(--space-4);'));
-  assert.ok(podiumFabCss.includes('bottom: var(--space-4);'));
-  assert.ok(podiumBottomSheetCss.includes('max-width: 390px;'));
-  assert.ok(podiumBottomSheetCss.includes('background: var(--color-scrim);'));
-});
+Then(
+  'AC-27 mobile-tier podium sheet width baseline remains unchanged',
+  function (this: PodiumResponsiveLayoutWorld) {
+    assert.ok(activeStyles(this).podiumBottomSheetCss.includes('max-width: 390px;'));
+  }
+);
 
-Then('AC-28 the 481px comments are reclassified as mobile-internal', function (this: PodiumResponsiveLayoutWorld) {
-  const { argumentCardCss, debateScreenCss, legendBarCss, timelineCss } = activeStyles(this);
+Then(
+  'AC-27 mobile-tier podium scrim baseline remains unchanged',
+  function (this: PodiumResponsiveLayoutWorld) {
+    assert.ok(activeStyles(this).podiumBottomSheetCss.includes('background: var(--color-scrim);'));
+  }
+);
 
-  assert.ok(
-    timelineCss.includes('mobile-internal layout adjustment (≥481px) — not a design tier')
-  );
-  assert.equal(timelineCss.includes('Tablet (\u2265481px)'), false);
+Then(
+  'AC-28 the timeline 481px comment is reclassified as mobile-internal',
+  function (this: PodiumResponsiveLayoutWorld) {
+    assert.ok(
+      activeStyles(this).timelineCss.includes(
+        'mobile-internal layout adjustment (≥481px) — not a design tier'
+      )
+    );
+  }
+);
 
-  assert.ok(debateScreenCss.includes('mobile-internal (≥481px) — not a design tier'));
-  assert.equal(debateScreenCss.includes('/* ── Tablet ── */'), false);
+Then(
+  'AC-28 the timeline 481px comment no longer uses tablet wording',
+  function (this: PodiumResponsiveLayoutWorld) {
+    assert.equal(activeStyles(this).timelineCss.includes('Tablet (\u2265481px)'), false);
+  }
+);
 
-  assert.ok(legendBarCss.includes('mobile-internal (≥481px) — not a design tier'));
-  assert.equal(legendBarCss.includes('Tablet and above'), false);
+Then(
+  'AC-28 the debate screen 481px comment is reclassified as mobile-internal',
+  function (this: PodiumResponsiveLayoutWorld) {
+    assert.ok(
+      activeStyles(this).debateScreenCss.includes('mobile-internal (≥481px) — not a design tier')
+    );
+  }
+);
 
-  assert.ok(argumentCardCss.includes('mobile-internal (≥481px) — not a design tier'));
-});
+Then(
+  'AC-28 the debate screen 481px comment no longer uses the tablet divider',
+  function (this: PodiumResponsiveLayoutWorld) {
+    assert.equal(activeStyles(this).debateScreenCss.includes('/* ── Tablet ── */'), false);
+  }
+);
 
-Then('AC-29 Figma tablet values are wired in responsive CSS', function (this: PodiumResponsiveLayoutWorld) {
-  const { podiumFabCss, podiumBottomSheetCss } = activeStyles(this);
+Then(
+  'AC-28 the legend bar 481px comment is reclassified as mobile-internal',
+  function (this: PodiumResponsiveLayoutWorld) {
+    assert.ok(
+      activeStyles(this).legendBarCss.includes('mobile-internal (≥481px) — not a design tier')
+    );
+  }
+);
 
-  const tabletFabBlock = mediaBlock(podiumFabCss, '@media (min-width: 768px)');
-  const tabletSheetBlock = mediaBlock(podiumBottomSheetCss, '@media (min-width: 768px)');
-  const tabletDarkScrimBlock = mediaBlock(
-    podiumBottomSheetCss,
-    '@media (min-width: 768px) and (max-width: 1023px)'
-  );
+Then(
+  'AC-28 the legend bar 481px comment no longer says tablet and above',
+  function (this: PodiumResponsiveLayoutWorld) {
+    assert.equal(activeStyles(this).legendBarCss.includes('Tablet and above'), false);
+  }
+);
 
-  assert.match(
-    tabletFabBlock,
-    /right:\s*(?:max\([^;]*var\(--space-8\)[^;]*\)|var\(--space-8\))\s*;/
-  );
-  assert.match(
-    tabletFabBlock,
-    /bottom:\s*(?:max\([^;]*var\(--space-8\)[^;]*\)|var\(--space-8\))\s*;/
-  );
-  assert.ok(tabletSheetBlock.includes('max-width: 600px;'));
-  assert.ok(tabletDarkScrimBlock.includes('rgba(0, 0, 0, 0.48)'));
-});
+Then(
+  'AC-28 the argument card 481px comment is reclassified as mobile-internal',
+  function (this: PodiumResponsiveLayoutWorld) {
+    assert.ok(
+      activeStyles(this).argumentCardCss.includes('mobile-internal (≥481px) — not a design tier')
+    );
+  }
+);
 
-Then('AC-30 Figma desktop values are wired in responsive CSS', function (this: PodiumResponsiveLayoutWorld) {
-  const { podiumFabCss, podiumBottomSheetCss } = activeStyles(this);
+Then(
+  'AC-29 Figma tablet FAB values are wired in responsive CSS',
+  function (this: PodiumResponsiveLayoutWorld) {
+    const tabletFabStyles = tabletFabBlock(this);
+    assert.match(
+      tabletFabStyles,
+      /right:\s*(?:max\([^;]*var\(--space-8\)[^;]*\)|var\(--space-8\))\s*;/
+    );
+    assert.match(
+      tabletFabStyles,
+      /bottom:\s*(?:max\([^;]*var\(--space-8\)[^;]*\)|var\(--space-8\))\s*;/
+    );
+  }
+);
 
-  const desktopFabBlock = mediaBlock(podiumFabCss, '@media (min-width: 1024px)');
-  const desktopSheetWidthBlock = mediaBlock(
-    podiumBottomSheetCss,
-    '@media (min-width: 1024px)',
-    1
-  );
-  const desktopScrimBlock = mediaBlock(
-    podiumBottomSheetCss,
-    '@media (min-width: 1024px)',
-    2
-  );
+Then(
+  'AC-29 Figma tablet sheet width value is wired in responsive CSS',
+  function (this: PodiumResponsiveLayoutWorld) {
+    assert.ok(tabletSheetWidthBlock(this).includes('max-width: 600px;'));
+  }
+);
 
-  assert.match(
-    desktopFabBlock,
-    /right:\s*(?:max\([^;]*var\(--space-12\)[^;]*\)|var\(--space-12\))\s*;/
-  );
-  assert.match(
-    desktopFabBlock,
-    /bottom:\s*(?:max\([^;]*var\(--space-12\)[^;]*\)|var\(--space-12\))\s*;/
-  );
-  assert.ok(desktopSheetWidthBlock.includes('max-width: 720px;'));
-  assert.ok(desktopScrimBlock.includes('.podium-sheet-scrim'));
-  assert.ok(desktopScrimBlock.includes('[data-theme="dark"] .podium-sheet-scrim'));
-  assert.ok(desktopScrimBlock.includes('rgba(0, 0, 0, 0.36)'));
-  assert.ok(desktopScrimBlock.includes('rgba(0, 0, 0, 0.52)'));
-});
+Then(
+  'AC-29 Figma tablet dark scrim value is wired in responsive CSS',
+  function (this: PodiumResponsiveLayoutWorld) {
+    const tabletDarkScrimStyles = tabletDarkScrimBlock(this);
+    assert.ok(tabletDarkScrimStyles.includes('rgba(0, 0, 0, 0.48)'));
+  }
+);
+
+Then(
+  'AC-30 Figma desktop FAB values are wired in responsive CSS',
+  function (this: PodiumResponsiveLayoutWorld) {
+    const desktopFabStyles = desktopFabBlock(this);
+    assert.match(
+      desktopFabStyles,
+      /right:\s*(?:max\([^;]*var\(--space-12\)[^;]*\)|var\(--space-12\))\s*;/
+    );
+    assert.match(
+      desktopFabStyles,
+      /bottom:\s*(?:max\([^;]*var\(--space-12\)[^;]*\)|var\(--space-12\))\s*;/
+    );
+  }
+);
+
+Then(
+  'AC-30 Figma desktop sheet width value is wired in responsive CSS',
+  function (this: PodiumResponsiveLayoutWorld) {
+    assert.ok(desktopSheetWidthBlock(this).includes('max-width: 720px;'));
+  }
+);
+
+Then(
+  'AC-30 Figma desktop scrim values are wired in responsive CSS',
+  function (this: PodiumResponsiveLayoutWorld) {
+    const desktopScrimStyles = desktopScrimBlock(this);
+    assert.ok(desktopScrimStyles.includes('rgba(0, 0, 0, 0.36)'));
+    assert.ok(desktopScrimStyles.includes('rgba(0, 0, 0, 0.52)'));
+  }
+);
