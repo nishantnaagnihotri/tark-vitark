@@ -29,13 +29,22 @@ function toSideLabel(side: Side): string {
   return side === 'tark' ? 'Tark' : 'Vitark';
 }
 
-function ensureBottomSheetOpen(world: PostTarkVitarkWorld, side: Side = 'tark'): void {
+function expandComposerOptions(world: PostTarkVitarkWorld): void {
+  const view = activeRender(world);
+  if (view.queryByRole('button', { name: 'Post as Tark' })) {
+    return;
+  }
+
+  fireEvent.click(view.getByRole('button', { name: 'Open post composer' }));
+}
+
+function openBottomSheetForSide(world: PostTarkVitarkWorld, side: Side = 'tark'): void {
   const view = activeRender(world);
 
   if (!view.queryByRole('dialog', { name: 'Post composer' })) {
-    fireEvent.click(view.getByRole('button', { name: 'Open post composer' }));
+    expandComposerOptions(world);
     fireEvent.click(
-      view.getByRole('button', {
+      activeRender(world).getByRole('button', {
         name: side === 'tark' ? 'Post as Tark' : 'Post as Vitark',
       })
     );
@@ -57,7 +66,7 @@ function composerInput(world: PostTarkVitarkWorld): HTMLTextAreaElement {
     return existingComposerInput as HTMLTextAreaElement;
   }
 
-  ensureBottomSheetOpen(world);
+  openBottomSheetForSide(world);
   return activeRender(world).getByRole('textbox', {
     name: 'Post text',
   }) as HTMLTextAreaElement;
@@ -72,7 +81,7 @@ function publishButton(world: PostTarkVitarkWorld): HTMLButtonElement {
     return existingPublishButton as HTMLButtonElement;
   }
 
-  ensureBottomSheetOpen(world);
+  openBottomSheetForSide(world);
   return activeRender(world).getByRole('button', {
     name: 'Publish post',
   }) as HTMLButtonElement;
@@ -139,16 +148,17 @@ Then('the composer controls are visible', function (this: PostTarkVitarkWorld) {
   assert.equal(view.queryByLabelText(/image|media|upload/i), null);
 });
 
-Then('Tark is selected by default', function (this: PostTarkVitarkWorld) {
-  ensureBottomSheetOpen(this, 'tark');
+Then('Tark is selected by default', async function (this: PostTarkVitarkWorld) {
+  expandComposerOptions(this);
 
-  const chip = activeRender(this).getByRole('radio', { name: 'Tark' });
-  assert.ok(chip);
-  assert.equal(chip.getAttribute('aria-checked'), 'true');
+  await waitFor(() => {
+    const tarkOption = activeRender(this).getByRole('button', { name: 'Post as Tark' });
+    assert.equal(document.activeElement, tarkOption);
+  });
 });
 
 When('the visitor selects the Vitark side', function (this: PostTarkVitarkWorld) {
-  ensureBottomSheetOpen(this, 'vitark');
+  openBottomSheetForSide(this, 'vitark');
 });
 
 Then('Vitark remains selected', function (this: PostTarkVitarkWorld) {
