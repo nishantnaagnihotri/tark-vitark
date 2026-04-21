@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Agentic Workflow — tark-vitark</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #0d1117;
+    color: #e6edf3;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+  }
+  .card {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 18px;
+    padding: 56px 72px;
+    width: 1400px;
+    max-width: 100%;
+  }
+  .label {
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #8b949e;
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #e6edf3;
+    margin-bottom: 32px;
+  }
+  h1 span { color: #58a6ff; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Agentic <span>Workflow</span></h1>
+
+  <svg viewBox="0 0 1080 400" width="100%" style="display:block">
+    <defs>
+      <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 Z" fill="#4a90d9"/>
+      </marker>
+      <marker id="ahg" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 Z" fill="#555e6a"/>
+      </marker>
+      <marker id="ahp" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 Z" fill="#c97dd4"/>
+      </marker>
+    </defs>
+
+    <!-- ═══════════════════════════════════════════════
+         ROW 1  (y = 30..90)
+         PO → G1 → G2 → G3 → G4
+    ════════════════════════════════════════════════ -->
+
+    <!-- PO (start) -->
+    <rect x="14"  y="36" width="136" height="68" rx="10" fill="#3d1a3d" stroke="#c97dd4" stroke-width="2"/>
+    <text x="82"  y="66" text-anchor="middle" font-size="16" font-weight="700" fill="#fae8fd">👤 Product</text>
+    <text x="82"  y="86" text-anchor="middle" font-size="14" fill="#e0a8e8">Owner</text>
+
+    <!-- Gate 1 -->
+    <rect x="186" y="36" width="136" height="68" rx="10" fill="#1b2d46" stroke="#4a90d9" stroke-width="2"/>
+    <text x="254" y="67" text-anchor="middle" font-size="13" fill="#93c5fd">Requirement</text>
+    <text x="254" y="83" text-anchor="middle" font-size="11" fill="#5a8abd">Challenger</text>
+
+    <!-- Gate 2 -->
+    <rect x="358" y="36" width="136" height="68" rx="10" fill="#1b2d46" stroke="#4a90d9" stroke-width="2"/>
+    <text x="426" y="67" text-anchor="middle" font-size="13" fill="#93c5fd">PRD</text>
+    <text x="426" y="83" text-anchor="middle" font-size="11" fill="#5a8abd">PRD Agent</text>
+
+    <!-- Gate 3 -->
+    <rect x="530" y="36" width="136" height="68" rx="10" fill="#1b2d46" stroke="#4a90d9" stroke-width="2"/>
+    <text x="598" y="67" text-anchor="middle" font-size="13" fill="#93c5fd">Design</text>
+    <text x="598" y="83" text-anchor="middle" font-size="11" fill="#5a8abd">UX Agent</text>
+
+    <!-- Gate 4 -->
+    <rect x="702" y="36" width="136" height="68" rx="10" fill="#1b2d46" stroke="#4a90d9" stroke-width="2"/>
+    <text x="770" y="67" text-anchor="middle" font-size="13" fill="#93c5fd">Architecture</text>
+    <text x="770" y="83" text-anchor="middle" font-size="11" fill="#5a8abd">Arch Agent</text>
+
+    <!-- Row 1 horizontal arrows -->
+    <line x1="150" y1="70" x2="184" y2="70" stroke="#4a90d9" stroke-width="2" marker-end="url(#ah)"/>
+    <line x1="322" y1="70" x2="356" y2="70" stroke="#4a90d9" stroke-width="2" marker-end="url(#ah)"/>
+    <line x1="494" y1="70" x2="528" y2="70" stroke="#4a90d9" stroke-width="2" marker-end="url(#ah)"/>
+    <line x1="666" y1="70" x2="700" y2="70" stroke="#4a90d9" stroke-width="2" marker-end="url(#ah)"/>
+
+    <!-- ═══════════════════════════════════════════════
+         ORCHESTRATOR SWIM LANE  (between rows)
+    ════════════════════════════════════════════════ -->
+
+    <!-- dashed ticks from row 1 gate bottoms (y=104) down to bar (y=162) -->
+    <line x1="254" y1="104" x2="254" y2="162" stroke="#d4a017" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.6"/>
+    <line x1="426" y1="104" x2="426" y2="162" stroke="#d4a017" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.6"/>
+    <line x1="598" y1="104" x2="598" y2="162" stroke="#d4a017" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.6"/>
+    <line x1="770" y1="104" x2="770" y2="162" stroke="#d4a017" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.6"/>
+
+    <!-- orchestrator bar -->
+    <rect x="186" y="162" width="824" height="24" rx="6" fill="#2a1e00" stroke="#d4a017" stroke-width="1.5"/>
+    <text x="598" y="179" text-anchor="middle" font-size="11" font-weight="600" fill="#d4a017" letter-spacing=".06em">🎯 Orchestrator — supervises every gate</text>
+
+    <!-- dashed ticks from bar bottom (y=186) down to row 2 gate tops (y=270) -->
+    <line x1="942" y1="186" x2="942" y2="270" stroke="#d4a017" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.6"/>
+    <line x1="770" y1="186" x2="770" y2="270" stroke="#d4a017" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.6"/>
+    <line x1="598" y1="186" x2="598" y2="270" stroke="#d4a017" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.6"/>
+    <line x1="426" y1="186" x2="426" y2="270" stroke="#d4a017" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.6"/>
+
+    <!-- ═══════════════════════════════════════════════
+         VERTICAL CONNECTOR  G4 → G5  (clean U right side)
+    ════════════════════════════════════════════════ -->
+    <path d="M 838,70 L 1068,70 L 1068,288 L 1010,288" stroke="#4a90d9" stroke-width="2" fill="none" marker-end="url(#ah)"/>
+
+    <!-- ═══════════════════════════════════════════════
+         ROW 2  (y = 270..338)  right → left
+         G5 → Code Review → G5.5 → G6 → PO Merge → Done
+    ════════════════════════════════════════════════ -->
+
+    <!-- Gate 5 -->
+    <rect x="874" y="270" width="136" height="68" rx="10" fill="#1b2d46" stroke="#4a90d9" stroke-width="2"/>
+    <text x="942" y="301" text-anchor="middle" font-size="13" fill="#93c5fd">Build</text>
+    <text x="942" y="317" text-anchor="middle" font-size="11" fill="#5a8abd">Dev Agent</text>
+
+    <!-- Code Reviewer -->
+    <rect x="702" y="270" width="136" height="68" rx="10" fill="#1b2d46" stroke="#4a90d9" stroke-width="2"/>
+    <text x="770" y="301" text-anchor="middle" font-size="13" fill="#93c5fd">Code Review</text>
+    <text x="770" y="317" text-anchor="middle" font-size="11" fill="#5a8abd">Code Reviewer</text>
+
+    <!-- Gate 5.5 -->
+    <rect x="530" y="270" width="136" height="68" rx="10" fill="#1b2d46" stroke="#4a90d9" stroke-width="2"/>
+    <text x="598" y="301" text-anchor="middle" font-size="13" fill="#93c5fd">Runtime QA</text>
+    <text x="598" y="317" text-anchor="middle" font-size="11" fill="#5a8abd">Runtime QA Agent</text>
+
+    <!-- Gate 6 -->
+    <rect x="358" y="270" width="136" height="68" rx="10" fill="#1b2d46" stroke="#4a90d9" stroke-width="2"/>
+    <text x="426" y="301" text-anchor="middle" font-size="13" fill="#93c5fd">Merge Ready</text>
+    <text x="426" y="317" text-anchor="middle" font-size="11" fill="#5a8abd">Gate 6</text>
+
+    <!-- PO Merge -->
+    <rect x="186" y="270" width="136" height="68" rx="10" fill="#3d1a3d" stroke="#c97dd4" stroke-width="2"/>
+    <text x="254" y="297" text-anchor="middle" font-size="15" font-weight="700" fill="#fae8fd">👤 PO</text>
+    <text x="254" y="316" text-anchor="middle" font-size="13" fill="#e0a8e8">Merges PR</text>
+    <text x="254" y="331" text-anchor="middle" font-size="11" fill="#b07cc0">GitHub UI</text>
+
+    <!-- Done -->
+    <rect x="14"  y="270" width="136" height="68" rx="10" fill="#122b1e" stroke="#4caf7d" stroke-width="2"/>
+    <text x="82"  y="302" text-anchor="middle" font-size="17" font-weight="700" fill="#d1fae5">✅ Done</text>
+    <text x="82"  y="322" text-anchor="middle" font-size="13" fill="#86efac">Shipped</text>
+
+    <!-- Row 2 horizontal arrows (right → left) -->
+    <line x1="874" y1="304" x2="840" y2="304" stroke="#4a90d9" stroke-width="2" marker-end="url(#ah)"/>
+    <line x1="702" y1="304" x2="668" y2="304" stroke="#4a90d9" stroke-width="2" marker-end="url(#ah)"/>
+    <line x1="530" y1="304" x2="496" y2="304" stroke="#4a90d9" stroke-width="2" marker-end="url(#ah)"/>
+    <line x1="358" y1="304" x2="324" y2="304" stroke="#4a90d9" stroke-width="2" marker-end="url(#ah)"/>
+    <line x1="186" y1="304" x2="152" y2="304" stroke="#4a90d9" stroke-width="2" marker-end="url(#ah)"/>
+
+
+
+  </svg>
+</div>
+</body>
+</html>
