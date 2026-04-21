@@ -50,7 +50,7 @@
     text-align: center;
 }
 
-/* Tablet and above: 3-column grid matching timeline spine alignment */
+/* mobile-internal (≥481px) — not a design tier */
 @media (min-width: 481px) {
     .legend-bar {
         display: grid;
