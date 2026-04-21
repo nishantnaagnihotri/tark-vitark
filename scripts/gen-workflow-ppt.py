@@ -1,13 +1,24 @@
 """
 Generate docs/agentic-workflow.pptx from the agentic workflow diagram.
+
+Requires:
+  python3 -m pip install python-pptx
+
 Usage: python3 scripts/gen-workflow-ppt.py
 """
 
-from pptx import Presentation
-from pptx.util import Inches, Pt, Emu
-from pptx.dml.color import RGBColor
-from pptx.enum.text import PP_ALIGN
-from pptx.util import Inches, Pt
+try:
+    from pptx import Presentation
+    from pptx.dml.color import RGBColor
+    from pptx.enum.shapes import MSO_AUTO_SHAPE_TYPE
+    from pptx.enum.text import PP_ALIGN
+    from pptx.util import Inches, Pt
+except ModuleNotFoundError as exc:
+    if exc.name == "pptx":
+        raise SystemExit(
+            "Missing dependency 'python-pptx'. Install it with: python3 -m pip install python-pptx"
+        ) from exc
+    raise
 
 # ── Colour palette ──────────────────────────────────────────────────────────
 BG          = RGBColor(0x0d, 0x11, 0x17)
@@ -41,7 +52,7 @@ prs.slide_height = H
 # ── Helpers ──────────────────────────────────────────────────────────────────
 
 def add_rect(slide, x, y, w, h, fill_rgb, border_rgb, border_pt=2.0):
-    shape = slide.shapes.add_shape(1, x, y, w, h)  # MSO_SHAPE_TYPE.RECTANGLE = 1
+    shape = slide.shapes.add_shape(MSO_AUTO_SHAPE_TYPE.RECTANGLE, x, y, w, h)
     shape.fill.solid()
     shape.fill.fore_color.rgb = fill_rgb
     line = shape.line
@@ -89,8 +100,8 @@ def add_label(slide, x, y, w, h, text, fsize, bold, rgb):
     run.font.color.rgb = rgb
     return tb
 
-def add_line(slide, x1, y1, x2, y2, rgb, width_pt=2.0, dash=None):
-    """Draw a line as a thin filled rectangle (Google Slides compatible)."""
+def add_line(slide, x1, y1, x2, y2, rgb, width_pt=2.0):
+    """Draw a solid line as a thin filled rectangle (Google Slides compatible)."""
     thick = Pt(width_pt)
     if abs(x2 - x1) >= abs(y2 - y1):  # horizontal
         lx = min(x1, x2)
@@ -102,7 +113,7 @@ def add_line(slide, x1, y1, x2, y2, rgb, width_pt=2.0, dash=None):
         ly = min(y1, y2)
         lw = max(thick, Pt(1))
         lh = abs(y2 - y1)
-    s = slide.shapes.add_shape(1, lx, ly, lw, lh)
+    s = slide.shapes.add_shape(MSO_AUTO_SHAPE_TYPE.RECTANGLE, lx, ly, lw, lh)
     s.fill.solid()
     s.fill.fore_color.rgb = rgb
     s.line.fill.background()  # no border on the rect itself
@@ -130,10 +141,6 @@ run.text = "Agentic Workflow"
 run.font.size = Pt(52)
 run.font.bold = True
 run.font.color.rgb = WHITE
-
-# Blue span on "Workflow"
-run2_para = tf.add_paragraph()
-run2_para.alignment = PP_ALIGN.LEFT
 
 sub_tb = slide1.shapes.add_textbox(Inches(0.8), Inches(3.9), Inches(11), Inches(0.6))
 sub_tf = sub_tb.text_frame
@@ -186,7 +193,7 @@ blocks_r1 = [
     (R1X[0], FILL_PRP, BORDER_PRP, [("👤 Product", 12, True, TITLE_PRP), ("Owner", 10, False, TEXT_PRP)]),
     (R1X[1], CARD_BG,  BORDER_BLUE, [("Requirement", 11, False, TEXT_BLUE), ("Challenger", 9, False, SUB_BLUE)]),
     (R1X[2], CARD_BG,  BORDER_BLUE, [("PRD", 11, False, TEXT_BLUE), ("PRD Agent", 9, False, SUB_BLUE)]),
-    (R1X[3], CARD_BG,  BORDER_BLUE, [("Design", 11, False, TEXT_BLUE), ("UX Agent", 9, False, SUB_BLUE)]),
+    (R1X[3], CARD_BG,  BORDER_BLUE, [("UX+Design", 11, False, TEXT_BLUE), ("Orchestrator", 9, False, SUB_BLUE)]),
     (R1X[4], CARD_BG,  BORDER_BLUE, [("Architecture", 11, False, TEXT_BLUE), ("Arch Agent", 9, False, SUB_BLUE)]),
 ]
 
@@ -201,7 +208,7 @@ blocks_r2 = [
     (R2X[4], CARD_BG,  BORDER_BLUE, [("Code Review", 11, False, TEXT_BLUE), ("Code Reviewer", 9, False, SUB_BLUE)]),
     (R2X[3], CARD_BG,  BORDER_BLUE, [("Runtime QA", 11, False, TEXT_BLUE), ("Runtime QA Agent", 9, False, SUB_BLUE)]),
     (R2X[2], CARD_BG,  BORDER_BLUE, [("Merge Ready", 11, False, TEXT_BLUE), ("Gate 6", 9, False, SUB_BLUE)]),
-    (R2X[1], FILL_PRP, BORDER_PRP,  [("👤 PO", 12, True, TITLE_PRP), ("Merges PR", 10, False, TEXT_PRP), ("GitHub UI", 9, False, RGBColor(0xb0, 0x7c, 0xc0))]),
+    (R2X[1], FILL_PRP, BORDER_PRP,  [("👤 PO", 12, True, TITLE_PRP), ("Merges PR", 10, False, TEXT_PRP), ("PO-only", 9, False, RGBColor(0xb0, 0x7c, 0xc0))]),
     (R2X[0], FILL_GRN, BORDER_GRN,  [("✅ Done", 13, True, TEXT_GRN), ("Shipped", 10, False, SUB_GRN)]),
 ]
 
@@ -248,7 +255,7 @@ orc_bar = add_rect(slide2, OX1, OY, OX2 - OX1, OH, ORC_FILL, ORC_BORDER, 1.5)
 set_text(orc_bar, [("🎯  Orchestrator — supervises every gate", 10, True, ORC_TEXT)])
 centre_v(orc_bar)
 
-# Dashed ticks: row-1 block bottoms → bar top
+# Connector ticks: row-1 block bottoms → bar top
 ORC_TOP    = OY
 ORC_BOTTOM = OY + OH
 
@@ -256,7 +263,7 @@ for bx in R1X[1:]:    # Gates 1-4
     cx = bx + BW / 2
     add_line(slide2, cx, R1Y + BH, cx, ORC_TOP,    ORC_BORDER, 1.2)
 
-# Dashed ticks: bar bottom → row-2 block tops
+# Connector ticks: bar bottom → row-2 block tops
 for bx in [R2X[5], R2X[4], R2X[3], R2X[2]]:   # Build, CodeReview, RuntimeQA, MergeReady
     cx = bx + BW / 2
     add_line(slide2, cx, ORC_BOTTOM, cx, R2Y,      ORC_BORDER, 1.2)
@@ -273,12 +280,12 @@ add_label(slide3, Inches(0.4), Inches(0.18), Inches(12), Inches(0.5),
 gates = [
     ("Gate 1", "Requirement", "Requirement Challenger grills the brief; exposes ambiguity before work starts."),
     ("Gate 2", "PRD",         "PRD Agent converts validated requirements into a structured product spec."),
-    ("Gate 3", "Design",      "UX Agent designs screens in Figma; Design QA Agent validates fidelity."),
+    ("Gate 3", "Design",      "Orchestrator executes UX+Design in Gate 3A; Design QA Agent validates fidelity in Gate 3B."),
     ("Gate 4", "Architecture","Architecture Agent maps modules, boundaries, risks, and task breakdown."),
     ("Gate 5", "Build",       "Dev Agent implements and tests against acceptance criteria on a feature branch."),
     ("Code Review", "",       "Code Reviewer (Copilot) reviews the PR; feedback loop until 0 comments."),
     ("Gate 5.5", "Runtime QA","Runtime QA Agent validates live behaviour across viewport × theme matrix."),
-    ("Gate 6", "Merge Ready", "Orchestrator confirms all evidence; Product Owner merges via GitHub UI."),
+    ("Gate 6", "Merge Ready", "Orchestrator confirms all evidence; Product Owner merges the PR."),
 ]
 
 ROW_H = Inches(0.62)
