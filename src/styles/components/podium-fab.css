@@ -109,8 +109,8 @@ div.podium-fab[role='group'].podium-fab--expanded {
 @media (min-width: 768px) {
     button.podium-fab,
     div.podium-fab[role="group"] {
-        right: var(--space-8);
-        bottom: var(--space-8);
+        right: max(var(--space-8), env(safe-area-inset-right, 0px));
+        bottom: max(var(--space-8), env(safe-area-inset-bottom, 0px));
     }
 }
 
@@ -118,7 +118,7 @@ div.podium-fab[role='group'].podium-fab--expanded {
 @media (min-width: 1024px) {
     button.podium-fab,
     div.podium-fab[role="group"] {
-        right: var(--space-12);
-        bottom: var(--space-12);
+        right: max(var(--space-12), env(safe-area-inset-right, 0px));
+        bottom: max(var(--space-12), env(safe-area-inset-bottom, 0px));
     }
 }
