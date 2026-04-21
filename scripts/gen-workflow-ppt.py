@@ -20,6 +20,8 @@ except ModuleNotFoundError as exc:
         ) from exc
     raise
 
+from pathlib import Path
+
 # ── Colour palette ──────────────────────────────────────────────────────────
 BG          = RGBColor(0x0d, 0x11, 0x17)
 CARD_BG     = RGBColor(0x16, 0x1b, 0x22)
@@ -48,6 +50,10 @@ H = Inches(7.5)
 prs = Presentation()
 prs.slide_width  = W
 prs.slide_height = H
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+WORKSPACE_ROOT = SCRIPT_DIR.parent
+DOCS_DIR = WORKSPACE_ROOT / "docs"
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -309,6 +315,7 @@ for i, (gate, title, desc) in enumerate(gates):
     drun.font.color.rgb = RGBColor(0x8b, 0x94, 0x9e)
 
 # ── Save ──────────────────────────────────────────────────────────────────────
-out = "docs/agentic-workflow.pptx"
+DOCS_DIR.mkdir(parents=True, exist_ok=True)
+out = DOCS_DIR / "agentic-workflow.pptx"
 prs.save(out)
-print(f"Saved → {out}")
+print(f"Saved → {out.relative_to(WORKSPACE_ROOT)}")
