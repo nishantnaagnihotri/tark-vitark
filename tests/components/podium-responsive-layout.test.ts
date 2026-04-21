@@ -27,9 +27,16 @@ const argumentCardCss = readFileSync(
   'utf-8'
 );
 
-function mediaBlock(css: string, mediaQuery: string): string {
-  const startIndex = css.indexOf(mediaQuery);
-  expect(startIndex).toBeGreaterThan(-1);
+function mediaBlock(css: string, mediaQuery: string, occurrence = 1): string {
+  let startIndex = -1;
+  let searchFrom = 0;
+
+  for (let count = 0; count < occurrence; count += 1) {
+    startIndex = css.indexOf(mediaQuery, searchFrom);
+    expect(startIndex).toBeGreaterThan(-1);
+    searchFrom = startIndex + mediaQuery.length;
+  }
+
   const nextMediaIndex = css.indexOf('@media', startIndex + mediaQuery.length);
   return nextMediaIndex === -1 ? css.slice(startIndex) : css.slice(startIndex, nextMediaIndex);
 }
@@ -43,7 +50,12 @@ describe('podium responsive layout', () => {
       '@media (min-width: 768px) and (max-width: 1023px)'
     );
 
-    expect(tabletFabBlock).toContain('var(--space-8)');
+    expect(tabletFabBlock).toMatch(
+      /right:\s*(?:max\([^;]*var\(--space-8\)[^;]*\)|var\(--space-8\))\s*;/
+    );
+    expect(tabletFabBlock).toMatch(
+      /bottom:\s*(?:max\([^;]*var\(--space-8\)[^;]*\)|var\(--space-8\))\s*;/
+    );
     expect(tabletSheetBlock).toContain('max-width: 600px;');
     expect(tabletDarkScrimBlock).toContain('[data-theme="dark"] .podium-sheet-scrim');
     expect(tabletDarkScrimBlock).toContain('rgba(0, 0, 0, 0.48)');
@@ -51,13 +63,28 @@ describe('podium responsive layout', () => {
 
   it('AC-26 Scenario: desktop-tier podium layout values are present', () => {
     const desktopFabBlock = mediaBlock(podiumFabCss, '@media (min-width: 1024px)');
-    const desktopSheetBlock = mediaBlock(podiumBottomSheetCss, '@media (min-width: 1024px)');
+    const desktopSheetWidthBlock = mediaBlock(
+      podiumBottomSheetCss,
+      '@media (min-width: 1024px)',
+      1
+    );
+    const desktopScrimBlock = mediaBlock(
+      podiumBottomSheetCss,
+      '@media (min-width: 1024px)',
+      2
+    );
 
-    expect(desktopFabBlock).toContain('var(--space-12)');
-    expect(desktopSheetBlock).toContain('max-width: 720px;');
-    expect(podiumBottomSheetCss).toContain('.podium-sheet-scrim');
-    expect(podiumBottomSheetCss).toContain('rgba(0, 0, 0, 0.36)');
-    expect(podiumBottomSheetCss).toContain('rgba(0, 0, 0, 0.52)');
+    expect(desktopFabBlock).toMatch(
+      /right:\s*(?:max\([^;]*var\(--space-12\)[^;]*\)|var\(--space-12\))\s*;/
+    );
+    expect(desktopFabBlock).toMatch(
+      /bottom:\s*(?:max\([^;]*var\(--space-12\)[^;]*\)|var\(--space-12\))\s*;/
+    );
+    expect(desktopSheetWidthBlock).toContain('max-width: 720px;');
+    expect(desktopScrimBlock).toContain('.podium-sheet-scrim');
+    expect(desktopScrimBlock).toContain('[data-theme="dark"] .podium-sheet-scrim');
+    expect(desktopScrimBlock).toContain('rgba(0, 0, 0, 0.36)');
+    expect(desktopScrimBlock).toContain('rgba(0, 0, 0, 0.52)');
   });
 
   it('AC-27 Scenario: mobile-tier podium behavior remains frozen', () => {
@@ -88,18 +115,39 @@ describe('podium responsive layout', () => {
       '@media (min-width: 768px) and (max-width: 1023px)'
     );
 
-    expect(tabletFabBlock).toContain('var(--space-8)');
+    expect(tabletFabBlock).toMatch(
+      /right:\s*(?:max\([^;]*var\(--space-8\)[^;]*\)|var\(--space-8\))\s*;/
+    );
+    expect(tabletFabBlock).toMatch(
+      /bottom:\s*(?:max\([^;]*var\(--space-8\)[^;]*\)|var\(--space-8\))\s*;/
+    );
     expect(tabletSheetBlock).toContain('max-width: 600px;');
     expect(tabletDarkScrimBlock).toContain('rgba(0, 0, 0, 0.48)');
   });
 
   it('AC-30 Scenario: Figma desktop values are wired in responsive CSS', () => {
     const desktopFabBlock = mediaBlock(podiumFabCss, '@media (min-width: 1024px)');
-    const desktopSheetBlock = mediaBlock(podiumBottomSheetCss, '@media (min-width: 1024px)');
+    const desktopSheetWidthBlock = mediaBlock(
+      podiumBottomSheetCss,
+      '@media (min-width: 1024px)',
+      1
+    );
+    const desktopScrimBlock = mediaBlock(
+      podiumBottomSheetCss,
+      '@media (min-width: 1024px)',
+      2
+    );
 
-    expect(desktopFabBlock).toContain('var(--space-12)');
-    expect(desktopSheetBlock).toContain('max-width: 720px;');
-    expect(podiumBottomSheetCss).toContain('rgba(0, 0, 0, 0.36)');
-    expect(podiumBottomSheetCss).toContain('rgba(0, 0, 0, 0.52)');
+    expect(desktopFabBlock).toMatch(
+      /right:\s*(?:max\([^;]*var\(--space-12\)[^;]*\)|var\(--space-12\))\s*;/
+    );
+    expect(desktopFabBlock).toMatch(
+      /bottom:\s*(?:max\([^;]*var\(--space-12\)[^;]*\)|var\(--space-12\))\s*;/
+    );
+    expect(desktopSheetWidthBlock).toContain('max-width: 720px;');
+    expect(desktopScrimBlock).toContain('.podium-sheet-scrim');
+    expect(desktopScrimBlock).toContain('[data-theme="dark"] .podium-sheet-scrim');
+    expect(desktopScrimBlock).toContain('rgba(0, 0, 0, 0.36)');
+    expect(desktopScrimBlock).toContain('rgba(0, 0, 0, 0.52)');
   });
 });
