@@ -192,7 +192,8 @@ describe('PodiumBottomSheet', () => {
     });
 
     it('applies tablet and desktop podium sheet width and scrim breakpoint rules for the expanded podium composer', () => {
-        // Traceability source for AC-25, AC-26, AC-29, and AC-30: GitHub issue #179.
+        // BDD traceability note: responsive podium sheet AC-25/26/29/30 are currently
+        // sourced from issue #179; add linked feature-scenario coverage in features/*.feature.
         expect(podiumBottomSheetCss).toMatch(
             /@media\s*\(min-width:\s*768px\)\s*\{[\s\S]*?\.podium-bottom-sheet\s*\{[\s\S]*?max-width:\s*600px;[\s\S]*?\}[\s\S]*?\}/
         );
