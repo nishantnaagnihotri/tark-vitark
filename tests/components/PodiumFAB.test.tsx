@@ -208,14 +208,24 @@ describe('PodiumFAB', () => {
     it('maps AC-25 AC-26 AC-29 and AC-30 to tokenized tablet and desktop FAB margins', () => {
         const tabletBreakpointIndex = podiumFabCss.indexOf('@media (min-width: 768px)');
         const desktopBreakpointIndex = podiumFabCss.indexOf('@media (min-width: 1024px)');
+        const tabletBlock = podiumFabCss.slice(tabletBreakpointIndex, desktopBreakpointIndex);
+        const desktopBlock = podiumFabCss.slice(desktopBreakpointIndex);
 
         expect(tabletBreakpointIndex).toBeGreaterThan(-1);
         expect(desktopBreakpointIndex).toBeGreaterThan(tabletBreakpointIndex);
-        expect(podiumFabCss).toMatch(
-            /@media\s*\(min-width:\s*768px\)\s*\{[\s\S]*button\.podium-fab,\s*div\.podium-fab\[role="group"\]\s*\{[\s\S]*right:\s*var\(--space-8\);[\s\S]*bottom:\s*var\(--space-8\);/
+        expect(tabletBlock).toMatch(/button\.podium-fab,\s*div\.podium-fab\[role="group"\]/);
+        expect(tabletBlock).toMatch(
+            /right:\s*max\(var\(--space-8\),\s*env\(safe-area-inset-right,\s*0px\)\);/
         );
-        expect(podiumFabCss).toMatch(
-            /@media\s*\(min-width:\s*1024px\)\s*\{[\s\S]*button\.podium-fab,\s*div\.podium-fab\[role="group"\]\s*\{[\s\S]*right:\s*var\(--space-12\);[\s\S]*bottom:\s*var\(--space-12\);/
+        expect(tabletBlock).toMatch(
+            /bottom:\s*max\(var\(--space-8\),\s*env\(safe-area-inset-bottom,\s*0px\)\);/
+        );
+        expect(desktopBlock).toMatch(/button\.podium-fab,\s*div\.podium-fab\[role="group"\]/);
+        expect(desktopBlock).toMatch(
+            /right:\s*max\(var\(--space-12\),\s*env\(safe-area-inset-right,\s*0px\)\);/
+        );
+        expect(desktopBlock).toMatch(
+            /bottom:\s*max\(var\(--space-12\),\s*env\(safe-area-inset-bottom,\s*0px\)\);/
         );
     });
 });
