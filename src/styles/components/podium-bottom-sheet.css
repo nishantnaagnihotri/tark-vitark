@@ -1,8 +1,4 @@
 .podium-sheet-scrim {
-    --podium-sheet-scrim-tablet-dark: rgba(0, 0, 0, 0.48);
-    --podium-sheet-scrim-desktop-light: rgba(0, 0, 0, 0.36);
-    --podium-sheet-scrim-desktop-dark: rgba(0, 0, 0, 0.52);
-
     animation: podium-scrim-fade-in 300ms ease-out;
     position: fixed;
     inset: 0;
@@ -169,17 +165,17 @@
 /* ── Scrim opacity: tablet dark theme ── */
 @media (min-width: 768px) and (max-width: 1023px) {
     [data-theme="dark"] .podium-sheet-scrim {
-        background: var(--podium-sheet-scrim-tablet-dark);
+        background: rgb(from var(--color-scrim) r g b / 0.48);
     }
 }
 
 /* ── Scrim opacity: desktop (light and dark theme) ── */
 @media (min-width: 1024px) {
     .podium-sheet-scrim {
-        background: var(--podium-sheet-scrim-desktop-light);
+        background: rgb(from var(--color-scrim) r g b / 0.36);
     }
 
     [data-theme="dark"] .podium-sheet-scrim {
-        background: var(--podium-sheet-scrim-desktop-dark);
+        background: rgb(from var(--color-scrim) r g b / 0.52);
     }
 }
