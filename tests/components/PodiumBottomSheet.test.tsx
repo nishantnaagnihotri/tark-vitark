@@ -191,18 +191,29 @@ describe('PodiumBottomSheet', () => {
         expect(podiumBottomSheetCss).toContain('env(safe-area-inset-bottom, 0px)');
     });
 
-    it('applies tablet and desktop podium sheet width and scrim breakpoints from AC-25, AC-26, AC-29, and AC-30', () => {
-        expect(podiumBottomSheetCss).toContain('@media (min-width: 768px) {');
-        expect(podiumBottomSheetCss).toContain('max-width: 600px;');
+    it('applies tablet and desktop podium sheet width and scrim breakpoints from issue #179 AC-25, AC-26, AC-29, and AC-30', () => {
+        // Traceability source for AC-29/AC-30: GitHub issue #179 (task-level acceptance criteria).
+        expect(podiumBottomSheetCss).toMatch(
+            /@media\s*\(min-width:\s*768px\)\s*\{[\s\S]*?\.podium-bottom-sheet\s*\{[\s\S]*?max-width:\s*600px;[\s\S]*?\}/
+        );
+        expect(podiumBottomSheetCss).toMatch(
+            /@media\s*\(min-width:\s*1024px\)\s*\{[\s\S]*?\.podium-bottom-sheet\s*\{[\s\S]*?max-width:\s*720px;[\s\S]*?\}/
+        );
 
-        expect(podiumBottomSheetCss).toContain('@media (min-width: 1024px) {');
-        expect(podiumBottomSheetCss).toContain('max-width: 720px;');
-
-        expect(podiumBottomSheetCss).toContain('@media (min-width: 768px) and (max-width: 1023px) {');
-        expect(podiumBottomSheetCss).toContain('[data-theme="dark"] .podium-sheet-scrim {');
-        expect(podiumBottomSheetCss).toContain('background: rgba(0, 0, 0, 0.48);');
-
-        expect(podiumBottomSheetCss).toContain('background: rgba(0, 0, 0, 0.36);');
-        expect(podiumBottomSheetCss).toContain('background: rgba(0, 0, 0, 0.52);');
+        expect(podiumBottomSheetCss).toMatch(
+            /--podium-sheet-scrim-tablet-dark:\s*rgba\(0,\s*0,\s*0,\s*0\.48\);/
+        );
+        expect(podiumBottomSheetCss).toMatch(
+            /--podium-sheet-scrim-desktop-light:\s*rgba\(0,\s*0,\s*0,\s*0\.36\);/
+        );
+        expect(podiumBottomSheetCss).toMatch(
+            /--podium-sheet-scrim-desktop-dark:\s*rgba\(0,\s*0,\s*0,\s*0\.52\);/
+        );
+        expect(podiumBottomSheetCss).toMatch(
+            /@media\s*\(min-width:\s*768px\)\s*and\s*\(max-width:\s*1023px\)\s*\{[\s\S]*?\[data-theme="dark"\]\s+\.podium-sheet-scrim\s*\{[\s\S]*?background:\s*var\(--podium-sheet-scrim-tablet-dark\);[\s\S]*?\}/
+        );
+        expect(podiumBottomSheetCss).toMatch(
+            /@media\s*\(min-width:\s*1024px\)\s*\{[\s\S]*?\.podium-sheet-scrim\s*\{[\s\S]*?background:\s*var\(--podium-sheet-scrim-desktop-light\);[\s\S]*?\}[\s\S]*?\[data-theme="dark"\]\s+\.podium-sheet-scrim\s*\{[\s\S]*?background:\s*var\(--podium-sheet-scrim-desktop-dark\);[\s\S]*?\}/
+        );
     });
 });
