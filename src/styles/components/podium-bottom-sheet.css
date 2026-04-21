@@ -148,7 +148,7 @@
     to { opacity: 1; }
 }
 
-/* ── Tablet (768–1023 px): BottomSheet max-width ── */
+/* ── Tablet (≥768 px, overridden at ≥1024 px): BottomSheet max-width ── */
 @media (min-width: 768px) {
     .podium-bottom-sheet {
         max-width: 600px;
@@ -165,6 +165,7 @@
 /* ── Scrim opacity: tablet dark theme ── */
 @media (min-width: 768px) and (max-width: 1023px) {
     [data-theme="dark"] .podium-sheet-scrim {
+        background: rgba(0, 0, 0, 0.48);
         background: rgb(from var(--color-scrim) r g b / 0.48);
     }
 }
@@ -172,10 +173,12 @@
 /* ── Scrim opacity: desktop (light and dark theme) ── */
 @media (min-width: 1024px) {
     .podium-sheet-scrim {
+        background: rgba(0, 0, 0, 0.36);
         background: rgb(from var(--color-scrim) r g b / 0.36);
     }
 
     [data-theme="dark"] .podium-sheet-scrim {
+        background: rgba(0, 0, 0, 0.52);
         background: rgb(from var(--color-scrim) r g b / 0.52);
     }
 }
