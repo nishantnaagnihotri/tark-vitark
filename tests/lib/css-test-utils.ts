@@ -6,6 +6,12 @@
  * occurrence is not found.
  */
 export function mediaBlock(css: string, mediaQuery: string, occurrence = 1): string {
+    if (!Number.isInteger(occurrence) || occurrence < 1) {
+        throw new Error(
+            `mediaBlock: "occurrence" must be a positive integer; received ${occurrence}.`
+        );
+    }
+
     let startIndex = -1;
     let searchFrom = 0;
 
