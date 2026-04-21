@@ -200,10 +200,16 @@ describe('PodiumBottomSheet', () => {
             /@media\s*\(min-width:\s*1024px\)\s*\{[\s\S]*?\.podium-bottom-sheet\s*\{[\s\S]*?max-width:\s*720px;[\s\S]*?\}[\s\S]*?\}/
         );
         expect(podiumBottomSheetCss).toMatch(
-            /@media\s*\(min-width:\s*768px\)\s*and\s*\(max-width:\s*1023px\)\s*\{[\s\S]*?\[data-theme="dark"\]\s+\.podium-sheet-scrim\s*\{[\s\S]*?background:\s*rgb\(from\s+var\(--color-scrim\)\s+r\s+g\s+b\s*\/\s*0\.48\);[\s\S]*?\}[\s\S]*?\}/
+            /@media\s*\(min-width:\s*768px\)\s*and\s*\(max-width:\s*1023px\)\s*\{[\s\S]*?\[data-theme="dark"\]\s+\.podium-sheet-scrim\s*\{[\s\S]*?background:\s*rgba\(0,\s*0,\s*0,\s*0\.48\);[\s\S]*?background:\s*rgb\(from\s+var\(--color-scrim\)\s+r\s+g\s+b\s*\/\s*0\.48\);[\s\S]*?\}[\s\S]*?\}/
+        );
+        expect(podiumBottomSheetCss).toMatch(
+            /@media\s*\(prefers-color-scheme:\s*dark\)\s*and\s*\(min-width:\s*768px\)\s*and\s*\(max-width:\s*1023px\)\s*\{[\s\S]*?:root:not\(\[data-theme\]\)\s+\.podium-sheet-scrim\s*\{[\s\S]*?background:\s*rgba\(0,\s*0,\s*0,\s*0\.48\);[\s\S]*?background:\s*rgb\(from\s+var\(--color-scrim\)\s+r\s+g\s+b\s*\/\s*0\.48\);[\s\S]*?\}[\s\S]*?\}/
         );
         expect(podiumBottomSheetCss).toMatch(
             /\/\*\s*──\s*Scrim opacity:\s*desktop\s*\(light and dark theme\)\s*──\s*\*\/[\s\S]*?@media\s*\(min-width:\s*1024px\)\s*\{[\s\S]*?\.podium-sheet-scrim\s*\{[\s\S]*?background:\s*rgba\(0,\s*0,\s*0,\s*0\.36\);[\s\S]*?background:\s*rgb\(from\s+var\(--color-scrim\)\s+r\s+g\s+b\s*\/\s*0\.36\);[\s\S]*?\}[\s\S]*?\[data-theme="dark"\]\s+\.podium-sheet-scrim\s*\{[\s\S]*?background:\s*rgba\(0,\s*0,\s*0,\s*0\.52\);[\s\S]*?background:\s*rgb\(from\s+var\(--color-scrim\)\s+r\s+g\s+b\s*\/\s*0\.52\);[\s\S]*?\}[\s\S]*?\}/
+        );
+        expect(podiumBottomSheetCss).toMatch(
+            /@media\s*\(prefers-color-scheme:\s*dark\)\s*and\s*\(min-width:\s*1024px\)\s*\{[\s\S]*?:root:not\(\[data-theme\]\)\s+\.podium-sheet-scrim\s*\{[\s\S]*?background:\s*rgba\(0,\s*0,\s*0,\s*0\.52\);[\s\S]*?background:\s*rgb\(from\s+var\(--color-scrim\)\s+r\s+g\s+b\s*\/\s*0\.52\);[\s\S]*?\}[\s\S]*?\}/
         );
     });
 });
