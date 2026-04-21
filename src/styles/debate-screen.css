@@ -18,7 +18,7 @@
     text-align: center;
 }
 
-/* ── Tablet ── */
+/* ── mobile-internal (≥481px) — not a design tier ── */
 @media (min-width: 481px) {
     .debate-header {
         padding: var(--space-12) var(--space-10) var(--space-8);
