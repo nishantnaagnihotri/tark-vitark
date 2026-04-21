@@ -170,6 +170,13 @@
     }
 }
 
+@media (prefers-color-scheme: dark) and (min-width: 768px) and (max-width: 1023px) {
+    :root:not([data-theme]) .podium-sheet-scrim {
+        background: rgba(0, 0, 0, 0.48);
+        background: rgb(from var(--color-scrim) r g b / 0.48);
+    }
+}
+
 /* ── Scrim opacity: desktop (light and dark theme) ── */
 @media (min-width: 1024px) {
     .podium-sheet-scrim {
@@ -178,6 +185,13 @@
     }
 
     [data-theme="dark"] .podium-sheet-scrim {
+        background: rgba(0, 0, 0, 0.52);
+        background: rgb(from var(--color-scrim) r g b / 0.52);
+    }
+}
+
+@media (prefers-color-scheme: dark) and (min-width: 1024px) {
+    :root:not([data-theme]) .podium-sheet-scrim {
         background: rgba(0, 0, 0, 0.52);
         background: rgb(from var(--color-scrim) r g b / 0.52);
     }
