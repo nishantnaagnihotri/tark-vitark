@@ -246,7 +246,7 @@ function persistRuns(): void {
     }
 }
 
-function hydratePersistedResults(results: Array<PersistedTaskResult & { model?: string }>): {
+function hydratePersistedResults(results: Array<Omit<PersistedTaskResult, "model"> & { model?: string }>): {
     results: TaskResult[];
     changed: boolean;
 } {

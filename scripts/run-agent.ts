@@ -249,7 +249,7 @@ const [role, rawPrompt] = argv;
 const policyModelSelection = modelSelectionForRole(role);
 const policyModel = policyModelSelection.model;
 const model = modelOverride ?? policyModel;
-const modelSource = modelOverride ? "--model override" : policyModelSelection.source;
+const modelSource = modelOverride ? "model-override" : policyModelSelection.source;
 
 // Support @file references: `@path/to/file.md` reads file contents as the prompt
 const prompt = rawPrompt.startsWith("@")
