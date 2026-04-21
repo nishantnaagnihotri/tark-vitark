@@ -184,9 +184,6 @@ R1X = [Inches(0.28), Inches(2.15), Inches(4.02), Inches(5.89), Inches(7.76)]
 R2X = [Inches(0.28), Inches(2.15), Inches(4.02), Inches(5.89), Inches(7.76), Inches(9.63)]
 # Row 2 logical order right→left: Build(9.63), CodeReview(7.76), RuntimeQA(5.89), MergeReady(4.02), POMerge(2.15), Done(0.28)
 
-CX = lambda xi: xi + BW / 2   # centre x
-CY = lambda y:  y  + BH / 2   # centre y
-
 # ── Row 1 blocks ─────────────────────────────────────────────────────────────
 blocks_r1 = [
     # (x, fill, border, lines)
