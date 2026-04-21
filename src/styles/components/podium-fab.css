@@ -1,8 +1,8 @@
 button.podium-fab,
 div.podium-fab[role="group"] {
     position: fixed;
-    right: var(--space-4);
-    bottom: var(--space-4);
+    right: max(var(--space-4), env(safe-area-inset-right, 0px));
+    bottom: max(var(--space-4), env(safe-area-inset-bottom, 0px));
     z-index: 30;
 }
 

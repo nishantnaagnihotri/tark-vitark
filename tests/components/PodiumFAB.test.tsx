@@ -197,6 +197,12 @@ describe('PodiumFAB', () => {
         expect(podiumFabCss).toMatch(/background-color:\s*var\(--color-vitark-surface\)/);
         expect(podiumFabCss).toMatch(/var\(--color-elevation-shadow-ambient\)/);
         expect(podiumFabCss).toMatch(/var\(--color-elevation-shadow-key\)/);
+        expect(podiumFabCss).toMatch(
+            /right:\s*max\(var\(--space-4\),\s*env\(safe-area-inset-right,\s*0px\)\);/
+        );
+        expect(podiumFabCss).toMatch(
+            /bottom:\s*max\(var\(--space-4\),\s*env\(safe-area-inset-bottom,\s*0px\)\);/
+        );
         expect(podiumFabCss).toMatch(/transition:\s*opacity\s+300ms\s+ease-out,\s*transform\s+300ms\s+ease-out/);
         expect(podiumFabCss).toMatch(/transform:\s*scale\(0\.8\)/);
         expect(podiumFabCss).toMatch(/\.podium-fab--expanded\s*\{[\s\S]*pointer-events:\s*auto;/);
