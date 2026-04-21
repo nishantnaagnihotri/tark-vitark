@@ -204,4 +204,18 @@ describe('PodiumFAB', () => {
         expect(podiumFabCss).not.toMatch(/\brgba?\s*\(/i);
         expect(podiumFabCss).not.toMatch(/\bhsla?\s*\(/i);
     });
+
+    it('maps AC-25 AC-26 AC-29 and AC-30 to tokenized tablet and desktop FAB margins', () => {
+        const tabletBreakpointIndex = podiumFabCss.indexOf('@media (min-width: 768px)');
+        const desktopBreakpointIndex = podiumFabCss.indexOf('@media (min-width: 1024px)');
+
+        expect(tabletBreakpointIndex).toBeGreaterThan(-1);
+        expect(desktopBreakpointIndex).toBeGreaterThan(tabletBreakpointIndex);
+        expect(podiumFabCss).toMatch(
+            /@media\s*\(min-width:\s*768px\)\s*\{[\s\S]*button\.podium-fab,\s*div\.podium-fab\[role="group"\]\s*\{[\s\S]*right:\s*var\(--space-8\);[\s\S]*bottom:\s*var\(--space-8\);/
+        );
+        expect(podiumFabCss).toMatch(
+            /@media\s*\(min-width:\s*1024px\)\s*\{[\s\S]*button\.podium-fab,\s*div\.podium-fab\[role="group"\]\s*\{[\s\S]*right:\s*var\(--space-12\);[\s\S]*bottom:\s*var\(--space-12\);/
+        );
+    });
 });
