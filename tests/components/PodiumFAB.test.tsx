@@ -216,10 +216,10 @@ describe('PodiumFAB', () => {
         expect(tabletBreakpointIndex).toBeGreaterThan(-1);
         expect(desktopBreakpointIndex).toBeGreaterThan(tabletBreakpointIndex);
         expect(tabletBlock).toMatch(
-            /button\.podium-fab,\s*div\.podium-fab\[role="group"\]\s*\{[\s\S]*right:\s*max\(var\(--space-8\),\s*env\(safe-area-inset-right,\s*0px\)\);[\s\S]*bottom:\s*max\(var\(--space-8\),\s*env\(safe-area-inset-bottom,\s*0px\)\);[\s\S]*\}/
+            /button\.podium-fab,\s*div\.podium-fab\[role=(['"])group\1\]\s*\{[^}]*right:\s*max\(var\(--space-8\),\s*env\(safe-area-inset-right,\s*0px\)\);[^}]*bottom:\s*max\(var\(--space-8\),\s*env\(safe-area-inset-bottom,\s*0px\)\);[^}]*\}/
         );
         expect(desktopBlock).toMatch(
-            /button\.podium-fab,\s*div\.podium-fab\[role="group"\]\s*\{[\s\S]*right:\s*max\(var\(--space-12\),\s*env\(safe-area-inset-right,\s*0px\)\);[\s\S]*bottom:\s*max\(var\(--space-12\),\s*env\(safe-area-inset-bottom,\s*0px\)\);[\s\S]*\}/
+            /button\.podium-fab,\s*div\.podium-fab\[role=(['"])group\1\]\s*\{[^}]*right:\s*max\(var\(--space-12\),\s*env\(safe-area-inset-right,\s*0px\)\);[^}]*bottom:\s*max\(var\(--space-12\),\s*env\(safe-area-inset-bottom,\s*0px\)\);[^}]*\}/
         );
     });
 });
