@@ -16,10 +16,16 @@ const podiumCss = readFileSync(
 
 async function openComposerForSide(side: 'Post as Tark' | 'Post as Vitark') {
     fireEvent.click(screen.getByRole('button', { name: 'Open post composer' }));
-    const sideOption = screen.getByRole('button', { name: side });
+    let sideOption: HTMLElement | null = null;
     await waitFor(() => {
+        sideOption = screen.getByRole('button', { name: side });
         expect(sideOption).toBeEnabled();
     });
+
+    if (!sideOption) {
+        throw new Error(`Expected composer side option "${side}" to be available.`);
+    }
+
     fireEvent.click(sideOption);
 }
 
