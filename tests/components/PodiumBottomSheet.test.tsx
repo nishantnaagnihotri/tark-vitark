@@ -191,29 +191,19 @@ describe('PodiumBottomSheet', () => {
         expect(podiumBottomSheetCss).toContain('env(safe-area-inset-bottom, 0px)');
     });
 
-    it('applies tablet and desktop podium sheet width and scrim breakpoints from issue #179 AC-25, AC-26, AC-29, and AC-30', () => {
+    it('applies tablet and desktop podium sheet width and scrim breakpoint rules for the expanded podium composer', () => {
         // Traceability source for AC-29/AC-30: GitHub issue #179 (task-level acceptance criteria).
         expect(podiumBottomSheetCss).toMatch(
-            /@media\s*\(min-width:\s*768px\)\s*\{[\s\S]*?\.podium-bottom-sheet\s*\{[\s\S]*?max-width:\s*600px;[\s\S]*?\}/
+            /@media\s*\(min-width:\s*768px\)\s*\{[\s\S]*?\.podium-bottom-sheet\s*\{[\s\S]*?max-width:\s*600px;[\s\S]*?\}[\s\S]*?\}/
         );
         expect(podiumBottomSheetCss).toMatch(
-            /@media\s*\(min-width:\s*1024px\)\s*\{[\s\S]*?\.podium-bottom-sheet\s*\{[\s\S]*?max-width:\s*720px;[\s\S]*?\}/
-        );
-
-        expect(podiumBottomSheetCss).toMatch(
-            /--podium-sheet-scrim-tablet-dark:\s*rgba\(0,\s*0,\s*0,\s*0\.48\);/
+            /@media\s*\(min-width:\s*1024px\)\s*\{[\s\S]*?\.podium-bottom-sheet\s*\{[\s\S]*?max-width:\s*720px;[\s\S]*?\}[\s\S]*?\}/
         );
         expect(podiumBottomSheetCss).toMatch(
-            /--podium-sheet-scrim-desktop-light:\s*rgba\(0,\s*0,\s*0,\s*0\.36\);/
+            /@media\s*\(min-width:\s*768px\)\s*and\s*\(max-width:\s*1023px\)\s*\{[\s\S]*?\[data-theme="dark"\]\s+\.podium-sheet-scrim\s*\{[\s\S]*?background:\s*rgb\(from\s+var\(--color-scrim\)\s+r\s+g\s+b\s*\/\s*0\.48\);[\s\S]*?\}[\s\S]*?\}/
         );
         expect(podiumBottomSheetCss).toMatch(
-            /--podium-sheet-scrim-desktop-dark:\s*rgba\(0,\s*0,\s*0,\s*0\.52\);/
-        );
-        expect(podiumBottomSheetCss).toMatch(
-            /@media\s*\(min-width:\s*768px\)\s*and\s*\(max-width:\s*1023px\)\s*\{[\s\S]*?\[data-theme="dark"\]\s+\.podium-sheet-scrim\s*\{[\s\S]*?background:\s*var\(--podium-sheet-scrim-tablet-dark\);[\s\S]*?\}/
-        );
-        expect(podiumBottomSheetCss).toMatch(
-            /@media\s*\(min-width:\s*1024px\)\s*\{[\s\S]*?\.podium-sheet-scrim\s*\{[\s\S]*?background:\s*var\(--podium-sheet-scrim-desktop-light\);[\s\S]*?\}[\s\S]*?\[data-theme="dark"\]\s+\.podium-sheet-scrim\s*\{[\s\S]*?background:\s*var\(--podium-sheet-scrim-desktop-dark\);[\s\S]*?\}/
+            /@media\s*\(min-width:\s*1024px\)\s*\{[\s\S]*?\.podium-sheet-scrim\s*\{[\s\S]*?background:\s*rgb\(from\s+var\(--color-scrim\)\s+r\s+g\s+b\s*\/\s*0\.36\);[\s\S]*?\}[\s\S]*?\[data-theme="dark"\]\s+\.podium-sheet-scrim\s*\{[\s\S]*?background:\s*rgb\(from\s+var\(--color-scrim\)\s+r\s+g\s+b\s*\/\s*0\.52\);[\s\S]*?\}[\s\S]*?\}/
         );
     });
 });
