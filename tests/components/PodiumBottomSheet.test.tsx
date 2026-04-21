@@ -190,4 +190,19 @@ describe('PodiumBottomSheet', () => {
         expect(podiumBottomSheetCss).toContain('touch-action: pan-y;');
         expect(podiumBottomSheetCss).toContain('env(safe-area-inset-bottom, 0px)');
     });
+
+    it('applies tablet and desktop podium sheet width and scrim breakpoints from AC-25, AC-26, AC-29, and AC-30', () => {
+        expect(podiumBottomSheetCss).toContain('@media (min-width: 768px) {');
+        expect(podiumBottomSheetCss).toContain('max-width: 600px;');
+
+        expect(podiumBottomSheetCss).toContain('@media (min-width: 1024px) {');
+        expect(podiumBottomSheetCss).toContain('max-width: 720px;');
+
+        expect(podiumBottomSheetCss).toContain('@media (min-width: 768px) and (max-width: 1023px) {');
+        expect(podiumBottomSheetCss).toContain('[data-theme="dark"] .podium-sheet-scrim {');
+        expect(podiumBottomSheetCss).toContain('background: rgba(0, 0, 0, 0.48);');
+
+        expect(podiumBottomSheetCss).toContain('background: rgba(0, 0, 0, 0.36);');
+        expect(podiumBottomSheetCss).toContain('background: rgba(0, 0, 0, 0.52);');
+    });
 });
