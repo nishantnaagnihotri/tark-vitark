@@ -41,7 +41,7 @@
     align-self: flex-end;
 }
 
-/* ── Tablet (≥481px): CSS Grid with center spine ── */
+/* ── mobile-internal layout adjustment (≥481px) — not a design tier ── */
 @media (min-width: 481px) {
     .timeline {
         padding: 0 var(--space-10);

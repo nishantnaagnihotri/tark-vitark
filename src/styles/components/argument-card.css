@@ -15,6 +15,7 @@
     }
 }
 
+/* mobile-internal (≥481px) — not a design tier */
 @media (min-width: 481px) {
     .argument-card__body--clamped {
         display: block;
