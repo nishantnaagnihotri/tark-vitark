@@ -104,3 +104,21 @@ div.podium-fab[role='group'].podium-fab--expanded {
     outline: 2px solid currentColor;
     outline-offset: 2px;
 }
+
+/* ── Tablet (768–1023 px): FAB margin override ── */
+@media (min-width: 768px) {
+    button.podium-fab,
+    div.podium-fab[role="group"] {
+        right: var(--space-8);
+        bottom: var(--space-8);
+    }
+}
+
+/* ── Desktop (≥1024 px): FAB margin override ── */
+@media (min-width: 1024px) {
+    button.podium-fab,
+    div.podium-fab[role="group"] {
+        right: var(--space-12);
+        bottom: var(--space-12);
+    }
+}
