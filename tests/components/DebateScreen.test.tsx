@@ -14,6 +14,15 @@ const podiumCss = readFileSync(
     'utf-8'
 );
 
+async function openComposerForSide(side: 'Post as Tark' | 'Post as Vitark') {
+    fireEvent.click(screen.getByRole('button', { name: 'Open post composer' }));
+    const sideOption = screen.getByRole('button', { name: side });
+    await waitFor(() => {
+        expect(sideOption).toBeEnabled();
+    });
+    fireEvent.click(sideOption);
+}
+
 describe('DebateScreen', () => {
     afterEach(() => {
         document.documentElement.removeAttribute('data-theme');
@@ -71,8 +80,7 @@ describe('DebateScreen', () => {
     it('appends a valid published post as the last timeline item', async () => {
         render(<DebateScreen />);
 
-        fireEvent.click(screen.getByRole('button', { name: 'Open post composer' }));
-        fireEvent.click(screen.getByRole('button', { name: 'Post as Tark' }));
+        await openComposerForSide('Post as Tark');
         fireEvent.change(screen.getByRole('textbox', { name: 'Post text' }), {
             target: { value: 'This post has enough length.' },
         });
@@ -88,8 +96,7 @@ describe('DebateScreen', () => {
     it('resets localPosts to empty after remount', async () => {
         const { unmount } = render(<DebateScreen />);
 
-        fireEvent.click(screen.getByRole('button', { name: 'Open post composer' }));
-        fireEvent.click(screen.getByRole('button', { name: 'Post as Tark' }));
+        await openComposerForSide('Post as Tark');
         fireEvent.change(screen.getByRole('textbox', { name: 'Post text' }), {
             target: { value: 'Session-only argument text.' },
         });
@@ -127,12 +134,10 @@ describe('DebateScreen', () => {
         expect(debateScreenCss).toContain('padding-bottom: var(--podium-height, 0px);');
     });
 
-    it('opens bottom sheet immediately with selected side after FAB side selection', () => {
+    it('opens bottom sheet immediately with selected side after FAB side selection', async () => {
         render(<DebateScreen />);
 
-        fireEvent.click(screen.getByRole('button', { name: 'Open post composer' }));
-        const vitarkAction = screen.getByRole('button', { name: 'Post as Vitark' });
-        fireEvent.click(vitarkAction);
+        await openComposerForSide('Post as Vitark');
 
         expect(screen.getByRole('dialog', { name: 'Post composer' })).toBeInTheDocument();
         expect(screen.getByRole('radio', { name: 'Vitark' })).toHaveAttribute('aria-checked', 'true');
