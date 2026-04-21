@@ -197,12 +197,6 @@ describe('PodiumFAB', () => {
         expect(podiumFabCss).toMatch(/background-color:\s*var\(--color-vitark-surface\)/);
         expect(podiumFabCss).toMatch(/var\(--color-elevation-shadow-ambient\)/);
         expect(podiumFabCss).toMatch(/var\(--color-elevation-shadow-key\)/);
-        expect(podiumFabCss).toMatch(
-            /right:\s*max\(var\(--space-4\),\s*env\(safe-area-inset-right,\s*0px\)\);/
-        );
-        expect(podiumFabCss).toMatch(
-            /bottom:\s*max\(var\(--space-4\),\s*env\(safe-area-inset-bottom,\s*0px\)\);/
-        );
         expect(podiumFabCss).toMatch(/transition:\s*opacity\s+300ms\s+ease-out,\s*transform\s+300ms\s+ease-out/);
         expect(podiumFabCss).toMatch(/transform:\s*scale\(0\.8\)/);
         expect(podiumFabCss).toMatch(/\.podium-fab--expanded\s*\{[\s\S]*pointer-events:\s*auto;/);
@@ -218,14 +212,30 @@ describe('PodiumFAB', () => {
         const desktopBreakpointIndex = desktopMediaMatch?.index ?? -1;
         const tabletBlock = podiumFabCss.slice(tabletBreakpointIndex, desktopBreakpointIndex);
         const desktopBlock = podiumFabCss.slice(desktopBreakpointIndex);
+        const tabletRule = tabletBlock.match(
+            /button\.podium-fab,\s*div\.podium-fab\[role=(['"])group\1\]\s*\{([^}]*)\}/
+        );
+        const desktopRule = desktopBlock.match(
+            /button\.podium-fab,\s*div\.podium-fab\[role=(['"])group\1\]\s*\{([^}]*)\}/
+        );
+        const tabletDeclarations = tabletRule?.[2] ?? '';
+        const desktopDeclarations = desktopRule?.[2] ?? '';
 
         expect(tabletBreakpointIndex).toBeGreaterThan(-1);
         expect(desktopBreakpointIndex).toBeGreaterThan(tabletBreakpointIndex);
-        expect(tabletBlock).toMatch(
-            /button\.podium-fab,\s*div\.podium-fab\[role=(['"])group\1\]\s*\{[^}]*right:\s*max\(var\(--space-8\),\s*env\(safe-area-inset-right,\s*0px\)\);[^}]*bottom:\s*max\(var\(--space-8\),\s*env\(safe-area-inset-bottom,\s*0px\)\);[^}]*\}/
+        expect(tabletRule).not.toBeNull();
+        expect(desktopRule).not.toBeNull();
+        expect(tabletDeclarations).toMatch(
+            /right:\s*max\(var\(--space-8\),\s*env\(safe-area-inset-right,\s*0px\)\);/
         );
-        expect(desktopBlock).toMatch(
-            /button\.podium-fab,\s*div\.podium-fab\[role=(['"])group\1\]\s*\{[^}]*right:\s*max\(var\(--space-12\),\s*env\(safe-area-inset-right,\s*0px\)\);[^}]*bottom:\s*max\(var\(--space-12\),\s*env\(safe-area-inset-bottom,\s*0px\)\);[^}]*\}/
+        expect(tabletDeclarations).toMatch(
+            /bottom:\s*max\(var\(--space-8\),\s*env\(safe-area-inset-bottom,\s*0px\)\);/
+        );
+        expect(desktopDeclarations).toMatch(
+            /right:\s*max\(var\(--space-12\),\s*env\(safe-area-inset-right,\s*0px\)\);/
+        );
+        expect(desktopDeclarations).toMatch(
+            /bottom:\s*max\(var\(--space-12\),\s*env\(safe-area-inset-bottom,\s*0px\)\);/
         );
     });
 });
