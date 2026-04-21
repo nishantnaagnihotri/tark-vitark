@@ -103,7 +103,7 @@ The full Gate 5, Gate 5.5 Runtime QA, and Gate 6 orchestration workflow - issue-
 4. Destructive commands (`git reset --hard`, force-push, history rewrite, mass deletion) remain disallowed unless Product Owner gives explicit command-level approval for that exact operation.
 5. Orchestrator must summarize intended commands before execution and record the decision in orchestration context updates.
 6. PR merges into `master` (or any default branch) are never executed by any agent. These are always performed by the Product Owner directly.
-7. The Orchestrator MAY execute `gh pr merge --squash` (or `--merge`) for PRs whose base branch matches `slice/*` (integration branches, never `master`), provided: (a) all gate conditions for that merge tier are satisfied, (b) the Orchestrator summarizes the exact command and its target before executing, and (c) the action is recorded in the orchestration context update.
+7. Explicit exception to rule 2: for PRs whose base branch matches `slice/*` (integration branches, never `master` or the default branch), the Orchestrator MAY execute the merge without a separate Product Owner mutation request, provided: (a) all gate conditions for that merge tier are satisfied, (b) the Orchestrator summarizes the exact action and target before executing, and (c) the action is recorded in the orchestration context update. The Orchestrator must use GitHub MCP tools for this merge action when that capability is available; `gh pr merge --squash` (or `--merge`) is permitted only as a fallback when GitHub MCP does not provide the required merge capability for that specific action and the Product Owner explicitly approves the non-MCP fallback.
 
 ## Owner Question Protocol
 
