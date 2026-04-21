@@ -61,7 +61,7 @@ describe('DebateScreen', () => {
         expect(items).toHaveLength(DEBATE.arguments.length);
     });
 
-    it('defaults selected side to tark on mount', () => {
+    it('renders FAB composer entry on mount', () => {
         render(<DebateScreen />);
 
         expect(screen.getByRole('button', { name: 'Open post composer' })).toBeInTheDocument();
