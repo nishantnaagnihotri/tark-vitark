@@ -162,10 +162,14 @@ Then(
   'AC-26 desktop-tier podium scrim values are present',
   function (this: PodiumResponsiveLayoutWorld) {
     const desktopScrimStyles = desktopScrimBlock(this);
-    assert.ok(desktopScrimStyles.includes('.podium-sheet-scrim'));
-    assert.ok(desktopScrimStyles.includes('[data-theme="dark"] .podium-sheet-scrim'));
-    assert.ok(desktopScrimStyles.includes('rgba(0, 0, 0, 0.36)'));
-    assert.ok(desktopScrimStyles.includes('rgba(0, 0, 0, 0.52)'));
+    assert.match(
+      desktopScrimStyles,
+      /\.podium-sheet-scrim\s*\{[^}]*rgba\(0,\s*0,\s*0,\s*0\.36\)[^}]*\}/
+    );
+    assert.match(
+      desktopScrimStyles,
+      /\[data-theme="dark"\]\s+\.podium-sheet-scrim\s*\{[^}]*rgba\(0,\s*0,\s*0,\s*0\.52\)[^}]*\}/
+    );
   }
 );
 
@@ -252,7 +256,7 @@ Then(
 );
 
 Then(
-  'AC-29 Figma tablet FAB values are wired in responsive CSS',
+  'AC-29 tablet-tier podium FAB spacing matches the Figma specification',
   function (this: PodiumResponsiveLayoutWorld) {
     const tabletFabStyles = tabletFabBlock(this);
     assert.match(
@@ -267,14 +271,14 @@ Then(
 );
 
 Then(
-  'AC-29 Figma tablet sheet width value is wired in responsive CSS',
+  'AC-29 tablet-tier podium sheet width matches the Figma specification',
   function (this: PodiumResponsiveLayoutWorld) {
     assert.ok(tabletSheetWidthBlock(this).includes('max-width: 600px;'));
   }
 );
 
 Then(
-  'AC-29 Figma tablet dark scrim value is wired in responsive CSS',
+  'AC-29 tablet-tier podium dark scrim matches the Figma specification',
   function (this: PodiumResponsiveLayoutWorld) {
     const tabletDarkScrimStyles = tabletDarkScrimBlock(this);
     assert.ok(tabletDarkScrimStyles.includes('rgba(0, 0, 0, 0.48)'));
@@ -282,7 +286,7 @@ Then(
 );
 
 Then(
-  'AC-30 Figma desktop FAB values are wired in responsive CSS',
+  'AC-30 desktop-tier podium FAB spacing matches the Figma specification',
   function (this: PodiumResponsiveLayoutWorld) {
     const desktopFabStyles = desktopFabBlock(this);
     assert.match(
@@ -297,17 +301,23 @@ Then(
 );
 
 Then(
-  'AC-30 Figma desktop sheet width value is wired in responsive CSS',
+  'AC-30 desktop-tier podium sheet width matches the Figma specification',
   function (this: PodiumResponsiveLayoutWorld) {
     assert.ok(desktopSheetWidthBlock(this).includes('max-width: 720px;'));
   }
 );
 
 Then(
-  'AC-30 Figma desktop scrim values are wired in responsive CSS',
+  'AC-30 desktop-tier podium scrim opacity matches the Figma specification',
   function (this: PodiumResponsiveLayoutWorld) {
     const desktopScrimStyles = desktopScrimBlock(this);
-    assert.ok(desktopScrimStyles.includes('rgba(0, 0, 0, 0.36)'));
-    assert.ok(desktopScrimStyles.includes('rgba(0, 0, 0, 0.52)'));
+    assert.match(
+      desktopScrimStyles,
+      /\.podium-sheet-scrim\s*\{[^}]*rgba\(0,\s*0,\s*0,\s*0\.36\)[^}]*\}/
+    );
+    assert.match(
+      desktopScrimStyles,
+      /\[data-theme="dark"\]\s+\.podium-sheet-scrim\s*\{[^}]*rgba\(0,\s*0,\s*0,\s*0\.52\)[^}]*\}/
+    );
   }
 );

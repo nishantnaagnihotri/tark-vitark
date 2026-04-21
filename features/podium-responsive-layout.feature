@@ -31,14 +31,14 @@ Feature: Podium responsive layout
     And AC-28 the legend bar 481px comment no longer says tablet and above
     And AC-28 the argument card 481px comment is reclassified as mobile-internal
 
-  Scenario: AC-29 Figma tablet values are wired in responsive CSS
+  Scenario: AC-29 tablet-tier podium layout values match the Figma specification
     Given the podium responsive stylesheet sources are loaded
-    Then AC-29 Figma tablet FAB values are wired in responsive CSS
-    And AC-29 Figma tablet sheet width value is wired in responsive CSS
-    And AC-29 Figma tablet dark scrim value is wired in responsive CSS
+    Then AC-29 tablet-tier podium FAB spacing matches the Figma specification
+    And AC-29 tablet-tier podium sheet width matches the Figma specification
+    And AC-29 tablet-tier podium dark scrim matches the Figma specification
 
-  Scenario: AC-30 Figma desktop values are wired in responsive CSS
+  Scenario: AC-30 desktop-tier podium layout values match the Figma specification
     Given the podium responsive stylesheet sources are loaded
-    Then AC-30 Figma desktop FAB values are wired in responsive CSS
-    And AC-30 Figma desktop sheet width value is wired in responsive CSS
-    And AC-30 Figma desktop scrim values are wired in responsive CSS
+    Then AC-30 desktop-tier podium FAB spacing matches the Figma specification
+    And AC-30 desktop-tier podium sheet width matches the Figma specification
+    And AC-30 desktop-tier podium scrim opacity matches the Figma specification
