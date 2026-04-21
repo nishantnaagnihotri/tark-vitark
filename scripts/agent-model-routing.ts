@@ -10,6 +10,27 @@ export const ROLE_DEFAULT_MODELS = {
     "runtime-qa": "gpt-5.4",
 } as const satisfies Record<string, string>;
 
+export type RoleModelSource = "role-default" | "fallback";
+
+export type RoleModelSelection = {
+    model: string;
+    source: RoleModelSource;
+};
+
+export function modelSelectionForRole(role: string): RoleModelSelection {
+    if (Object.prototype.hasOwnProperty.call(ROLE_DEFAULT_MODELS, role)) {
+        return {
+            model: ROLE_DEFAULT_MODELS[role as keyof typeof ROLE_DEFAULT_MODELS],
+            source: "role-default",
+        };
+    }
+
+    return {
+        model: FALLBACK_MODEL,
+        source: "fallback",
+    };
+}
+
 export function defaultModelForRole(role: string): string {
-    return ROLE_DEFAULT_MODELS[role] ?? FALLBACK_MODEL;
+    return modelSelectionForRole(role).model;
 }

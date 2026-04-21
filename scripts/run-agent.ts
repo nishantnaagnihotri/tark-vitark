@@ -29,7 +29,7 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 
 import { fileURLToPath } from "node:url";
 import { join, resolve } from "node:path";
 import { randomUUID } from "node:crypto";
-import { defaultModelForRole } from "./agent-model-routing.ts";
+import { modelSelectionForRole } from "./agent-model-routing.ts";
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
@@ -246,9 +246,10 @@ if (argv.length !== 2) {
     process.exit(1);
 }
 const [role, rawPrompt] = argv;
-const roleDefaultModel = defaultModelForRole(role);
-const model = modelOverride ?? roleDefaultModel;
-const modelSource = modelOverride ? "--model override" : "role default";
+const policyModelSelection = modelSelectionForRole(role);
+const policyModel = policyModelSelection.model;
+const model = modelOverride ?? policyModel;
+const modelSource = modelOverride ? "--model override" : policyModelSelection.source;
 
 // Support @file references: `@path/to/file.md` reads file contents as the prompt
 const prompt = rawPrompt.startsWith("@")
@@ -361,7 +362,10 @@ function inferTaskId(prompt: string, explicitTaskId?: string): string {
 const runId = randomUUID();
 const startedAt = new Date().toISOString();
 logInfo(`[run-agent] started  runId=${runId} role=${role} model=${model} effort=${REASONING_EFFORT} at=${startedAt}`);
-logInfo(`[run-agent] routing  role-default=${roleDefaultModel} model-source=${modelSource}`);
+logInfo(`[run-agent] routing  policy-model=${policyModel} policy-source=${policyModelSelection.source} model-source=${modelSource}`);
+if (!modelOverride && policyModelSelection.source === "fallback") {
+    logInfo(`[run-agent] warning  unknown role='${role}' not found in routing table; using fallback model=${policyModel}`);
+}
 logInfo(`[run-agent] prompt   ${prompt.slice(0, 120).replace(/\n/g, " ")}${prompt.length > 120 ? "…" : ""}`);
 
 const { tools, systemMessage } = readAgentMeta(role);
