@@ -286,7 +286,7 @@ gates = [
     ("Gate 3", "Design",      "Orchestrator executes UX+Design in Gate 3A; Design QA Agent validates fidelity in Gate 3B."),
     ("Gate 4", "Architecture","Architecture Agent maps modules, boundaries, risks, and task breakdown."),
     ("Gate 5", "Build",       "Dev Agent implements and tests against acceptance criteria on a feature branch."),
-    ("Code Review", "",       "Code Reviewer (Copilot) reviews the PR; feedback loop until 0 comments."),
+    ("Code Review", "",       "Code Reviewer (Copilot) reviews the PR; feedback loop until the latest Copilot review body says 'generated 0 comments' (or equivalent)."),
     ("Gate 5.5", "Runtime QA","Runtime QA Agent validates live behaviour across viewport × theme matrix."),
     ("Gate 6", "Merge Ready", "Orchestrator confirms all evidence; Product Owner merges the PR."),
 ]
