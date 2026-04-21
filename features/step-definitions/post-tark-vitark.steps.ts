@@ -38,11 +38,19 @@ function expandComposerOptions(world: PostTarkVitarkWorld): void {
   fireEvent.click(view.getByRole('button', { name: 'Open post composer' }));
 }
 
-function openBottomSheetForSide(world: PostTarkVitarkWorld, side: Side = 'tark'): void {
+async function openBottomSheetForSide(world: PostTarkVitarkWorld, side: Side = 'tark'): Promise<void> {
   const view = activeRender(world);
 
   if (!view.queryByRole('dialog', { name: 'Post composer' })) {
     expandComposerOptions(world);
+
+    await waitFor(() => {
+      const sideButton = activeRender(world).getByRole('button', {
+        name: side === 'tark' ? 'Post as Tark' : 'Post as Vitark',
+      }) as HTMLButtonElement;
+      assert.equal(sideButton.disabled, false);
+    });
+
     fireEvent.click(
       activeRender(world).getByRole('button', {
         name: side === 'tark' ? 'Post as Tark' : 'Post as Vitark',
@@ -57,7 +65,7 @@ function openBottomSheetForSide(world: PostTarkVitarkWorld, side: Side = 'tark')
   }
 }
 
-function composerInput(world: PostTarkVitarkWorld): HTMLTextAreaElement {
+async function composerInput(world: PostTarkVitarkWorld): Promise<HTMLTextAreaElement> {
   const view = activeRender(world);
   const existingComposerInput = view.queryByRole('textbox', {
     name: 'Post text',
@@ -66,13 +74,13 @@ function composerInput(world: PostTarkVitarkWorld): HTMLTextAreaElement {
     return existingComposerInput as HTMLTextAreaElement;
   }
 
-  openBottomSheetForSide(world);
+  await openBottomSheetForSide(world);
   return activeRender(world).getByRole('textbox', {
     name: 'Post text',
   }) as HTMLTextAreaElement;
 }
 
-function publishButton(world: PostTarkVitarkWorld): HTMLButtonElement {
+async function publishButton(world: PostTarkVitarkWorld): Promise<HTMLButtonElement> {
   const view = activeRender(world);
   const existingPublishButton = view.queryByRole('button', {
     name: 'Publish post',
@@ -81,7 +89,7 @@ function publishButton(world: PostTarkVitarkWorld): HTMLButtonElement {
     return existingPublishButton as HTMLButtonElement;
   }
 
-  openBottomSheetForSide(world);
+  await openBottomSheetForSide(world);
   return activeRender(world).getByRole('button', {
     name: 'Publish post',
   }) as HTMLButtonElement;
@@ -96,11 +104,13 @@ function buildText(length: number): string {
 }
 
 async function submitComposer(world: PostTarkVitarkWorld): Promise<void> {
+  const composerPublishButton = await publishButton(world);
+
   await waitFor(() => {
-    assert.equal(publishButton(world).disabled, false);
+    assert.equal(composerPublishButton.disabled, false);
   });
 
-  fireEvent.click(publishButton(world));
+  fireEvent.click(composerPublishButton);
 }
 
 class PostTarkVitarkWorld extends World {
@@ -158,7 +168,7 @@ Then('Tark is selected by default', async function (this: PostTarkVitarkWorld) {
 });
 
 When('the visitor selects the Vitark side', function (this: PostTarkVitarkWorld) {
-  openBottomSheetForSide(this, 'vitark');
+  return openBottomSheetForSide(this, 'vitark');
 });
 
 Then('Vitark remains selected', function (this: PostTarkVitarkWorld) {
@@ -167,18 +177,18 @@ Then('Vitark remains selected', function (this: PostTarkVitarkWorld) {
   assert.equal(chip.getAttribute('aria-checked'), 'true');
 });
 
-When('the visitor enters whitespace-only post text', function (this: PostTarkVitarkWorld) {
-  fireEvent.change(composerInput(this), { target: { value: '      ' } });
+When('the visitor enters whitespace-only post text', async function (this: PostTarkVitarkWorld) {
+  fireEvent.change(await composerInput(this), { target: { value: '      ' } });
 });
 
-When('the visitor enters a post with {int} characters', function (this: PostTarkVitarkWorld, length: number) {
+When('the visitor enters a post with {int} characters', async function (this: PostTarkVitarkWorld, length: number) {
   this.latestPublishedText = buildText(length);
-  fireEvent.change(composerInput(this), { target: { value: this.latestPublishedText } });
+  fireEvent.change(await composerInput(this), { target: { value: this.latestPublishedText } });
 });
 
-When('the visitor enters valid multiline post text', function (this: PostTarkVitarkWorld) {
+When('the visitor enters valid multiline post text', async function (this: PostTarkVitarkWorld) {
   this.latestPublishedText = 'Line one has spaces\nLine two stays valid.';
-  fireEvent.change(composerInput(this), { target: { value: this.latestPublishedText } });
+  fireEvent.change(await composerInput(this), { target: { value: this.latestPublishedText } });
 });
 
 When('the visitor submits the post', async function (this: PostTarkVitarkWorld) {
@@ -187,13 +197,13 @@ When('the visitor submits the post', async function (this: PostTarkVitarkWorld) 
 
 When('the visitor publishes the post text {string}', async function (this: PostTarkVitarkWorld, text: string) {
   this.latestPublishedText = text;
-  fireEvent.change(composerInput(this), { target: { value: text } });
+  fireEvent.change(await composerInput(this), { target: { value: text } });
   await submitComposer(this);
 });
 
-Then('a validation error appears saying {string}', function (this: PostTarkVitarkWorld, message: string) {
+Then('a validation error appears saying {string}', async function (this: PostTarkVitarkWorld, message: string) {
   assert.equal(activeRender(this).getByRole('alert').textContent?.trim(), message);
-  assert.equal(composerInput(this).getAttribute('aria-invalid'), 'true');
+  assert.equal((await composerInput(this)).getAttribute('aria-invalid'), 'true');
 });
 
 Then('no new debate post is added', function (this: PostTarkVitarkWorld) {
@@ -220,8 +230,10 @@ Then('the latest debate post text is {string}', async function (this: PostTarkVi
 });
 
 Then('the composer input is cleared', async function (this: PostTarkVitarkWorld) {
+  const input = await composerInput(this);
+
   await waitFor(() => {
-    assert.equal(composerInput(this).value, '');
+    assert.equal(input.value, '');
   });
 });
 
@@ -239,7 +251,7 @@ Given('a publish is already in progress in the composer', async function (this: 
     })
   );
 
-  fireEvent.change(composerInput(this), { target: { value: 'This text has enough length.' } });
+  fireEvent.change(await composerInput(this), { target: { value: 'This text has enough length.' } });
   await submitComposer(this);
 
   await waitFor(() => {
@@ -247,13 +259,13 @@ Given('a publish is already in progress in the composer', async function (this: 
   });
 });
 
-When('the visitor attempts another publish while busy', function (this: PostTarkVitarkWorld) {
-  fireEvent.click(publishButton(this));
+When('the visitor attempts another publish while busy', async function (this: PostTarkVitarkWorld) {
+  fireEvent.click(await publishButton(this));
 });
 
-Then('the second publish attempt is blocked', function (this: PostTarkVitarkWorld) {
+Then('the second publish attempt is blocked', async function (this: PostTarkVitarkWorld) {
   assert.equal(this.publishCalls, 1);
-  assert.equal(publishButton(this).disabled, true);
+  assert.equal((await publishButton(this)).disabled, true);
 });
 
 When('the page is refreshed', function (this: PostTarkVitarkWorld) {
