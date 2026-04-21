@@ -159,11 +159,12 @@ Then('the composer controls are visible', function (this: PostTarkVitarkWorld) {
 });
 
 Then('Tark is selected by default', async function (this: PostTarkVitarkWorld) {
-  expandComposerOptions(this);
+  await openBottomSheetForSide(this, 'tark');
 
   await waitFor(() => {
-    const tarkOption = activeRender(this).getByRole('button', { name: 'Post as Tark' });
-    assert.equal(document.activeElement, tarkOption);
+    const tarkOption = activeRender(this).getByRole('radio', { name: 'Tark' });
+    assert.ok(tarkOption);
+    assert.equal(tarkOption.getAttribute('aria-checked'), 'true');
   });
 });
 
