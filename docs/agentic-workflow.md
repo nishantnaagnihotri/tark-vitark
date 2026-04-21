@@ -11,7 +11,8 @@ flowchart TD
     G2 -->|approved| G3["Gate 3\nDesign\n🤖 Orchestrator + Design QA"]
     G3 -->|approved| G4["Gate 4\nArchitecture\n🤖 Architecture Agent"]
     G4 -->|issues created| G5["Gate 5\nBuild\n🤖 Dev Agent"]
-    G5 -->|PR opened| D55{UI change?}
+    G5 -->|PR opened| CR["Code Review\n🤖 Code Reviewer"]
+    CR -->|review clean| D55{UI change?}
     D55 -->|no| G6
     D55 -->|yes| G55["Gate 5.5\nRuntime QA\n🤖 Runtime QA Agent"]
     G55 -->|pass| G6["Gate 6\nMerge Readiness\n🤖 Orchestrator"]
@@ -22,6 +23,7 @@ flowchart TD
     G2 -->|needs work| G2
     G3 -->|needs work| G3
     G4 -->|needs work| G4
+    CR -->|needs fixes| G5
     G55 -->|fail| G5
     G6 -->|gaps| G5
 
@@ -30,7 +32,7 @@ flowchart TD
     classDef done fill:#1a3d2b,stroke:#4caf7d,color:#e8f5ec
     classDef decision fill:#3d3519,stroke:#d4c24e,color:#fdf8e8
 
-    class G1,G2,G3,G4,G5,G55,G6 gate
+    class G1,G2,G3,G4,G5,CR,G55,G6 gate
     class PO,MERGE po
     class DONE done
     class D1,D55 decision
@@ -45,6 +47,7 @@ flowchart TD
 | 3 — Design *(local-only)* | Orchestrator + Design QA Agent | Figma frames + QA verdict |
 | 4 — Architecture | Architecture Agent | Architecture plan + task issues |
 | 5 — Build | Dev Agent | Code + tests + PR |
+| Code Review | Code Reviewer | Latest Copilot review body says `generated 0 comments` (or equivalent) |
 | 5.5 — Runtime QA | Runtime QA Agent | Browser journey verdict |
 | 6 — Merge Readiness | Orchestrator | Merge recommendation |
 

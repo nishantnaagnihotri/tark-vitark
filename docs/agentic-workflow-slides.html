@@ -256,8 +256,8 @@
     <div class="slide-num">4 / 8</div>
     <div class="label">Overview</div>
     <h2>The 6-Gate Pipeline</h2>
-    <svg viewBox="0 0 560 232" width="100%" style="display:block;margin:16px auto 0;max-height:242px" role="img" aria-labelledby="workflow-pipeline-title">
-      <title id="workflow-pipeline-title">Pipeline diagram showing Product Owner intake, Gates 1 through 6, the trivial bypass, and final Product Owner merge.</title>
+    <svg viewBox="0 0 720 232" width="100%" style="display:block;margin:16px auto 0;max-height:242px" role="img" aria-labelledby="workflow-pipeline-title">
+      <title id="workflow-pipeline-title">Pipeline diagram showing Product Owner intake, Gates 1 through 6, the Code Review loop, the trivial bypass, and final Product Owner merge.</title>
       <defs>
         <marker id="ah" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
           <path d="M0,0 L7,3.5 L0,7 Z" fill="#4a90d9"/>
@@ -272,61 +272,66 @@
       <text x="60" y="37" text-anchor="middle" font-size="11" font-weight="600" fill="#fae8fd">👤 Product</text>
       <text x="60" y="51" text-anchor="middle" font-size="10" fill="#e9b3ef">Owner</text>
 
-      <rect x="126" y="18" width="88" height="46" rx="7" fill="#1e3a5f" stroke="#4a90d9" stroke-width="1.5"/>
-      <text x="170" y="37" text-anchor="middle" font-size="12" font-weight="700" fill="#e8f4fd">Gate 1</text>
-      <text x="170" y="51" text-anchor="middle" font-size="9.5" fill="#93c5fd">Requirement</text>
+      <rect x="152" y="18" width="88" height="46" rx="7" fill="#1e3a5f" stroke="#4a90d9" stroke-width="1.5"/>
+      <text x="196" y="37" text-anchor="middle" font-size="12" font-weight="700" fill="#e8f4fd">Gate 1</text>
+      <text x="196" y="51" text-anchor="middle" font-size="9.5" fill="#93c5fd">Requirement</text>
 
-      <rect x="236" y="18" width="88" height="46" rx="7" fill="#1e3a5f" stroke="#4a90d9" stroke-width="1.5"/>
-      <text x="280" y="37" text-anchor="middle" font-size="12" font-weight="700" fill="#e8f4fd">Gate 2</text>
-      <text x="280" y="51" text-anchor="middle" font-size="9.5" fill="#93c5fd">PRD</text>
+      <rect x="288" y="18" width="88" height="46" rx="7" fill="#1e3a5f" stroke="#4a90d9" stroke-width="1.5"/>
+      <text x="332" y="37" text-anchor="middle" font-size="12" font-weight="700" fill="#e8f4fd">Gate 2</text>
+      <text x="332" y="51" text-anchor="middle" font-size="9.5" fill="#93c5fd">PRD</text>
 
-      <rect x="346" y="18" width="88" height="46" rx="7" fill="#1e3a5f" stroke="#4a90d9" stroke-width="1.5"/>
-      <text x="390" y="37" text-anchor="middle" font-size="12" font-weight="700" fill="#e8f4fd">Gate 3</text>
-      <text x="390" y="51" text-anchor="middle" font-size="9.5" fill="#93c5fd">Design</text>
+      <rect x="424" y="18" width="88" height="46" rx="7" fill="#1e3a5f" stroke="#4a90d9" stroke-width="1.5"/>
+      <text x="468" y="37" text-anchor="middle" font-size="12" font-weight="700" fill="#e8f4fd">Gate 3</text>
+      <text x="468" y="51" text-anchor="middle" font-size="9.5" fill="#93c5fd">Design</text>
 
-      <rect x="456" y="18" width="88" height="46" rx="7" fill="#1e3a5f" stroke="#4a90d9" stroke-width="1.5"/>
-      <text x="500" y="37" text-anchor="middle" font-size="12" font-weight="700" fill="#e8f4fd">Gate 4</text>
-      <text x="500" y="51" text-anchor="middle" font-size="9.5" fill="#93c5fd">Architecture</text>
+      <rect x="560" y="18" width="88" height="46" rx="7" fill="#1e3a5f" stroke="#4a90d9" stroke-width="1.5"/>
+      <text x="604" y="37" text-anchor="middle" font-size="12" font-weight="700" fill="#e8f4fd">Gate 4</text>
+      <text x="604" y="51" text-anchor="middle" font-size="9.5" fill="#93c5fd">Architecture</text>
 
       <!-- ─── ROW 1 ARROWS ─── -->
-      <line x1="104" y1="41" x2="124" y2="41" stroke="#4a90d9" stroke-width="1.5" marker-end="url(#ah)"/>
-      <line x1="214" y1="41" x2="234" y2="41" stroke="#4a90d9" stroke-width="1.5" marker-end="url(#ah)"/>
-      <line x1="324" y1="41" x2="344" y2="41" stroke="#4a90d9" stroke-width="1.5" marker-end="url(#ah)"/>
-      <line x1="434" y1="41" x2="454" y2="41" stroke="#4a90d9" stroke-width="1.5" marker-end="url(#ah)"/>
+      <line x1="104" y1="41" x2="150" y2="41" stroke="#4a90d9" stroke-width="1.5" marker-end="url(#ah)"/>
+      <line x1="240" y1="41" x2="286" y2="41" stroke="#4a90d9" stroke-width="1.5" marker-end="url(#ah)"/>
+      <line x1="376" y1="41" x2="422" y2="41" stroke="#4a90d9" stroke-width="1.5" marker-end="url(#ah)"/>
+      <line x1="512" y1="41" x2="558" y2="41" stroke="#4a90d9" stroke-width="1.5" marker-end="url(#ah)"/>
 
       <!-- ─── VERTICAL CONNECTOR (G4 → G5) ─── -->
-      <line x1="500" y1="64" x2="500" y2="153" stroke="#4a90d9" stroke-width="1.5" marker-end="url(#ah)"/>
+      <path d="M 604,64 L 620,64 L 620,153" stroke="#4a90d9" stroke-width="1.5" fill="none" marker-end="url(#ah)"/>
 
       <!-- ─── TRIVIAL BYPASS (dashed, G1 skips to G5) ─── -->
-      <path d="M 170,64 C 170,118 456,118 456,156" stroke="#6e7681" stroke-width="1.2" stroke-dasharray="4,3" fill="none" marker-end="url(#ahg)"/>
-      <text x="313" y="113" text-anchor="middle" font-size="8" fill="#6e7681">trivial bypass</text>
+      <path d="M 196,64 C 196,118 576,118 576,156" stroke="#6e7681" stroke-width="1.2" stroke-dasharray="4,3" fill="none" marker-end="url(#ahg)"/>
+      <text x="384" y="113" text-anchor="middle" font-size="8" fill="#6e7681">trivial bypass</text>
 
       <!-- ─── ROW 2 BOXES ─── -->
-      <rect x="456" y="156" width="88" height="46" rx="7" fill="#1e3a5f" stroke="#4a90d9" stroke-width="1.5"/>
-      <text x="500" y="175" text-anchor="middle" font-size="12" font-weight="700" fill="#e8f4fd">Gate 5</text>
-      <text x="500" y="189" text-anchor="middle" font-size="9.5" fill="#93c5fd">Build</text>
+      <rect x="576" y="156" width="88" height="46" rx="7" fill="#1e3a5f" stroke="#4a90d9" stroke-width="1.5"/>
+      <text x="620" y="175" text-anchor="middle" font-size="12" font-weight="700" fill="#e8f4fd">Gate 5</text>
+      <text x="620" y="189" text-anchor="middle" font-size="9.5" fill="#93c5fd">Build</text>
 
-      <rect x="346" y="156" width="88" height="46" rx="7" fill="#1e3a5f" stroke="#4a90d9" stroke-width="1.5" stroke-dasharray="5,3"/>
-      <text x="390" y="175" text-anchor="middle" font-size="12" font-weight="700" fill="#e8f4fd">Gate 5.5</text>
-      <text x="390" y="189" text-anchor="middle" font-size="9.5" fill="#93c5fd">Runtime QA</text>
+      <rect x="464" y="156" width="88" height="46" rx="7" fill="#1e3a5f" stroke="#4a90d9" stroke-width="1.5"/>
+      <text x="508" y="175" text-anchor="middle" font-size="11" font-weight="700" fill="#e8f4fd">Code Review</text>
+      <text x="508" y="189" text-anchor="middle" font-size="9.5" fill="#93c5fd">Code Reviewer</text>
 
-      <rect x="236" y="156" width="88" height="46" rx="7" fill="#1e3a5f" stroke="#4a90d9" stroke-width="1.5"/>
-      <text x="280" y="175" text-anchor="middle" font-size="12" font-weight="700" fill="#e8f4fd">Gate 6</text>
-      <text x="280" y="189" text-anchor="middle" font-size="9.5" fill="#93c5fd">Merge Ready</text>
+      <rect x="352" y="156" width="88" height="46" rx="7" fill="#1e3a5f" stroke="#4a90d9" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <text x="396" y="175" text-anchor="middle" font-size="12" font-weight="700" fill="#e8f4fd">Gate 5.5</text>
+      <text x="396" y="189" text-anchor="middle" font-size="9.5" fill="#93c5fd">Runtime QA</text>
 
-      <rect x="126" y="156" width="88" height="46" rx="7" fill="#3d1a3d" stroke="#c97dd4" stroke-width="1.5"/>
-      <text x="170" y="175" text-anchor="middle" font-size="11" font-weight="600" fill="#fae8fd">👤 PO</text>
-      <text x="170" y="189" text-anchor="middle" font-size="9.5" fill="#e9b3ef">Merges PR</text>
+      <rect x="240" y="156" width="88" height="46" rx="7" fill="#1e3a5f" stroke="#4a90d9" stroke-width="1.5"/>
+      <text x="284" y="175" text-anchor="middle" font-size="12" font-weight="700" fill="#e8f4fd">Gate 6</text>
+      <text x="284" y="189" text-anchor="middle" font-size="8.8" fill="#93c5fd">Merge Readiness</text>
+
+      <rect x="128" y="156" width="88" height="46" rx="7" fill="#3d1a3d" stroke="#c97dd4" stroke-width="1.5"/>
+      <text x="172" y="175" text-anchor="middle" font-size="11" font-weight="600" fill="#fae8fd">👤 PO</text>
+      <text x="172" y="189" text-anchor="middle" font-size="9.5" fill="#e9b3ef">Merges PR</text>
 
       <rect x="16" y="156" width="88" height="46" rx="7" fill="#1a3d2b" stroke="#4caf7d" stroke-width="1.5"/>
       <text x="60" y="175" text-anchor="middle" font-size="12" font-weight="700" fill="#e8f5ec">✅ Done</text>
       <text x="60" y="189" text-anchor="middle" font-size="9.5" fill="#86efac">Shipped</text>
 
       <!-- ─── ROW 2 ARROWS (rightward source → leftward) ─── -->
-      <line x1="456" y1="179" x2="436" y2="179" stroke="#4a90d9" stroke-width="1.5" marker-end="url(#ah)"/>
-      <line x1="346" y1="179" x2="326" y2="179" stroke="#4a90d9" stroke-width="1.5" marker-end="url(#ah)"/>
-      <line x1="236" y1="179" x2="216" y2="179" stroke="#4a90d9" stroke-width="1.5" marker-end="url(#ah)"/>
-      <line x1="126" y1="179" x2="106" y2="179" stroke="#4a90d9" stroke-width="1.5" marker-end="url(#ah)"/>
+      <line x1="576" y1="179" x2="554" y2="179" stroke="#4a90d9" stroke-width="1.5" marker-end="url(#ah)"/>
+      <line x1="464" y1="179" x2="442" y2="179" stroke="#4a90d9" stroke-width="1.5" marker-end="url(#ah)"/>
+      <line x1="352" y1="179" x2="330" y2="179" stroke="#4a90d9" stroke-width="1.5" marker-end="url(#ah)"/>
+      <line x1="240" y1="179" x2="218" y2="179" stroke="#4a90d9" stroke-width="1.5" marker-end="url(#ah)"/>
+      <line x1="128" y1="179" x2="106" y2="179" stroke="#4a90d9" stroke-width="1.5" marker-end="url(#ah)"/>
 
       <!-- ─── LEGEND ─── -->
       <rect x="16" y="218" width="14" height="8" rx="2" fill="none" stroke="#4a90d9" stroke-width="1" stroke-dasharray="3,2"/>
@@ -387,9 +392,17 @@
         <div class="gate-num">5</div>
         <div class="gate-info">
           <div class="gate-title">Build</div>
-          <div class="gate-sub">Dev Agent implements one approved issue per run (test-first BDD) and opens a PR. Copilot review loop runs in parallel.</div>
+          <div class="gate-sub">Dev Agent implements one approved issue per run (test-first BDD) and opens a PR.</div>
         </div>
         <span class="gate-badge badge-agent">🤖 Dev Agent</span>
+      </div>
+      <div class="gate-row">
+        <div class="gate-num skip" style="font-size:9px">CR</div>
+        <div class="gate-info">
+          <div class="gate-title">Code Review</div>
+          <div class="gate-sub">Code Reviewer (Copilot) runs the PR review loop until the latest review body says "generated 0 comments" (or equivalent).</div>
+        </div>
+        <span class="gate-badge badge-agent">🤖 Code Reviewer</span>
       </div>
       <div class="gate-row">
         <div class="gate-num" style="font-size:10px">5.5</div>
@@ -403,7 +416,7 @@
         <div class="gate-num">6</div>
         <div class="gate-info">
           <div class="gate-title">Merge Readiness</div>
-          <div class="gate-sub">Orchestrator checks: tests pass, Copilot review 0 comments, Runtime QA pass, docs updated, rollback note present.</div>
+          <div class="gate-sub">Orchestrator checks: tests pass, latest Copilot review says "generated 0 comments", Runtime QA pass, docs updated, rollback note present.</div>
         </div>
         <span class="gate-badge badge-agent">🤖 Orchestrator</span>
       </div>

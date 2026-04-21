@@ -188,7 +188,7 @@ R1X = [Inches(0.28), Inches(2.15), Inches(4.02), Inches(5.89), Inches(7.76)]
 # Row 2 x positions (6 blocks, right→left visually but stored left→right for coords)
 # right-most is Build, left-most is Done
 R2X = [Inches(0.28), Inches(2.15), Inches(4.02), Inches(5.89), Inches(7.76), Inches(9.63)]
-# Row 2 logical order right→left: Build(9.63), CodeReview(7.76), RuntimeQA(5.89), MergeReady(4.02), POMerge(2.15), Done(0.28)
+# Row 2 logical order right→left: Build(9.63), CodeReview(7.76), RuntimeQA(5.89), MergeReadiness(4.02), POMerge(2.15), Done(0.28)
 
 # ── Row 1 blocks ─────────────────────────────────────────────────────────────
 blocks_r1 = [
@@ -210,7 +210,7 @@ blocks_r2 = [
     (R2X[5], CARD_BG,  BORDER_BLUE, [("Build", 11, False, TEXT_BLUE), ("Dev Agent", 9, False, SUB_BLUE)]),
     (R2X[4], CARD_BG,  BORDER_BLUE, [("Code Review", 11, False, TEXT_BLUE), ("Code Reviewer", 9, False, SUB_BLUE)]),
     (R2X[3], CARD_BG,  BORDER_BLUE, [("Runtime QA", 11, False, TEXT_BLUE), ("Runtime QA Agent", 9, False, SUB_BLUE)]),
-    (R2X[2], CARD_BG,  BORDER_BLUE, [("Merge Ready", 11, False, TEXT_BLUE), ("Gate 6", 9, False, SUB_BLUE)]),
+    (R2X[2], CARD_BG,  BORDER_BLUE, [("Merge Readiness", 10, False, TEXT_BLUE), ("Gate 6", 9, False, SUB_BLUE)]),
     (R2X[1], FILL_PRP, BORDER_PRP,  [("👤 PO", 12, True, TITLE_PRP), ("Merges PR", 10, False, TEXT_PRP), ("PO-only", 9, False, RGBColor(0xb0, 0x7c, 0xc0))]),
     (R2X[0], FILL_GRN, BORDER_GRN,  [("✅ Done", 13, True, TEXT_GRN), ("Shipped", 10, False, SUB_GRN)]),
 ]
@@ -288,7 +288,7 @@ gates = [
     ("Gate 5", "Build",       "Dev Agent implements and tests against acceptance criteria on a feature branch."),
     ("Code Review", "",       "Code Reviewer (Copilot) reviews the PR; feedback loop until the latest Copilot review body says 'generated 0 comments' (or equivalent)."),
     ("Gate 5.5", "Runtime QA","Runtime QA Agent validates live behaviour across viewport × theme matrix."),
-    ("Gate 6", "Merge Ready", "Orchestrator confirms all evidence; Product Owner merges the PR."),
+    ("Gate 6", "Merge Readiness", "Orchestrator confirms all evidence; Product Owner merges the PR."),
 ]
 
 ROW_H = Inches(0.62)
