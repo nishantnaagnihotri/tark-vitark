@@ -8,7 +8,7 @@
  * Options:
  *   --pre-sleep <seconds>   Sleep before sending the prompt (useful for async demo runs)
  *   --no-intro              Skip the automatic role-introduction prefix
- *   --model <model-id>      Override the role default model (fallback: gpt-5.4)
+ *   --model <model-id>      Override the role default model (otherwise uses configured routing)
  *   --task-id <task-id>     Optional issue/task reference for provenance block
  *   --allow-agent-orchestrator-mcp
  *                           Allow attaching the agent-orchestrator MCP server (disabled by default)
