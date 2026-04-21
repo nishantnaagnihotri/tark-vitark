@@ -64,6 +64,15 @@ Orchestrator-specific rule:
 2. Allowed secondary: Cloud for non-Gate-3 analysis drafts and alternatives.
 3. Final signoff decisions and merge readiness checks must be made in Local context.
 
+## Model Routing Policy
+
+Follow the shared Model Routing Policy in `.github/AGENTS.md` and the operational details in `.github/skills/async-agent-dispatch/SKILL.md`.
+
+1. Sync `runSubagent` handoffs must set an explicit model for specialist roles.
+2. Gate 1, Gate 2, and Gate 3B use `claude-sonnet-4.6` for `requirement-challenger`, `prd-agent`, and `design-qa-agent`.
+3. Gate 4 and Gate 5.5 use `gpt-5.4` for `architecture-agent` and `runtime-qa`.
+4. Async terminal dispatch should rely on the scripted role defaults unless there is a deliberate, documented override.
+
 ## Required Inputs
 
 1. Minimum kickoff input: requirement statement.

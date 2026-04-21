@@ -1,6 +1,6 @@
 ---
 name: async-agent-dispatch
-description: "Async agent dispatch workflow: run a single Copilot SDK agent via run-agent.ts, launch parallel async agents for Gate 5 parallel dev dispatch, apply session context prefix for chat traceability, read prompts from files, configure MCP servers via mcp.json, and maintain Figma OAuth token lifecycle. Use when: dispatching any named agent (prd-agent, dev, design-qa-agent, etc.) from the terminal, running Gate 5 parallel dev agents as background processes, tracing async chat sessions back to their originating slice/gate, troubleshooting MCP tool access, or refreshing an expired Figma OAuth token."
+description: "Async agent dispatch workflow: run a single Copilot SDK agent via run-agent.ts, launch parallel async agents for Gate 5 parallel dev dispatch, apply role-based model routing, apply session context prefix for chat traceability, read prompts from files, configure MCP servers via mcp.json, and maintain Figma OAuth token lifecycle. Use when: dispatching any named agent (prd-agent, dev, design-qa-agent, etc.) from the terminal, running Gate 5 parallel dev agents as background processes, tracing async chat sessions back to their originating slice/gate, troubleshooting MCP tool access, or refreshing an expired Figma OAuth token."
 ---
 
 # Async Agent Dispatch
@@ -32,6 +32,28 @@ Before every agent dispatch, classify the expected output:
 
 **Violation pattern to avoid:** using `runSubagent` to dispatch a dev agent to fix review comments. The commit SHA and thread replies are verifiable on GitHub; they do not need to flow into the orchestrator's reasoning context. Using `runSubagent` in this case blocks the chat session for the full agent duration unnecessarily.
 
+## Role-Based Model Routing (Mandatory)
+
+`scripts/agent-model-routing.ts` is the source of truth for terminal and async role defaults.
+
+| Role | Default model | Typical use |
+|---|---|---|
+| `architect-orchestrator` | `gpt-5.4` | coordination and gate decisions |
+| `requirement-challenger` | `claude-sonnet-4.6` | requirement challenge |
+| `prd-agent` | `claude-sonnet-4.6` | PRD drafting |
+| `design-qa-agent` | `claude-sonnet-4.6` | design QA critique |
+| `architecture-agent` | `gpt-5.4` | architecture reasoning |
+| `dev` | `gpt-5.3-codex` | issue-scoped implementation |
+| `runtime-qa` | `gpt-5.4` | runtime verdict synthesis |
+
+Rules:
+
+1. Gates 1, 2, 3B, 4, and 5.5 use sync `runSubagent` handoffs; those calls must pass an explicit `model` matching the shared policy.
+2. `scripts/run-agent.ts` resolves the role default automatically when `--model` is omitted and logs both the resolved model and whether it came from the role default or an override.
+3. `scripts/mcp-dev-orchestrator.ts` uses the same routing table for parallel async runs and includes the resolved model in task status output.
+4. If a task genuinely needs a non-default model, dispatch it directly with `scripts/run-agent.ts --model <id>` and record why in the handoff or dispatch note.
+5. Before introducing a new live role, add it to `scripts/agent-model-routing.ts` and this table in the same change.
+
 ---
 
 ## Core Script
@@ -43,6 +65,7 @@ Before every agent dispatch, classify the expected output:
 **Dependencies**:
 - `@github/copilot-sdk` (consumed from `node_modules`)
 - `tsx` — TypeScript executor (via `npx tsx`)
+- `scripts/agent-model-routing.ts` — shared role-to-model defaults
 - `.github/agents/*.agent.md` — role definitions (name, tools frontmatter, system message body)
 - `.vscode/mcp.json` — MCP server registry with `_envHeaders` and `_toolPrefixes` extensions
 - `local.env` — local secrets (gitignored); must be sourced before running if any MCP server needs env-based auth

@@ -153,6 +153,7 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). U
 80. PRD Amendment Protocol (adopted 2026-04-16): When the Product Owner approves a scope change after Gate 2 is closed, all three conditions must be met before Gate 3 closure: (1) a dated `## Amendments` entry appended in `02-prd.md` (amendment number, date, scope narrative, supersession clause if applicable), (2) delta markers in `03-ux.md` and `04-design-qa.md` citing the amendment number, and (3) no downstream artifact may remain with stale scope that conflicts with the amendment. Gate 3 is blocked until all three are satisfied. Cross-ref: `.github/skills/requirement-prd-alignment/SKILL.md` §PRD Amendment Protocol, `.github/skills/prd-gate-orchestration/SKILL.md` §PRD Amendment trigger rule.
 81. Gate 5.5 skip enforcement (adopted 2026-04-17): "Explicitly accept residual runtime risk" is only satisfied when the orchestrator has invoked `vscode_askQuestions` presenting the specific skip risk to Product Owner and received an explicit in-session confirmation. An orchestrator unilaterally declaring "PO accepted residual runtime risk" in a gate closure summary — without a `vscode_askQuestions` call in that session — is a workflow failure and an invalid Gate 5.5 skip path. Gate 5.5 remains blocking for UI-impacting issues until either a `Runtime QA Verdict: Pass` or a confirmed `vscode_askQuestions` risk acceptance is on record. Cross-ref: `build-merge-gate-orchestration` skill Explicit PO Acceptance Enforcement rule, `build-evidence-and-merge-readiness` skill Runtime QA lock and Merge Recommendation Checklist #6.
 82. Global AC numbering (adopted 2026-04-20, PO decision): AC IDs are globally unique across all slices. The last AC assigned is **AC-28** (`podium-responsive-layout`, 2026-04-20). The next slice must seed its first AC at **AC-29**. Orchestrator must update this rule (last assigned AC + slice + date) at Gate 1 freeze for every new slice. If a slice is expected to add ACs after Gate 1 (e.g., deferred OQs formalized at Gate 3), the orchestrator must either (a) reserve those AC IDs at Gate 1 freeze — recording them here with status "reserved, prose deferred to Gate N" — even though their prose is not yet written, or (b) update this rule immediately at the gate where each new AC ID is first assigned, before any subsequent slice may seed IDs. If option (b) is used and Gate 3 assigns new IDs for this slice, update this rule at Gate 3 closure with the new last assigned AC + slice + date. Per-slice feature files remain self-contained, but global uniqueness must be preserved for AC IDs created at any gate.
+83. Model routing policy (adopted 2026-04-21, PO decision): `architect-orchestrator`, `architecture-agent`, and `runtime-qa` use `gpt-5.4`; `requirement-challenger`, `prd-agent`, and `design-qa-agent` use `claude-sonnet-4.6`; `dev` uses `gpt-5.3-codex`. Gates 1, 2, 3B, 4, and 5.5 sync handoffs must pass an explicit `model` argument. Terminal dispatch via `scripts/run-agent.ts` and `scripts/mcp-dev-orchestrator.ts` resolves the role default automatically unless a deliberate override is specified. Any new live role must be added to `scripts/agent-model-routing.ts` and `.github/skills/async-agent-dispatch/SKILL.md` before use. Cross-ref: `.github/AGENTS.md` Model Routing Policy.
 
 ## Resume Protocol For Orchestrator
 
@@ -930,3 +931,15 @@ Detailed repo-wide governance history from 2026-03-30 through 2026-04-02 is arch
 - Open questions status: None.
 - Next micro-goal: Start next slice intake or governance task.
 - Known Rules added: #81 (Branch Sync Protocol — context pointer to pr-review-loop Section 4).
+
+### 2026-04-21 (Global — Model Routing Hardening)
+- Gate status: No active slice. Governance hardening task complete.
+- Artifact changes:
+  - `.github/AGENTS.md` — added shared Model Routing Policy and bumped protocol version to 3.20.
+  - `.github/agents/architect-orchestrator.agent.md` — made explicit-model sync handoffs mandatory for specialist roles.
+  - `.github/skills/async-agent-dispatch/SKILL.md` — added role-to-model table and shared routing-helper rule.
+  - Gate 4 skill updated: `architecture-gate-orchestration` now requires `gpt-5.4` in the sync handoff.
+  - Added `scripts/agent-model-routing.ts` and updated `scripts/run-agent.ts` + `scripts/mcp-dev-orchestrator.ts` to resolve role defaults automatically.
+- Open questions status: None.
+- Next micro-goal: Use the hardened routing defaults on the next slice intake and the next async build dispatch.
+- Blockers/owner decisions: Product Owner approved the role-model map: challenger / PRD / design QA → `claude-sonnet-4.6`; orchestrator / architecture / runtime QA → `gpt-5.4`; dev → `gpt-5.3-codex`.

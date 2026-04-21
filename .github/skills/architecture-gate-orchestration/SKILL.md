@@ -29,7 +29,7 @@ Orchestrator must include Figma frame URLs with node IDs in the Gate 4 handoff p
 
 ## Architecture Gate Handoff Trigger
 
-When executing Gate 4, invoke `architecture-agent` with slice artifacts (`01-requirement.md`, `02-prd.md`, `03-ux.md`, `04-design-qa.md`) **and Figma frame URLs with node IDs from `04-design-qa.md`** and any explicit Product Owner technical constraints.
+When executing Gate 4, invoke `architecture-agent` with model `gpt-5.4`, slice artifacts (`01-requirement.md`, `02-prd.md`, `03-ux.md`, `04-design-qa.md`) **and Figma frame URLs with node IDs from `04-design-qa.md`** and any explicit Product Owner technical constraints.
 
 ## Execution Rule
 

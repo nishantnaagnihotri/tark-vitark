@@ -32,13 +32,13 @@ import { fileURLToPath } from "node:url";
 import { basename, join, resolve } from "node:path";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
+import { FALLBACK_MODEL, defaultModelForRole } from "./agent-model-routing.ts";
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
 const WORKSPACE_ROOT = resolve(fileURLToPath(new URL(".", import.meta.url)), "..");
 const AGENTS_DIR = join(WORKSPACE_ROOT, ".github", "agents");
 const MCP_CONFIG_PATH = join(WORKSPACE_ROOT, ".vscode", "mcp.json");
-const MODEL = "gpt-5.3-codex";
 const LOG_DIR = resolve(fileURLToPath(new URL(".", import.meta.url)), "../logs/parallel-agents");
 const AGENT_TIMEOUT_MS = 60 * 60 * 1000; // 1 hour per agent
 
@@ -184,6 +184,7 @@ interface Task {
 interface TaskResult {
     taskId: string;
     role: string;
+    model: string;
     sessionId: string;
     status: TaskStatus;
     output?: string;
@@ -268,6 +269,7 @@ function loadPersistedRuns(): void {
                         .map((tid) => ({
                             taskId: tid,
                             role: "unknown",
+                            model: FALLBACK_MODEL,
                             sessionId: "unknown",
                             status: "failed" as TaskStatus,
                             error: "Orchestrator crashed or restarted before task completed",
@@ -320,6 +322,7 @@ async function runAgentTask(
     runId?: string,
     dispatchedAt?: string,
 ): Promise<TaskResult> {
+    const model = defaultModelForRole(task.role);
     const title = task.prompt.split("\n").find((l) => l.trim())?.trim().slice(0, 80) ?? task.id;
     const repo = basename(WORKSPACE_ROOT);
     const provenance = runId
@@ -331,7 +334,7 @@ async function runAgentTask(
             `task-id:    ${task.id}`,
             `title:      ${title}`,
             `role:       ${task.role}`,
-            `model:      ${MODEL}`,
+            `model:      ${model}`,
             `repo:       ${repo}`,
             `dispatched: ${dispatchedAt}`,
             "```",
@@ -351,7 +354,7 @@ async function runAgentTask(
         // createSession is inside try so a failure returns a task-scoped
         // "failed" result rather than throwing into Promise.all.
         session = await client.createSession({
-            model: MODEL,
+            model,
             onPermissionRequest: approveAll,
             systemMessage: { content: systemMessageForRole(task.role, task.systemMessage) },
             ...(Object.keys(mcpServers).length > 0 ? { mcpServers } : {}),
@@ -378,6 +381,7 @@ async function runAgentTask(
             return {
                 taskId: task.id,
                 role: task.role,
+                model,
                 sessionId: session.sessionId,
                 status: "needs-clarification",
                 output,
@@ -385,11 +389,12 @@ async function runAgentTask(
             };
         }
 
-        return { taskId: task.id, role: task.role, sessionId: session.sessionId, status: "done", output };
+        return { taskId: task.id, role: task.role, model, sessionId: session.sessionId, status: "done", output };
     } catch (err) {
         return {
             taskId: task.id,
             role: task.role,
+            model,
             sessionId: session?.sessionId ?? "unknown",
             status: "failed",
             error: err instanceof Error ? err.message : String(err),
@@ -462,6 +467,7 @@ function startRun(tasks: Task[], clarifications: Record<string, string>): Run {
         run.results = tasks.map((t) => ({
             taskId: t.id,
             role: t.role,
+            model: defaultModelForRole(t.role),
             sessionId: "unknown",
             status: "failed" as TaskStatus,
             error: String(err),
@@ -638,6 +644,7 @@ server.tool(
             results: run.results.map((r) => ({
                 taskId: r.taskId,
                 role: r.role,
+                model: r.model,
                 status: r.status,
                 sessionId: r.sessionId,
                 ...(r.challenge ? { challenge: r.challenge } : {}),
