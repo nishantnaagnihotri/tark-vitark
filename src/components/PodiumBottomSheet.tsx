@@ -190,6 +190,7 @@ export function PodiumBottomSheet({
             }
 
             setText('');
+            onClose();
         } finally {
             setIsBusy(false);
         }
