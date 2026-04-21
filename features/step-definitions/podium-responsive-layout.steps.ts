@@ -2,6 +2,7 @@ import { After, Before, Given, Then, World } from '@cucumber/cucumber';
 import * as assert from 'assert';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { mediaBlock } from '../../tests/lib/css-test-utils';
 
 interface PodiumResponsiveStyles {
   argumentCardCss: string;
@@ -22,23 +23,6 @@ function activeStyles(world: PodiumResponsiveLayoutWorld): PodiumResponsiveStyle
     'Expected podium responsive stylesheet sources to be loaded.'
   );
   return world.podiumResponsiveStyles;
-}
-
-function mediaBlock(css: string, mediaQuery: string, occurrence = 1): string {
-  let startIndex = -1;
-  let searchFrom = 0;
-
-  for (let count = 0; count < occurrence; count += 1) {
-    startIndex = css.indexOf(mediaQuery, searchFrom);
-    assert.ok(
-      startIndex >= 0,
-      `Expected media query "${mediaQuery}" occurrence ${count + 1} to be present; found ${count} occurrence${count === 1 ? '' : 's'}.`
-    );
-    searchFrom = startIndex + mediaQuery.length;
-  }
-
-  const nextMediaIndex = css.indexOf('@media', startIndex + mediaQuery.length);
-  return nextMediaIndex === -1 ? css.slice(startIndex) : css.slice(startIndex, nextMediaIndex);
 }
 
 function tabletFabBlock(world: PodiumResponsiveLayoutWorld): string {

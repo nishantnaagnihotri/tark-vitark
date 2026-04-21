@@ -5,20 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { PodiumBottomSheet } from '../../src/components/PodiumBottomSheet';
 import type { Side } from '../../src/data/debate';
-
-function mediaBlock(css: string, mediaQuery: string, occurrence = 1): string {
-    let startIndex = -1;
-    let searchFrom = 0;
-
-    for (let count = 0; count < occurrence; count += 1) {
-        startIndex = css.indexOf(mediaQuery, searchFrom);
-        expect(startIndex).toBeGreaterThan(-1);
-        searchFrom = startIndex + mediaQuery.length;
-    }
-
-    const nextMediaIndex = css.indexOf('@media', startIndex + mediaQuery.length);
-    return nextMediaIndex === -1 ? css.slice(startIndex) : css.slice(startIndex, nextMediaIndex);
-}
+import { mediaBlock } from '../lib/css-test-utils';
 
 const podiumBottomSheetCss = readFileSync(
     resolve(process.cwd(), 'src/styles/components/podium-bottom-sheet.css'),
