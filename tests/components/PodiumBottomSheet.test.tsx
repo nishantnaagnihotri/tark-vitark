@@ -192,7 +192,7 @@ describe('PodiumBottomSheet', () => {
         expect(podiumBottomSheetCss).toContain('env(safe-area-inset-bottom, 0px)');
     });
 
-    it('applies tablet and desktop podium sheet width and scrim breakpoint rules for the expanded podium composer', () => {
+    it('applies tablet-tier and desktop-tier podium sheet width and scrim rules for the expanded podium composer', () => {
         // BDD traceability note: responsive podium sheet AC-25/26/29/30 are covered by
         // features/podium-responsive-layout.feature and its linked step definitions.
         const tabletWidthBlock = mediaBlock(podiumBottomSheetCss, '@media (min-width: 768px)');

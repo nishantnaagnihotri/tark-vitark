@@ -29,7 +29,7 @@ const argumentCardCss = readFileSync(
 );
 
 describe('podium responsive layout', () => {
-    it('AC-25 Scenario: tablet-tier podium layout values are present', () => {
+    it('AC-25: tablet-tier podium layout values are present', () => {
         const tabletFabBlock = mediaBlock(podiumFabCss, '@media (min-width: 768px)');
         const tabletSheetBlock = mediaBlock(podiumBottomSheetCss, '@media (min-width: 768px)');
         const tabletDarkScrimBlock = mediaBlock(
@@ -48,7 +48,7 @@ describe('podium responsive layout', () => {
         expect(tabletDarkScrimBlock).toContain('rgba(0, 0, 0, 0.48)');
     });
 
-    it('AC-26 Scenario: desktop-tier podium layout values are present', () => {
+    it('AC-26: desktop-tier podium layout values are present', () => {
         const desktopFabBlock = mediaBlock(podiumFabCss, '@media (min-width: 1024px)');
         const desktopSheetWidthBlock = mediaBlock(
             podiumBottomSheetCss,
@@ -76,14 +76,14 @@ describe('podium responsive layout', () => {
         );
     });
 
-    it('AC-27 Scenario: mobile-tier podium behavior remains frozen', () => {
+    it('AC-27: mobile-tier podium behavior remains frozen', () => {
         expect(podiumFabCss).toContain('right: var(--space-4);');
         expect(podiumFabCss).toContain('bottom: var(--space-4);');
         expect(podiumBottomSheetCss).toContain('max-width: 390px;');
         expect(podiumBottomSheetCss).toContain('background: var(--color-scrim);');
     });
 
-    it('AC-28 Scenario: 481px comments are reclassified as mobile-internal', () => {
+    it('AC-28: 481px comments are reclassified as mobile-internal', () => {
         expect(timelineCss).toContain('mobile-internal layout adjustment (≥481px) — not a design tier');
         expect(timelineCss).not.toContain('Tablet (≥481px)');
 
@@ -96,7 +96,7 @@ describe('podium responsive layout', () => {
         expect(argumentCardCss).toContain('mobile-internal (≥481px) — not a design tier');
     });
 
-    it('AC-29 Scenario: tablet-tier podium layout values match the Figma specification', () => {
+    it('AC-29: tablet-tier podium layout values match the Figma specification', () => {
         const tabletFabBlock = mediaBlock(podiumFabCss, '@media (min-width: 768px)');
         const tabletSheetBlock = mediaBlock(podiumBottomSheetCss, '@media (min-width: 768px)');
         const tabletDarkScrimBlock = mediaBlock(
@@ -114,7 +114,7 @@ describe('podium responsive layout', () => {
         expect(tabletDarkScrimBlock).toContain('rgba(0, 0, 0, 0.48)');
     });
 
-    it('AC-30 Scenario: desktop-tier podium layout values match the Figma specification', () => {
+    it('AC-30: desktop-tier podium layout values match the Figma specification', () => {
         const desktopFabBlock = mediaBlock(podiumFabCss, '@media (min-width: 1024px)');
         const desktopSheetWidthBlock = mediaBlock(
             podiumBottomSheetCss,
