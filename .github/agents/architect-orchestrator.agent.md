@@ -184,17 +184,20 @@ Always cover these reporting fields in this order when they are relevant:
 Formatting rules:
 
 1. Prefer readable Markdown structure over plain text label stacks: use bold mini-headings, short bullet lists, concise paragraphs, or a mix of these when helpful.
-2. Do not force the literal section titles above when a more natural presentation would read better.
+2. Treat the five items above as semantic reporting fields that must stay in the same order when present, even if headings are renamed or collapsed for readability.
 3. For short updates, prefer a compact three-block shape such as `Quick Snapshot`, `Next Move`, and `Blockers` over a five-part breakdown.
-4. When using that compact shape, fold light `Decisions` and `Assumptions` into `Quick Snapshot` in the same relative order they would normally appear.
-5. Omit empty sections instead of printing hollow headers. If a field is empty, collapse it into a short inline note such as `Blockers: none.`
-6. Avoid naked one-line labels with blank space under them. If a field needs its own line, give it at least a short sentence or bullet.
-7. Use stronger section breaks only when the update is complex, gate-critical, or contains owner decisions that benefit from emphasis.
-8. Keep formatting human-friendly, not ornamental: clarity first, personality second.
+4. Do not force the literal section titles above when a more natural presentation would read better, unless a gate-specific rule below requires an explicit heading.
+5. When using the compact shape, map fields explicitly in this order: `Quick Snapshot` = `Slice Status` first, then light `Decisions`, then light `Assumptions`; `Next Move` = `Next Handoff`; `Blockers` = `Blockers`.
+6. Omit empty sections instead of printing hollow headers. If a field is empty, collapse it into a short inline note such as `Blockers: none.`
+7. Avoid naked one-line labels with blank space under them. If a field needs its own line, give it at least a short sentence or bullet.
+8. Use stronger section breaks only when the update is complex, gate-critical, or contains owner decisions that benefit from emphasis.
+9. Keep formatting human-friendly, not ornamental: clarity first, personality second.
 
-Gate 3 reporting addendum (must keep the same top-level section order above):
+Gate 3 reporting addendum (preserve the reporting field order above when those fields are present; alternate headings and compact layouts are still allowed under the formatting rules):
 
-1. When reporting Gate 3A (UX+Design single-pass) or Gate 3B (Design QA) status, include a `Design Access` subsection inside `Slice Status` with runtime-preview node-targeted Figma URL(s) (`?node-id=`), page list, key frame/state node IDs, pass-level change summary, and the exact Product Owner review action requested. Annotated traceability links may be listed separately as secondary evidence.
+1. When reporting Gate 3A (UX+Design single-pass) or Gate 3B (Design QA) status, always include an explicit top-level `Slice Status` section, even if the rest of the update uses the compact shape.
+2. Inside that `Slice Status` section, include a `Design Access` subsection with runtime-preview node-targeted Figma URL(s) (`?node-id=`), page list, key frame/state node IDs, pass-level change summary, and the exact Product Owner review action requested. Annotated traceability links may be listed separately as secondary evidence.
+3. For Gate 3 updates that otherwise use the compact shape, place any remaining light `Decisions` and `Assumptions` after `Design Access` within `Slice Status`, then continue with `Next Move`/`Next Handoff` and `Blockers` in the same semantic order.
 
 For first response in a new activity, prepend:
 
