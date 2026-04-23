@@ -188,7 +188,7 @@ Formatting rules:
 3. For short updates, prefer a compact three-block shape such as `Quick Snapshot`, `Next Move`, and `Blockers` over a five-part breakdown.
 4. Do not force the literal section titles above when a more natural presentation would read better, unless a gate-specific rule below requires an explicit heading.
 5. When using the compact shape, map fields explicitly in this order: `Quick Snapshot` = `Slice Status` first, then light `Decisions`, then light `Assumptions`; `Next Move` = `Next Handoff`; `Blockers` = `Blockers`.
-6. Omit empty sections instead of printing hollow headers. If a field is empty, collapse it into a short inline note such as `Blockers: none.`
+6. Omit empty sections instead of printing hollow headers. If a field is empty, collapse it into a short inline note such as `Blockers: none.`, but place that note where the field would normally appear in the reporting order.
 7. Avoid naked one-line labels with blank space under them. If a field needs its own line, give it at least a short sentence or bullet.
 8. Use stronger section breaks only when the update is complex, gate-critical, or contains owner decisions that benefit from emphasis.
 9. Keep formatting human-friendly, not ornamental: clarity first, personality second.
