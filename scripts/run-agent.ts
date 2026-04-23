@@ -32,6 +32,8 @@ import { randomUUID } from "node:crypto";
 import {
     reasoningEffortSelectionForModel,
     modelSelectionForRole,
+    type ReasoningEffort,
+    type ReasoningEffortSource,
 } from "./agent-model-routing.ts";
 
 // ── Config ────────────────────────────────────────────────────────────────────
@@ -116,9 +118,10 @@ function resolveAgentMcpServers(
         if (!allowAgentOrchestratorMcp && serverKey === "agent-orchestrator") continue;
 
         const { _toolPrefixes, _envHeaders, ...config } = rawConfig as {
+            [k: string]: unknown;
+        } & MCPServerConfig & {
             _toolPrefixes?: string[];
             _envHeaders?: Record<string, string>;
-            [k: string]: unknown;
         };
         const prefixes: string[] = _toolPrefixes ?? [serverKey];
         const matched = agentTools.some((tool) =>
@@ -172,7 +175,7 @@ function resolveAgentMcpServers(
             (config as any).tools = ["*"];
         }
 
-        result[serverKey] = config as MCPServerConfig;
+        result[serverKey] = config;
     }
     return result;
 }
@@ -393,12 +396,17 @@ persistRun({ runId, role, model, prompt: prompt.slice(0, 200), startedAt, status
 let exitCode = 0;
 const client = new CopilotClient();
 let session: Awaited<ReturnType<CopilotClient["createSession"]>> | undefined;
+let resolvedReasoningEffort: ReasoningEffort | undefined;
+let resolvedReasoningEffortSource: ReasoningEffortSource | undefined;
 
 try {
     await client.start();
     const availableModels = await client.listModels().catch(() => []);
     const reasoningEffortSelection = reasoningEffortSelectionForModel(model, availableModels);
     const reasoningEffort = reasoningEffortSelection.reasoningEffort;
+    resolvedReasoningEffort = reasoningEffort;
+    resolvedReasoningEffortSource = reasoningEffortSelection.source;
+    persistRun({ runId, reasoningEffort: resolvedReasoningEffort, reasoningEffortSource: resolvedReasoningEffortSource });
     logInfo(
         `[run-agent] effort   model=${model} effort=${reasoningEffort} source=${reasoningEffortSelection.source}`
     );
@@ -439,8 +447,9 @@ try {
         taskId,
     });
     const finalPrompt = noIntro ? promptWithProvenance : ROLE_INTRO_PREFIX + promptWithProvenance;
+    const runSession = session;
     const result = await withRetry(
-        () => session.sendAndWait({ prompt: finalPrompt }, TIMEOUT_MS),
+        () => runSession.sendAndWait({ prompt: finalPrompt }, TIMEOUT_MS),
         MAX_RETRIES,
         RETRY_BASE_MS,
         "sendAndWait",
@@ -449,12 +458,29 @@ try {
     const output = result?.data?.content ?? "(no output)";
 
     const finishedAt = new Date().toISOString();
-    persistRun({ runId, status: "done", finishedAt, output });
+    persistRun({
+        runId,
+        status: "done",
+        finishedAt,
+        output,
+        reasoningEffort: resolvedReasoningEffort,
+        reasoningEffortSource: resolvedReasoningEffortSource,
+    });
     logInfo(`[run-agent] finished at=${finishedAt}`);
 
     if (outputFormat === "json") {
         process.stdout.write(
-            JSON.stringify({ runId, role, model, startedAt, finishedAt, status: "done", output }) + "\n"
+            JSON.stringify({
+                runId,
+                role,
+                model,
+                reasoningEffort: resolvedReasoningEffort,
+                reasoningEffortSource: resolvedReasoningEffortSource,
+                startedAt,
+                finishedAt,
+                status: "done",
+                output,
+            }) + "\n"
         );
     } else {
         logInfo("\n── Agent output ─────────────────────────────────────────────────────────────\n");
@@ -464,7 +490,14 @@ try {
 
 } catch (err) {
     const finishedAt = new Date().toISOString();
-    persistRun({ runId, status: "failed", finishedAt, error: err instanceof Error ? err.message : String(err) });
+    persistRun({
+        runId,
+        status: "failed",
+        finishedAt,
+        error: err instanceof Error ? err.message : String(err),
+        reasoningEffort: resolvedReasoningEffort,
+        reasoningEffortSource: resolvedReasoningEffortSource,
+    });
     console.error(`[run-agent] failed:`, err instanceof Error ? err.message : err);
     exitCode = 1;
 } finally {
