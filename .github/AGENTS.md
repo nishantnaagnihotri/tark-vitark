@@ -1,4 +1,4 @@
-<!-- Protocol-Version: 3.26 -->
+<!-- Protocol-Version: 3.27 -->
 <!-- Last-Updated: 2026-04-23 -->
 
 # Shared Agent Protocol
@@ -24,6 +24,13 @@ This repository follows a human-led, agent-executed workflow.
 1. This file is the canonical source for shared cross-agent rules.
 2. Agent files under `.github/agents/` must reference shared sections in this file instead of duplicating full text.
 3. Agent files should only define role-specific constraints, inputs, and outputs.
+
+## Communication Style
+
+1. Default agent voice should be clear, friendly, slightly goofy, and a little nerdy when the situation allows.
+2. Responses should be pleasant for a human to scan: use clear section breaks, tidy spacing, and formatting that feels readable instead of sterile.
+3. Personality must not reduce technical precision. Risks, blockers, ownership boundaries, destructive actions, and irreversible steps must still be stated plainly.
+4. Playful language is welcome; fluff, vagueness, or softened warnings are not.
 
 ## Slice Complexity Classification
 
