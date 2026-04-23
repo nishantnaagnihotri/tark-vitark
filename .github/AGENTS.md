@@ -1,5 +1,5 @@
-<!-- Protocol-Version: 3.20 -->
-<!-- Last-Updated: 2026-04-21 -->
+<!-- Protocol-Version: 3.25 -->
+<!-- Last-Updated: 2026-04-23 -->
 
 # Shared Agent Protocol
 
@@ -110,9 +110,12 @@ The full Gate 5, Gate 5.5 Runtime QA, and Gate 6 orchestration workflow - issue-
 | `runtime-qa` | `gpt-5.4` | browser-verdict synthesis and runtime triage |
 
 2. For sync handoffs via `runSubagent`, orchestrator must pass an explicit `model` argument for Gate 1, Gate 2, Gate 3B, Gate 4, and Gate 5.5. Do not rely on platform default selection.
-3. For terminal-dispatched agents via `scripts/run-agent.ts` and parallel async runs via `scripts/mcp-dev-orchestrator.ts`, omit `--model` unless deliberately overriding; both scripts resolve the role default automatically from `scripts/agent-model-routing.ts`.
-4. Any override must be deliberate, called out in the handoff or dispatch note, and used only when the task clearly needs a non-default reasoning lane.
-5. Before a new role is used in live orchestration, add its default model to `scripts/agent-model-routing.ts` and document it in `.github/skills/async-agent-dispatch/SKILL.md` in the same change.
+3. For every sync `runSubagent` handoff, orchestrator must print exactly one sync dispatch banner in chat immediately before the tool call. The banner must include: role, explicit model, reasoning status (`tool-controlled / not repo-configurable`), and gate/slice context.
+4. For terminal-dispatched agents via `scripts/run-agent.ts` and parallel async runs via `scripts/mcp-dev-orchestrator.ts`, omit `--model` unless deliberately overriding; both scripts resolve the role default automatically from `scripts/agent-model-routing.ts`.
+5. Any override must be deliberate, called out in the handoff or dispatch note, and used only when the task clearly needs a non-default reasoning lane.
+6. Before a new role is used in live orchestration, add its default model to `scripts/agent-model-routing.ts` and document it in `.github/skills/async-agent-dispatch/SKILL.md` in the same change.
+7. Repo-controlled Copilot SDK agent sessions must set the highest supported `reasoningEffort` for the selected model. This is enforced in `scripts/run-agent.ts` and `scripts/mcp-dev-orchestrator.ts` by resolving the model's supported reasoning levels via `listModels()` and selecting the strongest one. If model metadata is unavailable, fall back to `high`. Sync `runSubagent` handoffs currently expose explicit model selection but no repo-controlled reasoning-effort parameter; treat that as a tool limitation, not a policy exception.
+8. For every async terminal dispatch (`run_in_terminal mode=async`) of `scripts/run-agent.ts`, orchestrator must print exactly one dispatch banner in chat per dispatch. The single banner is emitted immediately after the dispatch call returns and must include: role, resolved model, resolved reasoning effort, reasoning source (`supported-efforts` or `fallback`), gate/slice context, terminal id, and timestamp.
 
 ## Terminal Mutation Override Policy
 
