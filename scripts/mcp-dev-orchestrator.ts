@@ -458,7 +458,16 @@ function startRun(tasks: Task[], clarifications: Record<string, string>): Run {
     (async () => {
         const client = new CopilotClient();
         await client.start();
-        const availableModels = await client.listModels().catch(() => []);
+        let availableModels: Awaited<ReturnType<CopilotClient["listModels"]>> = [];
+        try {
+            availableModels = await client.listModels();
+        } catch (err) {
+            console.warn(
+                `[mcp-dev-orchestrator] Failed to list available models for run ${runId}; ` +
+                "continuing with fallback metadata. Reasoning-effort selection may not reach the highest supported level.",
+                err
+            );
+        }
 
         try {
             const results = await Promise.all(
