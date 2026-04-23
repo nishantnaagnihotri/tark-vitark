@@ -398,15 +398,34 @@ const client = new CopilotClient();
 let session: Awaited<ReturnType<CopilotClient["createSession"]>> | undefined;
 let resolvedReasoningEffort: ReasoningEffort | undefined;
 let resolvedReasoningEffortSource: ReasoningEffortSource | undefined;
+let modelLookupStatus: "ok" | "failed" = "ok";
+let modelLookupError: string | undefined;
 
 try {
     await client.start();
-    const availableModels = await client.listModels().catch(() => []);
+    let availableModels: Awaited<ReturnType<CopilotClient["listModels"]>> = [];
+    try {
+        availableModels = await client.listModels();
+    } catch (error) {
+        modelLookupStatus = "failed";
+        modelLookupError = error instanceof Error ? error.message : String(error);
+        logInfo(`[run-agent] models   failed to list models; using fallback metadata. error=${modelLookupError}`);
+        persistRun({ runId, modelLookupStatus, modelLookupError });
+    }
     const reasoningEffortSelection = reasoningEffortSelectionForModel(model, availableModels);
     const reasoningEffort = reasoningEffortSelection.reasoningEffort;
     resolvedReasoningEffort = reasoningEffort;
     resolvedReasoningEffortSource = reasoningEffortSelection.source;
-    persistRun({ runId, reasoningEffort: resolvedReasoningEffort, reasoningEffortSource: resolvedReasoningEffortSource });
+    const modelLookupRecord = {
+        modelLookupStatus,
+        ...(modelLookupError ? { modelLookupError } : {}),
+    };
+    persistRun({
+        runId,
+        reasoningEffort: resolvedReasoningEffort,
+        reasoningEffortSource: resolvedReasoningEffortSource,
+        ...modelLookupRecord,
+    });
     logInfo(
         `[run-agent] effort   model=${model} effort=${reasoningEffort} source=${reasoningEffortSelection.source}`
     );
@@ -465,6 +484,8 @@ try {
         output,
         reasoningEffort: resolvedReasoningEffort,
         reasoningEffortSource: resolvedReasoningEffortSource,
+        modelLookupStatus,
+        ...(modelLookupError ? { modelLookupError } : {}),
     });
     logInfo(`[run-agent] finished at=${finishedAt}`);
 
@@ -476,6 +497,8 @@ try {
                 model,
                 reasoningEffort: resolvedReasoningEffort,
                 reasoningEffortSource: resolvedReasoningEffortSource,
+                modelLookupStatus,
+                ...(modelLookupError ? { modelLookupError } : {}),
                 startedAt,
                 finishedAt,
                 status: "done",
@@ -497,6 +520,8 @@ try {
         error: err instanceof Error ? err.message : String(err),
         reasoningEffort: resolvedReasoningEffort,
         reasoningEffortSource: resolvedReasoningEffortSource,
+        modelLookupStatus,
+        ...(modelLookupError ? { modelLookupError } : {}),
     });
     console.error(`[run-agent] failed:`, err instanceof Error ? err.message : err);
     exitCode = 1;
