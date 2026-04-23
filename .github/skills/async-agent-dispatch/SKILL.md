@@ -49,10 +49,14 @@ Before every agent dispatch, classify the expected output:
 Rules:
 
 1. Gates 1, 2, 3B, 4, and 5.5 use sync `runSubagent` handoffs; those calls must pass an explicit `model` matching the shared policy.
-2. `scripts/run-agent.ts` resolves the role default automatically when `--model` is omitted and logs both the resolved model and whether it came from the role default or an override.
-3. `scripts/mcp-dev-orchestrator.ts` uses the same routing table for parallel async runs and includes the resolved model in task status output.
-4. If a task genuinely needs a non-default model, dispatch it directly with `scripts/run-agent.ts --model <id>` and record why in the handoff or dispatch note.
-5. Before introducing a new live role, add it to `scripts/agent-model-routing.ts` and this table in the same change.
+2. For each sync `runSubagent` handoff, print exactly one sync dispatch banner in chat immediately before the tool call. Include role, explicit model, reasoning status (`tool-controlled / not repo-configurable`), and gate/slice context.
+3. `scripts/run-agent.ts` resolves the role default automatically when `--model` is omitted, resolves the highest supported reasoning effort for the selected model via `listModels()`, and logs both the resolved model and whether it came from the role default or an override.
+4. `scripts/mcp-dev-orchestrator.ts` uses the same routing table for parallel async runs, includes the resolved model in task status output, and resolves the highest supported reasoning effort for each task's selected model via `listModels()`.
+5. If a task genuinely needs a non-default model, dispatch it directly with `scripts/run-agent.ts --model <id>` and record why in the handoff or dispatch note.
+6. Before introducing a new live role, add it to `scripts/agent-model-routing.ts` and this table in the same change.
+7. For each async `run-agent.ts` dispatch, print exactly one dispatch banner in chat immediately after the dispatch call returns. Include role, model, reasoning effort, effort source (`supported-efforts` or `fallback`), gate/slice context, terminal id, and timestamp.
+
+`runSubagent` sync handoffs currently expose explicit model selection but no repo-controlled reasoning-effort parameter. Keep the model explicit there, print the sync dispatch banner before the tool call, and treat reasoning-effort enforcement as a tool limitation until the chat tool exposes that control.
 
 ---
 
@@ -170,22 +174,49 @@ npx tsx scripts/run-agent.ts requirement-challenger "Reply with exactly: ALIVE"
 
 ---
 
-## Post-Dispatch Banner (Mandatory)
+## Sync Dispatch Banner (Mandatory)
 
-After every async agent dispatch via `run_in_terminal (mode=async)`, immediately output a dispatch banner.
+Before every sync handoff via `runSubagent`, output exactly one sync dispatch banner.
 
-**Immediately before dispatching, run two commands to capture the timestamps needed for both the dispatch banner and the session-memory table:**
+Use this format:
+
+```
+---
+🤝 SYNC DISPATCH — <role>
+Model: <display-model>
+Reasoning: tool-controlled / not repo-configurable
+Gate <N> | Slice: <slice-name>
+---
+```
+
+All values must be real:
+- `role`: the specialist role being invoked via `runSubagent`
+- `display-model`: the exact explicit model label passed to `runSubagent`
+- `Gate <N> | Slice: <slice-name>`: the current gate number and slice being worked on; use `N/A` if dispatched outside a gate context
+
+Rules:
+- Emit the banner immediately before the `runSubagent` call.
+- Do not invent a repo-controlled reasoning level for sync handoffs.
+- Do not add async-only fields such as terminal id or timestamp to the sync banner.
+
+## Single Async Dispatch Banner (Mandatory)
+
+After every async agent dispatch via `run_in_terminal (mode=async)`, output exactly one dispatch banner.
+
+**Immediately before dispatching, run two commands to capture the timestamps needed for the banner and session-memory table:**
 
 ```
 TZ=Asia/Kolkata date "+%H:%M %Z"       # HH:MM IST — for the dispatch banner
 TZ=Asia/Kolkata date "+%Y-%m-%dT%H:%M:%S+05:30"   # ISO timestamp — for the dispatched column
 ```
 
-Then dispatch the agent. Then output the dispatch banner — no exceptions:
+Then dispatch the agent. Then output the single dispatch banner — no exceptions:
 
 ```
 ---
 🤖 AGENT DISPATCHED — <role>
+Model: <model-id>
+Reasoning: <reasoning-effort> (source: <supported-efforts|fallback>)
 Gate <N> | Slice: <slice-name>
 Terminal: <terminal-id> | <HH:MM IST>
 ---
@@ -193,11 +224,18 @@ Terminal: <terminal-id> | <HH:MM IST>
 
 All values must be real:
 - `role`: the agent role argument passed to `run-agent.ts`
+- `model`: the resolved model used for this dispatch (or documented override)
+- `reasoning`: the resolved reasoning effort and source used for this dispatch
 - `Gate <N> | Slice: <slice-name>`: the current gate number and slice being worked on; use `N/A` if dispatched outside a gate context
 - `terminal`: the exact UUID returned by `run_in_terminal` — not fabricated, not guessed
 - `HH:MM IST`: derived from the actual `date` output — not calculated from context
 
-**Fabricating the terminal ID or time is a protocol violation. Omitting the banner is a protocol violation.**
+Rules:
+- Values must reflect the same role/model/reasoning path used in the dispatch command.
+- If a model override is used (`--model`), the banner must show the override and the reason.
+- If live model metadata is unavailable at dispatch time, use `Reasoning: high (source: fallback)` and state that metadata lookup was unavailable.
+
+**Fabricating banner values is a protocol violation. Omitting the banner is a protocol violation.**
 
 Immediately after outputting the dispatch banner, record the dispatch in `/memories/session/active-state.md` under `## Pending Async Runs`:
 

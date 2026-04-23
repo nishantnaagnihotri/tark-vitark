@@ -32,7 +32,12 @@ import { fileURLToPath } from "node:url";
 import { basename, join, resolve } from "node:path";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
-import { FALLBACK_MODEL, defaultModelForRole } from "./agent-model-routing.ts";
+import {
+    FALLBACK_MODEL,
+    defaultModelForRole,
+    reasoningEffortSelectionForModel,
+    type ModelReasoningSupport,
+} from "./agent-model-routing.ts";
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
@@ -340,11 +345,13 @@ function nowIST(): string {
 async function runAgentTask(
     client: CopilotClient,
     task: Task,
+    availableModels: readonly ModelReasoningSupport[],
     clarification?: string,
     runId?: string,
     dispatchedAt?: string,
 ): Promise<TaskResult> {
     const model = defaultModelForRole(task.role);
+    const reasoningEffort = reasoningEffortSelectionForModel(model, availableModels).reasoningEffort;
     const title = task.prompt.split("\n").find((l) => l.trim())?.trim().slice(0, 80) ?? task.id;
     const repo = basename(WORKSPACE_ROOT);
     const provenance = runId
@@ -377,6 +384,7 @@ async function runAgentTask(
         // "failed" result rather than throwing into Promise.all.
         session = await client.createSession({
             model,
+            reasoningEffort,
             onPermissionRequest: approveAll,
             systemMessage: { content: systemMessageForRole(task.role, task.systemMessage) },
             ...(Object.keys(mcpServers).length > 0 ? { mcpServers } : {}),
@@ -449,10 +457,11 @@ function startRun(tasks: Task[], clarifications: Record<string, string>): Run {
     (async () => {
         const client = new CopilotClient();
         await client.start();
+        const availableModels = await client.listModels().catch(() => []);
 
         try {
             const results = await Promise.all(
-                tasks.map((t) => runAgentTask(client, t, clarifications[t.id], runId, startedAt))
+                tasks.map((t) => runAgentTask(client, t, availableModels, clarifications[t.id], runId, startedAt))
             );
 
             run.results = results;

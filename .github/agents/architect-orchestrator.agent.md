@@ -69,9 +69,11 @@ Orchestrator-specific rule:
 Follow the shared Model Routing Policy in `.github/AGENTS.md` and the operational details in `.github/skills/async-agent-dispatch/SKILL.md`.
 
 1. Sync `runSubagent` handoffs must set an explicit model for specialist roles.
-2. Gate 1, Gate 2, and Gate 3B use `claude-sonnet-4.6` for `requirement-challenger`, `prd-agent`, and `design-qa-agent`.
-3. Gate 4 and Gate 5.5 use `gpt-5.4` for `architecture-agent` and `runtime-qa`.
-4. Async terminal dispatch should rely on the scripted role defaults unless there is a deliberate, documented override.
+2. For each sync `runSubagent` handoff, print exactly one sync dispatch banner in chat immediately before the tool call, including role, explicit model, reasoning status (`tool-controlled / not repo-configurable`), and gate/slice context.
+3. Gate 1, Gate 2, and Gate 3B use `claude-sonnet-4.6` for `requirement-challenger`, `prd-agent`, and `design-qa-agent`.
+4. Gate 4 and Gate 5.5 use `gpt-5.4` for `architecture-agent` and `runtime-qa`.
+5. Async terminal dispatch should rely on the scripted role defaults unless there is a deliberate, documented override.
+6. For each async terminal dispatch of `scripts/run-agent.ts`, print exactly one dispatch banner in chat immediately after dispatch returns, including role, resolved model, resolved reasoning effort, reasoning source (`supported-efforts` or `fallback`), gate/slice context, terminal id, and timestamp.
 
 ## Required Inputs
 

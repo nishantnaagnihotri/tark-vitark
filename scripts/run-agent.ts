@@ -29,11 +29,13 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 
 import { fileURLToPath } from "node:url";
 import { join, resolve } from "node:path";
 import { randomUUID } from "node:crypto";
-import { modelSelectionForRole } from "./agent-model-routing.ts";
+import {
+    reasoningEffortSelectionForModel,
+    modelSelectionForRole,
+} from "./agent-model-routing.ts";
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
-const REASONING_EFFORT = "high" as const;
 const TIMEOUT_MS = 60 * 60 * 1000; // 1 hour
 const MAX_RETRIES = 3;             // Retry sendAndWait on transient failures
 const RETRY_BASE_MS = 2_000;       // Exponential backoff base (2 s → 4 s → 8 s)
@@ -361,7 +363,7 @@ function inferTaskId(prompt: string, explicitTaskId?: string): string {
 
 const runId = randomUUID();
 const startedAt = new Date().toISOString();
-logInfo(`[run-agent] started  runId=${runId} role=${role} model=${model} effort=${REASONING_EFFORT} at=${startedAt}`);
+logInfo(`[run-agent] started  runId=${runId} role=${role} model=${model} at=${startedAt}`);
 logInfo(`[run-agent] routing  policy-model=${policyModel} policy-source=${policyModelSelection.source} model-source=${modelSource}`);
 if (!modelOverride && policyModelSelection.source === "fallback") {
     logInfo(`[run-agent] warning  unknown role='${role}' not found in routing table; using fallback model=${policyModel}`);
@@ -394,12 +396,18 @@ let session: Awaited<ReturnType<CopilotClient["createSession"]>> | undefined;
 
 try {
     await client.start();
+    const availableModels = await client.listModels().catch(() => []);
+    const reasoningEffortSelection = reasoningEffortSelectionForModel(model, availableModels);
+    const reasoningEffort = reasoningEffortSelection.reasoningEffort;
+    logInfo(
+        `[run-agent] effort   model=${model} effort=${reasoningEffort} source=${reasoningEffortSelection.source}`
+    );
     // approveAll: grants all permission requests automatically.
     // This is safe for trusted local use where the agent roles and MCP servers
     // are fully controlled by the repository owner. Do not use in shared/CI environments.
     session = await client.createSession({
         model,
-        reasoningEffort: REASONING_EFFORT,
+        reasoningEffort,
         onPermissionRequest: approveAll,
         // Register as a named custom agent so the Copilot UI shows the role identity.
         customAgents: [{
