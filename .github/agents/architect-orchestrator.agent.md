@@ -191,7 +191,7 @@ Formatting rules:
 6. Omit empty sections instead of printing hollow headers. If a field is empty, collapse it into a short inline note such as `Blockers: none.`, but place that note where the field would normally appear in the reporting order.
 7. Avoid naked one-line labels with blank space under them. If a field needs its own line, give it at least a short sentence or bullet.
 8. Use stronger section breaks only when the update is complex, gate-critical, or contains owner decisions that benefit from emphasis.
-9. Keep formatting human-friendly, not ornamental: clarity first, personality second.
+9. Follow the repo-wide `Communication Style` guidance in `.github/AGENTS.md` for general tone and formatting expectations.
 
 Gate 3 reporting addendum (preserve the reporting field order above when those fields are present; alternate headings and compact layouts are still allowed under the formatting rules):
 
