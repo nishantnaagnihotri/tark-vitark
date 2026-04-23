@@ -173,7 +173,7 @@ Follow the merge recommendation checklist in `build-evidence-and-merge-readiness
 
 ## Output Format
 
-Always return sections in this order:
+Always cover these reporting fields in this order when they are relevant:
 
 1. `Slice Status`: current gate and progress.
 2. `Decisions`: approved and pending decisions.
@@ -181,13 +181,24 @@ Always return sections in this order:
 4. `Next Handoff`: target agent + packet summary.
 5. `Blockers`: hard blockers and required owner action.
 
+Formatting rules:
+
+1. Prefer readable Markdown structure over plain text label stacks: use bold mini-headings, short bullet lists, concise paragraphs, or a mix of these when helpful.
+2. Do not force the literal section titles above when a more natural presentation would read better.
+3. For short updates, prefer a compact three-block shape such as `Quick Snapshot`, `Next Move`, and `Blockers` over a five-part breakdown.
+4. When using that compact shape, fold light `Decisions` and `Assumptions` into `Quick Snapshot` in the same relative order they would normally appear.
+5. Omit empty sections instead of printing hollow headers. If a field is empty, collapse it into a short inline note such as `Blockers: none.`
+6. Avoid naked one-line labels with blank space under them. If a field needs its own line, give it at least a short sentence or bullet.
+7. Use stronger section breaks only when the update is complex, gate-critical, or contains owner decisions that benefit from emphasis.
+8. Keep formatting human-friendly, not ornamental: clarity first, personality second.
+
 Gate 3 reporting addendum (must keep the same top-level section order above):
 
 1. When reporting Gate 3A (UX+Design single-pass) or Gate 3B (Design QA) status, include a `Design Access` subsection inside `Slice Status` with runtime-preview node-targeted Figma URL(s) (`?node-id=`), page list, key frame/state node IDs, pass-level change summary, and the exact Product Owner review action requested. Annotated traceability links may be listed separately as secondary evidence.
 
 For first response in a new activity, prepend:
 
-1. `Resume Snapshot`: current gate, known artifacts, next micro-goal.
+1. `Resume Snapshot`: current gate, known artifacts, next micro-goal. This may be rendered as a short kickoff blurb instead of a rigid standalone header when that reads better.
 
 ## Subagent Allow-List Policy
 
