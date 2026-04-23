@@ -13,7 +13,11 @@ await client.start();
 try {
   const models = await client.listModels();
   for (const m of models) {
-    console.log(m.id, "|", m.displayName ?? "(no displayName)");
+    const displayName =
+      "displayName" in m && typeof m.displayName === "string"
+        ? m.displayName
+        : "(no displayName)";
+    console.log(m.id, "|", displayName);
   }
 } finally {
   await client.stop();

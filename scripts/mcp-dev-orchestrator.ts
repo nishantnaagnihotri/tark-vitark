@@ -98,9 +98,10 @@ function resolveAgentMcpServers(role: string): Record<string, MCPServerConfig> {
     for (const [serverKey, rawConfig] of Object.entries(rawRegistry)) {
         // Strip our private annotations before passing to the SDK
         const { _toolPrefixes, _envHeaders, ...config } = rawConfig as {
+            [k: string]: unknown;
+        } & MCPServerConfig & {
             _toolPrefixes?: string[];
             _envHeaders?: Record<string, string>;
-            [k: string]: unknown;
         };
         const prefixes: string[] = _toolPrefixes ?? [serverKey];
         const matched = agentTools.some((tool) =>
@@ -131,7 +132,7 @@ function resolveAgentMcpServers(role: string): Record<string, MCPServerConfig> {
             }
         }
 
-        result[serverKey] = config as MCPServerConfig;
+        result[serverKey] = config;
     }
     return result;
 }

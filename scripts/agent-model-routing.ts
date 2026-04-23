@@ -18,6 +18,7 @@ export type ModelReasoningSupport = {
     capabilities?: {
         supports?: {
             reasoning_effort?: readonly string[];
+            reasoningEffort?: boolean | readonly string[];
         };
     };
 };
@@ -83,9 +84,20 @@ export function reasoningEffortSelectionForModel(
         }
     }
 
+    const camelCaseReasoningSupport = modelInfo?.capabilities?.supports?.reasoningEffort;
+    if (Array.isArray(camelCaseReasoningSupport)) {
+        for (const effort of camelCaseReasoningSupport) {
+            if (ALL_REASONING_EFFORTS.includes(effort as ReasoningEffort)) {
+                supportedReasoningEffortSet.add(effort as ReasoningEffort);
+            }
+        }
+    } else if (camelCaseReasoningSupport) {
+        supportedReasoningEffortSet.add(FALLBACK_REASONING_EFFORT);
+    }
+
     const supportedReasoningEfforts = Array.from(supportedReasoningEffortSet);
 
-    if (!supportedReasoningEfforts || supportedReasoningEfforts.length === 0) {
+    if (supportedReasoningEfforts.length === 0) {
         return {
             reasoningEffort: FALLBACK_REASONING_EFFORT,
             source: "fallback",
