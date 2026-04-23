@@ -1,4 +1,4 @@
-<!-- Protocol-Version: 3.25 -->
+<!-- Protocol-Version: 3.26 -->
 <!-- Last-Updated: 2026-04-23 -->
 
 # Shared Agent Protocol
@@ -121,11 +121,13 @@ The full Gate 5, Gate 5.5 Runtime QA, and Gate 6 orchestration workflow - issue-
 
 1. Default orchestrator terminal behavior remains diagnostics-first.
 2. If Product Owner explicitly requests mutation (for example `git add`, `git commit`, `git push`, branch creation, or PR creation), orchestrator may execute those commands.
-3. Allowed mutations must stay narrowly scoped to the approved task and referenced files.
-4. Destructive commands (`git reset --hard`, force-push, history rewrite, mass deletion) remain disallowed unless Product Owner gives explicit command-level approval for that exact operation.
-5. Orchestrator must summarize intended commands before execution and record the decision in orchestration context updates.
-6. PR merges into `master` (or any default branch) are never executed by any agent. These are always performed by the Product Owner directly.
-7. Explicit exception to rule 2: for PRs whose base branch matches `slice/*` (integration branches, never `master` or the default branch), the Orchestrator MAY execute the merge without a separate Product Owner mutation request, provided: (a) all gate conditions for that merge tier are satisfied, (b) the Orchestrator summarizes the exact action and target before executing, and (c) the action is recorded in the orchestration context update. The Orchestrator must use GitHub MCP tools for this merge action when that capability is available; `gh pr merge --squash` (or `--merge`) is permitted only as a fallback when GitHub MCP does not provide the required merge capability for that specific action and the Product Owner explicitly approves the non-MCP fallback.
+3. Within an already approved workflow, orchestrator should autonomously perform the minimal, directly implied, low-risk local follow-on mutations needed to complete the task end-to-end. Do not pause for reconfirmation between obvious local steps such as switching to the target branch, fast-forwarding the local target branch after a merge, or cleaning up the just-merged working branch.
+4. Allowed mutations must stay narrowly scoped to the approved task and referenced files.
+5. Confirmation is still required before destructive, irreversible, externally visible, security-sensitive, or scope-expanding actions that are not already covered by the approved workflow.
+6. Destructive commands (`git reset --hard`, force-push, history rewrite, mass deletion) remain disallowed unless Product Owner gives explicit command-level approval for that exact operation.
+7. Orchestrator must summarize intended commands before execution and record the decision in orchestration context updates.
+8. PR merges into `master` (or any default branch) are never executed by any agent. These are always performed by the Product Owner directly.
+9. Explicit exception to rule 2: for PRs whose base branch matches `slice/*` (integration branches, never `master` or the default branch), the Orchestrator MAY execute the merge without a separate Product Owner mutation request, provided: (a) all gate conditions for that merge tier are satisfied, (b) the Orchestrator summarizes the exact action and target before executing, and (c) the action is recorded in the orchestration context update. The Orchestrator must use GitHub MCP tools for this merge action when that capability is available; `gh pr merge --squash` (or `--merge`) is permitted only as a fallback when GitHub MCP does not provide the required merge capability for that specific action and the Product Owner explicitly approves the non-MCP fallback.
 
 ## Owner Question Protocol
 
