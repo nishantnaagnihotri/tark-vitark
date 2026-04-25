@@ -96,6 +96,12 @@ Pre-handoff confirmation rule:
 2. If Product Owner explicitly requests `cloud` for a specific issue, provide a manual handoff prompt and wait for returned `Build Output Package`.
 3. If cloud mode is not requested, continue normal local subagent invocation.
 
+Task PR ownership rule:
+
+1. Gate 5 task PR creation is dev-owned by default.
+2. Orchestrator does not wait for or solicit a separate Product Owner PR-open confirmation before dispatching `dev` unless the handoff is explicitly marked `branch-only`, `prepare PR package only`, or `do not open PR yet`.
+3. If Product Owner wants a non-default hold before PR creation for a specific issue, orchestrator must state that override explicitly in the dev handoff.
+
 Execution rule:
 
 1. Gate 5 is implementation-only and works one Issue at a time.

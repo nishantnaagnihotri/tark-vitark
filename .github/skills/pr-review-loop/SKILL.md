@@ -29,6 +29,13 @@ On-demand workflow for handling PR reviews end-to-end: intake triage, dispositio
 2. For dependent PR chains explicitly declared as `Orchestrator-Managed Stacked Review Mode`, ownership is split: each dev agent owns the full review loop for its own assigned PR; the orchestrator owns stack sequencing (merge order, base-to-tip progression, PR retargeting).
 3. In `Orchestrator-Managed Stacked Review Mode`, dev agents run this full review loop per-PR and exit with a formal Review Loop Exit Status package (see section 6). They do not advance stack sequencing, trigger merges, or retarget PR bases.
 
+## PR Opening Authority
+
+1. For Gate 5 implementation work, the implementing dev agent opens its own task PR by default.
+2. No separate Product Owner confirmation checkpoint is required before that dev agent opens its task PR unless the handoff explicitly says `branch-only`, `prepare PR package only`, or otherwise suppresses PR creation.
+3. The agent that opens the PR becomes the review-loop owner immediately and must start the atomic review request + polling sequence without pause.
+4. Orchestrator-opened or non-dev PRs follow their own mutation and authorization policy outside this skill.
+
 ---
 
 ## 1. Strict Accept-vs-Challenge Lens
