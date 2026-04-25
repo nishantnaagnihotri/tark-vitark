@@ -125,7 +125,7 @@ Design feedback loop rule:
 1. Gate 3B is a sync nested QA lane: `ux-agent` owns the dispatch packet, and `design-qa-agent` owns the verdict.
 2. Design QA reads the Figma design directly via MCP on every pass.
 3. If structural gaps exist, Design QA routes back to `ux-agent` with specific revision instructions.
-4. Orchestrator persists every Gate 3B pass, including `Needs Revision`, into `04-design-qa.md` before the next revision or Product Owner review.
+4. Orchestrator mechanically persists every Gate 3B pass, including `Needs Revision`, verbatim into `04-design-qa.md` before the next revision or Product Owner review; orchestrator does not edit Design QA content.
 5. `ux-agent` revises design frames using the `ux-design-execution` skill and re-submits an updated `UX Flow/State Package`, `Orchestrator Resume Packet`, and refreshed nested Design QA critique.
 6. Repeat the loop until no structural gaps remain.
 

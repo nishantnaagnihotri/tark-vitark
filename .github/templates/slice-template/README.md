@@ -179,7 +179,7 @@ Gate 6 (Merge Review)
 6. At Gate 3A: orchestrator invokes ux-agent, receives UX Flow/State Package
 7. ux-agent fills in 03-ux.md and returns it
 8. At Gate 3B: orchestrator routes a final sync ux-agent handoff, and ux-agent invokes design-qa-agent with the UX Flow/State Package plus PRD
-9. design-qa-agent reviews Figma frames (created by ux-agent in Gate 3A); orchestrator persists the returned critique in 04-design-qa.md
+9. design-qa-agent reviews Figma frames (created by ux-agent in Gate 3A); orchestrator mechanically persists the returned critique verbatim to 04-design-qa.md without content edits
 10. At Gate 4: orchestrator invokes architecture-agent, receives Architecture Plan
 11. architecture-agent fills in 05-architecture.md and returns it
 12. Orchestrator creates GitHub issues and fills in 06-tasks.md
