@@ -32,9 +32,10 @@ On-demand workflow for handling PR reviews end-to-end: intake triage, dispositio
 ## PR Opening Authority
 
 1. For Gate 5 implementation work, the implementing dev agent opens its own task PR by default.
-2. No separate Product Owner confirmation checkpoint is required before that dev agent opens its task PR unless the handoff explicitly says `branch-only`, `prepare PR package only`, or otherwise suppresses PR creation.
-3. The agent that opens the PR becomes the review-loop owner immediately and must start the atomic review request + polling sequence without pause.
-4. Orchestrator-opened or non-dev PRs follow their own mutation and authorization policy outside this skill.
+2. This automatic PR-opening allowance is unique to the implementing Gate 5 dev agent.
+3. No separate Product Owner confirmation checkpoint is required before that dev agent opens its task PR unless the handoff explicitly says `branch-only`, `prepare PR package only`, or otherwise suppresses PR creation.
+4. The agent that opens the PR becomes the review-loop owner immediately and must start the atomic review request + polling sequence without pause.
+5. Any PR creation by a non-dev agent requires explicit Product Owner authorization and does not inherit the Gate 5 dev default.
 
 ---
 

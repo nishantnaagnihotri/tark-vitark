@@ -1,4 +1,4 @@
-<!-- Protocol-Version: 3.30 -->
+<!-- Protocol-Version: 3.31 -->
 <!-- Last-Updated: 2026-04-25 -->
 
 # Shared Agent Protocol
@@ -143,9 +143,10 @@ The full Gate 5, Gate 5.5 Runtime QA, and Gate 6 orchestration workflow - issue-
 ## PR Opening Policy
 
 1. Gate 5 task PR creation is dev-owned by default. Once a dev agent has code, tests, and PR package evidence ready for its assigned issue, it may open its own task PR as part of normal completion flow.
-2. A separate Product Owner confirmation checkpoint is not required before a dev agent opens its own task PR unless the handoff explicitly says `branch-only`, `prepare PR package only`, or otherwise suppresses PR creation.
-3. The dev agent that opens the task PR becomes the review-loop owner immediately and must enter the `Create PR -> [REVIEW REQUESTED] -> [POLLING STARTED]` sequence without pause.
-4. Orchestrator-opened PRs and non-Gate-5 PRs remain subject to the Orchestrator's mutation rules; explicit Product Owner authorization is still required unless another shared rule already permits that action.
+2. This automatic PR-opening allowance is unique to the implementing Gate 5 dev agent. No other agent inherits it.
+3. A separate Product Owner confirmation checkpoint is not required before that dev agent opens its own task PR unless the handoff explicitly says `branch-only`, `prepare PR package only`, or otherwise suppresses PR creation.
+4. The dev agent that opens the task PR becomes the review-loop owner immediately and must enter the `Create PR -> [REVIEW REQUESTED] -> [POLLING STARTED]` sequence without pause.
+5. Any PR creation by a non-dev agent, including orchestrator-opened PRs, requires explicit Product Owner authorization unless a different shared rule explicitly says otherwise.
 
 ## Owner Question Protocol
 
