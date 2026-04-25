@@ -1,4 +1,4 @@
-<!-- Protocol-Version: 3.29 -->
+<!-- Protocol-Version: 3.30 -->
 <!-- Last-Updated: 2026-04-25 -->
 
 # Shared Agent Protocol
@@ -139,6 +139,13 @@ The full Gate 5, Gate 5.5 Runtime QA, and Gate 6 orchestration workflow - issue-
 7. Orchestrator must summarize intended commands before execution and record the decision in orchestration context updates.
 8. PR merges into `master` (or any default branch) are never executed by any agent. These are always performed by the Product Owner directly.
 9. Explicit exception to rule 2: for PRs whose base branch matches `slice/*` (integration branches, never `master` or the default branch), the Orchestrator MAY execute the merge without a separate Product Owner mutation request, provided: (a) all gate conditions for that merge tier are satisfied, (b) the Orchestrator summarizes the exact action and target before executing, and (c) the action is recorded in the orchestration context update. The Orchestrator must use GitHub MCP tools for this merge action when that capability is available; `gh pr merge --squash` (or `--merge`) is permitted only as a fallback when GitHub MCP does not provide the required merge capability for that specific action and the Product Owner explicitly approves the non-MCP fallback.
+
+## PR Opening Policy
+
+1. Gate 5 task PR creation is dev-owned by default. Once a dev agent has code, tests, and PR package evidence ready for its assigned issue, it may open its own task PR as part of normal completion flow.
+2. A separate Product Owner confirmation checkpoint is not required before a dev agent opens its own task PR unless the handoff explicitly says `branch-only`, `prepare PR package only`, or otherwise suppresses PR creation.
+3. The dev agent that opens the task PR becomes the review-loop owner immediately and must enter the `Create PR -> [REVIEW REQUESTED] -> [POLLING STARTED]` sequence without pause.
+4. Orchestrator-opened PRs and non-Gate-5 PRs remain subject to the Orchestrator's mutation rules; explicit Product Owner authorization is still required unless another shared rule already permits that action.
 
 ## Owner Question Protocol
 

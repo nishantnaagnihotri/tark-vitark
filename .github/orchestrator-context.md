@@ -162,6 +162,7 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). U
 90. Gate 3 progressive persistence (adopted 2026-04-24, PO decision): during async Gate 3A, `ux-agent` must incrementally checkpoint stable decisions into `docs/slices/<slice-name>/03-ux.md` using `STATUS: IN PROGRESS`, `Last Updated`, `Checkpoint Ledger`, current design access snapshot, and the latest checkpointed `Orchestrator Resume Packet`. If the UX thread is compacted or interrupted, the latest `03-ux.md` checkpoint is the authoritative rehydration source; chat history is secondary. Cross-ref: `.github/skills/ux-design-execution/SKILL.md`, `.github/skills/gate-recovery-and-resume/SKILL.md`, `.github/skills/orchestrator-session-context-lifecycle/SKILL.md`.
 91. Gate 3 async pass model (adopted 2026-04-24, amended 2026-04-24, PO decision): `scripts/run-agent.ts` is a single-shot `sendAndWait(...)` execution path, not a persistent user-interactive UX thread. Gate 3A therefore runs as bounded async `ux-agent` passes rehydrated from `03-ux.md`. Rejected or incomplete UX work is revised via a new async dispatch from the latest checkpoint, not by reopening the old terminal session. Sync `runSubagent` is a fallback only when the Product Owner explicitly wants to stay in the current chat for short critique/revision. Cross-ref: `.github/skills/design-gate-orchestration/SKILL.md`, `.github/skills/async-agent-dispatch/SKILL.md`, `scripts/run-agent.ts`.
 92. Gate 3 manual-resume boundary (adopted 2026-04-24, PO decision): after any async Gate 3A `ux-agent` dispatch, orchestrator records the terminal, waits for completion, updates session memory, and stops. Even when `03-ux.md` contains a valid final packet, Gate 3 does not progress until the Product Owner explicitly asks the orchestrator to resume. Cross-ref: `.github/skills/orchestrator-session-context-lifecycle/SKILL.md`, `.github/agents/architect-orchestrator.agent.md`.
+93. Gate 5 PR opening ownership (adopted 2026-04-25, PO decision): Gate 5 task PRs are opened by the implementing dev agent by default, with no separate Product Owner confirmation checkpoint, unless the handoff explicitly suppresses PR creation (`branch-only`, `prepare PR package only`, or `do not open PR yet`). Opening that PR is part of the dev-owned review loop. Orchestrator-opened PRs remain under explicit orchestrator mutation rules. Cross-ref: `.github/AGENTS.md` PR Opening Policy, `.github/skills/pr-review-loop/SKILL.md`, `.github/agents/dev.agent.md`, `.github/skills/build-merge-gate-orchestration/SKILL.md`.
 
 ## Resume Protocol For Orchestrator
 
@@ -291,6 +292,13 @@ Template:
 - Open questions status: none. This is protocol hardening, not a slice-scope change.
 - Next micro-goal: use the finalized async Gate 3A process for remaining `create-debate` UX iterations and future slices.
 - Blockers/owner decisions: none. Product Owner confirmed the async UX dispatch process is working and should be the preferred Gate 3A lane.
+
+### 2026-04-25 (Gate 5 PR Opening Ownership Clarified)
+- Gate status: Gate 5 PR-opening ownership clarified.
+- Artifact changes: Updated shared AGENTS policy, PR review-loop skill, dev agent contract, and build/merge orchestration so Gate 5 task PRs are opened by dev agents by default, without a separate Product Owner confirmation checkpoint, unless the handoff explicitly suppresses PR creation.
+- Open questions status: none. This is a workflow ownership clarification.
+- Next micro-goal: apply the dev-owned PR opening rule on future Gate 5 task handoffs and continue the current PR review loop on #200.
+- Blockers/owner decisions: none. Orchestrator-opened PRs remain under explicit orchestrator mutation control.
 
 ### debate-screen-polish — Gate 6 ✅ Complete (2026-04-19) — Full log: docs/slices/debate-screen-polish/context-log.md
 
