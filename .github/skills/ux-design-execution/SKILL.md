@@ -73,25 +73,17 @@ Log format for visual verification:
 [RESULT] ✅ renders correctly | 🔴 still wrong — rebind required
 ```
 
-### Clone Inheritance — Component Sizing Audit (Mandatory After Every Frame Clone)
+### Clone Inheritance — Property Audit (Mandatory After Every Frame Clone)
 
-When a frame is cloned from another frame (e.g., Mobile → Tablet, Light → Dark), component instances inside the clone **inherit the sizing mode of the source**. This is silent: `primaryAxisSizingMode: FIXED` at a source-specific pixel width carries over unchanged, even if the target frame has different column dimensions.
+When a frame is cloned via the Plugin API, **all component properties are inherited silently** — sizing modes, fixed widths, overridden variants, hardcoded fills. None of these are flagged or highlighted; the clone looks structurally correct but may carry source-specific values that are wrong for the target viewport or theme.
 
-**Required after every frame clone:**
+**Required after every frame clone, before any further edits:**
 
-1. For every DS Button/Filled (or any component with a manually-set fixed width) in the cloned frame:
-   - Read `primaryAxisSizingMode` and `width`.
-   - If `primaryAxisSizingMode` is `FIXED`, audit whether the fixed width is correct for the target viewport and the M3 spec.
-2. **M3 Button sizing rule — mandatory:**
-   - Full-width (column-spanning) buttons: **Mobile only**. On narrow mobile viewports, a full-width submit button on a form is an accepted pattern.
-   - On **Tablet and Desktop**: buttons must be **content-hugged** (`primaryAxisSizingMode: AUTO`). A button spanning 600–640px with a short label ("Start", "Submit") is non-compliant with M3 and visually broken.
-   - When in doubt: use AUTO (HUG) sizing on all viewports, centered within the layout column.
-3. After correcting sizing, **re-center the button** within its content column (do not leave it at the cloned frame's absolute coordinates).
-4. Screenshot-verify all corrected frames to confirm label centering and proportions.
+Read back `primaryAxisSizingMode`, `width`, and `fills` on every component instance in the clone. If any value is viewport-specific or source-specific, correct it for the target context before proceeding.
 
 Log format:
 ```
-[CLONE AUDIT] <cloned-frame-id> | checked components: <list> | primaryAxisSizingMode values: <list> | corrections applied: <list>
+[CLONE AUDIT] <cloned-frame-id> | checked: <properties> | corrections: <list or "none">
 ```
 
 
