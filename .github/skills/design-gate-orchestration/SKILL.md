@@ -97,7 +97,7 @@ Proceeding rule:
 9. Require a `DS Component Coverage Declaration` in UX output: flat deduplicated list of all DS components required across all frames. Component Coverage Check must be completed before any frame is created.
 10. Require a `Design Review Access` section in UX output with node-targeted Figma URL(s) (`?node-id=` with actual node IDs from frames created in this pass), expected pages, and review focus.
 11. Require an `Orchestrator Resume Packet` in UX output with gate phase reached, persistence-ready summary, AC delta status, OQ resolution status, design access snapshot, and the exact next orchestrator action.
-11. Otherwise, loop back to UX clarification and Phase 1 correction before Phase 2 can proceed.
+12. Otherwise, loop back to UX clarification and Phase 1 correction before Phase 2 can proceed.
 
 Local-validation rule:
 
