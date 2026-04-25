@@ -1,11 +1,11 @@
 ---
 name: ux-design-execution
-description: "UX and Figma execution workflow: run the Challenge Phase, produce UX Flow/State Package, execute Figma pixel frames via MCP using single-screen-first protocol. Use when: performing Gate 3A UX work directly as the Orchestrator, creating or modifying Figma design frames, executing DS library operations, or validating UX coverage before Design QA."
+description: "UX and Figma execution workflow: run the Challenge Phase, produce UX Flow/State Package, execute Figma pixel frames via MCP using single-screen-first protocol. Use when: performing Gate 3A UX work through `ux-agent`, creating or modifying Figma design frames, executing DS library operations, or validating UX coverage before Design QA."
 ---
 
 # UX Design Execution Workflow
 
-Use this skill when executing Gate 3A UX work directly. This skill transfers the full UX Agent execution contract to the Orchestrator. Follow every section in order.
+Use this skill when executing Gate 3A UX work. This skill is the canonical execution contract for `ux-agent` and any explicitly approved Gate 3A fallback lane. Follow every section in order.
 
 ## When To Use
 
@@ -57,6 +57,7 @@ Variable IDs are **file-scoped**. A variable written as `VariableID:9:2` in the 
    - Re-read to verify the correction.
    - If still not matching after two correction attempts → **raise a loop-back condition** (see Zero Autonomous Gap Decisions below). Do NOT proceed past a failed verify.
 5. **Never present a result to Product Owner that has not passed a read-back verify.** A screenshot alone is not verification — screenshots can show stale paint; only MCP read-back confirms the actual property value.
+6. **Neighbor Recheck (Mandatory after every write):** After a write is confirmed, immediately read the full element state — all relevant properties — of the **written node's parent and direct siblings**. Figma's auto-layout engine and component override system can silently mutate neighboring nodes (e.g., collapsing a sibling's width, re-pinning a parent's padding, resetting a fill on a sibling frame). These side effects produce no error and are invisible in screenshots. If any neighbor property changed unexpectedly, treat it as a new mismatch and apply the Write-Verify-Correct Loop to that node before continuing.
 
 ### Per-Change Verification Log Format
 
@@ -129,6 +130,19 @@ Do not ask Product Owner for direction or approval while issues are still being 
 9. Block progression when UX coverage is incomplete or inconsistent with the PRD.
 10. For interactive journeys, define an explicit `UI Control Contract` and `M3 Control Mapping`.
 11. Provide `Design Review Access` with node-targeted links to actual frames created this pass.
+
+## Progressive Persistence Protocol (Mandatory For Async UX Lane)
+
+During Gate 3A async execution, `docs/slices/<slice-name>/03-ux.md` is the live working artifact, not a write-once final dump.
+
+Rules:
+
+1. Create or update `03-ux.md` as soon as the first stable UX information exists. Mark it `STATUS: IN PROGRESS` until the final Gate 3A package is complete.
+2. After each stable milestone or Product Owner-approved decision, checkpoint the artifact instead of relying on chat history. At minimum, checkpoint after Challenge Phase resolution, after stable control/flow decisions, after stable Frame Blueprint changes, and after any Figma pass that changes review-relevant node IDs.
+3. Every checkpoint must refresh: `Last Updated`, `Gate 3A Phase`, `Checkpoint Ledger`, current `AC Delta Status`, current `OQ Resolution Status`, current `Design Access Snapshot`, and the latest checkpointed `Orchestrator Resume Packet`.
+4. Completed sections of the `UX Flow/State Package` should be written into `03-ux.md` incrementally as they stabilize. Do not hold completed sections back for a single end-of-thread write.
+5. If chat context compacts or the UX lane is resumed later, the latest `03-ux.md` checkpoint becomes the authoritative rehydration source for continuing the UX pass.
+6. On final completion, replace the in-progress status with the final Gate 3A artifact state and ensure the file contains the full `UX Flow/State Package` plus the final `Orchestrator Resume Packet`.
 
 ## Step 1 — Challenge Phase (Mandatory Before Any Flow Artifacts)
 
@@ -512,6 +526,36 @@ Before declaring any frame pass complete (Phase 1 or Phase 2), run a final syste
 
 This step runs **after** Step 10 (End-of-Pass Full Verification Sweep) and **before** any screenshot or output is returned to Product Owner. Every criterion must pass. Any failure restarts the iteration — no partial presentation.
 
+### QG-0: Spec-First Verification (Mandatory Preamble — Before Reading Any Node)
+
+**Before inspecting a single Figma node**, derive a spec table for every element in the frame from authoritative sources only — M3 spec, the DS library component definition, and the slice PRD. Do **not** read Figma first and then check; derive first, then compare.
+
+**Required spec table format (one row per element):**
+
+| Element | Property | Spec-required value | Source |
+|---|---|---|---|
+| FilledButton | background fill token | `md.sys.color.primary` | M3 FilledButton spec |
+| FilledButton | label text token | `md.sys.color.on-primary` | M3 FilledButton spec |
+| FilledButton | disabled opacity | 0.38 on container + label | M3 disabled state spec |
+| FilledButton | label M3 role | `label/large` | M3 button spec |
+| Screen | status bar + gesture nav | present (mobile frame contract) | Apple HIG / M3 mobile spec |
+| … | … | … | … |
+
+After the table is built, read each property from Figma via MCP and fill in an **Actual** column. Any divergence between Spec-required and Actual is a blocker — apply the Write-Verify-Correct Loop before proceeding.
+
+**Why this matters:** output-only review catches only what was already suspected. Spec-first derivation surfaces violations that nobody thought to look for, regardless of how the violation was introduced.
+
+Log the result:
+```
+[SPEC-FIRST VERIFICATION]
+Elements derived: <n>
+Divergences found: <n>
+All resolved: YES / NO
+Blockers remaining: <list or "none">
+```
+
+A `NO` on "All resolved" is a gate blocker. Do not proceed to QG-1 until all spec-vs-actual divergences are resolved.
+
 ### QG-1: Typography Role Correctness (M3 Spec)
 
 M3 defines 5 roles. Each content element must map to exactly one role. Using the wrong role is a defect regardless of whether the font size looks approximately correct.
@@ -638,6 +682,7 @@ Any NO in the MCP checks is a blocker — fix the mismatched property before pre
 
 ```
 [DESIGN QUALITY GATE]
+QG-0 Spec-first verification: ✅ / ❌ <divergences found / resolved>
 QG-1 Typography roles: ✅ / ❌ <issues>
 QG-2 Spacing rhythm: ✅ / ❌ <values that failed>
 QG-3 Greyscale check: ✅ / ❌ <which element drew eye, was it primary action?>
