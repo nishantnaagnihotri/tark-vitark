@@ -62,11 +62,12 @@ Design QA-specific note:
 
 ## Handoff Input Contract
 
-Expected input from Architect + Orchestrator:
+Expected input from UX Agent (canonical Gate 3B caller) or Architect + Orchestrator:
 
 1. `Design Draft Package`.
 2. Explicit request to return a QA verdict artifact plus gate decision.
 3. Any new owner constraints or accepted assumptions since Figma substep completion.
+4. When nested under `ux-agent`, return the critique cleanly enough for orchestrator to persist the pass verbatim into `04-design-qa.md`.
 
 ## Approach
 

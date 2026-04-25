@@ -47,3 +47,4 @@ PRD Amendment trigger rule:
 2. Gate closure is blocked if: a downstream artifact (`03-ux.md`, `04-design-qa.md`) references an owner-approved scope change but no corresponding PRD amendment exists in `## Amendments` in `02-prd.md`.
 3. The amendment does not require a full PRD re-run. It is an append-only operation to the `## Amendments` section per the `PRD Amendment Protocol` in `requirement-prd-alignment`.
 4. After any amendment, re-run the alignment check to confirm all affected AC rows reference the amended definition.
+5. If Gate 3 Delta Triage classifies the change as `Material scope change`, do not rely on append-only amendment alone. Re-open Gate 2 and re-invoke `prd-agent` for PRD re-analysis, and re-open Gate 1 as well if the requirement boundary itself changed.

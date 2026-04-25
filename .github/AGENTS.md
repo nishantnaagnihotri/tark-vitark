@@ -1,5 +1,5 @@
-<!-- Protocol-Version: 3.27 -->
-<!-- Last-Updated: 2026-04-23 -->
+<!-- Protocol-Version: 3.29 -->
+<!-- Last-Updated: 2026-04-25 -->
 
 # Shared Agent Protocol
 
@@ -55,15 +55,16 @@ Product Owner may override classification at any time.
 1. Requirement challenge gate must pass before PRD freeze for Standard and Complex slices.
 2. PRD drafting uses Requirement Context Package and must pass PRD quality gate before PRD freeze (Standard and Complex slices; Trivial slices skip Gate 2).
 3. Gate 2 (PRD) must preserve Gate 1 intent: no silent reinterpretation of requirement statement, scope boundaries, or acceptance criteria.
-4. Design freeze must happen before coding for Standard and Complex slices. Gate 3 includes two substeps: (A) UX+Design single-pass — Orchestrator executes UX work directly using the `ux-design-execution` skill (`.github/skills/ux-design-execution/SKILL.md`) under the **single-screen-first** protocol: create the primary frame (Default/Light/Mobile) first, return it to the Product Owner for explicit approval, then create all remaining frames in a follow-up pass; (B) Design QA. There is no separate UX Agent or Figma Agent substep.
+4. Design freeze must happen before coding for Standard and Complex slices. Gate 3 includes two substeps: (A) UX+Design single-pass and (B) Design QA. Gate 3A's canonical operating mode is async `scripts/run-agent.ts` dispatch to `ux-agent` as a bounded pass: `ux-agent` rehydrates from `docs/slices/<slice-name>/03-ux.md`, progressively checkpoints stable decisions back into that file, and ends the pass with an `Orchestrator Resume Packet`. After dispatch, orchestrator records the terminal ID and pauses Gate 3 until the Product Owner explicitly returns to resume; terminal completion alone never advances the gate. If the Product Owner explicitly wants to stay in the current chat for a short critique/revision loop, orchestrator may use sync `runSubagent` rounds with `ux-agent` and explicit model `claude-sonnet-4.6`, still checkpointing stable decisions into `03-ux.md`. Further UX iteration after async feedback happens as a new async pass rehydrated from the latest `03-ux.md` checkpoint, not by keeping the prior terminal session open. There is no separate Figma Agent substep.
 5. Design artifact is mandatory for every UX task: each Gate 3A UX output must include a Figma artifact reference (Figma file URL) before progression. Raw file keys must never appear in git-tracked artifacts — store them only in `.figma-config.local`.
-6. Orchestrator must run an internal challenge phase (per `ux-design-execution` skill) before producing UX flow/state artifacts: all `Must Resolve` UX gaps must be addressed or accepted by Product Owner before Gate 3A can pass.
+6. UX Agent must run an internal challenge phase (per `ux-design-execution` skill) before producing UX flow/state artifacts: all `Must Resolve` UX gaps must be addressed or accepted by Product Owner before Gate 3A can pass.
 7. Architecture signoff must happen before coding for Standard and Complex slices.
 8. Architecture Agent must run an internal challenge phase before producing any architecture output: all `Must Resolve` architecture gaps must be addressed or accepted by Product Owner before Gate 4 can pass.
 9. Architecture Agent must run a Discussion Phase before freezing the plan: key technical decisions across System Design, Solution Architecture, and Implementation Design must be surfaced, discussed with Product Owner, and confirmed before the full plan is written.
 10. UI-impacting implementation issues must pass the Gate 5.5 Runtime QA substep before Gate 6 progression, unless Product Owner explicitly accepts residual runtime risk.
 11. Merge requires passing tests, review closure, docs update when applicable, and rollback note.
 12. After Gate 3A (UX+Design single-pass) execution, orchestrator must return a Product Owner `Design Review Access Packet` with: node-targeted Figma URL(s) (include `?node-id=`), page list, key frame/state names with node IDs, pass-level change summary, and the exact review decision requested next. Packet links must prioritize runtime-preview visual frames (minimal/no QA overlays); annotated traceability frames may be included as secondary evidence links. Root file URL alone is insufficient. If node IDs are missing, loop back for clarification before claiming review-ready.
+13. If UX, Design QA, or Product Owner discussion during Gate 3 refines the approved contract, orchestrator must classify the delta before progression: `Visual-only refinement` stays in Gate 3 artifacts only; `Behavioral refinement within scope` requires explicit Product Owner approval plus AC/PRD amendment writeback; `Material scope change` loops back to Gate 2, and to Gate 1 as well if requirement boundaries changed.
 
 ## Architecture Reference Documents
 
@@ -111,18 +112,21 @@ The full Gate 5, Gate 5.5 Runtime QA, and Gate 6 orchestration workflow - issue-
 | `architect-orchestrator` | `gpt-5.4` | coordination, gate decisions, merge-readiness reasoning |
 | `requirement-challenger` | `claude-sonnet-4.6` | requirement challenge and ambiguity reduction |
 | `prd-agent` | `claude-sonnet-4.6` | PRD drafting and acceptance-criteria quality checks |
-| `design-qa-agent` | `claude-sonnet-4.6` | design coverage and UX/design critique |
+| `ux-agent` | `claude-sonnet-4.6` | Gate 3A UX design, control selection, and Figma execution |
+| `design-qa-agent` | `gpt-5.3-codex` | design coverage and UX/design critique |
 | `architecture-agent` | `gpt-5.4` | architecture planning and dependency/risk reasoning |
 | `dev` | `gpt-5.3-codex` | issue-scoped implementation and code editing |
 | `runtime-qa` | `gpt-5.4` | browser-verdict synthesis and runtime triage |
 
-2. For sync handoffs via `runSubagent`, orchestrator must pass an explicit `model` argument for Gate 1, Gate 2, Gate 3B, Gate 4, and Gate 5.5. Do not rely on platform default selection.
+2. For sync handoffs via `runSubagent`, the dispatching agent must pass an explicit `model` argument for Gate 1, Gate 2, Gate 3A discussion loops, Gate 3B nested Design QA, Gate 4, and Gate 5.5. Do not rely on platform default selection.
 3. For every sync `runSubagent` handoff, orchestrator must print exactly one sync dispatch banner in chat immediately before the tool call. The banner must include: role, explicit model, reasoning status (`tool-controlled / not repo-configurable`), and gate/slice context.
-4. For terminal-dispatched agents via `scripts/run-agent.ts` and parallel async runs via `scripts/mcp-dev-orchestrator.ts`, omit `--model` unless deliberately overriding; both scripts resolve the role default automatically from `scripts/agent-model-routing.ts`.
-5. Any override must be deliberate, called out in the handoff or dispatch note, and used only when the task clearly needs a non-default reasoning lane.
-6. Before a new role is used in live orchestration, add its default model to `scripts/agent-model-routing.ts` and document it in `.github/skills/async-agent-dispatch/SKILL.md` in the same change.
-7. Repo-controlled Copilot SDK agent sessions must set the highest supported `reasoningEffort` for the selected model. This is enforced in `scripts/run-agent.ts` and `scripts/mcp-dev-orchestrator.ts` by resolving the model's supported reasoning levels via `listModels()` and selecting the strongest one. If model metadata is unavailable, fall back to `high`. Sync `runSubagent` handoffs currently expose explicit model selection but no repo-controlled reasoning-effort parameter; treat that as a tool limitation, not a policy exception.
-8. For every async terminal dispatch (`run_in_terminal mode=async`) of `scripts/run-agent.ts`, orchestrator must print exactly one dispatch banner in chat per dispatch. The single banner is emitted immediately after the dispatch call returns and must include: role, resolved model, resolved reasoning effort, reasoning source (`supported-efforts` or `fallback`), gate/slice context, terminal id, and timestamp.
+4. Gate 3A default path uses async `scripts/run-agent.ts` dispatch to `ux-agent` and the role default model. Sync `runSubagent` with explicit model `claude-sonnet-4.6` is the fallback only when the Product Owner explicitly wants to stay in the current chat for a short critique/revision loop or when async dispatch is unavailable.
+5. Gate 3B default path uses sync `runSubagent` from `ux-agent` to `design-qa-agent` with explicit model `gpt-5.3-codex`. Orchestrator consumes the returned critique and persists the latest Gate 3B pass to `04-design-qa.md` before Product Owner review.
+6. For terminal-dispatched agents via `scripts/run-agent.ts` and parallel async runs via `scripts/mcp-dev-orchestrator.ts`, omit `--model` unless deliberately overriding; both scripts resolve the role default automatically from `scripts/agent-model-routing.ts`.
+7. Any override must be deliberate, called out in the handoff or dispatch note, and used only when the task clearly needs a non-default reasoning lane.
+8. Before a new role is used in live orchestration, add its default model to `scripts/agent-model-routing.ts` and document it in `.github/skills/async-agent-dispatch/SKILL.md` in the same change.
+9. Repo-controlled Copilot SDK agent sessions must set the highest supported `reasoningEffort` for the selected model. This is enforced in `scripts/run-agent.ts` and `scripts/mcp-dev-orchestrator.ts` by resolving the model's supported reasoning levels via `listModels()` and selecting the strongest one. If model metadata is unavailable, fall back to `high`. Sync `runSubagent` handoffs currently expose explicit model selection but no repo-controlled reasoning-effort parameter; Gate 3B therefore targets the Codex sync lane as the closest available path to the desired `xhigh` review posture, but exact sync `xhigh` cannot be repo-enforced until the tool surface exposes reasoning control.
+10. For every async terminal dispatch (`run_in_terminal mode=async`) of `scripts/run-agent.ts`, orchestrator must print exactly one dispatch banner in chat per dispatch. The single banner is emitted immediately after the dispatch call returns and must include: role, resolved model, resolved reasoning effort, reasoning source (`supported-efforts` or `fallback`), gate/slice context, terminal id, and timestamp.
 
 ## Terminal Mutation Override Policy
 
@@ -241,7 +245,7 @@ Follow the `figma-governance-and-fidelity` skill (`.github/skills/figma-governan
 ## Figma Baseline-Lock Policy
 
 1. **One Figma file per screen.** All slices that add to or modify the same screen share one Figma file for that screen. Frames from different screens must never share a single Figma file. The file key is recorded in `.figma-config.local` (gitignored); the file URL may appear in git-tracked artifacts. Cross-ref: `orchestrator-context.md` Known Rule #73.
-2. **Mandatory baseline-lock for continuation slices.** When a slice modifies or extends an existing approved screen, the Orchestrator's first Figma action (during Gate 3A using the `ux-design-execution` skill) must be to call `node.clone()` on the approved baseline frame(s) within the same file — not recreate, reinterpret, or approximate them. The source node ID(s) and resulting clone node ID(s) must be recorded as provenance in the `Design Review Access` packet. Because the file is shared, `node.clone()` works natively — no cross-file workaround is needed.
+2. **Mandatory baseline-lock for continuation slices.** When a slice modifies or extends an existing approved screen, the UX Agent's first Figma action (during Gate 3A using the `ux-design-execution` skill) must be to call `node.clone()` on the approved baseline frame(s) within the same file — not recreate, reinterpret, or approximate them. The source node ID(s) and resulting clone node ID(s) must be recorded as provenance in the `Design Review Access` packet. Because the file is shared, `node.clone()` works natively — no cross-file workaround is needed.
 3. **No rebuilding approved elements.** Any element already present in the approved baseline frame (cards, typography, spacing, spine, layout) must come from the clone — never rebuilt from raw shapes or primitives. Only net-new additions for this slice (e.g., a composer bar) are authored fresh by the agent.
 4. **New-screen slices.** When a slice introduces a brand-new screen with no approved predecessor, a new dedicated file is created for that screen. No baseline duplication is required. All elements must still use Design System library variables only — no raw values.
 5. Violation of rules 2–3 is a loop-back condition: orchestrator must reject `UX Readiness: Ready` claims and re-execute Gate 3A compliant with baseline-lock rules.
