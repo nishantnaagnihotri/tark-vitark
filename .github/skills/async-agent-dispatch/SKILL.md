@@ -14,7 +14,7 @@ description: "Async agent dispatch workflow: run a single Copilot SDK agent via 
 
 ## When NOT To Use
 
-- Gates 1, 2, 3B, and 4 orchestration: use `runSubagent` tool (built into VS Code Copilot chat) — output flows directly into conversation context
+- Gate-orchestration sync lanes — Gates 1, 2, 3B, 4, and 5.5: use `runSubagent` tool (built into VS Code Copilot chat) — output flows directly into conversation context
 - Gate 3A short in-chat critique fallback: do NOT use async `run-agent.ts` when the Product Owner explicitly wants to stay in the current chat for a short critique/revision loop. `run-agent.ts` is single-shot; use sync `runSubagent` with `ux-agent` for that fallback path.
 - Running one-off shell commands unrelated to the agent SDK
 
