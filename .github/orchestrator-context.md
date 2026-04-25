@@ -49,7 +49,7 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). U
     - Output: PRD Draft Package plus readiness, alignment/traceability, quality gaps, open questions, and gate decision.
 
 3. Gate 3 (Design)
-  - Flow: PRD Draft Package -> bounded async `ux-agent` pass -> checkpointed `03-ux.md` + `Orchestrator Resume Packet` -> manual orchestrator resume -> Design QA Verdict Package. Additional UX iteration repeats the bounded async pass from the latest checkpoint.
+    - Flow: PRD Draft Package -> bounded async `ux-agent` pass -> checkpointed `03-ux.md` + `Orchestrator Resume Packet` -> manual orchestrator resume -> Design QA Verdict Package. Additional UX iteration repeats the bounded async pass from the latest checkpoint.
     - Gate closes only after UX+Design pass and Design QA pass and Product Owner explicitly approves the design.
 
 4. Gate 4 (Architecture)
