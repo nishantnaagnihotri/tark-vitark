@@ -73,7 +73,28 @@ Log format for visual verification:
 [RESULT] ✅ renders correctly | 🔴 still wrong — rebind required
 ```
 
-### Write-Verify-Correct Loop (Mandatory for Every Change)
+### Clone Inheritance — Component Sizing Audit (Mandatory After Every Frame Clone)
+
+When a frame is cloned from another frame (e.g., Mobile → Tablet, Light → Dark), component instances inside the clone **inherit the sizing mode of the source**. This is silent: `primaryAxisSizingMode: FIXED` at a source-specific pixel width carries over unchanged, even if the target frame has different column dimensions.
+
+**Required after every frame clone:**
+
+1. For every DS Button/Filled (or any component with a manually-set fixed width) in the cloned frame:
+   - Read `primaryAxisSizingMode` and `width`.
+   - If `primaryAxisSizingMode` is `FIXED`, audit whether the fixed width is correct for the target viewport and the M3 spec.
+2. **M3 Button sizing rule — mandatory:**
+   - Full-width (column-spanning) buttons: **Mobile only**. On narrow mobile viewports, a full-width submit button on a form is an accepted pattern.
+   - On **Tablet and Desktop**: buttons must be **content-hugged** (`primaryAxisSizingMode: AUTO`). A button spanning 600–640px with a short label ("Start", "Submit") is non-compliant with M3 and visually broken.
+   - When in doubt: use AUTO (HUG) sizing on all viewports, centered within the layout column.
+3. After correcting sizing, **re-center the button** within its content column (do not leave it at the cloned frame's absolute coordinates).
+4. Screenshot-verify all corrected frames to confirm label centering and proportions.
+
+Log format:
+```
+[CLONE AUDIT] <cloned-frame-id> | checked components: <list> | primaryAxisSizingMode values: <list> | corrections applied: <list>
+```
+
+
 
 1. **Write:** apply the change via MCP (`use_figma`, `update_node`, `set_fills`, `set_variable_mode`, etc.).
 2. **Verify immediately:** in the same follow-up MCP call, read back the exact property that was written and compare value-for-value against the intended target.
