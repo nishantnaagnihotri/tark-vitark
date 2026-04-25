@@ -40,6 +40,39 @@ Variable IDs are **file-scoped**. A variable written as `VariableID:9:2` in the 
 4. Use the ID returned by that lookup — never copy an ID from a different file, a snippet, or a prior session log.
 5. After writing the binding, read it back immediately (Write-Verify-Correct Loop). If the read-back shows no binding or a fallback fill, the ID was wrong — re-resolve from step 2.
 
+### Local vs Imported Variable Scope Rule (Mandatory for All Variable Bindings)
+
+`setExplicitVariableModeForCollection(collectionId, modeId)` applies a mode override **only to the collection whose ID you pass**. If a node is bound to a variable from a *different* collection (e.g., an imported DS library variable whose collection ID ≠ the local file's collection ID), that override has **zero effect** on the imported variable's resolved value.
+
+**This is the most common silent failure pattern for dark-mode color fixes.** The API accepts the call, returns success, and read-back confirms the override is set — but the imported variable never changes its resolved color.
+
+**Required check before every variable binding write:**
+
+1. Call `figma.variables.getLocalVariables()` in the target file and find the variable **by semantic name**.
+2. Check `variable.variableCollectionId`. It must match the collection ID you are setting the mode override on.
+3. If the variable's `variableCollectionId` does **not** match the frame's mode-overridden collection, you are binding the wrong variable — it is an imported alias from a different collection.
+4. **Always bind to the LOCAL file variable** (found via `getLocalVariables()` by name), not to a variable imported via `importVariableByKeyAsync`. The local variable participates in the local collection's mode override; the imported one does not.
+5. After binding, confirm `fills[0].boundVariables.color.id` starts with `VariableID:<localCollectionNumericPrefix>` — imported variables have the format `VariableID:<libraryFileKey>/<n>:<m>` and are visually distinguishable.
+
+### Visual Screenshot Verification Rule (Mandatory After Every Color/Token/Mode Fix)
+
+MCP read-back confirms that a property is **set**. It does not confirm what **color the frame actually renders**. Variable resolution is multi-layered (binding → collection scope → mode override → resolved value), and each layer can pass individually while the final render is still wrong.
+
+**Required after any color token binding, mode override, or variable rebind:**
+
+1. **Take a full-frame screenshot** of every affected frame using `get_screenshot`.
+2. **Visually inspect the rendered output** — confirm the actual rendered color, not just that a variable ID is bound.
+3. **For any frame with Light and Dark variants**, screenshot both variants, not just one.
+4. **Only after visual confirmation** → log the fix as complete and update any checkpoint or checklist entry.
+5. **Never claim a color/token/mode fix is done based on API data alone.** The fix is done only when the screenshot shows the correct rendered color.
+
+Log format for visual verification:
+
+```
+[VISUAL CHECK] <frame node ID> | <theme variant> | expected: <description> | screenshot: taken
+[RESULT] ✅ renders correctly | 🔴 still wrong — rebind required
+```
+
 ### Write-Verify-Correct Loop (Mandatory for Every Change)
 
 1. **Write:** apply the change via MCP (`use_figma`, `update_node`, `set_fills`, `set_variable_mode`, etc.).
@@ -56,7 +89,7 @@ Variable IDs are **file-scoped**. A variable written as `VariableID:9:2` in the 
    - Attempt the correction using the correct MCP approach (e.g., use `figma.variables.setBoundVariableForPaint` instead of `boundVariables` direct write if binding failed).
    - Re-read to verify the correction.
    - If still not matching after two correction attempts → **raise a loop-back condition** (see Zero Autonomous Gap Decisions below). Do NOT proceed past a failed verify.
-5. **Never present a result to Product Owner that has not passed a read-back verify.** A screenshot alone is not verification — screenshots can show stale paint; only MCP read-back confirms the actual property value.
+5. **For color/token/mode changes: MCP read-back is necessary but not sufficient.** After read-back passes, also run the Visual Screenshot Verification Rule above. A correct binding can still produce the wrong rendered color if the variable is from the wrong collection scope.
 
 ### Per-Change Verification Log Format
 
