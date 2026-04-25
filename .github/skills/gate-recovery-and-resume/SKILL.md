@@ -24,6 +24,11 @@ Use this skill for failure handling and safe recovery before continuing gate pro
 3. Re-invoke the same agent with the same inputs and overwrite the incomplete artifact.
 4. If re-invocation fails twice, escalate to Product Owner for manual intervention.
 
+Gate 3A-specific recovery rule:
+
+5. If `docs/slices/<slice-name>/03-ux.md` exists with `STATUS: IN PROGRESS` or `STATUS: INCOMPLETE`, treat it as the authoritative recovery source for the async UX lane. Re-invoke `ux-agent` with that artifact as required context; do not restart Gate 3A from chat history alone.
+6. If the partial `03-ux.md` is missing the latest checkpoint metadata (`Last Updated`, `Checkpoint Ledger`, current design access snapshot, or checkpointed `Orchestrator Resume Packet`), first preserve the file as `STATUS: INCOMPLETE`, then re-invoke `ux-agent` to reconstruct and overwrite it from the surviving artifact and Figma state.
+
 ### Figma MCP Failure
 
 1. If a Figma MCP call fails, retry once.

@@ -1,13 +1,18 @@
 ---
 name: alarm
-description: "Parameterised self-wake alarm: arm an async sleep alarm at a caller-chosen interval so the orchestrator auto-resumes from any wait state. Use when: entering any wait state — PR review pending, agent build in progress, merge sequencing block, or any other bounded wait."
+description: "Parameterised self-wake alarm: arm an async sleep alarm at a caller-chosen interval so the orchestrator auto-resumes from bounded wait states that are allowed to self-resume. Use when: PR review is pending, an agent build is in progress, a merge sequencing block exists, or another bounded wait can safely self-resume. Do not use when the owning workflow requires an explicit manual resume or owner-led restart."
 ---
 
 # Alarm Skill
 
 ## Purpose
 
-The orchestrator has no built-in signal when background agents finish or when a Copilot review arrives. Without an alarm the only resumption path is a user ping. This skill converts every wait state into a bounded, self-resuming one.
+The orchestrator has no built-in signal when background agents finish or when a Copilot review arrives. Without an alarm the only resumption path is a user ping. This skill converts eligible wait states into bounded, self-resuming ones.
+
+Eligibility rule:
+
+- Arm this skill only when the owning workflow explicitly allows autonomous resume after the wake check.
+- Do not arm it for workflows that require an explicit manual resume, owner-led restart, or a gate-specific resume boundary.
 
 ## How To Arm
 

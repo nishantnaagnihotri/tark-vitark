@@ -68,7 +68,7 @@ Return only:
 9) PR Description (ready-to-paste GitHub PR body including: one-line PRD summary, slice folder path, gate status, open questions table with Status and Resolution columns, which unresolved questions block which future gate, artifact path)
 ```
 
-Use this message when invoking `ux-agent` at Gate 3:
+Use this message when asynchronously dispatching `ux-agent` at Gate 3A:
 
 ```text
 Draft UX flow and state package for this slice using the PRD Draft Package below.
@@ -83,17 +83,28 @@ Return only:
 1) UX Readiness: Ready | Needs Clarification | Blocked
 2) UX Flows
 3) State Matrix
-4) Interaction Notes
-5) Quality Gaps
-6) Open Questions (with owner decision status)
-7) Gate Decision: can proceed to design-qa | must loop back
-8) Design Artifact (mandatory Figma file URL for this UX task)
-9) UX Flow/State Package (for Figma handoff)
+4) UI Control Contract
+5) M3 Control Mapping
+6) Frame Blueprint
+7) DS Component Coverage Declaration
+8) Component Coverage Check
+9) Design Execution
+10) Design Coverage Map
+11) Interaction Notes
+12) Quality Gaps
+13) Open Questions (with owner decision status)
+14) Gate Decision: can proceed to design-qa | must loop back
+15) Design Artifact (mandatory Figma file URL for this UX task)
+16) Design Review Access
+17) UX Flow/State Package (for Design QA handoff)
+18) Orchestrator Resume Packet (gate phase reached, persistence-ready summary, AC delta status, OQ resolution status, design access snapshot, exact next orchestrator action)
 ```
 
 ## Example Design QA Handoff Message (Copy-Paste)
 
-Use this message when invoking `design-qa-agent` at Gate 3 Substep B:
+Use this message when `ux-agent` invokes `design-qa-agent` at Gate 3 Substep B.
+
+Dispatch model: `gpt-5.3-codex` via sync `runSubagent`. Exact sync `xhigh` remains a tool limitation and must be recorded honestly rather than inferred.
 
 ```text
 Review the UX Flow/State Package and Figma design for this slice using the artifacts below.

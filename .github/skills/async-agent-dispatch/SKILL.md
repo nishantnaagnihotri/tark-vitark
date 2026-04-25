@@ -14,7 +14,8 @@ description: "Async agent dispatch workflow: run a single Copilot SDK agent via 
 
 ## When NOT To Use
 
-- Gates 1–4 orchestration: use `runSubagent` tool (built into VS Code Copilot chat) — output flows directly into conversation context
+- Gates 1, 2, 3B, and 4 orchestration: use `runSubagent` tool (built into VS Code Copilot chat) — output flows directly into conversation context
+- Gate 3A short in-chat critique fallback: do NOT use async `run-agent.ts` when the Product Owner explicitly wants to stay in the current chat for a short critique/revision loop. `run-agent.ts` is single-shot; use sync `runSubagent` with `ux-agent` for that fallback path.
 - Running one-off shell commands unrelated to the agent SDK
 
 ---
@@ -26,9 +27,23 @@ Before every agent dispatch, classify the expected output:
 | Output type | Example | Dispatch mode |
 |---|---|---|
 | GitHub side effect — commits, PR updates, thread replies, issue comments | Dev agent fixing review comments | `run_in_terminal (mode=async)` + `get_terminal_output` |
+| Async UX pass — canonical Gate 3A lane | Gate 3A `ux-agent` Phase 1 frame pass, Phase 2 frame pass, rejected-frame rerun, Design QA revision response | `run_in_terminal (mode=async)` + return to orchestrator only with updated `03-ux.md`, `UX Flow/State Package`, and `Orchestrator Resume Packet` |
+| In-chat UX critique fallback — Product Owner explicitly wants to stay in the current chat | Gate 3A `ux-agent` short critique/revision loop before the next async pass | `runSubagent` with `ux-agent` + updated `03-ux.md` checkpoint context |
 | Reasoning input — analysis, verdict, pass/fail decision the orchestrator must evaluate immediately | Requirement challenger, PRD agent, design QA agent | `runSubagent` (Gates 1–4 only) |
 
 **Rule:** if the orchestrator does not need to read the agent's output to decide what to do next — because the result is a GitHub artifact verifiable via MCP or PR list — use async terminal dispatch.
+
+**Gate 3A finalized process:** `scripts/run-agent.ts` uses a single-shot `sendAndWait(...)` session and is not a persistent chat thread. Gate 3A therefore runs as a sequence of bounded async `ux-agent` passes. Each pass rehydrates from `03-ux.md`, checkpoints stable decisions back into that file, and ends with an `Orchestrator Resume Packet`. Orchestrator records the dispatch, pauses, and waits for the Product Owner to come back and explicitly resume. If more UX work is needed, launch a new async pass from the latest `03-ux.md` checkpoint. Use sync `runSubagent` only for the explicit in-chat critique fallback.
+
+## Gate 3A Async Dispatch Contract (Canonical)
+
+For Gate 3A, async `ux-agent` dispatch is the default operating mode.
+
+1. Bound every async pass to one concrete goal: Phase 1 frame, Phase 2 frame set, rejected-frame rerun, or Design QA revision response.
+2. Every async prompt must include: the slice/gate context header, source-of-truth artifact paths, the latest `03-ux.md` checkpoint state, the exact pass goal, any Product Owner feedback or rejection summary, instructions to progressively update `03-ux.md`, and an instruction to stop after writing the final `Orchestrator Resume Packet` for that pass.
+3. After dispatch, orchestrator must emit the async dispatch banner, write the terminal ID to session memory, and then pause Gate 3. Do not auto-resume when the terminal exits.
+4. On later return, inspect `03-ux.md` first. If more UX work is needed, start a fresh async pass from that checkpoint rather than attempting to continue the old session.
+5. Use sync `runSubagent` only when the Product Owner explicitly asks to stay in the current chat for short critique/revision or when async dispatch is unavailable.
 
 **Violation pattern to avoid:** using `runSubagent` to dispatch a dev agent to fix review comments. The commit SHA and thread replies are verifiable on GitHub; they do not need to flow into the orchestrator's reasoning context. Using `runSubagent` in this case blocks the chat session for the full agent duration unnecessarily.
 
@@ -41,28 +56,34 @@ Before every agent dispatch, classify the expected output:
 | `architect-orchestrator` | `gpt-5.4` | coordination and gate decisions |
 | `requirement-challenger` | `claude-sonnet-4.6` | requirement challenge |
 | `prd-agent` | `claude-sonnet-4.6` | PRD drafting |
-| `design-qa-agent` | `claude-sonnet-4.6` | design QA critique |
+| `ux-agent` | `claude-sonnet-4.6` | Gate 3A UX design and Figma execution |
+| `design-qa-agent` | `gpt-5.3-codex` | design QA critique |
 | `architecture-agent` | `gpt-5.4` | architecture reasoning |
 | `dev` | `gpt-5.3-codex` | issue-scoped implementation |
 | `runtime-qa` | `gpt-5.4` | runtime verdict synthesis |
 
 Rules:
 
-1. Gates 1, 2, 3B, 4, and 5.5 use sync `runSubagent` handoffs; those calls must pass an explicit `model` matching the shared policy.
-2. For each sync `runSubagent` handoff, print exactly one sync dispatch banner in chat immediately before the tool call. Include role, explicit model, reasoning status (`tool-controlled / not repo-configurable`), and gate/slice context.
-3. `scripts/run-agent.ts` resolves the role default automatically when `--model` is omitted, resolves the highest supported reasoning effort for the selected model via `listModels()`, and logs both the resolved model and whether it came from the role default or an override.
-4. `scripts/mcp-dev-orchestrator.ts` uses the same routing table for parallel async runs, includes the resolved model in task status output, and resolves the highest supported reasoning effort for each task's selected model via `listModels()`.
-5. If a task genuinely needs a non-default model, dispatch it directly with `scripts/run-agent.ts --model <id>` and record why in the handoff or dispatch note.
-6. Before introducing a new live role, add it to `scripts/agent-model-routing.ts` and this table in the same change.
-7. For each async `run-agent.ts` dispatch, print exactly one dispatch banner in chat immediately after the dispatch call returns. Include role, model, reasoning effort, effort source (`supported-efforts` or `fallback`), gate/slice context, terminal id, and timestamp.
+1. Gates 1, 2, 3B nested QA, 4, and 5.5 use sync `runSubagent` handoffs; those calls must pass an explicit `model` matching the shared policy.
+2. Gate 3A's default path is async `run-agent.ts` dispatch to `ux-agent`. Use the role default model unless deliberately overriding.
+3. Gate 3A sync `runSubagent` handoffs are fallback-only when the Product Owner explicitly wants in-chat critique/revision.
+4. Gate 3B sync Design QA usually runs as a nested `ux-agent` -> `design-qa-agent` handoff on explicit model `gpt-5.3-codex`.
+5. For each sync `runSubagent` handoff, print exactly one sync dispatch banner in chat immediately before the tool call. Include role, explicit model, reasoning status (`tool-controlled / not repo-configurable`), and gate/slice context.
+6. `scripts/run-agent.ts` resolves the role default automatically when `--model` is omitted, resolves the highest supported reasoning effort for the selected model via `listModels()`, and logs both the resolved model and whether it came from the role default or an override.
+7. `scripts/mcp-dev-orchestrator.ts` uses the same routing table for parallel async runs, includes the resolved model in task status output, and resolves the highest supported reasoning effort for each task's selected model via `listModels()`.
+8. If a task genuinely needs a non-default model, dispatch it directly with `scripts/run-agent.ts --model <id>` and record why in the handoff or dispatch note.
+9. Before introducing a new live role, add it to `scripts/agent-model-routing.ts` and this table in the same change.
+10. For each async `run-agent.ts` dispatch, print exactly one dispatch banner in chat immediately after the dispatch call returns. Include role, model, reasoning effort, effort source (`supported-efforts` or `fallback`), gate/slice context, terminal id, and timestamp.
 
-`runSubagent` sync handoffs currently expose explicit model selection but no repo-controlled reasoning-effort parameter. Keep the model explicit there, print the sync dispatch banner before the tool call, and treat reasoning-effort enforcement as a tool limitation until the chat tool exposes that control.
+`runSubagent` sync handoffs currently expose explicit model selection but no repo-controlled reasoning-effort parameter. Keep the model explicit there, print the sync dispatch banner before the tool call, and treat reasoning-effort enforcement as a tool limitation until the chat tool exposes that control. Gate 3B therefore targets the Codex sync lane as the closest available approximation to the desired `xhigh` review posture, but exact sync `xhigh` cannot be asserted today.
 
 ---
 
 ## Core Script
 
 `scripts/run-agent.ts` — single-shot Copilot SDK agent dispatcher.
+
+Important limitation: this script is execution-oriented, not a persistent user-interactive chat surface. It creates one session, calls `sendAndWait(...)`, and exits.
 
 **Location**: `scripts/run-agent.ts` in the workspace root.
 
