@@ -42,17 +42,18 @@ Variable IDs are **file-scoped**. A variable written as `VariableID:9:2` in the 
 
 ### Local vs Imported Variable Scope Rule (Mandatory For All Variable Bindings)
 
-`setExplicitVariableModeForCollection(collectionId, modeId)` applies a mode override only to the collection whose ID you pass. If a node is bound to a variable from a different collection, such as an imported DS library variable whose collection ID does not match the local file's collection ID, that override has zero effect on the imported variable's resolved value.
+`setExplicitVariableModeForCollection(collectionId, modeId)` applies a mode override only to the collection whose ID you pass. If a node is bound to a variable from a different collection, such as an imported DS library variable whose collection ID does not match the collection receiving the override, that override has zero effect on that variable's resolved value.
 
-This is the most common silent failure pattern for dark-mode color fixes. The API accepts the call, returns success, and read-back confirms the override is set, but the imported variable never changes its resolved color.
+This is the most common silent failure pattern for dark-mode color fixes. The API accepts the call, returns success, and read-back confirms the override is set, but the bound variable never changes its resolved color because the override was applied to the wrong collection.
 
 Required check before every variable binding write:
 
-1. Call `figma.variables.getLocalVariables()` in the target file and find the variable by semantic name.
-2. Check `variable.variableCollectionId`. It must match the collection ID you are setting the mode override on.
-3. If the variable's `variableCollectionId` does not match the frame's mode-overridden collection, you are binding the wrong variable.
-4. Always bind to the local file variable found via `getLocalVariables()` by name, not to a variable imported via `importVariableByKeyAsync`.
-5. After binding, confirm `fills[0].boundVariables.color.id` is the local variable you intended instead of an imported alias.
+1. In the target file, call `figma.variables.getLocalVariables()` and resolve the intended variable by semantic name as the default first check.
+2. Check the candidate variable's `variableCollectionId`.
+3. Ensure every collection used by the node's bound variables has an explicit mode override when the fix depends on mode-specific resolution.
+4. If the variable's `variableCollectionId` does not match any collection you are setting explicit mode overrides for, you are binding the wrong variable for that fix, even if the semantic name looks correct.
+5. Imported or published-library variables are allowed only when you intentionally use them and also set or verify explicit mode overrides for their collection(s); do not assume a local-file collection override will affect them.
+6. After binding, confirm `fills[0].boundVariables.color.id` is the variable you intended and that its `variableCollectionId` matches a collection whose mode override is set for the node.
 
 ### Visual Screenshot Verification Rule (Mandatory After Every Color Or Token Fix)
 
