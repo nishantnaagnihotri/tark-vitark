@@ -99,8 +99,10 @@ Pre-handoff confirmation rule:
 Task PR ownership rule:
 
 1. Gate 5 task PR creation is dev-owned by default.
-2. Orchestrator does not wait for or solicit a separate Product Owner PR-open confirmation before dispatching `dev` unless the handoff is explicitly marked `branch-only`, `prepare PR package only`, or `do not open PR yet`.
-3. If Product Owner wants a non-default hold before PR creation for a specific issue, orchestrator must state that override explicitly in the dev handoff.
+2. This automatic PR-opening allowance is unique to the implementing dev agent for that Gate 5 task.
+3. Orchestrator does not wait for or solicit a separate Product Owner PR-open confirmation before dispatching `dev` unless the handoff is explicitly marked `branch-only`, `prepare PR package only`, or `do not open PR yet`.
+4. If Product Owner wants a non-default hold before PR creation for a specific issue, orchestrator must state that override explicitly in the dev handoff.
+5. Non-dev PR creation remains outside this default and still requires explicit Product Owner authorization.
 
 Execution rule:
 
