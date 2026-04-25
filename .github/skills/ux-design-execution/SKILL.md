@@ -5,7 +5,7 @@ description: "UX and Figma execution workflow: run the Challenge Phase, produce 
 
 # UX Design Execution Workflow
 
-Use this skill when executing Gate 3A UX work. This skill is the canonical execution contract for `ux-agent` and any explicitly approved Gate 3A fallback lane. Follow every section in order.
+Use this skill when executing Gate 3A UX work. This skill is the canonical execution contract for `ux-agent` and for any explicitly approved Gate 3A fallback lane that still dispatches all Figma write execution through `ux-agent`; fallback approval or orchestration does not create a separate exception to domain ownership. Follow every section in order.
 
 ## When To Use
 
