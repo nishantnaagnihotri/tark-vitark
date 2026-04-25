@@ -1,11 +1,11 @@
 ---
 name: ux-design-execution
-description: "UX and Figma execution workflow: run the Challenge Phase, produce UX Flow/State Package, execute Figma pixel frames via MCP using single-screen-first protocol. Use when: performing Gate 3A UX work directly as the Orchestrator, creating or modifying Figma design frames, executing DS library operations, or validating UX coverage before Design QA."
+description: "UX and Figma execution workflow: run the Challenge Phase, produce UX Flow/State Package, execute Figma pixel frames via MCP using single-screen-first protocol. Use when: performing Gate 3A UX work through `ux-agent`, creating or modifying Figma design frames, executing DS library operations, or validating UX coverage before Design QA."
 ---
 
 # UX Design Execution Workflow
 
-Use this skill when executing Gate 3A UX work directly. This skill transfers the full UX Agent execution contract to the Orchestrator. Follow every section in order.
+Use this skill when executing Gate 3A UX work. This skill is the canonical execution contract for `ux-agent` and any explicitly approved Gate 3A fallback lane. Follow every section in order.
 
 ## When To Use
 
@@ -40,6 +40,53 @@ Variable IDs are **file-scoped**. A variable written as `VariableID:9:2` in the 
 4. Use the ID returned by that lookup — never copy an ID from a different file, a snippet, or a prior session log.
 5. After writing the binding, read it back immediately (Write-Verify-Correct Loop). If the read-back shows no binding or a fallback fill, the ID was wrong — re-resolve from step 2.
 
+### Local vs Imported Variable Scope Rule (Mandatory For All Variable Bindings)
+
+`setExplicitVariableModeForCollection(collectionId, modeId)` applies a mode override only to the collection whose ID you pass. If a node is bound to a variable from a different collection, such as an imported DS library variable whose collection ID does not match the local file's collection ID, that override has zero effect on the imported variable's resolved value.
+
+This is the most common silent failure pattern for dark-mode color fixes. The API accepts the call, returns success, and read-back confirms the override is set, but the imported variable never changes its resolved color.
+
+Required check before every variable binding write:
+
+1. Call `figma.variables.getLocalVariables()` in the target file and find the variable by semantic name.
+2. Check `variable.variableCollectionId`. It must match the collection ID you are setting the mode override on.
+3. If the variable's `variableCollectionId` does not match the frame's mode-overridden collection, you are binding the wrong variable.
+4. Always bind to the local file variable found via `getLocalVariables()` by name, not to a variable imported via `importVariableByKeyAsync`.
+5. After binding, confirm `fills[0].boundVariables.color.id` is the local variable you intended instead of an imported alias.
+
+### Visual Screenshot Verification Rule (Mandatory After Every Color Or Token Fix)
+
+MCP read-back confirms that a property is set. It does not confirm what color the frame actually renders. Variable resolution is multi-layered: binding, collection scope, mode override, and resolved value can all look individually correct while the final render is still wrong.
+
+Required after any color token binding, mode override, or variable rebind:
+
+1. Take a full-frame screenshot of every affected frame.
+2. Visually inspect the rendered output and confirm the actual rendered color, not just that a variable ID is bound.
+3. For any frame with Light and Dark variants, screenshot both variants, not just one.
+4. Only after visual confirmation may the fix be logged as complete.
+5. Never claim a color, token, or mode fix is done based on API data alone.
+
+Log format:
+
+```
+[VISUAL CHECK] <frame node ID> | <theme variant> | expected: <description> | screenshot: taken
+[RESULT] ✅ renders correctly | 🔴 still wrong — rebind required
+```
+
+### Clone Inheritance — Property Audit (Mandatory After Every Frame Clone)
+
+When a frame is cloned via the Plugin API, all component properties are inherited silently: sizing modes, fixed widths, overridden variants, and hardcoded fills. None of these are flagged, so the clone can look structurally correct while still carrying source-specific values that are wrong for the target viewport or theme.
+
+Required after every frame clone, before any further edits:
+
+Read back `primaryAxisSizingMode`, `width`, and `fills` on every component instance in the clone. If any value is viewport-specific or source-specific, correct it for the target context before proceeding.
+
+Log format:
+
+```
+[CLONE AUDIT] <cloned-frame-id> | checked: <properties> | corrections: <list or "none">
+```
+
 ### Write-Verify-Correct Loop (Mandatory for Every Change)
 
 1. **Write:** apply the change via MCP (`use_figma`, `update_node`, `set_fills`, `set_variable_mode`, etc.).
@@ -56,7 +103,9 @@ Variable IDs are **file-scoped**. A variable written as `VariableID:9:2` in the 
    - Attempt the correction using the correct MCP approach (e.g., use `figma.variables.setBoundVariableForPaint` instead of `boundVariables` direct write if binding failed).
    - Re-read to verify the correction.
    - If still not matching after two correction attempts → **raise a loop-back condition** (see Zero Autonomous Gap Decisions below). Do NOT proceed past a failed verify.
-5. **Never present a result to Product Owner that has not passed a read-back verify.** A screenshot alone is not verification — screenshots can show stale paint; only MCP read-back confirms the actual property value.
+5. For color, token, and mode changes, MCP read-back is necessary but not sufficient. After read-back passes, also run the Visual Screenshot Verification Rule above.
+6. **Neighbor Recheck (Mandatory after every write):** After a write is confirmed, immediately read the relevant properties of the written node's parent and direct siblings. Figma auto-layout and component overrides can silently mutate neighboring nodes with no error and no screenshot signal. If any neighbor changed unexpectedly, treat it as a new mismatch and apply the Write-Verify-Correct Loop to that node before continuing.
+7. **Never present a result to Product Owner that has not passed a read-back verify.** For color, token, and mode changes, screenshot verification is also required.
 
 ### Per-Change Verification Log Format
 
@@ -129,6 +178,19 @@ Do not ask Product Owner for direction or approval while issues are still being 
 9. Block progression when UX coverage is incomplete or inconsistent with the PRD.
 10. For interactive journeys, define an explicit `UI Control Contract` and `M3 Control Mapping`.
 11. Provide `Design Review Access` with node-targeted links to actual frames created this pass.
+
+## Progressive Persistence Protocol (Mandatory For Async UX Lane)
+
+During Gate 3A async execution, `docs/slices/<slice-name>/03-ux.md` is the live working artifact, not a write-once final dump.
+
+Rules:
+
+1. Create or update `03-ux.md` as soon as the first stable UX information exists. Mark it `STATUS: IN PROGRESS` until the final Gate 3A package is complete.
+2. After each stable milestone or Product Owner-approved decision, checkpoint the artifact instead of relying on chat history.
+3. Every checkpoint must refresh `Last Updated`, `Gate 3A Phase`, `Checkpoint Ledger`, current `AC Delta Status`, current `OQ Resolution Status`, current `Design Access Snapshot`, and the latest checkpointed `Orchestrator Resume Packet`.
+4. Completed sections of the `UX Flow/State Package` should be written into `03-ux.md` incrementally as they stabilize.
+5. If chat context compacts or the UX lane is resumed later, the latest `03-ux.md` checkpoint becomes the authoritative rehydration source.
+6. On final completion, replace the in-progress status with the final Gate 3A artifact state and ensure the file contains the full `UX Flow/State Package` plus the final `Orchestrator Resume Packet`.
 
 ## Step 1 — Challenge Phase (Mandatory Before Any Flow Artifacts)
 
@@ -512,6 +574,34 @@ Before declaring any frame pass complete (Phase 1 or Phase 2), run a final syste
 
 This step runs **after** Step 10 (End-of-Pass Full Verification Sweep) and **before** any screenshot or output is returned to Product Owner. Every criterion must pass. Any failure restarts the iteration — no partial presentation.
 
+### QG-0: Spec-First Verification (Mandatory Preamble — Before Reading Any Node)
+
+Before inspecting a single Figma node, derive a spec table for every element in the frame from authoritative sources only: M3 spec, the DS library component definition, and the slice PRD. Do not read Figma first and then check; derive first, then compare.
+
+Required spec table format:
+
+| Element | Property | Spec-required value | Source |
+|---|---|---|---|
+| FilledButton | background fill token | `md.sys.color.primary` | M3 FilledButton spec |
+| FilledButton | label text token | `md.sys.color.on-primary` | M3 FilledButton spec |
+| FilledButton | disabled opacity | 0.38 on container + label | M3 disabled state spec |
+| FilledButton | label M3 role | `label/large` | M3 button spec |
+| Screen | status bar + gesture nav | present (mobile frame contract) | mobile viewport contract |
+
+After the table is built, read each property from Figma via MCP and fill in an actual column. Any divergence between spec-required and actual is a blocker and must go through the Write-Verify-Correct Loop before proceeding.
+
+Log the result:
+
+```
+[SPEC-FIRST VERIFICATION]
+Elements derived: <n>
+Divergences found: <n>
+All resolved: YES / NO
+Blockers remaining: <list or "none">
+```
+
+A `NO` on `All resolved` is a blocker. Do not proceed to QG-1 until all spec-vs-actual divergences are resolved.
+
 ### QG-1: Typography Role Correctness (M3 Spec)
 
 M3 defines 5 roles. Each content element must map to exactly one role. Using the wrong role is a defect regardless of whether the font size looks approximately correct.
@@ -638,6 +728,7 @@ Any NO in the MCP checks is a blocker — fix the mismatched property before pre
 
 ```
 [DESIGN QUALITY GATE]
+QG-0 Spec-first verification: ✅ / ❌ <divergences found / resolved>
 QG-1 Typography roles: ✅ / ❌ <issues>
 QG-2 Spacing rhythm: ✅ / ❌ <values that failed>
 QG-3 Greyscale check: ✅ / ❌ <which element drew eye, was it primary action?>
