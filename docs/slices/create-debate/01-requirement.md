@@ -2,7 +2,7 @@
 
 **Date:** 2026-04-23
 **Complexity:** Standard (full 6-gate flow)
-**Gate Decision:** ✅ Pass — OQ-1 accepted for Gate 3 UX; OQ-2 and OQ-3 accepted for Gate 4 architecture
+**Gate Decision:** ✅ Pass — OQ-1 accepted for Gate 3 UX (closed at Gate 3 via AC-40); OQ-2 and OQ-3 accepted for Gate 4 architecture
 
 ---
 
