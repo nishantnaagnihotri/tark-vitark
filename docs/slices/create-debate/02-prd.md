@@ -309,7 +309,7 @@ _This section records owner-approved PRD deltas since Gate 2 approval. Original 
 
 **Original FR-8 text (unchanged in body):** "Abandoning the new-debate flow before completion shall leave the current debate topic and all existing arguments fully intact."
 
-**Gate 3 delta:** The abandon mechanism is an explicit "Cancel" TextButton rendered in the replace form (label="Cancel", fill bound to `color/brand/primary`). Tapping "Cancel" dismisses the replace form and leaves the current debate and all arguments fully intact. Nodes: 936:468 (Light), 936:470 (Dark).
+**Gate 3 delta:** The abandon mechanism is an explicit "Cancel" TV DS Button/Text component instance rendered in the replace form (label="Cancel"). The DS component governs token lineage internally via `color/primary`, which resolves to the brand-primary visual. Tapping "Cancel" dismisses the replace form and leaves the current debate and all arguments fully intact. Nodes: 977:481 (Light), 977:483 (Dark). _(DS swap applied at Gate 3B QA; pre-swap native nodes 936:468 / 936:470 superseded.)_
 
 **What remains out-of-scope:** System-back-only dismiss; tap-away-only dismiss.
 

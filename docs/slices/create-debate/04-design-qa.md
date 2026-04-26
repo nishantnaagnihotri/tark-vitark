@@ -6,6 +6,7 @@
 **Date:** `2026-04-25`
 **Author:** `design-qa-agent` (GPT-5.3-Codex, copilot)
 **Source Artifacts:** `docs/slices/create-debate/03-ux.md`, `docs/slices/create-debate/02-prd.md`
+**Amendments covered:** `A-1`, `A-2`, `A-3`, `A-4`, `A-5`
 **Primary Figma Review Link:** https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=832-452
 **Passes:** 2 (1 blocker fixed between passes; all 14 frames reviewed)
 
@@ -239,3 +240,50 @@ After both corrections are made, Design QA can be re-run against the updated art
 ## 11. Product Owner Approval Status
 
 **Pending** - Routes back to UX agent for revision. Product Owner review will be requested after the next Design QA pass returns Agent-Ready.
+
+---
+
+## Pass 3 - Gate 3B Spot-Check: QG-NEW DS Cancel Swap (2026-04-26)
+
+**QA Result: PASS**
+**Gate Decision: can proceed to Gate 4 (Architecture) - no blockers**
+**Scope:** DS-backed Cancel instances in ReplaceFlow frames (`897:462` Light, `898:463` Dark)
+**Context:** Native Cancel nodes `936:468` and `936:470` replaced by imported TV DS Button/Text instances after PO published the DS library. Spot-check validates the swap is clean.
+
+### Reviewed Nodes
+
+| Node | Frame | Role |
+|---|---|---|
+| `897:462` | CreateDebate/ReplaceFlow/Light/Mobile | Parent frame - Light |
+| `977:481` | child of `897:462` | Cancel DS instance - Light |
+| `898:463` | CreateDebate/ReplaceFlow/Dark/Mobile | Parent frame - Dark |
+| `977:483` | child of `898:463` | Cancel DS instance - Dark |
+
+### Verification Results
+
+| Check | Result | Detail |
+|---|---|---|
+| DS instance type | ✅ PASS | Both `977:481` and `977:483` are `INSTANCE` nodes |
+| mainComponentKey | ✅ PASS | Both: `0eee15af12f5a3539394ea96a8edda4ff2744eaf` (TV DS Button/Text state=enabled) |
+| Label text | ✅ PASS | `characters = "Cancel"` confirmed in both |
+| Placement (x, y) | ✅ PASS | Both at `x=160, y=567` |
+| Dimensions | ✅ PASS | Both `68×40px`, HUG horizontal, FIXED vertical |
+| Visibility | ✅ PASS | `visible: true` in both |
+| Old native nodes removed | ✅ PASS | `936:468` ABSENT, `936:470` ABSENT |
+| Visual - Light (`897:462`) | ✅ PASS | Screenshot confirms dark-blue Cancel on white surface (correct light-mode rendering) |
+| Visual - Dark (`898:463`) | ✅ PASS | Screenshot confirms lavender Cancel on dark surface (correct dark-mode rendering, mode override active) |
+| Frame names / dimensions | ✅ PASS | Unchanged: `CreateDebate/ReplaceFlow/Light/Mobile` and `/Dark/Mobile`, both `390×844px` |
+| AC-35 visual coverage | ✅ PASS | Cancel affordance present and legible in both themes |
+
+### Advisories (non-blocking)
+
+**DQG-S1 - Token lineage (advisory):** The Cancel label fill in both instances binds to `VariableID:c79806f9d4af4247e65f8f327dc0a5da3f568cfa/34:1`, which resolves as `color/primary` from the M3 Baseline library (collection `3f8bb364362f342755859d72df0f0e46c5cda70e/4:40`), not directly to TV DS `color/brand/primary` (`VariableID:65:3`). The binding is internal to the TV DS Button/Text component and was not overridden at the instance level. Visual rendering is identical to `color/brand/primary` in both Light and Dark modes (confirmed via screenshot). Component-governed binding is correct behavior; A-4's "fill bound to `color/brand/primary`" was written for the pre-DS-component era. No Gate 4 action required unless DS team wants to align the Button/Text component's internal binding to `color/brand/primary` for token lineage purity.
+
+**DQG-S2 - A-4 doc currency (advisory, closed):** At spot-check time, A-4 in 02-prd.md still referenced legacy Cancel node IDs `936:468` (Light) and `936:470` (Dark). This has now been corrected in A-4 to DS instances `977:481` (Light) and `977:483` (Dark). No further action required.
+
+### Figma Access
+
+| Frame | Link |
+|---|---|
+| ReplaceFlow/Light (Cancel `977:481`) | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=897-462 |
+| ReplaceFlow/Dark (Cancel `977:483`) | https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=898-463 |
