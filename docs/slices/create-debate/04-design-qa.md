@@ -3,12 +3,12 @@
 **Slice:** `create-debate`
 **Gate:** `3B - Design QA`
 **Status:** `COMPLETE — PASS`
-**Date:** `2026-04-25`
+**Date:** `2026-04-26`
 **Author:** `design-qa-agent` (GPT-5.3-Codex, copilot)
 **Source Artifacts:** `docs/slices/create-debate/03-ux.md`, `docs/slices/create-debate/02-prd.md`
 **Amendments covered:** `A-1`, `A-2`, `A-3`, `A-4`, `A-5`
 **Primary Figma Review Link:** https://www.figma.com/design/CsPAyUdLSStdmNpmiBMESQ?node-id=832-452
-**Passes:** 2 (1 blocker fixed between passes; all 14 frames reviewed)
+**Passes:** 3 (Pass 1 identified blockers, Pass 2 cleared core Gate 3 issues, Pass 3 verified the DS Cancel swap)
 
 ---
 

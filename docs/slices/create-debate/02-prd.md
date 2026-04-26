@@ -249,7 +249,7 @@ Replace the hardcoded demo debate with a device-local, user-owned debate lifecyc
 
 _This section records owner-approved PRD deltas since Gate 2 approval. Original FR/AC rows in the PRD body are preserved unchanged. Downstream artifacts (`03-ux.md`, `04-design-qa.md`) are the execution source for these decisions; this section is the PRD version history._
 
-**Gate 3 status:** Design QA PASS (2026-04-25). Gate 3 closure authorized.
+**Gate 3 status:** Design QA PASS, including Pass 3 DS Cancel swap spot-check (2026-04-26). Gate 3 closure authorized.
 
 ---
 
