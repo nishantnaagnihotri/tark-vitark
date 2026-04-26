@@ -151,11 +151,11 @@ AC prose remains authored in [01-requirement.md](01-requirement.md). This PRD re
 | Requirement statement — no argument count cap | FR-10, C-4 | ✅ Mapped |
 | Requirement statement — no standalone clear action | FR-3 | ✅ Mapped |
 | Requirement statement — hardcoded debate removed | FR-9, IS-1 | ✅ Mapped |
-| AC-29 through AC-39 | FR-1 through FR-11 | ✅ One-to-one |
+| AC-29 through AC-40 | FR-1 through FR-12 | ✅ One-to-one |
 | In-scope / out-of-scope boundaries | Section 3 tables | ✅ Preserved |
 | Accepted OQ-1 through OQ-3 | Section 9 | ✅ Carried forward with non-empty resolutions |
 
-**Owner-approved deltas:** None.
+**Owner-approved deltas:** A-1 through A-5 (see Amendments).
 
 ---
 
