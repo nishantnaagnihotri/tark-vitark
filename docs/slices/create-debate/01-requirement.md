@@ -96,7 +96,7 @@ The current landing page behaves like a static demo: it always shows a fixed deb
 
 | # | Question | Blocking? | Status |
 |---|---|---|---|
-| OQ-1 | Must the replace flow include a confirmation/warning guard before deleting all current arguments? | No | **Closed at Gate 3** — PO decision: inline warning in the topic input area; no blocking dialog. Resolved by AC-40. (2026-04-26) |
+| OQ-1 | Must the replace flow include a confirmation/warning guard before deleting all current arguments? | No | **Closed at Gate 3** — PO decision: inline warning in the topic input area; no blocking dialog. Resolved by AC-40. (PO decision 2026-04-25; writeback 2026-04-26) |
 | OQ-2 | Is topic length evaluated on trimmed input or raw input? | No | **PO-accepted open** — deferred to Gate 4 architecture |
 | OQ-3 | When localStorage is unavailable, should the product block creation or fall back to an in-memory session? | No | **PO-accepted open** — deferred to Gate 4 architecture; AC-39 sets the no-crash floor |
 
