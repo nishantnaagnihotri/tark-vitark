@@ -1,5 +1,5 @@
-<!-- Protocol-Version: 3.31 -->
-<!-- Last-Updated: 2026-04-25 -->
+<!-- Protocol-Version: 3.32 -->
+<!-- Last-Updated: 2026-04-26 -->
 
 # Shared Agent Protocol
 
@@ -181,9 +181,9 @@ The full Gate 5, Gate 5.5 Runtime QA, and Gate 6 orchestration workflow - issue-
 ## GitHub Interaction Policy
 
 1. For GitHub repository, issue, pull request, review, comment, label, and status interactions, agents must use the GitHub MCP server as the primary and required interface.
-2. Agents must not rely on `gh`, raw GitHub API terminal calls, or editor-cached GitHub payloads when an equivalent GitHub MCP capability exists.
+2. Agents must not rely on `gh`, raw GitHub API terminal calls, or editor-cached GitHub payloads when an equivalent GitHub MCP capability exists and returns fresh enough data to complete the current step.
 3. Local git commands remain allowed for repository-local branch, commit, diff, and workspace inspection tasks that are not GitHub API interactions.
-4. If a required GitHub action is not available through the GitHub MCP server, the agent must explicitly state the MCP gap and request Product Owner approval before using any fallback path.
+4. If a required GitHub action or required current GitHub data is not available through the GitHub MCP server, the agent must explicitly state the MCP gap before using any fallback path. Product Owner approval is still required before any mutating or externally visible fallback action. Exception: during the Copilot PR review loop, agents may immediately use read-only GitHub REST fallbacks without Product Owner approval to read reviews, review threads/comments, PR conversation comments, and check/workflow state when MCP data is missing, stale, truncated, or otherwise insufficient to determine the current-head review status.
 
 ## Gate Handoff And Decision Workflow
 
