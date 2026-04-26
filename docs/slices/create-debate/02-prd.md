@@ -9,7 +9,7 @@
 
 ## PRD Readiness
 
-**Ready** — all 11 Gate 1 AC IDs are mapped one-to-one, scope boundaries are preserved without drift, and all open questions carry non-empty downstream resolutions.
+**Ready** — all 12 AC IDs (AC-29 through AC-40) are mapped one-to-one to FR-1 through FR-12, scope boundaries are preserved without drift, and all open questions carry non-empty downstream resolutions.
 
 ---
 
@@ -183,7 +183,7 @@ AC prose remains authored in [01-requirement.md](01-requirement.md). This PRD re
 
 **✅ Can proceed to Gate 3 (Design).**
 
-No requirement drift detected. All 11 AC IDs are covered. All remaining open questions are explicitly accepted for downstream resolution and do not block PRD readiness.
+No requirement drift detected. All 12 AC IDs (AC-29 through AC-40) and all 12 FRs (FR-1 through FR-12) are covered. All remaining open questions are explicitly accepted for downstream resolution and do not block PRD readiness.
 
 ---
 
