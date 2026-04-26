@@ -143,7 +143,7 @@ Status: semantic-closed | semantic-open (reason)
     How to track the 1-hour window:
 
     - **Clock start (push time):** Record T0 yourself immediately after `git push` completes — read the wall clock at that moment (e.g., `TZ=Asia/Kolkata date`). Do not use `updated_at` from the PR API: it resets on non-push events (new comments, label changes, review activity) and can silently extend or reset the 1-hour window. Do not use the git commit's author/committer date; on rebases or cherry-picks that can be much earlier than the real push.
-   - **On each wake with no review yet:** Check how long it's been since the push. If it's under 1 hour → re-arm the alarm and continue polling. Do not re-request. If the Copilot review workflow is complete, or MCP review data is otherwise stale/incomplete for the current head, apply the immediate read-only REST fallback in Rule 9, step 4 on that wake before escalating to the Product Owner.
+    - **On each wake with no review yet:** Check how long it's been since the push. If it's under 1 hour → re-arm the alarm and continue polling. Do not re-request. If the Copilot review workflow is complete, or MCP review data is otherwise stale/incomplete for the current head, apply the immediate read-only REST fallback in Rule 9, step 4 on that wake before escalating to the Product Owner.
     - **Once 1 hour has passed with still no review:** Stop retrying. Report to the Product Owner: PR link, head SHA, push time, how long you've been waiting. Something is stuck on GitHub's side.
 
     Do not escalate while still within the 1-hour window.
