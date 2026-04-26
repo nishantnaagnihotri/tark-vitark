@@ -59,7 +59,7 @@ All 14 deliverable frames reviewed. One blocker (QG-1: unbound icon fills in `94
 
 ---
 
-## Archive: Pass 1 (earlier session — Needs Revision at that point)
+## Archive: Earlier Session (pre-Pass 1 — Needs Revision at that point)
 
 > **SUPERSEDED / DO NOT ACTION**
 > This archived Pass 1 record is historical only and has been superseded by the **Final Design QA Verdict (Pass 2 — 2026-04-25)** above.
@@ -148,7 +148,7 @@ The only structural text contradiction is in the CP table - see Quality Gap 2.
 | Frame naming convention | All 12 frames follow `<ScreenName>/<State>/<Theme>/<Viewport>` | OK |
 | Section naming convention | `06-create-debate [IN PROGRESS]` follows zero-padded + `[STATUS]` spec | OK |
 | Frame surface background token | `color/surface` bound on all 8 Mobile frames (Bug 1 remediated, checkpoint 15) | OK |
-| TV lettermark - Light | Dark-blue circle (#4555B7) + white `TV` - `color/brand-primary` local variable | OK |
+| TV lettermark - Light | Dark-blue circle (#4555B7) + white `TV` - `color/brand-primary` local variable (legacy naming; current canonical: `color/brand/primary`) | OK |
 | TV lettermark - Dark | Lavender circle (#BBC3FF) + dark-navy `TV` - fixed to LOCAL `color/brand/on-primary` (VariableID:65:4) after imported-variable scope bug, checkpoint 17 | OK |
 | SystemChrome fills | StatusBar + GestureNav fills bound to `color/surface` (6 nodes x 8 frames, Bug 2 remediated) | OK |
 | Placeholder text fill | `color/on-surface-variant` (VariableID:149:8) | OK |

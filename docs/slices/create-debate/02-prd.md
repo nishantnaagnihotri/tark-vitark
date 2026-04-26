@@ -65,7 +65,7 @@ Expected outcome: a first-time visitor lands on an empty state, creates a debate
 | FR-1 | When no active debate exists in localStorage, the landing page shall render an empty state with a debate-creation affordance. | Must | AC-29 |
 | FR-2 | The Podium composer shall be absent and unreachable when no active debate exists, and shall become visible and operable after a debate is created. | Must | AC-32 |
 | FR-3 | There shall be no standalone in-app action to clear an active debate to an empty state. | Must | AC-36 |
-| FR-4 | The debate topic input shall enforce a minimum of 10 and a maximum of 120 characters with a visible validation error on rejection. | Must | AC-30 |
+| FR-4 | ~~The debate topic input shall enforce a minimum of 10 and a maximum of 120 characters with a visible validation error on rejection.~~ _(Superseded by A-2; see Amendments section. Gate 3 delta is the binding spec.)_ | Must | AC-30 |
 | FR-5 | Submitting a valid topic shall create an active debate, persist the topic to localStorage, and transition the UI from empty state to active debate view. | Must | AC-31 |
 | FR-6 | Arguments posted to a debate shall persist to localStorage and be restored into the timeline on subsequent page loads on the same device. | Must | AC-33 |
 | FR-7 | A visitor shall be able to initiate a new debate while one is active; completing that flow shall atomically overwrite the current topic and delete all current arguments from localStorage and the timeline. | Must | AC-34 |
