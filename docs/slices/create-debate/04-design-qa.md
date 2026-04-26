@@ -17,9 +17,9 @@
 **QA Result: PASS**
 **Gate Decision: can proceed to Gate 4 (Architecture)**
 
-All 14 deliverable frames reviewed. One blocker (QG-1: unbound icon fills in `947:476`) was identified in Pass 1, fixed by UX Agent (bound `961:501`, `947:518`, `947:519`, `947:520` to `color/brand/on-primary` `VariableID:65:4`), and verified in Pass 2. Pass 3 also verified A-5 / AC-40: the ReplaceFlow warning remains inline in the topic input area (nodes `897:475` and `898:475`), and no blocking dialog is shown.
+All 14 deliverable frames reviewed. One blocker (QG-ICON-1: unbound icon fills in `947:476`) was identified in Pass 1, fixed by UX Agent (bound `961:501`, `947:518`, `947:519`, `947:520` to `color/brand/on-primary` `VariableID:65:4`), and verified in Pass 2. Pass 3 also verified A-5 / AC-40: the ReplaceFlow warning remains inline in the topic input area (nodes `897:475` and `898:475`), and no blocking dialog is shown.
 
-### Pass 2 — QG-1 Resolution Evidence
+### Pass 2 — QG-ICON-1 Resolution Evidence
 
 | Node | Fix Verified | Bound Variable | Resolved Value |
 |---|---|---|---|
