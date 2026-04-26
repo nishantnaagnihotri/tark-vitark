@@ -59,17 +59,18 @@ The current landing page behaves like a static demo: it always shows a fixed deb
 
 | ID | Criterion | Status |
 |---|---|---|
-| AC-29 | When no debate exists in localStorage, the landing page displays an empty state with a debate-creation entry affordance and no Podium composer. Exact interaction pattern is deferred to Gate 3 UX. | Ready |
-| AC-30 | The debate topic input enforces a 10-to-120 character constraint. Submitting outside that range is blocked and a visible validation error is communicated to the user. | Ready |
+| AC-29 | When no debate exists in localStorage, the landing page displays an empty state with an inline topic-entry form — comprising a topic input field, a character counter, and a disabled "Start" button — and no Podium composer. *(Amended at Gate 3 — Gate 3 UX resolved the deferred interaction pattern: the creation form is inline in the empty state with a disabled-by-default submit button; 2026-04-26)* | Ready |
+| AC-30 | The debate topic input enforces a 10-to-120 character constraint with real-time validation. The "Start" button is disabled when the input length is fewer than 10 or more than 120 characters. When the input exceeds 120 characters, a visible error message and a color-coded counter are displayed; no error message is shown for input under 10 characters. *(Amended at Gate 3 — Gate 3 UX resolved validation timing to real-time and error display to >120 chars only; 2026-04-26)* | Ready |
 | AC-31 | Submitting a valid topic creates a debate, persists the topic to localStorage, and transitions the UI from empty state to active debate view. | Ready |
 | AC-32 | The Podium composer is not visible or reachable when no debate exists, and becomes visible and operable immediately after a debate is created. | Ready |
 | AC-33 | Arguments posted in a debate are persisted to localStorage and reloaded into the timeline when the user returns to the page on the same device. | Ready |
-| AC-34 | A user can initiate a new debate while an active debate exists. Completing that flow atomically replaces the current topic and deletes all current arguments from localStorage and the timeline. | Ready |
-| AC-35 | Abandoning the new-debate flow before completion leaves the current debate topic and all existing arguments fully intact. | Ready |
+| AC-34 | A user can initiate a new debate while an active debate exists by selecting "New Debate" from the TopAppBar trailing overflow menu (⋮ icon). Completing that flow atomically replaces the current topic and deletes all current arguments from localStorage and the timeline. *(Amended at Gate 3 — Gate 3 UX resolved the entry mechanism as the TopAppBar overflow menu per CP-6 PO decision 2026-04-25; 2026-04-26)* | Ready |
+| AC-35 | The replace form presents an explicit "Cancel" button; tapping it dismisses the form and leaves the current debate topic and all existing arguments fully intact. *(Amended at Gate 3 — Gate 3 UX resolved the abandon mechanism as an explicit Cancel button in the replace form; 2026-04-26)* | Ready |
 | AC-36 | There is no standalone in-app action to clear a debate to an empty state; replacement is the only in-app path away from an active debate. | Ready |
 | AC-37 | The hardcoded `DEBATE` constant and all seeded posts are removed from the codebase and never shown in the production render path. | Ready |
 | AC-38 | No argument count cap is enforced in this slice. | Ready |
 | AC-39 | If localStorage is unavailable or returns invalid/corrupted data, the app renders the empty state gracefully without throwing a runtime error. | Ready |
+| AC-40 | When a user initiates a new debate while an active debate exists, the replace form displays an inline warning in the topic input area informing the user that proceeding will replace the current topic and delete all existing arguments. No blocking confirmation dialog is shown. *(Added at Gate 3 — resolves OQ-1 deferred from Gate 1; 2026-04-26)* | Ready |
 
 ---
 
@@ -95,7 +96,7 @@ The current landing page behaves like a static demo: it always shows a fixed deb
 
 | # | Question | Blocking? | Status |
 |---|---|---|---|
-| OQ-1 | Must the replace flow include a confirmation/warning guard before deleting all current arguments? | No | **PO-accepted open** — deferred to Gate 3 UX |
+| OQ-1 | Must the replace flow include a confirmation/warning guard before deleting all current arguments? | No | **Closed at Gate 3** — PO decision: inline warning in the topic input area; no blocking dialog. Resolved by AC-40. (2026-04-26) |
 | OQ-2 | Is topic length evaluated on trimmed input or raw input? | No | **PO-accepted open** — deferred to Gate 4 architecture |
 | OQ-3 | When localStorage is unavailable, should the product block creation or fall back to an in-memory session? | No | **PO-accepted open** — deferred to Gate 4 architecture; AC-39 sets the no-crash floor |
 
@@ -122,10 +123,10 @@ Resolved / frozen decisions:
 - Hardcoded debate and seeded posts are fully removed.
 
 Accepted open questions:
-- OQ-1 confirmation guard on replace flow -> Gate 3 UX
+- OQ-1 confirmation guard on replace flow -> Resolved at Gate 3 via AC-40
 - OQ-2 trimmed vs raw topic validation -> Gate 4 architecture
 - OQ-3 localStorage unavailable fallback contract -> Gate 4 architecture
 
-Acceptance criteria: AC-29 through AC-39.
+Acceptance criteria: AC-29 through AC-40.
 Domain Glossary: 11 terms as listed above.
 ```
