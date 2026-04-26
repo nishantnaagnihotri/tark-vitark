@@ -313,7 +313,7 @@ _This section records owner-approved PRD deltas since Gate 2 approval. Original 
 
 **What remains out-of-scope:** System-back-only dismiss; tap-away-only dismiss.
 
-**PO approval reference:** 03-ux.md Checkpoint 21; 04-design-qa.md final PASS (2026-04-25).
+**PO approval reference:** 03-ux.md Checkpoint 21; 04-design-qa.md final PASS (2026-04-25); 04-design-qa.md Pass 3 DS Cancel swap spot-check — nodes 977:481 (Light) / 977:483 (Dark) confirmed (2026-04-26).
 
 ---
 
