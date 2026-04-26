@@ -12,7 +12,7 @@
 
 ---
 
-## Final Design QA Verdict (Pass 2 — 2026-04-25)
+## Design QA Verdict (Pass 2 - 2026-04-25)
 
 **QA Result: PASS**
 **Gate Decision: can proceed to Gate 4 (Architecture)**
