@@ -73,6 +73,7 @@ Expected outcome: a first-time visitor lands on an empty state, creates a debate
 | FR-9 | The hardcoded `DEBATE` constant and all seeded posts shall be removed from the codebase and the production render path. | Must | AC-37 |
 | FR-10 | No maximum argument count shall be enforced in this slice. | Must | AC-38 |
 | FR-11 | If localStorage is unavailable or returns corrupted data, the app shall render the empty state without throwing a runtime error. | Must | AC-39 |
+| FR-12 | When the user initiates a new debate while one is active, the replace form shall display an inline warning in the topic input area informing the user that proceeding will replace the current topic and delete all existing arguments; no blocking confirmation dialog shall be shown. | Must | AC-40 |
 
 ---
 
@@ -108,7 +109,7 @@ Expected outcome: a first-time visitor lands on an empty state, creates a debate
 
 **Acceptance Criteria source:** [01-requirement.md](01-requirement.md) (current). The executable feature file `features/create-debate.feature` does not exist yet; it will be generated at Gate 5 (Build).
 
-In-scope AC IDs for this slice: **AC-29, AC-30, AC-31, AC-32, AC-33, AC-34, AC-35, AC-36, AC-37, AC-38, AC-39**.
+In-scope AC IDs for this slice: **AC-29, AC-30, AC-31, AC-32, AC-33, AC-34, AC-35, AC-36, AC-37, AC-38, AC-39, AC-40**.
 
 AC prose remains authored in [01-requirement.md](01-requirement.md). This PRD references AC IDs only to prevent drift.
 
@@ -130,7 +131,7 @@ AC prose remains authored in [01-requirement.md](01-requirement.md). This PRD re
 
 | ID | Question | Source | Status | Resolution |
 |---|---|---|---|---|
-| OQ-1 | Should the replace flow include a confirmation or warning guard before wiping the active debate? | Gate 1 accepted OQ | Unresolved — Non-Blocking | UX owns the interaction pattern. The required behavioral outcome remains FR-7 / AC-34 regardless. Must resolve at Gate 3 before design closure. |
+| OQ-1 | Should the replace flow include a confirmation or warning guard before wiping the active debate? | Gate 1 accepted OQ | Resolved | Resolved at Gate 3 — PO decision: inline warning displayed in the topic input area of the replace form; no blocking confirmation dialog. Implemented via AC-40. (2026-04-25; 03-ux.md Checkpoint 10) |
 | OQ-2 | Does the 10–120 character topic validation apply to the trimmed string or the raw string as entered? | Gate 1 accepted OQ | Unresolved — Non-Blocking | Default assumption is raw character count until Gate 4 chooses and records the contract. Must resolve before Gate 5. |
 | OQ-3 | What is the full fallback contract when localStorage is unavailable or corrupted? | Gate 1 accepted OQ | Unresolved — Non-Blocking | AC-39 is the minimum floor: graceful empty state and no runtime error. Extended fallback behavior is deferred to Gate 4. Must resolve before Gate 5. |
 
@@ -201,7 +202,7 @@ Replace the hardcoded landing-page debate with a device-local, user-owned debate
 
 | ID | Question | Status | Resolution |
 |---|---|---|---|
-| OQ-1 | Replace-flow confirmation / warning guard | Unresolved — Non-Blocking | Gate 3 UX decides the pattern. |
+| OQ-1 | Replace-flow confirmation / warning guard | Resolved | Resolved at Gate 3 — PO decision: inline warning in the topic input area; no blocking dialog. Implemented via AC-40. (2026-04-25) |
 | OQ-2 | Trimmed vs raw topic validation | Unresolved — Non-Blocking | Gate 4 architecture decides the binding rule before build. |
 | OQ-3 | Full localStorage-unavailability fallback contract | Unresolved — Non-Blocking | Gate 4 architecture defines behavior beyond AC-39 minimum floor. |
 
@@ -220,7 +221,7 @@ Replace the hardcoded demo debate with a device-local, user-owned debate lifecyc
 
 | ID | Question | Status | Resolution |
 |---|---|---|---|
-| OQ-1 | Replace-flow confirmation / warning guard | Unresolved — Non-Blocking | Gate 3 UX decides the interaction pattern. |
+| OQ-1 | Replace-flow confirmation / warning guard | Resolved | Resolved at Gate 3 — PO decision: inline warning in the topic input area; no blocking dialog. Implemented via AC-40. (2026-04-25) |
 | OQ-2 | Trimmed vs raw topic validation | Unresolved — Non-Blocking | Gate 4 architecture decides the contract before build. |
 | OQ-3 | Full localStorage-unavailability fallback contract | Unresolved — Non-Blocking | Gate 4 architecture defines behavior beyond AC-39. |
 
@@ -228,7 +229,7 @@ Replace the hardcoded demo debate with a device-local, user-owned debate lifecyc
 
 | OQ | Blocks |
 |---|---|
-| OQ-1 | Gate 3 closure |
+| OQ-1 | Resolved at Gate 3; no remaining blocker (AC-40) |
 | OQ-2 | Gate 4 closure; Gate 5 start |
 | OQ-3 | Gate 4 closure; Gate 5 start |
 
@@ -241,3 +242,109 @@ Replace the hardcoded demo debate with a device-local, user-owned debate lifecyc
 - [x] All open questions have non-empty Resolution fields
 - [x] PRD Draft Package included
 ```
+
+---
+
+## Amendments
+
+_This section records owner-approved PRD deltas since Gate 2 approval. Original FR/AC rows in the PRD body are preserved unchanged. Downstream artifacts (`03-ux.md`, `04-design-qa.md`) are the execution source for these decisions; this section is the PRD version history._
+
+**Gate 3 status:** Design QA PASS (2026-04-25). Gate 3 closure authorized.
+
+---
+
+### A-1 — Gate 3 UX: Empty-State Creation Form Interaction Pattern
+
+**Date:** 2026-04-26
+**Gate:** Gate 3A Phase 1 rerun v2; PO-approved 2026-04-25
+**Affected:** FR-1 / AC-29
+
+**Original FR-1 text (unchanged in body):** "When no active debate exists in localStorage, the landing page shall render an empty state with a debate-creation affordance."
+
+**Gate 3 delta:** The creation form is inline in the empty state — TV lettermark icon (48×48, brand-primary fill) + topic TextField (placeholder only, no floating label) + character counter ("X / 120") + "Start" button (disabled by default, enabled when input is 10–120 characters). No separate FormOpen state; no headline; no body copy.
+
+**What remains out-of-scope:** Separate FormOpen transition state; floating-label TextField variant; headline/body copy in empty state.
+
+**PO approval reference:** 03-ux.md Checkpoints 6 and 14 (2026-04-25).
+
+---
+
+### A-2 — Gate 3 UX: Topic Validation Timing and Error Display
+
+**Date:** 2026-04-26
+**Gate:** Gate 3A CP-3 resolution
+**Affected:** FR-4 / AC-30
+
+**Original FR-4 text (unchanged in body):** "The debate topic input shall enforce a minimum of 10 and a maximum of 120 characters with a visible validation error on rejection."
+
+**Gate 3 delta:** Validation fires in real time on every keystroke. The "Start" button is disabled when input length is fewer than 10 or greater than 120 characters. An error message is shown only when input exceeds 120 characters; no error message is shown for input below the 10-character minimum.
+
+**What remains out-of-scope:** On-blur-only validation; under-minimum error copy.
+
+**PO approval reference:** 03-ux.md Challenge Phase Results CP-3 (2026-04-25).
+
+---
+
+### A-3 — Gate 3 UX: New Debate Entry Mechanism
+
+**Date:** 2026-04-26
+**Gate:** Gate 3A CP-6 resolution; PO confirmed 2026-04-25T16:30Z
+**Affected:** FR-7 / AC-34
+
+**Original FR-7 text (unchanged in body):** "A visitor shall be able to initiate a new debate while one is active; completing that flow shall atomically overwrite the current topic and delete all current arguments from localStorage and the timeline."
+
+**Gate 3 delta:** The entry point for the replace flow is the TopAppBar trailing overflow menu (⋮ icon -> "New Debate" menu item). This is a binding Gate 4 implementation contract. TextButton near the topic heading, FAB, and primary-button placements are ruled out. No separate Figma frame is required for Gate 3; ReplaceFlow frames (897:462 Light, 898:463 Dark) cover all post-trigger behavior.
+
+**What remains out-of-scope:** Any entry point other than the TopAppBar overflow menu; atomic replace behavior is unchanged (FR-7 body stands).
+
+**PO approval reference:** 03-ux.md Checkpoint 22 (2026-04-25T16:30Z).
+
+---
+
+### A-4 — Gate 3 UX: Replace-Flow Abandon Mechanism
+
+**Date:** 2026-04-26
+**Gate:** Gate 3B QG-1 resolution; PO Option A confirmed
+**Affected:** FR-8 / AC-35
+
+**Original FR-8 text (unchanged in body):** "Abandoning the new-debate flow before completion shall leave the current debate topic and all existing arguments fully intact."
+
+**Gate 3 delta:** The abandon mechanism is an explicit "Cancel" TextButton rendered in the replace form (label="Cancel", fill bound to `color/brand/primary`). Tapping "Cancel" dismisses the replace form and leaves the current debate and all arguments fully intact. Nodes: 936:468 (Light), 936:470 (Dark).
+
+**What remains out-of-scope:** System-back-only dismiss; tap-away-only dismiss.
+
+**PO approval reference:** 03-ux.md Checkpoint 21; 04-design-qa.md final PASS (2026-04-25).
+
+---
+
+### A-5 — Gate 3 New Criterion: Replace-Flow Inline Warning (resolves OQ-1)
+
+**Date:** 2026-04-26
+**Gate:** Gate 3A OQ-1 closure; PO confirmed 2026-04-25T05:41Z
+**Affected:** New FR-12 / AC-40
+
+**Original state:** OQ-1 asked whether the replace flow requires a confirmation or warning guard. Status was "Unresolved — Non-Blocking" at Gate 2 close, deferred to Gate 3.
+
+**Gate 3 delta:** PO decision: when a user initiates a new debate while an active debate exists, the replace form displays an inline warning in the topic input area informing the user that proceeding will replace the current topic and delete all existing arguments. No blocking confirmation dialog is shown. AC-40 added to `01-requirement.md` at Gate 3. New FR-12 added to Section 4 of this PRD to map AC-40.
+
+**What remains out-of-scope:** Modal dialogs; toast notifications; blocking dialogs; any non-inline warning pattern.
+
+**PO approval reference:** 03-ux.md Checkpoint 10 (2026-04-25T05:41Z); 01-requirement.md OQ-1 "Closed at Gate 3".
+
+---
+
+### Gate 3 Alignment Check Extension
+
+_Re-run of Section 10 for Gate 3 deltas only. Original Section 10 rows (AC-29 through AC-39 mapped to FR-1 through FR-11) remain valid for non-amended behavior._
+
+| Gate 3 Delta | Amendment | Affected AC (amended) | FR Mapping | Alignment Status |
+|---|---|---|---|---|
+| Inline form in empty state (CP-1) | A-1 | AC-29 | FR-1 + A-1 | ✅ Mapped |
+| Real-time validation; >120 error only (CP-3) | A-2 | AC-30 | FR-4 + A-2 | ✅ Mapped |
+| TopAppBar overflow menu entry (CP-6) | A-3 | AC-34 | FR-7 + A-3 | ✅ Mapped |
+| Explicit Cancel button (QG-1) | A-4 | AC-35 | FR-8 + A-4 | ✅ Mapped |
+| Inline warning; no blocking dialog (OQ-1 closed) | A-5 | AC-40 (new) | FR-12 (new) | ✅ Mapped |
+
+**Owner-approved deltas since Gate 2:** A-1 through A-5 above.
+**Unauthorized scope expansion:** None detected.
+**Out-of-scope boundaries (Section 3):** Preserved without change.
