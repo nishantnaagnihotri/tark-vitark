@@ -54,7 +54,7 @@ All 14 deliverable frames reviewed. One blocker (QG-ICON-1: unbound icon fills i
 | CreateDebate/EmptyState/Dark/Tablet | `925:507` | ✅ PASS |
 | CreateDebate/EmptyState/Light/Desktop | `926:496` | ✅ PASS |
 | CreateDebate/EmptyState/Dark/Desktop | `926:509` | ✅ PASS |
-| ActiveDebate/Default/Light/Mobile | `947:476` | ✅ PASS (after QG-1 fix) |
+| ActiveDebate/Default/Light/Mobile | `947:476` | ✅ PASS (after QG-ICON-1 fix) |
 | ActiveDebate/Default/Dark/Mobile | `947:521` | ✅ PASS |
 
 ---
