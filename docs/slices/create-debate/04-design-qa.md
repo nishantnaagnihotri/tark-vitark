@@ -60,13 +60,17 @@ All 14 deliverable frames reviewed. One blocker (QG-1: unbound icon fills in `94
 
 ## Archive: Pass 1 (earlier session — Needs Revision at that point)
 
-Persisted from the 2026-04-25 earlier Gate 3B `design-qa-agent` pass. Context: before ActiveDebate frames were added (only 12 deliverable frames; Cancel buttons and CP-6 were the open items at that stage). Kept for traceability.
+> **SUPERSEDED / DO NOT ACTION**
+> This archived Pass 1 record is historical only and has been superseded by the **Final Design QA Verdict (Pass 2 — 2026-04-25)** above.
+> Do not use the archived "Needs Revision" outcome below for current gate closure or routing decisions.
+
+Persisted from the 2026-04-25 earlier Gate 3B `design-qa-agent` pass. Context: before ActiveDebate frames were added (only 12 deliverable frames; Cancel buttons and CP-6 were the open items at that stage). Kept for traceability only.
 
 ## 1. Design QA Readiness
 
 **Needs Revision**
 
-Two quality gaps require resolution before this slice is eligible for Product Owner approval. Both are fixable in a single focused pass; neither expands scope.
+Two quality gaps required resolution before this slice was eligible for Product Owner approval at that time. Both were fixable in a single focused pass; neither expanded scope.
 
 ## 2. Figma Access Confirmation
 
