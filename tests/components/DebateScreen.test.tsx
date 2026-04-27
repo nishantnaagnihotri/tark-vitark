@@ -1,9 +1,12 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DebateScreen } from '../../src/components/DebateScreen';
-import { DEBATE } from '../../src/data/debate';
+import {
+    activeDebateFixture,
+    seedActiveDebateFixture,
+} from '../fixtures/activeDebateFixture';
 
 const debateScreenCss = readFileSync(
     resolve(process.cwd(), 'src/styles/debate-screen.css'),
@@ -30,6 +33,10 @@ async function openComposerForSide(side: 'Post as Tark' | 'Post as Vitark') {
 }
 
 describe('DebateScreen', () => {
+    beforeEach(() => {
+        seedActiveDebateFixture(window.localStorage);
+    });
+
     afterEach(() => {
         document.documentElement.removeAttribute('data-theme');
         sessionStorage.clear();
@@ -45,7 +52,7 @@ describe('DebateScreen', () => {
     it('renders the debate topic as a heading', () => {
         render(<DebateScreen />);
         const heading = screen.getByRole('heading', { level: 1 });
-        expect(heading).toHaveTextContent(DEBATE.topic);
+        expect(heading).toHaveTextContent(activeDebateFixture.topic);
     });
 
     it('composes Topic component', () => {
@@ -70,10 +77,10 @@ describe('DebateScreen', () => {
         expect(timeline).toBeInTheDocument();
     });
 
-    it('renders all arguments from DEBATE data', () => {
+    it('renders all arguments from active debate fixture data', () => {
         render(<DebateScreen />);
         const items = screen.getAllByRole('listitem');
-        expect(items).toHaveLength(DEBATE.arguments.length);
+        expect(items).toHaveLength(activeDebateFixture.arguments.length);
     });
 
     it('renders FAB composer entry on mount', () => {
@@ -94,7 +101,7 @@ describe('DebateScreen', () => {
 
         await waitFor(() => {
             const items = screen.getAllByRole('listitem');
-            expect(items).toHaveLength(DEBATE.arguments.length + 1);
+            expect(items).toHaveLength(activeDebateFixture.arguments.length + 1);
             expect(items[items.length - 1]).toHaveTextContent('This post has enough length.');
         });
     });
@@ -110,14 +117,14 @@ describe('DebateScreen', () => {
 
         await waitFor(() => {
             expect(screen.getAllByRole('listitem')).toHaveLength(
-                DEBATE.arguments.length + 1
+                activeDebateFixture.arguments.length + 1
             );
         });
 
         unmount();
         render(<DebateScreen />);
 
-        expect(screen.getAllByRole('listitem')).toHaveLength(DEBATE.arguments.length);
+        expect(screen.getAllByRole('listitem')).toHaveLength(activeDebateFixture.arguments.length);
         expect(screen.queryByText('Session-only argument text.')).not.toBeInTheDocument();
     });
 
