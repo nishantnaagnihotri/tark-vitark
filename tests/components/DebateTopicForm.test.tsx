@@ -9,6 +9,7 @@ const debateTopicFormCss = readFileSync(
     resolve(process.cwd(), 'src/styles/components/debate-topic-form.css'),
     'utf-8'
 );
+const tokensCss = readFileSync(resolve(process.cwd(), 'src/styles/tokens.css'), 'utf-8');
 
 describe('DebateTopicForm', () => {
     it('shows the create flow with Start disabled at 0 / 120 (AC-29)', () => {
@@ -132,9 +133,15 @@ describe('DebateTopicForm', () => {
     it('pins topic-form geometry and token usage to Figma values for create and replace states', () => {
         expect(debateTopicFormCss).toContain('max-width: var(--size-create-debate-content-max-width);');
         expect(debateTopicFormCss).toContain('@media (min-width: 768px)');
-        expect(debateTopicFormCss).toContain('max-width: 600px;');
+        expect(debateTopicFormCss).toContain(
+            'max-width: var(--size-create-debate-content-max-width-tablet);'
+        );
         expect(debateTopicFormCss).toContain('@media (min-width: 1024px)');
-        expect(debateTopicFormCss).toContain('max-width: 640px;');
+        expect(debateTopicFormCss).toContain(
+            'max-width: var(--size-create-debate-content-max-width-desktop);'
+        );
+        expect(tokensCss).toContain('--size-create-debate-content-max-width-tablet: 600px;');
+        expect(tokensCss).toContain('--size-create-debate-content-max-width-desktop: 640px;');
         expect(debateTopicFormCss).toContain('height: 56px;');
         expect(debateTopicFormCss).toContain('padding: 0 15px;');
         expect(debateTopicFormCss).toContain('height: 40px;');
