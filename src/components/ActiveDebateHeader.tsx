@@ -20,13 +20,13 @@ export function ActiveDebateHeader({
             return;
         }
 
-        function handlePointerDown(event: MouseEvent) {
-            const pointerTarget = event.target;
-            if (!(pointerTarget instanceof Node)) {
+        function handleMouseDown(event: MouseEvent) {
+            const clickTarget = event.target;
+            if (!(clickTarget instanceof Node)) {
                 return;
             }
 
-            if (!debateActionsRef.current?.contains(pointerTarget)) {
+            if (!debateActionsRef.current?.contains(clickTarget)) {
                 setIsDebateActionsOpen(false);
             }
         }
@@ -37,11 +37,11 @@ export function ActiveDebateHeader({
             }
         }
 
-        document.addEventListener('mousedown', handlePointerDown);
+        document.addEventListener('mousedown', handleMouseDown);
         document.addEventListener('keydown', handleEscape);
 
         return () => {
-            document.removeEventListener('mousedown', handlePointerDown);
+            document.removeEventListener('mousedown', handleMouseDown);
             document.removeEventListener('keydown', handleEscape);
         };
     }, [isDebateActionsOpen]);
@@ -58,7 +58,7 @@ export function ActiveDebateHeader({
                         type="button"
                         className="active-debate-header__overflow-trigger"
                         aria-label="Open debate actions"
-                        aria-controls="active-debate-header-actions"
+                        aria-controls={isDebateActionsOpen ? 'active-debate-header-actions' : undefined}
                         aria-expanded={isDebateActionsOpen}
                         onClick={() => setIsDebateActionsOpen((isOpen) => !isOpen)}
                     >
