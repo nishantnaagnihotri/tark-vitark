@@ -16,8 +16,12 @@ export function ActiveDebateHeader({
     const debateActionsRef = useRef<HTMLDivElement | null>(null);
     const overflowTriggerRef = useRef<HTMLButtonElement | null>(null);
 
-    function closeDebateActionsAndRestoreFocus() {
+    function closeDebateActions(options?: { restoreFocus?: boolean }) {
         setIsDebateActionsOpen(false);
+
+        if (!options?.restoreFocus) {
+            return;
+        }
 
         window.requestAnimationFrame(() => {
             const overflowTrigger = overflowTriggerRef.current;
@@ -39,13 +43,13 @@ export function ActiveDebateHeader({
             }
 
             if (!debateActionsRef.current?.contains(clickTarget)) {
-                closeDebateActionsAndRestoreFocus();
+                closeDebateActions();
             }
         }
 
         function handleEscape(event: KeyboardEvent) {
             if (event.key === 'Escape') {
-                closeDebateActionsAndRestoreFocus();
+                closeDebateActions({ restoreFocus: true });
             }
         }
 
@@ -88,7 +92,7 @@ export function ActiveDebateHeader({
                                 type="button"
                                 className="active-debate-header__menu-item"
                                 onClick={() => {
-                                    closeDebateActionsAndRestoreFocus();
+                                    closeDebateActions({ restoreFocus: true });
                                     onStartNewDebate();
                                 }}
                             >
