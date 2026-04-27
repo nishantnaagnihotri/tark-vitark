@@ -207,7 +207,7 @@ describe('DebateScreen', () => {
         window.localStorage.clear();
         render(<DebateScreen />);
 
-        expect(screen.queryByRole('banner')).not.toBeInTheDocument();
+        expect(screen.queryByRole('heading', { level: 1 })).not.toBeInTheDocument();
         expect(screen.getByRole('textbox', { name: 'Debate topic' })).toBeInTheDocument();
         expect(screen.queryByRole('button', { name: 'Open post composer' })).not.toBeInTheDocument();
         expect(screen.getByRole('switch', { name: /dark mode/i })).toHaveClass(
@@ -223,7 +223,8 @@ describe('DebateScreen', () => {
         fireEvent.click(screen.getByRole('button', { name: 'New Debate' }));
 
         expect(screen.getByRole('textbox', { name: 'Debate topic' })).toBeInTheDocument();
-        expect(screen.queryByRole('banner')).not.toBeInTheDocument();
+        expect(screen.queryByRole('heading', { level: 1 })).not.toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: 'Open debate actions' })).not.toBeInTheDocument();
     });
 
     it('uses shared podium height variable for debate screen clearance', () => {
