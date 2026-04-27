@@ -11,7 +11,7 @@
     color: var(--color-on-surface);
 }
 
-/* ── mobile-internal (≥481px) — not a design tier ── */
+/* mobile-internal (≥481px) — not a design tier (marker retained for AC-28 traceability only). */
 
 .debate-screen--empty {
     display: block;
