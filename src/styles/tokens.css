@@ -7,6 +7,8 @@
   --color-on-surface: #1C1B1F;
   --color-brand-primary: #4555B7;
   --color-brand-on-primary: #FFFFFF;
+  --color-primary: #4555B7;
+  --color-on-primary: #FFFFFF;
 
   /* Spine (maps to M3 outline) */
   --color-spine-line: #767680;
@@ -14,6 +16,7 @@
   --color-on-surface-variant: #49454E;
   --color-error: #B3261E;
   --color-surface-container-high: #E9E7EF;
+  --color-surface-container-highest: #E4E1E9;
   --color-surface-container-lowest: #FFFFFF;
   --color-outline: #767680;
   --color-outline-variant: #C7C5D0;
@@ -87,12 +90,15 @@
   --color-on-surface: #E6E1E5;
   --color-brand-primary: #BBC3FF;
   --color-brand-on-primary: #0E2288;
+  --color-primary: #4555B7;
+  --color-on-primary: #FFFFFF;
 
   --color-spine-line: #90909A;
 
   --color-on-surface-variant: #CAC4D0;
   --color-error: #F2B8B5;
   --color-surface-container-high: #2A2A30;
+  --color-surface-container-highest: #E4E1E9;
   --color-surface-container-lowest: #0E0E13;
   --color-outline: #90909A;
   --color-outline-variant: #46464F;
@@ -120,12 +126,15 @@
     --color-on-surface: #E6E1E5;
     --color-brand-primary: #BBC3FF;
     --color-brand-on-primary: #0E2288;
+    --color-primary: #4555B7;
+    --color-on-primary: #FFFFFF;
 
     --color-spine-line: #90909A;
 
     --color-on-surface-variant: #CAC4D0;
     --color-error: #F2B8B5;
     --color-surface-container-high: #2A2A30;
+    --color-surface-container-highest: #E4E1E9;
     --color-surface-container-lowest: #0E0E13;
     --color-outline: #90909A;
     --color-outline-variant: #46464F;
