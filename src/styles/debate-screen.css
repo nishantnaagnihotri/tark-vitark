@@ -51,6 +51,18 @@
     letter-spacing: var(--typescale-label-md-tracking);
 }
 
+@media (min-width: 768px) {
+    .debate-screen__action-error {
+        max-width: var(--size-create-debate-content-max-width-tablet);
+    }
+}
+
+@media (min-width: 1024px) {
+    .debate-screen__action-error {
+        max-width: var(--size-create-debate-content-max-width-desktop);
+    }
+}
+
 .debate-screen__active-action-error {
     margin: 0 auto var(--space-4);
     padding: 0 var(--space-4);
