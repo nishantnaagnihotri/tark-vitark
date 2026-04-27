@@ -5,7 +5,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Debate } from '../../src/data/debate';
 import { DebateScreen } from '../../src/components/DebateScreen';
 import {
-    ACTIVE_DEBATE_RECORD_VERSION,
     ACTIVE_DEBATE_STORAGE_KEY,
 } from '../../src/lib/activeDebateStorage';
 import {
