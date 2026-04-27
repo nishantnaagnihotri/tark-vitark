@@ -1,0 +1,86 @@
+.active-debate-header {
+    position: relative;
+    background-color: var(--color-brand-primary);
+    color: var(--color-brand-on-primary);
+    padding: var(--space-12) var(--space-5) var(--space-8);
+    text-align: center;
+}
+
+.active-debate-header__chrome {
+    position: absolute;
+    inset-inline: 0;
+    top: calc(var(--space-4) / 2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: calc(var(--space-4) / 2);
+    pointer-events: none;
+}
+
+.active-debate-header__theme-action,
+.active-debate-header__overflow-trigger {
+    width: var(--space-12);
+    height: var(--space-12);
+    pointer-events: auto;
+}
+
+.active-debate-header__overflow {
+    position: relative;
+    pointer-events: auto;
+}
+
+.active-debate-header__overflow-trigger {
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.active-debate-header__overflow-glyph {
+    font-size: calc(var(--space-4) + (var(--space-4) / 2));
+    line-height: 1;
+}
+
+.active-debate-header__menu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + (var(--space-4) / 2));
+    min-width: calc(var(--space-30) + var(--space-5));
+    border: var(--divider-thickness) solid var(--color-outline-variant);
+    border-radius: var(--radius-round);
+    background-color: var(--color-surface-default);
+    color: var(--color-on-surface);
+    box-shadow:
+        0 calc(var(--space-4) / 4) calc(var(--space-4) / 2) 0
+        var(--color-elevation-shadow-ambient),
+        0 calc(var(--space-4) / 16) calc(var(--space-4) / 4) 0
+        var(--color-elevation-shadow-key);
+    overflow: hidden;
+    z-index: 2;
+}
+
+.active-debate-header__menu-item {
+    width: 100%;
+    min-height: var(--space-12);
+    border: 0;
+    background: transparent;
+    color: inherit;
+    padding: 0 var(--space-5);
+    text-align: left;
+    font-family: var(--font-family-plain);
+    font-size: var(--typescale-body-lg-size);
+    line-height: var(--typescale-body-lg-line-height);
+    font-weight: var(--typescale-body-lg-weight);
+    letter-spacing: var(--typescale-body-lg-tracking);
+    cursor: pointer;
+}
+
+.active-debate-header__overflow-trigger:focus-visible,
+.active-debate-header__menu-item:focus-visible {
+    outline: calc(var(--divider-thickness) * 2) solid currentColor;
+    outline-offset: calc(var(--space-4) / 8);
+}

@@ -11,23 +11,26 @@
     color: var(--color-on-surface);
 }
 
-.debate-header {
-    background-color: var(--color-brand-primary);
-    color: var(--color-brand-on-primary);
-    padding: var(--space-12) var(--space-5) var(--space-8);
-    text-align: center;
-}
-
 /* ── mobile-internal (≥481px) — not a design tier ── */
-@media (min-width: 481px) {
-    .debate-header {
-        padding: var(--space-12) var(--space-10) var(--space-8);
-    }
+
+.debate-screen--empty {
+    display: block;
+    padding-bottom: 0;
 }
 
-/* ── Desktop ── */
-@media (min-width: 1024px) {
-    .debate-header {
-        padding: var(--space-12) var(--space-30) var(--space-8);
-    }
+.debate-screen__empty-state {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 var(--space-4) max(var(--space-4), env(safe-area-inset-bottom, 0px));
+}
+
+.debate-screen__empty-theme-toggle {
+    position: absolute;
+    left: calc(var(--space-4) / 2);
+    top: calc(var(--space-5) + (var(--space-4) / 2));
+    color: var(--color-on-surface);
 }
