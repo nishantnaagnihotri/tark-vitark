@@ -61,6 +61,10 @@ describe('Landmark and heading verification', () => {
 });
 
 describe('aria-label verification on argument cards', () => {
+    beforeEach(() => {
+        seedActiveDebateFixture(window.localStorage);
+    });
+
     it('every argument card has an aria-label identifying its side', () => {
         render(<DebateScreen />);
 
