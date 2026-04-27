@@ -40,11 +40,20 @@ function createInMemoryStorage(): Storage {
     };
 }
 
-const storageNeedsPolyfill =
-    typeof window.localStorage?.getItem !== 'function'
-    || typeof window.localStorage?.setItem !== 'function'
-    || typeof window.localStorage?.removeItem !== 'function'
-    || typeof window.localStorage?.clear !== 'function';
+function localStorageNeedsPolyfill(): boolean {
+    try {
+        return (
+            typeof window.localStorage.getItem !== 'function'
+            || typeof window.localStorage.setItem !== 'function'
+            || typeof window.localStorage.removeItem !== 'function'
+            || typeof window.localStorage.clear !== 'function'
+        );
+    } catch {
+        return true;
+    }
+}
+
+const storageNeedsPolyfill = localStorageNeedsPolyfill();
 
 if (storageNeedsPolyfill) {
     Object.defineProperty(window, 'localStorage', {
