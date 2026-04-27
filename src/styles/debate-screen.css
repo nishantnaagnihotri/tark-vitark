@@ -23,6 +23,7 @@
     min-height: 100vh;
     min-height: 100dvh;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 0 var(--space-4) max(var(--space-4), env(safe-area-inset-bottom, 0px));
@@ -71,5 +72,6 @@
 
 .debate-screen__empty-action-error {
     margin: 0 0 var(--space-4);
+    width: 100%;
     text-align: center;
 }

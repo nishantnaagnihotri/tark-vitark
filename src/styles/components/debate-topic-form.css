@@ -1,4 +1,6 @@
 .debate-topic-form {
+    width: 100%;
+    max-width: var(--size-create-debate-content-max-width);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -25,7 +27,6 @@
 
 .debate-topic-form__form {
     width: 100%;
-    max-width: var(--size-create-debate-content-max-width);
     display: flex;
     flex-direction: column;
 }
@@ -161,13 +162,13 @@
 }
 
 @media (min-width: 768px) {
-    .debate-topic-form__form {
+    .debate-topic-form {
         max-width: var(--size-create-debate-content-max-width-tablet);
     }
 }
 
 @media (min-width: 1024px) {
-    .debate-topic-form__form {
+    .debate-topic-form {
         max-width: var(--size-create-debate-content-max-width-desktop);
     }
 }
