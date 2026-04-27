@@ -90,6 +90,45 @@ describe('DebateTopicForm', () => {
         expect(onCancelReplace).toHaveBeenCalledTimes(1);
     });
 
+    it('disables Cancel while replacement debate start is in-flight (AC-35, AC-40)', async () => {
+        const user = userEvent.setup();
+        let resolveStartDebate: (() => void) | undefined;
+        const onStartDebate = vi.fn(
+            () =>
+                new Promise<void>((resolve) => {
+                    resolveStartDebate = resolve;
+                })
+        );
+        const onCancelReplace = vi.fn();
+
+        render(
+            <DebateTopicForm
+                mode="replace"
+                onStartDebate={onStartDebate}
+                onCancelReplace={onCancelReplace}
+            />
+        );
+
+        await user.type(screen.getByRole('textbox', { name: 'Debate topic' }), 'abcdefghij');
+
+        const startDebateButton = screen.getByRole('button', { name: 'Start' });
+        const cancelReplaceButton = screen.getByRole('button', { name: 'Cancel' });
+        await user.click(startDebateButton);
+
+        await waitFor(() => {
+            expect(cancelReplaceButton).toBeDisabled();
+        });
+
+        fireEvent.click(cancelReplaceButton);
+        expect(onCancelReplace).not.toHaveBeenCalled();
+
+        resolveStartDebate?.();
+
+        await waitFor(() => {
+            expect(cancelReplaceButton).toBeEnabled();
+        });
+    });
+
     it('pins topic-form geometry and token usage to Figma values for create and replace states', () => {
         expect(debateTopicFormCss).toContain('max-width: 358px;');
         expect(debateTopicFormCss).toContain('height: 56px;');
