@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { ActiveDebateHeader } from '../../src/components/ActiveDebateHeader';
 
@@ -45,15 +46,20 @@ describe('ActiveDebateHeader', () => {
         expect(screen.queryByRole('button', { name: 'New Debate' })).not.toBeInTheDocument();
     });
 
-    it('AC-34: restores overflow trigger focus when debate actions close via dismiss gestures', async () => {
+    it('AC-34: restores focus for escape dismissals without stealing outside-click focus', async () => {
+        const user = userEvent.setup();
         render(
-            <ActiveDebateHeader
-                topic="Should artificial intelligence be regulated by international law?"
-                onStartNewDebate={vi.fn()}
-            />
+            <>
+                <ActiveDebateHeader
+                    topic="Should artificial intelligence be regulated by international law?"
+                    onStartNewDebate={vi.fn()}
+                />
+                <button type="button">Outside control</button>
+            </>
         );
 
         const overflowTrigger = screen.getByRole('button', { name: 'Open debate actions' });
+        const outsideControl = screen.getByRole('button', { name: 'Outside control' });
 
         fireEvent.click(overflowTrigger);
         expect(screen.getByRole('button', { name: 'New Debate' })).toBeInTheDocument();
@@ -66,10 +72,10 @@ describe('ActiveDebateHeader', () => {
 
         fireEvent.click(overflowTrigger);
         expect(screen.getByRole('button', { name: 'New Debate' })).toBeInTheDocument();
-        fireEvent.mouseDown(document.body);
+        await user.click(outsideControl);
 
         await waitFor(() => {
-            expect(overflowTrigger).toHaveFocus();
+            expect(outsideControl).toHaveFocus();
             expect(screen.queryByRole('button', { name: 'New Debate' })).not.toBeInTheDocument();
         });
     });
