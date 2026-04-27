@@ -227,6 +227,53 @@ describe('DebateScreen', () => {
         expect(screen.queryByRole('button', { name: 'Open debate actions' })).not.toBeInTheDocument();
     });
 
+    it('AC-34: keeps create state when active debate persistence is unavailable', async () => {
+        window.localStorage.clear();
+        const unavailableStorage = {
+            clear() {
+                throw new Error('Storage unavailable');
+            },
+            getItem(_key: string) {
+                throw new Error('Storage unavailable');
+            },
+            key(_index: number) {
+                throw new Error('Storage unavailable');
+                return null;
+            },
+            removeItem(_key: string) {
+                throw new Error('Storage unavailable');
+            },
+            setItem(_key: string, _value: string) {
+                throw new Error('Storage unavailable');
+            },
+            get length() {
+                throw new Error('Storage unavailable');
+                return 0;
+            },
+        } as Storage;
+        vi.stubGlobal('localStorage', unavailableStorage);
+        vi.stubGlobal('sessionStorage', unavailableStorage);
+
+        try {
+            render(<DebateScreen />);
+
+            fireEvent.change(screen.getByRole('textbox', { name: 'Debate topic' }), {
+                target: { value: 'Should communities ban private cars in city centers?' },
+            });
+            fireEvent.click(screen.getByRole('button', { name: 'Start' }));
+
+            await waitFor(() => {
+                expect(screen.getByRole('textbox', { name: 'Debate topic' })).toBeInTheDocument();
+                expect(screen.queryByRole('heading', { level: 1 })).not.toBeInTheDocument();
+                expect(screen.getByRole('alert')).toHaveTextContent(
+                    'Unable to start a new debate right now. Please try again.'
+                );
+            });
+        } finally {
+            vi.unstubAllGlobals();
+        }
+    });
+
     it('uses shared podium height variable for debate screen clearance', () => {
         expect(debateScreenCss).toContain('display: flex;');
         expect(debateScreenCss).toContain('flex-direction: column;');
