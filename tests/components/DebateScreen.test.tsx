@@ -196,6 +196,36 @@ describe('DebateScreen', () => {
         expect(screen.getByRole('button', { name: 'Open post composer' })).toBeInTheDocument();
     });
 
+    it('AC-34: renders active-debate header chrome actions', () => {
+        render(<DebateScreen />);
+
+        expect(screen.getByRole('switch', { name: /dark mode/i })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Open debate actions' })).toBeInTheDocument();
+    });
+
+    it('AC-34, AC-36: keeps empty state headerless without floating theme control', () => {
+        window.localStorage.clear();
+        render(<DebateScreen />);
+
+        expect(screen.queryByRole('banner')).not.toBeInTheDocument();
+        expect(screen.getByRole('textbox', { name: 'Debate topic' })).toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: 'Open post composer' })).not.toBeInTheDocument();
+        expect(screen.getByRole('switch', { name: /dark mode/i })).toHaveClass(
+            'theme-toggle--chrome'
+        );
+        expect(screen.queryByRole('button', { name: 'Open debate actions' })).not.toBeInTheDocument();
+    });
+
+    it('AC-34: uses the overflow trigger to enter a new debate flow', () => {
+        render(<DebateScreen />);
+
+        fireEvent.click(screen.getByRole('button', { name: 'Open debate actions' }));
+        fireEvent.click(screen.getByRole('menuitem', { name: 'New Debate' }));
+
+        expect(screen.getByRole('textbox', { name: 'Debate topic' })).toBeInTheDocument();
+        expect(screen.queryByRole('banner')).not.toBeInTheDocument();
+    });
+
     it('uses shared podium height variable for debate screen clearance', () => {
         expect(debateScreenCss).toContain('display: flex;');
         expect(debateScreenCss).toContain('flex-direction: column;');

@@ -72,8 +72,22 @@ describe('ThemeToggle', () => {
         expect(document.documentElement.getAttribute('data-theme')).toBeNull();
         const button = screen.getByRole('switch');
         expect(button).toHaveAttribute('aria-checked', 'true');
-        expect(button).toHaveTextContent('☀️');
+        expect(button.querySelector('.theme-toggle__icon--light')).not.toBeNull();
 
         matchMediaSpy.mockRestore();
+    });
+
+    it('AC-36: defaults to floating variant for utility placement', () => {
+        render(<ThemeToggle />);
+        expect(screen.getByRole('switch', { name: /dark mode/i })).toHaveClass(
+            'theme-toggle--floating'
+        );
+    });
+
+    it('AC-34: supports chrome variant for integrated header placement', () => {
+        render(<ThemeToggle variant="chrome" />);
+        const switchControl = screen.getByRole('switch', { name: /dark mode/i });
+        expect(switchControl).toHaveClass('theme-toggle--chrome');
+        expect(switchControl).not.toHaveClass('theme-toggle--floating');
     });
 });

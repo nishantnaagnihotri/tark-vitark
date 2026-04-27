@@ -1,9 +1,19 @@
-/* ThemeToggle — floating dev utility button */
-
 .theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.theme-toggle--floating {
     position: fixed;
-    bottom: var(--space-4);
     right: var(--space-4);
+    bottom: max(var(--space-4), env(safe-area-inset-bottom, 0px));
     z-index: 100;
     width: var(--space-10);
     height: var(--space-10);
@@ -11,17 +21,27 @@
     border-radius: 50%;
     background-color: var(--color-surface-default);
     color: var(--color-on-surface);
-    font-size: 1.25rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    line-height: 1;
+}
+
+.theme-toggle--chrome {
+    width: var(--space-12);
+    height: var(--space-12);
+    border-radius: 50%;
+}
+
+.theme-toggle__icon {
+    width: calc(var(--space-12) / 2);
+    height: calc(var(--space-12) / 2);
+    fill: currentColor;
+}
+
+.theme-toggle:focus-visible {
+    outline: calc(var(--divider-thickness) * 2) solid currentColor;
+    outline-offset: calc(var(--space-4) / 8);
 }
 
 @media (max-width: 1023px) {
-    .theme-toggle {
+    .theme-toggle--floating {
         bottom: auto;
         top: calc(var(--space-4) + var(--space-8));
     }

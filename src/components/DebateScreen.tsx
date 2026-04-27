@@ -1,7 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Argument, Debate, Side } from '../data/debate';
-import { loadStoredActiveDebateRecord } from '../lib/activeDebateStorage';
-import { Topic } from './Topic';
+import {
+    loadStoredActiveDebateRecord,
+    replaceActiveDebate,
+} from '../lib/activeDebateStorage';
+import { ActiveDebateHeader } from './ActiveDebateHeader';
+import { DebateTopicForm } from './DebateTopicForm';
 import { LegendBar } from './LegendBar';
 import { Timeline } from './Timeline';
 import { PodiumFAB } from './PodiumFAB';
@@ -34,14 +38,19 @@ function nextPublishedArgumentId(
     return highestArgumentId + 1;
 }
 
+function hasActiveDebateTopic(topic: string): boolean {
+    return topic.trim().length > 0;
+}
+
 export function DebateScreen() {
-    const [activeDebate] = useState<Debate>(loadInitialActiveDebate);
+    const [activeDebate, setActiveDebate] = useState<Debate>(loadInitialActiveDebate);
     const [localPosts, setLocalPosts] = useState<Argument[]>([]);
     const [selectedSide, setSelectedSide] = useState<Side>('tark');
     const [isFabExpanded, setIsFabExpanded] = useState(false);
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const ignoreNextSheetCloseRef = useRef(false);
     const clearIgnoreCloseAnimationFrameRef = useRef<number | null>(null);
+    const hasActiveDebate = hasActiveDebateTopic(activeDebate.topic);
 
     useEffect(() => {
         return () => {
@@ -64,48 +73,90 @@ export function DebateScreen() {
         return null;
     }
 
+    function handleStartDebate(topic: string): void {
+        replaceActiveDebate(topic);
+        setActiveDebate({
+            topic,
+            arguments: [],
+        });
+        setLocalPosts([]);
+        setSelectedSide('tark');
+        setIsFabExpanded(false);
+        setIsSheetOpen(false);
+        ignoreNextSheetCloseRef.current = false;
+    }
+
+    function handleStartNewDebate(): void {
+        replaceActiveDebate('');
+        setActiveDebate(emptyActiveDebate());
+        setLocalPosts([]);
+        setSelectedSide('tark');
+        setIsFabExpanded(false);
+        setIsSheetOpen(false);
+        ignoreNextSheetCloseRef.current = false;
+    }
+
     return (
-        <main role="main" className="debate-screen">
-            <header className="debate-header">
-                <Topic text={activeDebate.topic} />
-            </header>
-            <LegendBar />
-            <Timeline arguments={[...activeDebate.arguments, ...localPosts]} />
-            <PodiumFAB
-                isExpanded={isFabExpanded}
-                onExpand={() => setIsFabExpanded(true)}
-                onSideSelect={(side) => {
-                    setSelectedSide(side);
-                    setIsFabExpanded(false);
-                    ignoreNextSheetCloseRef.current = true;
+        <main
+            role="main"
+            className={`debate-screen ${hasActiveDebate ? 'debate-screen--active' : 'debate-screen--empty'}`}
+        >
+            {hasActiveDebate ? (
+                <>
+                    <ActiveDebateHeader
+                        topic={activeDebate.topic}
+                        onStartNewDebate={handleStartNewDebate}
+                    />
+                    <LegendBar />
+                    <Timeline arguments={[...activeDebate.arguments, ...localPosts]} />
+                    <PodiumFAB
+                        isExpanded={isFabExpanded}
+                        onExpand={() => setIsFabExpanded(true)}
+                        onSideSelect={(side) => {
+                            setSelectedSide(side);
+                            setIsFabExpanded(false);
+                            ignoreNextSheetCloseRef.current = true;
 
-                    if (clearIgnoreCloseAnimationFrameRef.current !== null) {
-                        window.cancelAnimationFrame(clearIgnoreCloseAnimationFrameRef.current);
-                    }
-                    clearIgnoreCloseAnimationFrameRef.current = window.requestAnimationFrame(() => {
-                        ignoreNextSheetCloseRef.current = false;
-                        clearIgnoreCloseAnimationFrameRef.current = null;
-                    });
+                            if (clearIgnoreCloseAnimationFrameRef.current !== null) {
+                                window.cancelAnimationFrame(
+                                    clearIgnoreCloseAnimationFrameRef.current
+                                );
+                            }
+                            clearIgnoreCloseAnimationFrameRef.current = window.requestAnimationFrame(
+                                () => {
+                                    ignoreNextSheetCloseRef.current = false;
+                                    clearIgnoreCloseAnimationFrameRef.current = null;
+                                }
+                            );
 
-                    setIsSheetOpen(true);
-                }}
-                onCollapse={() => setIsFabExpanded(false)}
-            />
-            <PodiumBottomSheet
-                isOpen={isSheetOpen}
-                selectedSide={selectedSide}
-                onSideChange={setSelectedSide}
-                onPublish={handlePublish}
-                onClose={() => {
-                    if (ignoreNextSheetCloseRef.current) {
-                        ignoreNextSheetCloseRef.current = false;
-                        return;
-                    }
+                            setIsSheetOpen(true);
+                        }}
+                        onCollapse={() => setIsFabExpanded(false)}
+                    />
+                    <PodiumBottomSheet
+                        isOpen={isSheetOpen}
+                        selectedSide={selectedSide}
+                        onSideChange={setSelectedSide}
+                        onPublish={handlePublish}
+                        onClose={() => {
+                            if (ignoreNextSheetCloseRef.current) {
+                                ignoreNextSheetCloseRef.current = false;
+                                return;
+                            }
 
-                    setIsSheetOpen(false);
-                }}
-            />
-            <ThemeToggle />
+                            setIsSheetOpen(false);
+                        }}
+                    />
+                </>
+            ) : (
+                <section className="debate-screen__empty-state" aria-label="Create debate">
+                    <ThemeToggle
+                        variant="chrome"
+                        className="debate-screen__empty-theme-toggle"
+                    />
+                    <DebateTopicForm mode="create" onStartDebate={handleStartDebate} />
+                </section>
+            )}
         </main>
     );
 }
