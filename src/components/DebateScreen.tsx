@@ -22,6 +22,18 @@ function loadInitialActiveDebate(): Debate {
     );
 }
 
+function nextPublishedArgumentId(
+    baselineArguments: Argument[],
+    localArguments: Argument[],
+): number {
+    const highestArgumentId = [...baselineArguments, ...localArguments].reduce(
+        (highestId, argument) => Math.max(highestId, argument.id),
+        0,
+    );
+
+    return highestArgumentId + 1;
+}
+
 export function DebateScreen() {
     const [activeDebate] = useState<Debate>(loadInitialActiveDebate);
     const [localPosts, setLocalPosts] = useState<Argument[]>([]);
@@ -43,7 +55,7 @@ export function DebateScreen() {
         setLocalPosts((existingPosts) => [
             ...existingPosts,
             {
-                id: activeDebate.arguments.length + existingPosts.length + 1,
+                id: nextPublishedArgumentId(activeDebate.arguments, existingPosts),
                 side,
                 text,
             },
