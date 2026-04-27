@@ -97,7 +97,7 @@ describe('DebateTopicForm', () => {
         expect(debateTopicFormCss).toContain('height: 40px;');
         expect(debateTopicFormCss).toContain('padding: 0 24px;');
         expect(debateTopicFormCss).toContain('padding: 0 12px;');
-        expect(debateTopicFormCss).toContain('border-radius: 4px;');
+        expect(debateTopicFormCss).toContain('border-radius: var(--radius-sharp);');
         expect(debateTopicFormCss).toContain('border-radius: 20px;');
         expect(debateTopicFormCss).toContain('var(--color-outline)');
         expect(debateTopicFormCss).toContain('var(--color-error)');
