@@ -150,7 +150,11 @@
     cursor: pointer;
 }
 
-.debate-topic-form__start:focus-visible,
+.debate-topic-form__start:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
 .debate-topic-form__cancel:focus-visible {
     outline: 2px solid currentColor;
     outline-offset: 2px;
