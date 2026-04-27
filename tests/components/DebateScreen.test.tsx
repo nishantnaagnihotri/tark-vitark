@@ -404,10 +404,20 @@ describe('DebateScreen', () => {
     });
 
     it('matches create-mode theme-toggle offsets for mobile and tablet/desktop Figma frames', () => {
+        expect(debateScreenCss).toContain(
+            '.debate-screen__action-error {\n    max-width: var(--size-create-debate-content-max-width);'
+        );
         expect(debateScreenCss).toContain('left: calc(var(--space-4) / 2);');
         expect(debateScreenCss).toContain('top: calc(var(--space-5) + (var(--space-4) / 2));');
         expect(debateScreenCss).toContain('@media (min-width: 768px)');
+        expect(debateScreenCss).toContain(
+            'max-width: var(--size-create-debate-content-max-width-tablet);'
+        );
         expect(debateScreenCss).toContain('left: var(--space-4);');
         expect(debateScreenCss).toContain('top: var(--space-4);');
+        expect(debateScreenCss).toContain('@media (min-width: 1024px)');
+        expect(debateScreenCss).toContain(
+            'max-width: var(--size-create-debate-content-max-width-desktop);'
+        );
     });
 });
