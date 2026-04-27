@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import type { Side } from '../src/data/debate';
 import { activeDebateFixture } from './fixtures/activeDebateFixture';
 
-describe('active debate fixture data shape', () => {
+describe('active debate baseline data shape', () => {
   it('has a non-empty topic string', () => {
     expect(typeof activeDebateFixture.topic).toBe('string');
     expect(activeDebateFixture.topic.length).toBeGreaterThan(0);
