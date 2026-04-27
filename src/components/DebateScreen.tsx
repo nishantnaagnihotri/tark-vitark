@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Argument, Debate, Side } from '../data/debate';
 import {
+    clearActiveDebate,
     loadStoredActiveDebateRecord,
     replaceActiveDebate,
 } from '../lib/activeDebateStorage';
@@ -87,7 +88,7 @@ export function DebateScreen() {
     }
 
     function handleStartNewDebate(): void {
-        replaceActiveDebate('');
+        clearActiveDebate();
         setActiveDebate(emptyActiveDebate());
         setLocalPosts([]);
         setSelectedSide('tark');

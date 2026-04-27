@@ -35,17 +35,15 @@ describe('ActiveDebateHeader', () => {
         );
 
         fireEvent.click(screen.getByRole('button', { name: 'Open debate actions' }));
-        fireEvent.click(screen.getByRole('menuitem', { name: 'New Debate' }));
+        fireEvent.click(screen.getByRole('button', { name: 'New Debate' }));
 
         expect(onStartNewDebate).toHaveBeenCalledTimes(1);
-        expect(screen.queryByRole('menuitem', { name: 'New Debate' })).not.toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: 'New Debate' })).not.toBeInTheDocument();
     });
 
     it('AC-36: keeps header action touch targets at 48px minimum', () => {
-        expect(activeDebateHeaderCss).toContain('.active-debate-header__theme-action');
-        expect(activeDebateHeaderCss).toContain('.active-debate-header__overflow-trigger');
-        expect(activeDebateHeaderCss).toContain('width: var(--space-12);');
-        expect(activeDebateHeaderCss).toContain('height: var(--space-12);');
-        expect(activeDebateHeaderCss).toContain('min-height: var(--space-12);');
+        expect(activeDebateHeaderCss).toMatch(
+            /\.active-debate-header__theme-action,\s*\.active-debate-header__overflow-trigger\s*\{[^}]*width:\s*var\(--space-12\);[^}]*height:\s*var\(--space-12\);[^}]*min-height:\s*var\(--space-12\);/s
+        );
     });
 });

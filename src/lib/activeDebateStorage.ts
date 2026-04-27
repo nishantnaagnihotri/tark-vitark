@@ -206,6 +206,16 @@ export function replaceActiveDebate(
     );
 }
 
+export function clearActiveDebate(storage?: Storage): ActiveDebateStorageWriteResult {
+    return persistStoredActiveDebateRecord(
+        {
+            version: ACTIVE_DEBATE_RECORD_VERSION,
+            activeDebate: null,
+        },
+        storage,
+    );
+}
+
 export function appendActiveDebateArgument(
     argument: Argument,
     storage?: Storage,
