@@ -122,7 +122,13 @@ export function DebateTopicForm(props: DebateTopicFormProps) {
                     <button
                         type="button"
                         className="debate-topic-form__cancel"
-                        onClick={props.onCancelReplace}
+                        disabled={isStartingDebate}
+                        onClick={() => {
+                            if (isStartingDebate) {
+                                return;
+                            }
+                            props.onCancelReplace();
+                        }}
                     >
                         Cancel
                     </button>
