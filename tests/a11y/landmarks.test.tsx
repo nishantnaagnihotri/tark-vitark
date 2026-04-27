@@ -59,7 +59,7 @@ describe('Landmark and heading verification', () => {
         expect(navIdx).toBeLessThan(sectionIdx);
     });
 
-    it('AC-37: landmark transition from create flow to active debate preserves semantic regions', async () => {
+    it('AC-37: starting a debate turns topic drafting into an active debate with the expected structure', async () => {
         window.localStorage.clear();
         render(<DebateScreen />);
 

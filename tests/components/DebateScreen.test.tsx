@@ -218,7 +218,7 @@ describe('DebateScreen', () => {
         expect(screen.queryByRole('button', { name: 'Open debate actions' })).not.toBeInTheDocument();
     });
 
-    it('AC-29: renders create mode without legend, timeline, or podium when no active debate exists', () => {
+    it('AC-29: keeps debate creation focused on starting a topic when no active debate exists', () => {
         window.localStorage.clear();
         render(<DebateScreen />);
 
