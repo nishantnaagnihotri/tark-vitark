@@ -35,13 +35,22 @@
     color: var(--color-on-surface);
 }
 
-.debate-screen__empty-start-error {
-    margin: 0 0 var(--space-4);
+.debate-screen__action-error {
     max-width: 358px;
     color: var(--color-error);
     font-size: var(--typescale-label-md-size);
     line-height: var(--typescale-label-md-line-height);
     font-weight: var(--typescale-label-md-weight);
     letter-spacing: var(--typescale-label-md-tracking);
+}
+
+.debate-screen__active-action-error {
+    margin: 0 auto var(--space-4);
+    padding: 0 var(--space-4);
+    text-align: center;
+}
+
+.debate-screen__empty-action-error {
+    margin: 0 0 var(--space-4);
     text-align: center;
 }
