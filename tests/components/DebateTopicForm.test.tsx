@@ -131,7 +131,11 @@ describe('DebateTopicForm', () => {
     });
 
     it('pins topic-form geometry and token usage to Figma values for create and replace states', () => {
+        expect(debateTopicFormCss).toContain(
+            '.debate-topic-form {\n    width: 100%;\n    max-width: var(--size-create-debate-content-max-width);'
+        );
         expect(debateTopicFormCss).toContain('max-width: var(--size-create-debate-content-max-width);');
+        expect(debateTopicFormCss).toContain('.debate-topic-form__form {\n    width: 100%;');
         expect(debateTopicFormCss).toContain('@media (min-width: 768px)');
         expect(debateTopicFormCss).toContain(
             'max-width: var(--size-create-debate-content-max-width-tablet);'
