@@ -100,7 +100,7 @@ export function DebateScreen() {
     return (
         <main
             role="main"
-            className={`debate-screen ${hasActiveDebate ? 'debate-screen--active' : 'debate-screen--empty'}`}
+            className={`debate-screen${hasActiveDebate ? '' : ' debate-screen--empty'}`}
         >
             {hasActiveDebate ? (
                 <>
