@@ -18,7 +18,11 @@ import * as assert from 'assert';
 import { createElement } from 'react';
 import { DebateScreen } from '../../src/components/DebateScreen';
 import { Podium } from '../../src/components/Podium';
-import { DEBATE, type Side } from '../../src/data/debate';
+import type { Side } from '../../src/data/debate';
+import {
+  activeDebateFixture,
+  seedActiveDebateFixture,
+} from '../../tests/fixtures/activeDebateFixture';
 
 function activeRender(world: PostTarkVitarkWorld): RenderResult {
   assert.ok(world.renderResult, 'Expected an active rendered view.');
@@ -114,7 +118,7 @@ async function submitComposer(world: PostTarkVitarkWorld): Promise<void> {
 }
 
 class PostTarkVitarkWorld extends World {
-  baselineCount = DEBATE.arguments.length;
+  baselineCount = activeDebateFixture.arguments.length;
   latestPublishedText = '';
   publishCalls = 0;
   resolvePendingPublish: (() => void) | null = null;
@@ -131,7 +135,8 @@ setWorldConstructor(PostTarkVitarkWorld);
 
 Before(function (this: PostTarkVitarkWorld) {
   cleanup();
-  this.baselineCount = DEBATE.arguments.length;
+  seedActiveDebateFixture(window.localStorage);
+  this.baselineCount = activeDebateFixture.arguments.length;
   this.latestPublishedText = '';
   this.publishCalls = 0;
   this.resolvePendingPublish = null;
@@ -275,6 +280,6 @@ When('the page is refreshed', function (this: PostTarkVitarkWorld) {
 });
 
 Then('the debate resets to baseline static content', function (this: PostTarkVitarkWorld) {
-  assert.equal(debateItems(this).length, DEBATE.arguments.length);
+  assert.equal(debateItems(this).length, activeDebateFixture.arguments.length);
   assert.equal(activeRender(this).queryByText(this.latestPublishedText), null);
 });
