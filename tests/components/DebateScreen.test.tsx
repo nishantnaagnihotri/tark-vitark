@@ -216,15 +216,19 @@ describe('DebateScreen', () => {
         expect(screen.queryByRole('button', { name: 'Open debate actions' })).not.toBeInTheDocument();
     });
 
-    it('AC-34: uses the overflow trigger to enter a new debate flow', () => {
+    it('AC-34: uses the overflow trigger to enter a new debate flow', async () => {
         render(<DebateScreen />);
 
         fireEvent.click(screen.getByRole('button', { name: 'Open debate actions' }));
         fireEvent.click(screen.getByRole('button', { name: 'New Debate' }));
 
-        expect(screen.getByRole('textbox', { name: 'Debate topic' })).toBeInTheDocument();
-        expect(screen.queryByRole('heading', { level: 1 })).not.toBeInTheDocument();
-        expect(screen.queryByRole('button', { name: 'Open debate actions' })).not.toBeInTheDocument();
+        await waitFor(() => {
+            const topicInput = screen.getByRole('textbox', { name: 'Debate topic' });
+            expect(topicInput).toBeInTheDocument();
+            expect(topicInput).toHaveFocus();
+            expect(screen.queryByRole('heading', { level: 1 })).not.toBeInTheDocument();
+            expect(screen.queryByRole('button', { name: 'Open debate actions' })).not.toBeInTheDocument();
+        });
     });
 
     it('AC-34: keeps active debate visible when New Debate persistence reset fails', async () => {
