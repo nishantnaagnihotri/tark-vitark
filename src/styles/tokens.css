@@ -80,6 +80,7 @@
   /* ── Shape ── */
   --radius-sharp: 4px;
   --radius-round: 12px;
+  --radius-pill: 20px;
 
   /* ── Dimension ── */
   --divider-thickness: 1px;

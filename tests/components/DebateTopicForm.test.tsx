@@ -109,7 +109,7 @@ describe('DebateTopicForm', () => {
         setItemSpy.mockRestore();
     });
 
-    it('AC-30 uses Figma-locked sizing and token-bound styling in topic form CSS', () => {
+    it('AC-30 keeps shared topic-capture visuals aligned with the debate topic contract', () => {
         expect(debateTopicFormCss).toContain('max-width: 390px;');
         expect(debateTopicFormCss).toContain('width: 48px;');
         expect(debateTopicFormCss).toContain('height: 48px;');
@@ -118,6 +118,7 @@ describe('DebateTopicForm', () => {
         expect(debateTopicFormCss).toContain('min-height: 40px;');
         expect(debateTopicFormCss).toContain('min-width: 82px;');
         expect(debateTopicFormCss).toContain('min-width: 68px;');
+        expect(debateTopicFormCss).toContain('var(--radius-pill)');
         expect(debateTopicFormCss).toContain('var(--color-surface-default)');
         expect(debateTopicFormCss).toContain('var(--color-outline)');
         expect(debateTopicFormCss).toContain('var(--color-error)');
