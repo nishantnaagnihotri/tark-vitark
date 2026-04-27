@@ -35,6 +35,13 @@
     color: var(--color-on-surface);
 }
 
+@media (min-width: 768px) {
+    .debate-screen__empty-theme-toggle {
+        left: var(--space-4);
+        top: var(--space-4);
+    }
+}
+
 .debate-screen__action-error {
     max-width: var(--size-create-debate-content-max-width);
     color: var(--color-error);
