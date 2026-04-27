@@ -22,7 +22,7 @@ interface DebateTopicReplaceFormProps extends DebateTopicFormSharedProps {
 
 export type DebateTopicFormProps = DebateTopicCreateFormProps | DebateTopicReplaceFormProps;
 
-const TOO_LONG_TOPIC_MESSAGE = 'Topic must be 120 characters or fewer.';
+const TOO_LONG_TOPIC_MESSAGE = `Topic must be ${TOPIC_MAX_LENGTH} characters or fewer.`;
 const REPLACE_WARNING_TITLE = '⚠  You already have an active debate.';
 const REPLACE_WARNING_DETAIL = 'Starting a new one will replace it.';
 
