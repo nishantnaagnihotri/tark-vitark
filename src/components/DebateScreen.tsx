@@ -49,6 +49,7 @@ export function DebateScreen() {
     const [selectedSide, setSelectedSide] = useState<Side>('tark');
     const [isFabExpanded, setIsFabExpanded] = useState(false);
     const [isSheetOpen, setIsSheetOpen] = useState(false);
+    const [startDebateError, setStartDebateError] = useState<string | null>(null);
     const ignoreNextSheetCloseRef = useRef(false);
     const clearIgnoreCloseAnimationFrameRef = useRef<number | null>(null);
     const hasActiveDebate = hasActiveDebateTopic(activeDebate.topic);
@@ -75,7 +76,13 @@ export function DebateScreen() {
     }
 
     function handleStartDebate(topic: string): void {
-        replaceActiveDebate(topic);
+        const replaceResult = replaceActiveDebate(topic);
+        if (!replaceResult.ok) {
+            setStartDebateError('Unable to start a new debate right now. Please try again.');
+            return;
+        }
+
+        setStartDebateError(null);
         setActiveDebate({
             topic,
             arguments: [],
@@ -89,6 +96,7 @@ export function DebateScreen() {
 
     function handleStartNewDebate(): void {
         clearActiveDebate();
+        setStartDebateError(null);
         setActiveDebate(emptyActiveDebate());
         setLocalPosts([]);
         setSelectedSide('tark');
@@ -155,6 +163,11 @@ export function DebateScreen() {
                         variant="chrome"
                         className="debate-screen__empty-theme-toggle"
                     />
+                    {startDebateError ? (
+                        <p className="debate-screen__empty-start-error" role="alert" aria-live="polite">
+                            {startDebateError}
+                        </p>
+                    ) : null}
                     <DebateTopicForm mode="create" onStartDebate={handleStartDebate} />
                 </section>
             )}
