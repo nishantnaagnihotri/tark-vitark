@@ -43,13 +43,15 @@ function hasActiveDebateTopic(topic: string): boolean {
     return topic.trim().length > 0;
 }
 
+const DEBATE_PERSISTENCE_ERROR_MESSAGE = 'Unable to start a new debate right now. Please try again.';
+
 export function DebateScreen() {
     const [activeDebate, setActiveDebate] = useState<Debate>(loadInitialActiveDebate);
     const [localPosts, setLocalPosts] = useState<Argument[]>([]);
     const [selectedSide, setSelectedSide] = useState<Side>('tark');
     const [isFabExpanded, setIsFabExpanded] = useState(false);
     const [isSheetOpen, setIsSheetOpen] = useState(false);
-    const [startDebateError, setStartDebateError] = useState<string | null>(null);
+    const [debateActionError, setDebateActionError] = useState<string | null>(null);
     const ignoreNextSheetCloseRef = useRef(false);
     const clearIgnoreCloseAnimationFrameRef = useRef<number | null>(null);
     const hasActiveDebate = hasActiveDebateTopic(activeDebate.topic);
@@ -78,11 +80,11 @@ export function DebateScreen() {
     function handleStartDebate(topic: string): void {
         const replaceResult = replaceActiveDebate(topic);
         if (!replaceResult.ok) {
-            setStartDebateError('Unable to start a new debate right now. Please try again.');
+            setDebateActionError(DEBATE_PERSISTENCE_ERROR_MESSAGE);
             return;
         }
 
-        setStartDebateError(null);
+        setDebateActionError(null);
         setActiveDebate({
             topic,
             arguments: [],
@@ -95,8 +97,13 @@ export function DebateScreen() {
     }
 
     function handleStartNewDebate(): void {
-        clearActiveDebate();
-        setStartDebateError(null);
+        const clearResult = clearActiveDebate();
+        if (!clearResult.ok) {
+            setDebateActionError(DEBATE_PERSISTENCE_ERROR_MESSAGE);
+            return;
+        }
+
+        setDebateActionError(null);
         setActiveDebate(emptyActiveDebate());
         setLocalPosts([]);
         setSelectedSide('tark');
@@ -116,6 +123,15 @@ export function DebateScreen() {
                         topic={activeDebate.topic}
                         onStartNewDebate={handleStartNewDebate}
                     />
+                    {debateActionError ? (
+                        <p
+                            className="debate-screen__action-error debate-screen__active-action-error"
+                            role="alert"
+                            aria-live="polite"
+                        >
+                            {debateActionError}
+                        </p>
+                    ) : null}
                     <LegendBar />
                     <Timeline arguments={[...activeDebate.arguments, ...localPosts]} />
                     <PodiumFAB
@@ -163,9 +179,13 @@ export function DebateScreen() {
                         variant="chrome"
                         className="debate-screen__empty-theme-toggle"
                     />
-                    {startDebateError ? (
-                        <p className="debate-screen__empty-start-error" role="alert" aria-live="polite">
-                            {startDebateError}
+                    {debateActionError ? (
+                        <p
+                            className="debate-screen__action-error debate-screen__empty-action-error"
+                            role="alert"
+                            aria-live="polite"
+                        >
+                            {debateActionError}
                         </p>
                     ) : null}
                     <DebateTopicForm mode="create" onStartDebate={handleStartDebate} />

@@ -227,6 +227,52 @@ describe('DebateScreen', () => {
         expect(screen.queryByRole('button', { name: 'Open debate actions' })).not.toBeInTheDocument();
     });
 
+    it('AC-34: keeps active debate visible when New Debate persistence reset fails', async () => {
+        const storedRecord = window.localStorage.getItem(ACTIVE_DEBATE_STORAGE_KEY);
+        const unavailableWriteStorage = {
+            clear() {
+                if (storedRecord !== null) {
+                    return;
+                }
+            },
+            getItem(key: string) {
+                return key === ACTIVE_DEBATE_STORAGE_KEY ? storedRecord : null;
+            },
+            key(index: number) {
+                return index === 0 ? ACTIVE_DEBATE_STORAGE_KEY : null;
+            },
+            removeItem(_key: string) {
+                if (storedRecord !== null) {
+                    return;
+                }
+            },
+            setItem(_key: string, _value: string) {
+                throw new Error('Storage unavailable');
+            },
+            get length() {
+                return storedRecord === null ? 0 : 1;
+            },
+        } as Storage;
+        vi.stubGlobal('localStorage', unavailableWriteStorage);
+
+        try {
+            render(<DebateScreen />);
+
+            fireEvent.click(screen.getByRole('button', { name: 'Open debate actions' }));
+            fireEvent.click(screen.getByRole('button', { name: 'New Debate' }));
+
+            await waitFor(() => {
+                expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument();
+                expect(screen.queryByRole('textbox', { name: 'Debate topic' })).not.toBeInTheDocument();
+                expect(screen.getByRole('alert')).toHaveTextContent(
+                    'Unable to start a new debate right now. Please try again.'
+                );
+            });
+        } finally {
+            vi.unstubAllGlobals();
+        }
+    });
+
     it('AC-34: keeps create state when active debate persistence is unavailable', async () => {
         window.localStorage.clear();
         const unavailableStorage = {
@@ -252,7 +298,6 @@ describe('DebateScreen', () => {
             },
         } as Storage;
         vi.stubGlobal('localStorage', unavailableStorage);
-        vi.stubGlobal('sessionStorage', unavailableStorage);
 
         try {
             render(<DebateScreen />);
