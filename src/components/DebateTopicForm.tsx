@@ -22,7 +22,7 @@ interface ReplaceDebateTopicFormProps extends DebateTopicFormBaseProps {
 export type DebateTopicFormProps = CreateDebateTopicFormProps | ReplaceDebateTopicFormProps;
 
 const TOPIC_INPUT_PLACEHOLDER = 'What is the Tark Vitark about?';
-const TOPIC_TOO_LONG_MESSAGE = 'Topic must be 120 characters or fewer.';
+const TOPIC_TOO_LONG_MESSAGE = `Topic must be ${MAX_DEBATE_TOPIC_LENGTH} characters or fewer.`;
 
 export function DebateTopicForm(props: DebateTopicFormProps) {
     const [topicDraft, setTopicDraft] = useState(props.initialTopic ?? '');
@@ -82,7 +82,6 @@ export function DebateTopicForm(props: DebateTopicFormProps) {
                             onChange={(event) => setTopicDraft(event.target.value)}
                             className="debate-topic-form__topic-field"
                             placeholder={TOPIC_INPUT_PLACEHOLDER}
-                            aria-label="Debate topic"
                             aria-describedby={topicDescriptionIds.join(' ')}
                             aria-invalid={topicValidation.isTooLong}
                         />

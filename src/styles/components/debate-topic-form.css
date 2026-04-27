@@ -17,7 +17,7 @@
 .debate-topic-form__lettermark {
     width: 48px;
     height: 48px;
-    border-radius: 24px;
+    border-radius: 50%;
     margin-bottom: var(--space-6);
     display: flex;
     align-items: center;
@@ -42,7 +42,7 @@
     width: 100%;
     max-width: 358px;
     height: 56px;
-    border: 1px solid var(--color-outline);
+    border: var(--divider-thickness) solid var(--color-outline);
     border-radius: var(--radius-sharp);
     box-sizing: border-box;
     display: flex;
@@ -65,7 +65,7 @@
     font-size: 1rem;
     line-height: 1;
     font-weight: 400;
-    padding: 0 calc(var(--space-4) - 1px);
+    padding: 0 calc(var(--space-4) - var(--divider-thickness));
 }
 
 .debate-topic-form__topic-field::placeholder {
