@@ -36,7 +36,7 @@
 }
 
 .debate-screen__action-error {
-    max-width: 358px;
+    max-width: var(--size-create-debate-content-max-width);
     color: var(--color-error);
     font-size: var(--typescale-label-md-size);
     line-height: var(--typescale-label-md-line-height);

@@ -25,7 +25,7 @@
 
 .debate-topic-form__form {
     width: 100%;
-    max-width: 358px;
+    max-width: var(--size-create-debate-content-max-width);
     display: flex;
     flex-direction: column;
 }

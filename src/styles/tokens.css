@@ -82,6 +82,7 @@
 
   /* ── Dimension ── */
   --divider-thickness: 1px;
+  --size-create-debate-content-max-width: 358px;
 }
 
 [data-theme="dark"] {
