@@ -83,6 +83,8 @@
   /* ── Dimension ── */
   --divider-thickness: 1px;
   --size-create-debate-content-max-width: 358px;
+  --size-create-debate-content-max-width-tablet: 600px;
+  --size-create-debate-content-max-width-desktop: 640px;
 }
 
 [data-theme="dark"] {
