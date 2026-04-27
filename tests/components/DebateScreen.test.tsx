@@ -248,13 +248,12 @@ describe('DebateScreen', () => {
         });
 
         expect(window.localStorage.getItem(ACTIVE_DEBATE_STORAGE_KEY)).toEqual(
-            JSON.stringify({
-                version: ACTIVE_DEBATE_RECORD_VERSION,
-                activeDebate: {
+            JSON.stringify(
+                createStoredActiveDebateFixtureRecord({
                     topic: createdDebateTopic,
                     arguments: [],
-                },
-            }),
+                })
+            ),
         );
     });
 

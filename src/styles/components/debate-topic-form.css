@@ -162,13 +162,13 @@
 
 @media (min-width: 768px) {
     .debate-topic-form__form {
-        max-width: 600px;
+        max-width: var(--size-create-debate-content-max-width-tablet);
     }
 }
 
 @media (min-width: 1024px) {
     .debate-topic-form__form {
-        max-width: 640px;
+        max-width: var(--size-create-debate-content-max-width-desktop);
     }
 }
 
