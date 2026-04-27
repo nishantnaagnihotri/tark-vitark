@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { ActiveDebateHeader } from '../../src/components/ActiveDebateHeader';
 
@@ -25,7 +25,7 @@ describe('ActiveDebateHeader', () => {
         expect(screen.getByRole('button', { name: 'Open debate actions' })).toBeInTheDocument();
     });
 
-    it('AC-34: exposes a single New Debate action from overflow chrome', () => {
+    it('AC-34: exposes a single New Debate action from overflow chrome', async () => {
         const onStartNewDebate = vi.fn();
         render(
             <ActiveDebateHeader
@@ -34,11 +34,44 @@ describe('ActiveDebateHeader', () => {
             />
         );
 
-        fireEvent.click(screen.getByRole('button', { name: 'Open debate actions' }));
+        const overflowTrigger = screen.getByRole('button', { name: 'Open debate actions' });
+        fireEvent.click(overflowTrigger);
         fireEvent.click(screen.getByRole('button', { name: 'New Debate' }));
 
+        await waitFor(() => {
+            expect(overflowTrigger).toHaveFocus();
+        });
         expect(onStartNewDebate).toHaveBeenCalledTimes(1);
         expect(screen.queryByRole('button', { name: 'New Debate' })).not.toBeInTheDocument();
+    });
+
+    it('AC-34: restores overflow trigger focus when debate actions close via dismiss gestures', async () => {
+        render(
+            <ActiveDebateHeader
+                topic="Should artificial intelligence be regulated by international law?"
+                onStartNewDebate={vi.fn()}
+            />
+        );
+
+        const overflowTrigger = screen.getByRole('button', { name: 'Open debate actions' });
+
+        fireEvent.click(overflowTrigger);
+        expect(screen.getByRole('button', { name: 'New Debate' })).toBeInTheDocument();
+        fireEvent.keyDown(document, { key: 'Escape' });
+
+        await waitFor(() => {
+            expect(overflowTrigger).toHaveFocus();
+            expect(screen.queryByRole('button', { name: 'New Debate' })).not.toBeInTheDocument();
+        });
+
+        fireEvent.click(overflowTrigger);
+        expect(screen.getByRole('button', { name: 'New Debate' })).toBeInTheDocument();
+        fireEvent.mouseDown(document.body);
+
+        await waitFor(() => {
+            expect(overflowTrigger).toHaveFocus();
+            expect(screen.queryByRole('button', { name: 'New Debate' })).not.toBeInTheDocument();
+        });
     });
 
     it('AC-36: keeps header action touch targets at 48px minimum', () => {

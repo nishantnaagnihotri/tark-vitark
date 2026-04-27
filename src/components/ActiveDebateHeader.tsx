@@ -14,6 +14,18 @@ export function ActiveDebateHeader({
 }: ActiveDebateHeaderProps) {
     const [isDebateActionsOpen, setIsDebateActionsOpen] = useState(false);
     const debateActionsRef = useRef<HTMLDivElement | null>(null);
+    const overflowTriggerRef = useRef<HTMLButtonElement | null>(null);
+
+    function closeDebateActionsAndRestoreFocus() {
+        setIsDebateActionsOpen(false);
+
+        window.requestAnimationFrame(() => {
+            const overflowTrigger = overflowTriggerRef.current;
+            if (overflowTrigger && document.contains(overflowTrigger)) {
+                overflowTrigger.focus();
+            }
+        });
+    }
 
     useEffect(() => {
         if (!isDebateActionsOpen) {
@@ -27,13 +39,13 @@ export function ActiveDebateHeader({
             }
 
             if (!debateActionsRef.current?.contains(clickTarget)) {
-                setIsDebateActionsOpen(false);
+                closeDebateActionsAndRestoreFocus();
             }
         }
 
         function handleEscape(event: KeyboardEvent) {
             if (event.key === 'Escape') {
-                setIsDebateActionsOpen(false);
+                closeDebateActionsAndRestoreFocus();
             }
         }
 
@@ -55,6 +67,7 @@ export function ActiveDebateHeader({
                 />
                 <div className="active-debate-header__overflow" ref={debateActionsRef}>
                     <button
+                        ref={overflowTriggerRef}
                         type="button"
                         className="active-debate-header__overflow-trigger"
                         aria-label="Open debate actions"
@@ -75,7 +88,7 @@ export function ActiveDebateHeader({
                                 type="button"
                                 className="active-debate-header__menu-item"
                                 onClick={() => {
-                                    setIsDebateActionsOpen(false);
+                                    closeDebateActionsAndRestoreFocus();
                                     onStartNewDebate();
                                 }}
                             >
