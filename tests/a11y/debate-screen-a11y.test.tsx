@@ -66,7 +66,7 @@ describe('axe-core accessibility audit — DebateScreen', () => {
         }
     });
 
-    it('AC-37: empty-to-active transition keeps zero critical/serious violations', async () => {
+    it('AC-37: starting a debate keeps both the topic draft and active debate accessible', async () => {
         window.localStorage.clear();
         const { container } = render(<DebateScreen />);
 
