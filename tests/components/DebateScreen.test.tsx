@@ -4,7 +4,10 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Debate } from '../../src/data/debate';
 import { DebateScreen } from '../../src/components/DebateScreen';
-import { ACTIVE_DEBATE_STORAGE_KEY } from '../../src/lib/activeDebateStorage';
+import {
+    ACTIVE_DEBATE_RECORD_VERSION,
+    ACTIVE_DEBATE_STORAGE_KEY,
+} from '../../src/lib/activeDebateStorage';
 import {
     activeDebateFixture,
     createStoredActiveDebateFixtureRecord,
@@ -216,6 +219,63 @@ describe('DebateScreen', () => {
         expect(screen.queryByRole('button', { name: 'Open debate actions' })).not.toBeInTheDocument();
     });
 
+    it('AC-29: renders create mode without legend, timeline, or podium when no active debate exists', () => {
+        window.localStorage.clear();
+        render(<DebateScreen />);
+
+        expect(screen.getByRole('textbox', { name: 'Debate topic' })).toBeInTheDocument();
+        expect(screen.queryByRole('navigation', { name: 'Debate sides legend' })).not.toBeInTheDocument();
+        expect(screen.queryByRole('region', { name: 'Debate arguments' })).not.toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: 'Open post composer' })).not.toBeInTheDocument();
+        expect(screen.queryByRole('dialog', { name: 'Post composer' })).not.toBeInTheDocument();
+    });
+
+    it('AC-31: persists a fresh active debate and transitions into active mode after Start', async () => {
+        window.localStorage.clear();
+        render(<DebateScreen />);
+
+        const createdDebateTopic = 'Is remote work better than office work?';
+        fireEvent.change(screen.getByRole('textbox', { name: 'Debate topic' }), {
+            target: { value: `  ${createdDebateTopic}  ` },
+        });
+        fireEvent.click(screen.getByRole('button', { name: 'Start' }));
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(createdDebateTopic);
+            expect(screen.queryByRole('textbox', { name: 'Debate topic' })).not.toBeInTheDocument();
+            expect(screen.getByRole('navigation', { name: 'Debate sides legend' })).toBeInTheDocument();
+            expect(screen.getByRole('region', { name: 'Debate arguments' })).toBeInTheDocument();
+        });
+
+        expect(window.localStorage.getItem(ACTIVE_DEBATE_STORAGE_KEY)).toEqual(
+            JSON.stringify({
+                version: ACTIVE_DEBATE_RECORD_VERSION,
+                activeDebate: {
+                    topic: createdDebateTopic,
+                    arguments: [],
+                },
+            }),
+        );
+    });
+
+    it('AC-32: first render falls back to create mode instead of seeded runtime debate content', () => {
+        window.localStorage.clear();
+        render(<DebateScreen />);
+
+        expect(screen.queryByText(activeDebateFixture.topic)).not.toBeInTheDocument();
+        expect(screen.getByRole('textbox', { name: 'Debate topic' })).toBeInTheDocument();
+        expect(screen.queryByRole('heading', { level: 1 })).not.toBeInTheDocument();
+    });
+
+    it('AC-39: corrupt active debate storage payload fails closed to create mode', () => {
+        window.localStorage.setItem(ACTIVE_DEBATE_STORAGE_KEY, '{"version":1');
+        render(<DebateScreen />);
+
+        expect(screen.getByRole('textbox', { name: 'Debate topic' })).toBeInTheDocument();
+        expect(screen.queryByRole('heading', { level: 1 })).not.toBeInTheDocument();
+        expect(screen.queryByRole('navigation', { name: 'Debate sides legend' })).not.toBeInTheDocument();
+    });
+
     it('AC-34: uses the overflow trigger to enter a new debate flow', async () => {
         render(<DebateScreen />);
 
@@ -343,5 +403,13 @@ describe('DebateScreen', () => {
         expect(podiumCss).toMatch(
             /@media\s*\(min-width:\s*768px\)\s*\{[\s\S]*:root\s*\{[\s\S]*--podium-height:\s*calc\(109px\s*\+\s*env\(safe-area-inset-bottom,\s*0px\)\);/
         );
+    });
+
+    it('matches create-mode theme-toggle offsets for mobile and tablet/desktop Figma frames', () => {
+        expect(debateScreenCss).toContain('left: calc(var(--space-4) / 2);');
+        expect(debateScreenCss).toContain('top: calc(var(--space-5) + (var(--space-4) / 2));');
+        expect(debateScreenCss).toContain('@media (min-width: 768px)');
+        expect(debateScreenCss).toContain('left: var(--space-4);');
+        expect(debateScreenCss).toContain('top: var(--space-4);');
     });
 });

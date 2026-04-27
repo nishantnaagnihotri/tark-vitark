@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DebateScreen } from '../../src/components/DebateScreen';
 import {
@@ -57,6 +57,27 @@ describe('Landmark and heading verification', () => {
         const sectionIdx = tagNames.indexOf('section');
         expect(headerIdx).toBeLessThan(navIdx);
         expect(navIdx).toBeLessThan(sectionIdx);
+    });
+
+    it('AC-37: landmark transition from create flow to active debate preserves semantic regions', async () => {
+        window.localStorage.clear();
+        render(<DebateScreen />);
+
+        expect(screen.getByRole('main')).toBeInTheDocument();
+        expect(screen.queryByRole('navigation', { name: 'Debate sides legend' })).not.toBeInTheDocument();
+        expect(screen.queryByRole('region', { name: 'Debate arguments' })).not.toBeInTheDocument();
+
+        const createdDebateTopic = 'Is remote work better than office work?';
+        fireEvent.change(screen.getByRole('textbox', { name: 'Debate topic' }), {
+            target: { value: createdDebateTopic },
+        });
+        fireEvent.click(screen.getByRole('button', { name: 'Start' }));
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(createdDebateTopic);
+            expect(screen.getByRole('navigation', { name: 'Debate sides legend' })).toBeInTheDocument();
+            expect(screen.getByRole('region', { name: 'Debate arguments' })).toBeInTheDocument();
+        });
     });
 });
 

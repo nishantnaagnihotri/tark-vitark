@@ -160,6 +160,18 @@
     outline-offset: 2px;
 }
 
+@media (min-width: 768px) {
+    .debate-topic-form__form {
+        max-width: 600px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .debate-topic-form__form {
+        max-width: 640px;
+    }
+}
+
 [data-theme='dark'] .debate-topic-form__start:disabled {
     color: var(--color-surface-default);
 }
