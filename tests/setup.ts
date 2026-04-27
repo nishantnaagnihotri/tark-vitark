@@ -14,3 +14,42 @@ if (!window.matchMedia) {
         }),
     });
 }
+
+function createInMemoryStorage(): Storage {
+    const values = new Map<string, string>();
+
+    return {
+        get length() {
+            return values.size;
+        },
+        clear() {
+            values.clear();
+        },
+        getItem(key: string) {
+            return values.get(key) ?? null;
+        },
+        key(index: number) {
+            return Array.from(values.keys())[index] ?? null;
+        },
+        removeItem(key: string) {
+            values.delete(key);
+        },
+        setItem(key: string, value: string) {
+            values.set(key, value);
+        },
+    };
+}
+
+const storageNeedsPolyfill =
+    typeof window.localStorage?.getItem !== 'function'
+    || typeof window.localStorage?.setItem !== 'function'
+    || typeof window.localStorage?.removeItem !== 'function'
+    || typeof window.localStorage?.clear !== 'function';
+
+if (storageNeedsPolyfill) {
+    Object.defineProperty(window, 'localStorage', {
+        configurable: true,
+        writable: true,
+        value: createInMemoryStorage(),
+    });
+}
