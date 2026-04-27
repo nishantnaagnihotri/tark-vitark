@@ -105,5 +105,8 @@ describe('DebateTopicForm', () => {
         expect(debateTopicFormCss).toContain('var(--color-on-primary)');
         expect(debateTopicFormCss).toContain('var(--color-surface-container-highest)');
         expect(debateTopicFormCss).toContain('var(--color-on-surface-variant)');
+        expect(debateTopicFormCss).toContain('.debate-topic-form__topic-input--error:focus-visible');
+        expect(debateTopicFormCss).toContain("[data-theme='dark'] .debate-topic-form__start:disabled");
+        expect(debateTopicFormCss).toContain(':root:not([data-theme]) .debate-topic-form__start:disabled');
     });
 });
