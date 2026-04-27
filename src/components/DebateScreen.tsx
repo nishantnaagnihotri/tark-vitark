@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import type { Argument, Side } from '../data/debate';
-import { DEBATE } from '../data/debate';
+import type { Argument, Debate, Side } from '../data/debate';
+import { loadStoredActiveDebateRecord } from '../lib/activeDebateStorage';
 import { Topic } from './Topic';
 import { LegendBar } from './LegendBar';
 import { Timeline } from './Timeline';
@@ -9,7 +9,33 @@ import { PodiumBottomSheet } from './PodiumBottomSheet';
 import { ThemeToggle } from './ThemeToggle';
 import '../styles/debate-screen.css';
 
+function emptyActiveDebate(): Debate {
+    return {
+        topic: '',
+        arguments: [],
+    };
+}
+
+function loadInitialActiveDebate(): Debate {
+    return (
+        loadStoredActiveDebateRecord().record.activeDebate ?? emptyActiveDebate()
+    );
+}
+
+function nextPublishedArgumentId(
+    baselineArguments: Argument[],
+    localArguments: Argument[],
+): number {
+    const highestArgumentId = [...baselineArguments, ...localArguments].reduce(
+        (highestId, argument) => Math.max(highestId, argument.id),
+        0,
+    );
+
+    return highestArgumentId + 1;
+}
+
 export function DebateScreen() {
+    const [activeDebate] = useState<Debate>(loadInitialActiveDebate);
     const [localPosts, setLocalPosts] = useState<Argument[]>([]);
     const [selectedSide, setSelectedSide] = useState<Side>('tark');
     const [isFabExpanded, setIsFabExpanded] = useState(false);
@@ -29,7 +55,7 @@ export function DebateScreen() {
         setLocalPosts((existingPosts) => [
             ...existingPosts,
             {
-                id: DEBATE.arguments.length + existingPosts.length + 1,
+                id: nextPublishedArgumentId(activeDebate.arguments, existingPosts),
                 side,
                 text,
             },
@@ -41,10 +67,10 @@ export function DebateScreen() {
     return (
         <main role="main" className="debate-screen">
             <header className="debate-header">
-                <Topic text={DEBATE.topic} />
+                <Topic text={activeDebate.topic} />
             </header>
             <LegendBar />
-            <Timeline arguments={[...DEBATE.arguments, ...localPosts]} />
+            <Timeline arguments={[...activeDebate.arguments, ...localPosts]} />
             <PodiumFAB
                 isExpanded={isFabExpanded}
                 onExpand={() => setIsFabExpanded(true)}

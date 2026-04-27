@@ -1,9 +1,16 @@
 import { render, screen } from '@testing-library/react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DebateScreen } from '../../src/components/DebateScreen';
-import { DEBATE } from '../../src/data/debate';
+import {
+    activeDebateFixture,
+    seedActiveDebateFixture,
+} from '../fixtures/activeDebateFixture';
 
 describe('Landmark and heading verification', () => {
+    beforeEach(() => {
+        seedActiveDebateFixture(window.localStorage);
+    });
+
     it('has a <main> landmark', () => {
         render(<DebateScreen />);
         expect(screen.getByRole('main')).toBeInTheDocument();
@@ -29,7 +36,7 @@ describe('Landmark and heading verification', () => {
         render(<DebateScreen />);
         const headings = screen.getAllByRole('heading', { level: 1 });
         expect(headings).toHaveLength(1);
-        expect(headings[0]).toHaveTextContent(DEBATE.topic);
+        expect(headings[0]).toHaveTextContent(activeDebateFixture.topic);
     });
 
     it('landmark order is main > header > nav > section', () => {
@@ -54,10 +61,14 @@ describe('Landmark and heading verification', () => {
 });
 
 describe('aria-label verification on argument cards', () => {
+    beforeEach(() => {
+        seedActiveDebateFixture(window.localStorage);
+    });
+
     it('every argument card has an aria-label identifying its side', () => {
         render(<DebateScreen />);
 
-        for (const arg of DEBATE.arguments) {
+        for (const arg of activeDebateFixture.arguments) {
             const expectedLabel =
                 arg.side === 'tark' ? 'Tark argument' : 'Vitark argument';
             const cards = screen.getAllByLabelText(expectedLabel);
@@ -68,7 +79,7 @@ describe('aria-label verification on argument cards', () => {
     it('tark argument cards have "Tark argument" label', () => {
         render(<DebateScreen />);
         const tarkCards = screen.getAllByLabelText('Tark argument');
-        const tarkCount = DEBATE.arguments.filter(
+        const tarkCount = activeDebateFixture.arguments.filter(
             (a) => a.side === 'tark',
         ).length;
         expect(tarkCards).toHaveLength(tarkCount);
@@ -77,7 +88,7 @@ describe('aria-label verification on argument cards', () => {
     it('vitark argument cards have "Vitark argument" label', () => {
         render(<DebateScreen />);
         const vitarkCards = screen.getAllByLabelText('Vitark argument');
-        const vitarkCount = DEBATE.arguments.filter(
+        const vitarkCount = activeDebateFixture.arguments.filter(
             (a) => a.side === 'vitark',
         ).length;
         expect(vitarkCards).toHaveLength(vitarkCount);

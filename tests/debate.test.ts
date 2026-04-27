@@ -1,40 +1,40 @@
 import { describe, it, expect } from 'vitest';
-import { DEBATE } from '../src/data/debate';
 import type { Side } from '../src/data/debate';
+import { activeDebateFixture } from './fixtures/activeDebateFixture';
 
-describe('DEBATE data shape', () => {
+describe('active debate baseline data shape', () => {
   it('has a non-empty topic string', () => {
-    expect(typeof DEBATE.topic).toBe('string');
-    expect(DEBATE.topic.length).toBeGreaterThan(0);
+    expect(typeof activeDebateFixture.topic).toBe('string');
+    expect(activeDebateFixture.topic.length).toBeGreaterThan(0);
   });
 
   it('has an arguments array with exactly 8 entries', () => {
-    expect(Array.isArray(DEBATE.arguments)).toBe(true);
-    expect(DEBATE.arguments.length).toBe(8);
+    expect(Array.isArray(activeDebateFixture.arguments)).toBe(true);
+    expect(activeDebateFixture.arguments.length).toBe(8);
   });
 
   it('argument IDs are sequential starting from 1', () => {
-    DEBATE.arguments.forEach((arg, index) => {
+    activeDebateFixture.arguments.forEach((arg, index) => {
       expect(arg.id).toBe(index + 1);
     });
   });
 
   it('every argument has a valid Side value', () => {
     const validSides: Side[] = ['tark', 'vitark'];
-    DEBATE.arguments.forEach((arg) => {
+    activeDebateFixture.arguments.forEach((arg) => {
       expect(validSides).toContain(arg.side);
     });
   });
 
   it('every argument has a non-empty text string', () => {
-    DEBATE.arguments.forEach((arg) => {
+    activeDebateFixture.arguments.forEach((arg) => {
       expect(typeof arg.text).toBe('string');
       expect(arg.text.length).toBeGreaterThan(0);
     });
   });
 
   it('arguments contain a mix of tark and vitark sides', () => {
-    const sides = DEBATE.arguments.map((arg) => arg.side);
+    const sides = activeDebateFixture.arguments.map((arg) => arg.side);
     expect(sides).toContain('tark');
     expect(sides).toContain('vitark');
   });
@@ -44,7 +44,7 @@ describe('DEBATE data shape', () => {
       'tark', 'vitark', 'tark', 'vitark',
       'tark', 'vitark', 'vitark', 'tark',
     ];
-    const actualOrder = DEBATE.arguments.map((arg) => arg.side);
+    const actualOrder = activeDebateFixture.arguments.map((arg) => arg.side);
     expect(actualOrder).toEqual(expectedOrder);
   });
 });
