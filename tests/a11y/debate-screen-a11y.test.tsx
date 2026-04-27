@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
 import * as axe from 'axe-core';
 import { DebateScreen } from '../../src/components/DebateScreen';
@@ -64,5 +64,26 @@ describe('axe-core accessibility audit — DebateScreen', () => {
             unmount();
             document.documentElement.removeAttribute('data-theme');
         }
+    });
+
+    it('AC-37: empty-to-active transition keeps zero critical/serious violations', async () => {
+        window.localStorage.clear();
+        const { container } = render(<DebateScreen />);
+
+        const emptyStateResults = await runAxe(container);
+        expect(filterViolations(emptyStateResults, ['critical', 'serious'])).toHaveLength(0);
+
+        const createdDebateTopic = 'Is remote work better than office work?';
+        fireEvent.change(screen.getByRole('textbox', { name: 'Debate topic' }), {
+            target: { value: createdDebateTopic },
+        });
+        fireEvent.click(screen.getByRole('button', { name: 'Start' }));
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(createdDebateTopic);
+        });
+
+        const activeStateResults = await runAxe(container);
+        expect(filterViolations(activeStateResults, ['critical', 'serious'])).toHaveLength(0);
     });
 });
