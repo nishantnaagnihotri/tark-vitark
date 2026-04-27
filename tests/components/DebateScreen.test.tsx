@@ -405,7 +405,13 @@ describe('DebateScreen', () => {
 
     it('matches create-mode theme-toggle offsets for mobile and tablet/desktop Figma frames', () => {
         expect(debateScreenCss).toContain(
+            '.debate-screen__empty-state {\n    position: relative;\n    min-height: 100vh;\n    min-height: 100dvh;\n    display: flex;\n    flex-direction: column;'
+        );
+        expect(debateScreenCss).toContain(
             '.debate-screen__action-error {\n    max-width: var(--size-create-debate-content-max-width);'
+        );
+        expect(debateScreenCss).toContain(
+            '.debate-screen__empty-action-error {\n    margin: 0 0 var(--space-4);\n    width: 100%;'
         );
         expect(debateScreenCss).toContain('left: calc(var(--space-4) / 2);');
         expect(debateScreenCss).toContain('top: calc(var(--space-5) + (var(--space-4) / 2));');
