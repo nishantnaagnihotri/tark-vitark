@@ -106,6 +106,16 @@ function storageUnavailableResult(): ActiveDebateStorageLoadResult {
     };
 }
 
+function normalizeStoredActiveDebateRecord(
+    record: StoredActiveDebateRecord,
+): StoredActiveDebateRecord {
+    if (record.activeDebate && record.activeDebate.topic.trim().length === 0) {
+        return createEmptyStoredActiveDebateRecord();
+    }
+
+    return record;
+}
+
 function persistStoredActiveDebateRecord(
     record: StoredActiveDebateRecord,
     storage?: Storage,
@@ -171,9 +181,14 @@ export function loadStoredActiveDebateRecord(storage?: Storage): ActiveDebateSto
         };
     }
 
+    const normalizedRecord = normalizeStoredActiveDebateRecord(parsedRecord);
+    if (normalizedRecord !== parsedRecord) {
+        persistStoredActiveDebateRecord(normalizedRecord, availableStorage);
+    }
+
     return {
         state: 'loaded',
-        record: parsedRecord,
+        record: normalizedRecord,
     };
 }
 

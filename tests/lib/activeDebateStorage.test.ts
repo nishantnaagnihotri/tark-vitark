@@ -179,6 +179,27 @@ describe('active debate storage foundation', () => {
         expect(loadResult.record).toEqual(createEmptyStoredActiveDebateRecord());
     });
 
+    it('AC-39: normalizes legacy empty-topic payloads to null activeDebate on load', () => {
+        storage.setItem(
+            ACTIVE_DEBATE_STORAGE_KEY,
+            JSON.stringify({
+                version: ACTIVE_DEBATE_RECORD_VERSION,
+                activeDebate: {
+                    topic: '   ',
+                    arguments: [],
+                },
+            } satisfies StoredActiveDebateRecord),
+        );
+
+        const loadResult = loadStoredActiveDebateRecord(storage);
+
+        expect(loadResult.state).toBe('loaded');
+        expect(loadResult.record).toEqual(createEmptyStoredActiveDebateRecord());
+        expect(storage.getItem(ACTIVE_DEBATE_STORAGE_KEY)).toEqual(
+            JSON.stringify(createEmptyStoredActiveDebateRecord()),
+        );
+    });
+
     it('AC-39: unavailable storage load fails closed to the safe empty record', () => {
         const unavailableStorage = createUnavailableStorage();
 
