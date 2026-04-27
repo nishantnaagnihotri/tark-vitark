@@ -2,9 +2,12 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { Debate } from '../../src/data/debate';
 import { DebateScreen } from '../../src/components/DebateScreen';
+import { ACTIVE_DEBATE_STORAGE_KEY } from '../../src/lib/activeDebateStorage';
 import {
     activeDebateFixture,
+    createStoredActiveDebateFixtureRecord,
     seedActiveDebateFixture,
 } from '../fixtures/activeDebateFixture';
 
@@ -77,7 +80,7 @@ describe('DebateScreen', () => {
         expect(timeline).toBeInTheDocument();
     });
 
-    it('renders all arguments from active debate fixture data', () => {
+    it('renders all arguments from stored active debate data', () => {
         render(<DebateScreen />);
         const items = screen.getAllByRole('listitem');
         expect(items).toHaveLength(activeDebateFixture.arguments.length);
@@ -104,6 +107,58 @@ describe('DebateScreen', () => {
             expect(items).toHaveLength(activeDebateFixture.arguments.length + 1);
             expect(items[items.length - 1]).toHaveTextContent('This post has enough length.');
         });
+    });
+
+    it('publishes arguments with IDs above the active debate maximum', async () => {
+        const sparseActiveDebate: Debate = {
+            topic: activeDebateFixture.topic,
+            arguments: [
+                {
+                    id: 2,
+                    side: 'tark',
+                    text: 'Existing tark argument with non-sequential ids.',
+                },
+                {
+                    id: 3,
+                    side: 'vitark',
+                    text: 'Existing vitark argument with non-sequential ids.',
+                },
+            ],
+        };
+        window.localStorage.setItem(
+            ACTIVE_DEBATE_STORAGE_KEY,
+            JSON.stringify(createStoredActiveDebateFixtureRecord(sparseActiveDebate)),
+        );
+        const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+        try {
+            render(<DebateScreen />);
+
+            await openComposerForSide('Post as Tark');
+            fireEvent.change(screen.getByRole('textbox', { name: 'Post text' }), {
+                target: { value: 'Unique ID publish path should avoid collisions.' },
+            });
+            fireEvent.click(screen.getByRole('button', { name: 'Publish post' }));
+
+            await waitFor(() => {
+                const items = screen.getAllByRole('listitem');
+                expect(items).toHaveLength(sparseActiveDebate.arguments.length + 1);
+                expect(items[items.length - 1]).toHaveTextContent(
+                    'Unique ID publish path should avoid collisions.'
+                );
+            });
+
+            const duplicateKeyWarningLogged = consoleErrorSpy.mock.calls.some((callArguments) =>
+                callArguments.some(
+                    (argument) =>
+                        typeof argument === 'string'
+                        && argument.includes('Encountered two children with the same key')
+                )
+            );
+            expect(duplicateKeyWarningLogged).toBe(false);
+        } finally {
+            consoleErrorSpy.mockRestore();
+        }
     });
 
     it('resets localPosts to empty after remount', async () => {
