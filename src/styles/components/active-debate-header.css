@@ -21,6 +21,7 @@
 .active-debate-header__overflow-trigger {
     width: var(--space-12);
     height: var(--space-12);
+    min-height: var(--space-12);
     pointer-events: auto;
 }
 

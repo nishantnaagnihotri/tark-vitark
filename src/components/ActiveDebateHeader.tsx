@@ -58,7 +58,7 @@ export function ActiveDebateHeader({
                         type="button"
                         className="active-debate-header__overflow-trigger"
                         aria-label="Open debate actions"
-                        aria-haspopup="menu"
+                        aria-controls="active-debate-header-actions"
                         aria-expanded={isDebateActionsOpen}
                         onClick={() => setIsDebateActionsOpen((isOpen) => !isOpen)}
                     >
@@ -67,10 +67,12 @@ export function ActiveDebateHeader({
                         </span>
                     </button>
                     {isDebateActionsOpen ? (
-                        <div className="active-debate-header__menu" role="menu" aria-label="Debate actions">
+                        <div
+                            className="active-debate-header__menu"
+                            id="active-debate-header-actions"
+                        >
                             <button
                                 type="button"
-                                role="menuitem"
                                 className="active-debate-header__menu-item"
                                 onClick={() => {
                                     setIsDebateActionsOpen(false);

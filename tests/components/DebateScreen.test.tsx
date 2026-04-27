@@ -220,7 +220,7 @@ describe('DebateScreen', () => {
         render(<DebateScreen />);
 
         fireEvent.click(screen.getByRole('button', { name: 'Open debate actions' }));
-        fireEvent.click(screen.getByRole('menuitem', { name: 'New Debate' }));
+        fireEvent.click(screen.getByRole('button', { name: 'New Debate' }));
 
         expect(screen.getByRole('textbox', { name: 'Debate topic' })).toBeInTheDocument();
         expect(screen.queryByRole('banner')).not.toBeInTheDocument();

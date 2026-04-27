@@ -4,6 +4,7 @@ import {
     ACTIVE_DEBATE_RECORD_VERSION,
     ACTIVE_DEBATE_STORAGE_KEY,
     appendActiveDebateArgument,
+    clearActiveDebate,
     createEmptyStoredActiveDebateRecord,
     loadStoredActiveDebateRecord,
     replaceActiveDebate,
@@ -111,6 +112,24 @@ describe('active debate storage foundation', () => {
                     topic: 'Should public transport be free?',
                     arguments: [],
                 },
+            } satisfies StoredActiveDebateRecord),
+        );
+    });
+
+    it('AC-34: clear rewrites the record with no active debate payload', () => {
+        storage.setItem(
+            ACTIVE_DEBATE_STORAGE_KEY,
+            JSON.stringify(createStoredActiveDebateFixtureRecord()),
+        );
+
+        const clearResult = clearActiveDebate(storage);
+        const storedPayload = storage.getItem(ACTIVE_DEBATE_STORAGE_KEY);
+
+        expect(clearResult.ok).toBe(true);
+        expect(storedPayload).toEqual(
+            JSON.stringify({
+                version: ACTIVE_DEBATE_RECORD_VERSION,
+                activeDebate: null,
             } satisfies StoredActiveDebateRecord),
         );
     });
