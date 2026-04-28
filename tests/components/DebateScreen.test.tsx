@@ -286,6 +286,7 @@ describe('DebateScreen', () => {
             expect(topicInput).toHaveFocus();
             expect(screen.getByText(/You already have an active debate\./)).toBeInTheDocument();
             expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
+            expect(screen.getByRole('region', { name: 'Replace debate' })).toBeInTheDocument();
             expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
             expect(screen.queryByRole('heading', { level: 1 })).not.toBeInTheDocument();
             expect(screen.queryByRole('button', { name: 'Open debate actions' })).not.toBeInTheDocument();

@@ -71,13 +71,22 @@ export function ActiveDebateHeader({
             return;
         }
 
-        window.requestAnimationFrame(() => {
+        let didRestoreOverflowFocus = false;
+        const restoreOverflowFocusAnimationFrameId = window.requestAnimationFrame(() => {
             const overflowTrigger = overflowTriggerRef.current;
             if (overflowTrigger && document.contains(overflowTrigger)) {
                 overflowTrigger.focus();
             }
+            didRestoreOverflowFocus = true;
             onOverflowFocusRestored?.();
         });
+
+        return () => {
+            window.cancelAnimationFrame(restoreOverflowFocusAnimationFrameId);
+            if (!didRestoreOverflowFocus) {
+                onOverflowFocusRestored?.();
+            }
+        };
     }, [restoreOverflowFocus, onOverflowFocusRestored]);
 
     return (

@@ -179,7 +179,10 @@ export function DebateScreen() {
                     />
                 </>
             ) : (
-                <section className="debate-screen__empty-state" aria-label="Create debate">
+                <section
+                    className="debate-screen__empty-state"
+                    aria-label={isReplaceMode ? 'Replace debate' : 'Create debate'}
+                >
                     <ThemeToggle
                         variant="chrome"
                         className="debate-screen__empty-theme-toggle"
