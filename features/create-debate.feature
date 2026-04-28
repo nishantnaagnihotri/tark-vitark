@@ -51,6 +51,8 @@ Feature: Create Debate Lifecycle
     Given an active debate exists in storage
     And the debate screen is loaded
     Then no standalone clear debate action is available
+    When the visitor opens debate actions
+    Then no clear debate action is available in debate actions
 
   Scenario: AC-39 invalid saved debate data returns visitors to create debate state
     Given active debate storage contains corrupt payload
