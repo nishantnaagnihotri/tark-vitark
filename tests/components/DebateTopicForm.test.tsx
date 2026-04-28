@@ -15,7 +15,9 @@ describe('DebateTopicForm', () => {
     it('shows the create flow with Start disabled at 0 / 120 (AC-29)', () => {
         render(<DebateTopicForm mode="create" onStartDebate={vi.fn()} />);
 
-        expect(screen.getByRole('textbox', { name: 'Debate topic' })).toHaveValue('');
+        const topicInput = screen.getByRole('textbox', { name: 'Debate topic' });
+        expect(topicInput).toHaveValue('');
+        expect(topicInput).toHaveAttribute('name', 'debate-topic');
         expect(screen.getByText('0 / 120')).toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'Start' })).toBeDisabled();
         expect(screen.queryByRole('button', { name: 'Cancel' })).not.toBeInTheDocument();
@@ -156,6 +158,7 @@ describe('DebateTopicForm', () => {
         expect(debateTopicFormCss).toContain('var(--color-outline)');
         expect(debateTopicFormCss).toContain('var(--color-error)');
         expect(debateTopicFormCss).toContain('var(--color-primary)');
+        expect(debateTopicFormCss).toContain('color: var(--color-brand-primary);');
         expect(debateTopicFormCss).toContain('var(--color-on-primary)');
         expect(debateTopicFormCss).toContain('var(--color-surface-container-highest)');
         expect(debateTopicFormCss).toContain('var(--color-on-surface-variant)');
