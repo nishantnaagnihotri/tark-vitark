@@ -83,7 +83,7 @@ export function DebateTopicForm(props: DebateTopicFormProps) {
                     className={`debate-topic-form__topic-input${isTopicTooLong ? ' debate-topic-form__topic-input--error' : ''}`}
                     value={topicDraft}
                     onChange={(event) => setTopicDraft(event.target.value)}
-                    autoFocus={props.mode === 'create'}
+                    autoFocus
                     placeholder="What is the Tark Vitark about?"
                     aria-label="Debate topic"
                     aria-describedby={topicDescriptionIds}
