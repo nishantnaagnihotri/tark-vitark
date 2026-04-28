@@ -40,7 +40,6 @@ Given('active debate storage contains corrupt payload', function () {
 
 Given('active debate storage is unavailable', function (this: CreateDebateWorld) {
   const windowStorageDescriptor = Object.getOwnPropertyDescriptor(window, 'localStorage');
-  const globalStorageDescriptor = Object.getOwnPropertyDescriptor(globalThis, 'localStorage');
   const unavailableStorage = {
     clear() {
       throw new Error('Storage unavailable');
@@ -66,18 +65,10 @@ Given('active debate storage is unavailable', function (this: CreateDebateWorld)
     configurable: true,
     value: unavailableStorage,
   });
-  Object.defineProperty(globalThis, 'localStorage', {
-    configurable: true,
-    writable: true,
-    value: unavailableStorage,
-  });
 
   this.restoreStorage = () => {
     if (windowStorageDescriptor) {
       Object.defineProperty(window, 'localStorage', windowStorageDescriptor);
-    }
-    if (globalStorageDescriptor) {
-      Object.defineProperty(globalThis, 'localStorage', globalStorageDescriptor);
     }
   };
 });
