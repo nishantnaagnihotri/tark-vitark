@@ -310,6 +310,7 @@ describe('DebateScreen', () => {
         await waitFor(() => {
             expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(activeDebateFixture.topic);
             expect(screen.getAllByRole('listitem')).toHaveLength(activeDebateFixture.arguments.length);
+            expect(screen.getByRole('button', { name: 'Open debate actions' })).toHaveFocus();
         });
 
         expect(window.localStorage.getItem(ACTIVE_DEBATE_STORAGE_KEY)).toEqual(

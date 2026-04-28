@@ -6,11 +6,15 @@ import '../styles/components/active-debate-header.css';
 interface ActiveDebateHeaderProps {
     topic: string;
     onStartNewDebate: () => void;
+    restoreOverflowFocus?: boolean;
+    onOverflowFocusRestored?: () => void;
 }
 
 export function ActiveDebateHeader({
     topic,
     onStartNewDebate,
+    restoreOverflowFocus = false,
+    onOverflowFocusRestored,
 }: ActiveDebateHeaderProps) {
     const [isDebateActionsOpen, setIsDebateActionsOpen] = useState(false);
     const debateActionsRef = useRef<HTMLDivElement | null>(null);
@@ -61,6 +65,20 @@ export function ActiveDebateHeader({
             document.removeEventListener('keydown', handleEscape);
         };
     }, [isDebateActionsOpen]);
+
+    useEffect(() => {
+        if (!restoreOverflowFocus) {
+            return;
+        }
+
+        window.requestAnimationFrame(() => {
+            const overflowTrigger = overflowTriggerRef.current;
+            if (overflowTrigger && document.contains(overflowTrigger)) {
+                overflowTrigger.focus();
+            }
+            onOverflowFocusRestored?.();
+        });
+    }, [restoreOverflowFocus, onOverflowFocusRestored]);
 
     return (
         <header className="active-debate-header">
