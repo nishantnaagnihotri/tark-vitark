@@ -65,8 +65,13 @@ export function DebateScreen() {
     }, []);
 
     function handlePublish(text: string, side: Side): string | null {
+        const latestStoredDebate = loadStoredActiveDebateRecord().record.activeDebate;
+        if (!latestStoredDebate) {
+            return ARGUMENT_PERSISTENCE_ERROR_MESSAGE;
+        }
+
         const publishedArgument: Argument = {
-            id: nextPublishedArgumentId(activeDebate.arguments),
+            id: nextPublishedArgumentId(latestStoredDebate.arguments),
             side,
             text,
         };
