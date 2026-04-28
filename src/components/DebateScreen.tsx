@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Argument, Debate, Side } from '../data/debate';
 import {
+    appendActiveDebateArgument,
     loadStoredActiveDebateRecord,
     replaceActiveDebate,
 } from '../lib/activeDebateStorage';
@@ -26,11 +27,8 @@ function loadInitialActiveDebate(): Debate {
     );
 }
 
-function nextPublishedArgumentId(
-    baselineArguments: Argument[],
-    localArguments: Argument[],
-): number {
-    const highestArgumentId = [...baselineArguments, ...localArguments].reduce(
+function nextPublishedArgumentId(existingArguments: Argument[]): number {
+    const highestArgumentId = existingArguments.reduce(
         (highestId, argument) => Math.max(highestId, argument.id),
         0,
     );
@@ -43,10 +41,10 @@ function hasActiveDebateTopic(topic: string): boolean {
 }
 
 const DEBATE_PERSISTENCE_ERROR_MESSAGE = 'Unable to start a new debate right now. Please try again.';
+const ARGUMENT_PERSISTENCE_ERROR_MESSAGE = 'Unable to publish right now. Please try again.';
 
 export function DebateScreen() {
     const [activeDebate, setActiveDebate] = useState<Debate>(loadInitialActiveDebate);
-    const [localPosts, setLocalPosts] = useState<Argument[]>([]);
     const [selectedSide, setSelectedSide] = useState<Side>('tark');
     const [isFabExpanded, setIsFabExpanded] = useState(false);
     const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -67,14 +65,17 @@ export function DebateScreen() {
     }, []);
 
     function handlePublish(text: string, side: Side): string | null {
-        setLocalPosts((existingPosts) => [
-            ...existingPosts,
-            {
-                id: nextPublishedArgumentId(activeDebate.arguments, existingPosts),
-                side,
-                text,
-            },
-        ]);
+        const publishedArgument: Argument = {
+            id: nextPublishedArgumentId(activeDebate.arguments),
+            side,
+            text,
+        };
+        const appendResult = appendActiveDebateArgument(publishedArgument);
+        if (!appendResult.ok || !appendResult.record.activeDebate) {
+            return ARGUMENT_PERSISTENCE_ERROR_MESSAGE;
+        }
+
+        setActiveDebate(appendResult.record.activeDebate);
 
         return null;
     }
@@ -91,7 +92,6 @@ export function DebateScreen() {
             topic,
             arguments: [],
         });
-        setLocalPosts([]);
         setSelectedSide('tark');
         setIsFabExpanded(false);
         setIsSheetOpen(false);
@@ -137,7 +137,7 @@ export function DebateScreen() {
                         </p>
                     ) : null}
                     <LegendBar />
-                    <Timeline arguments={[...activeDebate.arguments, ...localPosts]} />
+                    <Timeline arguments={activeDebate.arguments} />
                     <PodiumFAB
                         isExpanded={isFabExpanded}
                         onExpand={() => setIsFabExpanded(true)}

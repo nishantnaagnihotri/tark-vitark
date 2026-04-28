@@ -82,8 +82,8 @@ Feature: Post Tark or Vitark to the Debate Screen
     When the visitor attempts another publish while busy
     Then the second publish attempt is blocked
 
-  Scenario: Full page refresh resets the debate to baseline static content
+  Scenario: Full page refresh keeps the published argument in the active debate
     Given the debate screen is loaded
-    When the visitor publishes the post text "Session-only post that should disappear on refresh."
+    When the visitor publishes the post text "Persisted post that should remain after refresh."
     And the page is refreshed
-    Then the debate resets to baseline static content
+    Then the published post remains in the debate after refresh
