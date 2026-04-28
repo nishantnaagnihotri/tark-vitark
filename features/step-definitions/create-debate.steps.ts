@@ -48,9 +48,8 @@ Given('active debate storage is unavailable', function (this: CreateDebateWorld)
     getItem(_key: string) {
       throw new Error('Storage unavailable');
     },
-    key(_index: number) {
+    key(_index: number): string | null {
       throw new Error('Storage unavailable');
-      return null;
     },
     removeItem(_key: string) {
       throw new Error('Storage unavailable');
@@ -58,9 +57,8 @@ Given('active debate storage is unavailable', function (this: CreateDebateWorld)
     setItem(_key: string, _value: string) {
       throw new Error('Storage unavailable');
     },
-    get length() {
+    get length(): number {
       throw new Error('Storage unavailable');
-      return 0;
     },
   } as Storage;
 
