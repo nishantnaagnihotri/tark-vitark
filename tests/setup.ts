@@ -42,12 +42,21 @@ function createInMemoryStorage(): Storage {
 
 function localStorageNeedsPolyfill(): boolean {
     try {
-        return (
-            typeof window.localStorage.getItem !== 'function'
-            || typeof window.localStorage.setItem !== 'function'
-            || typeof window.localStorage.removeItem !== 'function'
-            || typeof window.localStorage.clear !== 'function'
-        );
+        const storage = window.localStorage;
+
+        if (
+            typeof storage.getItem !== 'function'
+            || typeof storage.setItem !== 'function'
+            || typeof storage.removeItem !== 'function'
+            || typeof storage.clear !== 'function'
+        ) {
+            return true;
+        }
+
+        const probeKey = '__tv_local_storage_probe__';
+        storage.setItem(probeKey, probeKey);
+        storage.removeItem(probeKey);
+        return false;
     } catch {
         return true;
     }
