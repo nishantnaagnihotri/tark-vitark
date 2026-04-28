@@ -279,7 +279,9 @@ When('the page is refreshed', function (this: PostTarkVitarkWorld) {
   this.renderResult = render(createElement(DebateScreen));
 });
 
-Then('the debate resets to baseline static content', function (this: PostTarkVitarkWorld) {
-  assert.equal(debateItems(this).length, activeDebateFixture.arguments.length);
-  assert.equal(activeRender(this).queryByText(this.latestPublishedText), null);
+Then('the published post remains in the debate after refresh', async function (this: PostTarkVitarkWorld) {
+  await waitFor(() => {
+    assert.equal(debateItems(this).length, this.baselineCount + 1);
+    assert.ok(activeRender(this).queryByText(this.latestPublishedText));
+  });
 });

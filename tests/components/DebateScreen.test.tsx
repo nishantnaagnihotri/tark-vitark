@@ -6,6 +6,7 @@ import type { Debate } from '../../src/data/debate';
 import { DebateScreen } from '../../src/components/DebateScreen';
 import {
     ACTIVE_DEBATE_STORAGE_KEY,
+    loadStoredActiveDebateRecord,
 } from '../../src/lib/activeDebateStorage';
 import {
     activeDebateFixture,
@@ -88,26 +89,35 @@ describe('DebateScreen', () => {
         expect(items).toHaveLength(activeDebateFixture.arguments.length);
     });
 
-    it('renders FAB composer entry on mount', () => {
+    it('AC-32: renders podium entry when an active debate exists on load', () => {
         render(<DebateScreen />);
 
         expect(screen.getByRole('button', { name: 'Open post composer' })).toBeInTheDocument();
         expect(screen.queryByRole('switch', { name: 'Post as Tark' })).not.toBeInTheDocument();
     });
 
-    it('appends a valid published post as the last timeline item', async () => {
+    it('AC-33: appends and persists a published argument as the last timeline item', async () => {
         render(<DebateScreen />);
+
+        const publishedArgumentText = 'This argument has enough length.';
 
         await openComposerForSide('Post as Tark');
         fireEvent.change(screen.getByRole('textbox', { name: 'Post text' }), {
-            target: { value: 'This post has enough length.' },
+            target: { value: publishedArgumentText },
         });
         fireEvent.click(screen.getByRole('button', { name: 'Publish post' }));
 
         await waitFor(() => {
             const items = screen.getAllByRole('listitem');
             expect(items).toHaveLength(activeDebateFixture.arguments.length + 1);
-            expect(items[items.length - 1]).toHaveTextContent('This post has enough length.');
+            expect(items[items.length - 1]).toHaveTextContent(publishedArgumentText);
+        });
+
+        const storedActiveDebate = loadStoredActiveDebateRecord(window.localStorage).record.activeDebate;
+        expect(storedActiveDebate?.arguments).toHaveLength(activeDebateFixture.arguments.length + 1);
+        expect(storedActiveDebate?.arguments.at(-1)).toMatchObject({
+            side: 'tark',
+            text: publishedArgumentText,
         });
     });
 
@@ -163,12 +173,13 @@ describe('DebateScreen', () => {
         }
     });
 
-    it('resets localPosts to empty after remount', async () => {
+    it('AC-33: keeps published arguments after remount from persisted active debate storage', async () => {
         const { unmount } = render(<DebateScreen />);
+        const publishedArgumentText = 'Persisted argument text.';
 
         await openComposerForSide('Post as Tark');
         fireEvent.change(screen.getByRole('textbox', { name: 'Post text' }), {
-            target: { value: 'Session-only argument text.' },
+            target: { value: publishedArgumentText },
         });
         fireEvent.click(screen.getByRole('button', { name: 'Publish post' }));
 
@@ -181,8 +192,13 @@ describe('DebateScreen', () => {
         unmount();
         render(<DebateScreen />);
 
-        expect(screen.getAllByRole('listitem')).toHaveLength(activeDebateFixture.arguments.length);
-        expect(screen.queryByText('Session-only argument text.')).not.toBeInTheDocument();
+        expect(screen.getAllByRole('listitem')).toHaveLength(activeDebateFixture.arguments.length + 1);
+        expect(screen.getByText(publishedArgumentText)).toBeInTheDocument();
+        expect(loadStoredActiveDebateRecord(window.localStorage).record.activeDebate?.arguments.at(-1)).toMatchObject(
+            {
+                text: publishedArgumentText,
+            },
+        );
     });
 
     it('applies debate-screen CSS class to main element', () => {
@@ -256,6 +272,21 @@ describe('DebateScreen', () => {
         );
     });
 
+    it('AC-32: reveals podium actions after starting a debate from empty mode', async () => {
+        window.localStorage.clear();
+        render(<DebateScreen />);
+
+        expect(screen.queryByRole('button', { name: 'Open post composer' })).not.toBeInTheDocument();
+        fireEvent.change(screen.getByRole('textbox', { name: 'Debate topic' }), {
+            target: { value: 'Should renewable energy subsidies be increased?' },
+        });
+        fireEvent.click(screen.getByRole('button', { name: 'Start' }));
+
+        await waitFor(() => {
+            expect(screen.getByRole('button', { name: 'Open post composer' })).toBeInTheDocument();
+        });
+    });
+
     it('AC-32: first render falls back to create mode instead of seeded runtime debate content', () => {
         window.localStorage.clear();
         render(<DebateScreen />);
@@ -272,6 +303,95 @@ describe('DebateScreen', () => {
         expect(screen.getByRole('textbox', { name: 'Debate topic' })).toBeInTheDocument();
         expect(screen.queryByRole('heading', { level: 1 })).not.toBeInTheDocument();
         expect(screen.queryByRole('navigation', { name: 'Debate sides legend' })).not.toBeInTheDocument();
+    });
+
+    it('AC-39: publish failure keeps debate state unchanged and does not fake success', async () => {
+        const storedRecord = window.localStorage.getItem(ACTIVE_DEBATE_STORAGE_KEY);
+        const unavailableWriteStorage = {
+            clear() {
+                if (storedRecord !== null) {
+                    return;
+                }
+            },
+            getItem(key: string) {
+                return key === ACTIVE_DEBATE_STORAGE_KEY ? storedRecord : null;
+            },
+            key(index: number) {
+                return index === 0 ? ACTIVE_DEBATE_STORAGE_KEY : null;
+            },
+            removeItem(_key: string) {
+                if (storedRecord !== null) {
+                    return;
+                }
+            },
+            setItem(_key: string, _value: string) {
+                throw new Error('Storage unavailable');
+            },
+            get length() {
+                return storedRecord === null ? 0 : 1;
+            },
+        } as Storage;
+        vi.stubGlobal('localStorage', unavailableWriteStorage);
+        const failedArgumentText = 'This publish attempt should fail closed.';
+
+        try {
+            render(<DebateScreen />);
+            await openComposerForSide('Post as Tark');
+            fireEvent.change(screen.getByRole('textbox', { name: 'Post text' }), {
+                target: { value: failedArgumentText },
+            });
+            fireEvent.click(screen.getByRole('button', { name: 'Publish post' }));
+
+            await waitFor(() => {
+                expect(screen.getByRole('dialog', { name: 'Post composer' })).toBeInTheDocument();
+                expect(screen.getByRole('alert')).toHaveTextContent(
+                    'Unable to publish right now. Please try again.'
+                );
+            });
+
+            expect(screen.getAllByRole('listitem')).toHaveLength(activeDebateFixture.arguments.length);
+            expect(screen.getByRole('region', { name: 'Debate arguments' })).not.toHaveTextContent(
+                failedArgumentText
+            );
+            expect(window.localStorage.getItem(ACTIVE_DEBATE_STORAGE_KEY)).toEqual(storedRecord);
+        } finally {
+            vi.unstubAllGlobals();
+        }
+    });
+
+    it('AC-38: allows uncapped argument publishing for the active debate timeline', async () => {
+        render(<DebateScreen />);
+
+        const publishedArgumentCount = 12;
+        for (let publishedArgumentIndex = 1; publishedArgumentIndex <= publishedArgumentCount; publishedArgumentIndex += 1) {
+            const sideLabel = publishedArgumentIndex % 2 === 0 ? 'Post as Vitark' : 'Post as Tark';
+            const publishedArgumentText =
+                `Uncapped argument ${publishedArgumentIndex} demonstrates no enforced posting cap.`;
+
+            await openComposerForSide(sideLabel);
+            await waitFor(() => {
+                expect(screen.getByRole('dialog', { name: 'Post composer' })).toHaveClass(
+                    'podium-bottom-sheet--open'
+                );
+            });
+            fireEvent.change(screen.getByRole('textbox', { name: 'Post text' }), {
+                target: { value: publishedArgumentText },
+            });
+            fireEvent.click(screen.getByRole('button', { name: 'Publish post' }));
+
+            await waitFor(() => {
+                expect(screen.queryByRole('dialog', { name: 'Post composer' })).not.toBeInTheDocument();
+            });
+        }
+
+        await waitFor(() => {
+            expect(screen.getAllByRole('listitem')).toHaveLength(
+                activeDebateFixture.arguments.length + publishedArgumentCount
+            );
+        });
+        expect(loadStoredActiveDebateRecord(window.localStorage).record.activeDebate?.arguments).toHaveLength(
+            activeDebateFixture.arguments.length + publishedArgumentCount,
+        );
     });
 
     it('AC-34, AC-40: enters replace mode from New Debate with inline warning', async () => {
