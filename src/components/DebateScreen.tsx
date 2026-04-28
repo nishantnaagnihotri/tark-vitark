@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Argument, Debate, Side } from '../data/debate';
 import {
-    clearActiveDebate,
     loadStoredActiveDebateRecord,
     replaceActiveDebate,
 } from '../lib/activeDebateStorage';
@@ -51,10 +50,12 @@ export function DebateScreen() {
     const [selectedSide, setSelectedSide] = useState<Side>('tark');
     const [isFabExpanded, setIsFabExpanded] = useState(false);
     const [isSheetOpen, setIsSheetOpen] = useState(false);
+    const [isReplaceFlowOpen, setIsReplaceFlowOpen] = useState(false);
     const [debateActionError, setDebateActionError] = useState<string | null>(null);
     const ignoreNextSheetCloseRef = useRef(false);
     const clearIgnoreCloseAnimationFrameRef = useRef<number | null>(null);
     const hasActiveDebate = hasActiveDebateTopic(activeDebate.topic);
+    const isReplaceMode = hasActiveDebate && isReplaceFlowOpen;
 
     useEffect(() => {
         return () => {
@@ -93,35 +94,33 @@ export function DebateScreen() {
         setSelectedSide('tark');
         setIsFabExpanded(false);
         setIsSheetOpen(false);
+        setIsReplaceFlowOpen(false);
         ignoreNextSheetCloseRef.current = false;
     }
 
-    function handleStartNewDebate(): void {
-        const clearResult = clearActiveDebate();
-        if (!clearResult.ok) {
-            setDebateActionError(DEBATE_PERSISTENCE_ERROR_MESSAGE);
-            return;
-        }
-
+    function handleStartReplaceFlow(): void {
         setDebateActionError(null);
-        setActiveDebate(emptyActiveDebate());
-        setLocalPosts([]);
-        setSelectedSide('tark');
+        setIsReplaceFlowOpen(true);
         setIsFabExpanded(false);
         setIsSheetOpen(false);
         ignoreNextSheetCloseRef.current = false;
     }
 
+    function handleCancelReplaceFlow(): void {
+        setDebateActionError(null);
+        setIsReplaceFlowOpen(false);
+    }
+
     return (
         <main
             role="main"
-            className={`debate-screen${hasActiveDebate ? '' : ' debate-screen--empty'}`}
+            className={`debate-screen${isReplaceMode || !hasActiveDebate ? ' debate-screen--empty' : ''}`}
         >
-            {hasActiveDebate ? (
+            {hasActiveDebate && !isReplaceMode ? (
                 <>
                     <ActiveDebateHeader
                         topic={activeDebate.topic}
-                        onStartNewDebate={handleStartNewDebate}
+                        onStartNewDebate={handleStartReplaceFlow}
                     />
                     {debateActionError ? (
                         <p
@@ -188,7 +187,15 @@ export function DebateScreen() {
                             {debateActionError}
                         </p>
                     ) : null}
-                    <DebateTopicForm mode="create" onStartDebate={handleStartDebate} />
+                    {isReplaceMode ? (
+                        <DebateTopicForm
+                            mode="replace"
+                            onStartDebate={handleStartDebate}
+                            onCancelReplace={handleCancelReplaceFlow}
+                        />
+                    ) : (
+                        <DebateTopicForm mode="create" onStartDebate={handleStartDebate} />
+                    )}
                 </section>
             )}
         </main>

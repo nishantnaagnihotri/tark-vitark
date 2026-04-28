@@ -274,7 +274,7 @@ describe('DebateScreen', () => {
         expect(screen.queryByRole('navigation', { name: 'Debate sides legend' })).not.toBeInTheDocument();
     });
 
-    it('AC-34: uses the overflow trigger to enter a new debate flow', async () => {
+    it('AC-34, AC-40: uses the overflow trigger to enter replace mode with inline warning', async () => {
         render(<DebateScreen />);
 
         fireEvent.click(screen.getByRole('button', { name: 'Open debate actions' }));
@@ -284,12 +284,73 @@ describe('DebateScreen', () => {
             const topicInput = screen.getByRole('textbox', { name: 'Debate topic' });
             expect(topicInput).toBeInTheDocument();
             expect(topicInput).toHaveFocus();
+            expect(screen.getByText(/You already have an active debate\./)).toBeInTheDocument();
+            expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
+            expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
             expect(screen.queryByRole('heading', { level: 1 })).not.toBeInTheDocument();
             expect(screen.queryByRole('button', { name: 'Open debate actions' })).not.toBeInTheDocument();
         });
     });
 
-    it('AC-34: keeps active debate visible when New Debate persistence reset fails', async () => {
+    it('AC-35: cancel exits replace mode with the current debate unchanged', async () => {
+        render(<DebateScreen />);
+
+        fireEvent.click(screen.getByRole('button', { name: 'Open debate actions' }));
+        fireEvent.click(screen.getByRole('button', { name: 'New Debate' }));
+
+        await waitFor(() => {
+            expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
+        });
+
+        fireEvent.change(screen.getByRole('textbox', { name: 'Debate topic' }), {
+            target: { value: 'Should city centers ban private cars?' },
+        });
+        fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(activeDebateFixture.topic);
+            expect(screen.getAllByRole('listitem')).toHaveLength(activeDebateFixture.arguments.length);
+        });
+
+        expect(window.localStorage.getItem(ACTIVE_DEBATE_STORAGE_KEY)).toEqual(
+            JSON.stringify(createStoredActiveDebateFixtureRecord())
+        );
+    });
+
+    it('AC-34: replace submit writes a fresh topic and clears carried arguments', async () => {
+        render(<DebateScreen />);
+
+        fireEvent.click(screen.getByRole('button', { name: 'Open debate actions' }));
+        fireEvent.click(screen.getByRole('button', { name: 'New Debate' }));
+
+        await waitFor(() => {
+            expect(screen.getByRole('textbox', { name: 'Debate topic' })).toBeInTheDocument();
+        });
+
+        const replacementTopic = 'Should governments mandate open-source AI models?';
+        fireEvent.change(screen.getByRole('textbox', { name: 'Debate topic' }), {
+            target: { value: `  ${replacementTopic}  ` },
+        });
+        fireEvent.click(screen.getByRole('button', { name: 'Start' }));
+
+        await waitFor(() => {
+            expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(replacementTopic);
+            expect(screen.queryByRole('textbox', { name: 'Debate topic' })).not.toBeInTheDocument();
+            expect(screen.getByRole('region', { name: 'Debate arguments' })).toBeInTheDocument();
+        });
+
+        expect(screen.queryAllByRole('listitem')).toHaveLength(0);
+        expect(window.localStorage.getItem(ACTIVE_DEBATE_STORAGE_KEY)).toEqual(
+            JSON.stringify(
+                createStoredActiveDebateFixtureRecord({
+                    topic: replacementTopic,
+                    arguments: [],
+                })
+            )
+        );
+    });
+
+    it('AC-34: failed replace submit keeps the current debate intact until save succeeds', async () => {
         const storedRecord = window.localStorage.getItem(ACTIVE_DEBATE_STORAGE_KEY);
         const unavailableWriteStorage = {
             clear() {
@@ -322,14 +383,27 @@ describe('DebateScreen', () => {
 
             fireEvent.click(screen.getByRole('button', { name: 'Open debate actions' }));
             fireEvent.click(screen.getByRole('button', { name: 'New Debate' }));
+            fireEvent.change(screen.getByRole('textbox', { name: 'Debate topic' }), {
+                target: { value: 'Should cities ban private cars from downtown roads?' },
+            });
+            fireEvent.click(screen.getByRole('button', { name: 'Start' }));
 
             await waitFor(() => {
-                expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument();
-                expect(screen.queryByRole('textbox', { name: 'Debate topic' })).not.toBeInTheDocument();
+                expect(screen.getByRole('textbox', { name: 'Debate topic' })).toBeInTheDocument();
                 expect(screen.getByRole('alert')).toHaveTextContent(
                     'Unable to start a new debate right now. Please try again.'
                 );
             });
+
+            fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+
+            await waitFor(() => {
+                expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
+                    activeDebateFixture.topic
+                );
+                expect(screen.getAllByRole('listitem')).toHaveLength(activeDebateFixture.arguments.length);
+            });
+            expect(window.localStorage.getItem(ACTIVE_DEBATE_STORAGE_KEY)).toEqual(storedRecord);
         } finally {
             vi.unstubAllGlobals();
         }
