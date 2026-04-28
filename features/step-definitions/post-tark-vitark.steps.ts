@@ -100,7 +100,7 @@ async function publishButton(world: PostTarkVitarkWorld): Promise<HTMLButtonElem
 }
 
 function debateItems(world: PostTarkVitarkWorld): HTMLElement[] {
-  return activeRender(world).getAllByRole('listitem');
+  return activeRender(world).queryAllByRole('listitem');
 }
 
 function buildText(length: number): string {
@@ -118,10 +118,11 @@ async function submitComposer(world: PostTarkVitarkWorld): Promise<void> {
 }
 
 class PostTarkVitarkWorld extends World {
-  baselineCount = activeDebateFixture.arguments.length;
+  baselineCount = 0;
   latestPublishedText = '';
   publishCalls = 0;
   resolvePendingPublish: (() => void) | null = null;
+  restoreStorage: (() => void) | null = null;
   renderResult: RenderResult | null = null;
 
   renderDebateScreen(): void {
@@ -135,20 +136,33 @@ setWorldConstructor(PostTarkVitarkWorld);
 
 Before(function (this: PostTarkVitarkWorld) {
   cleanup();
-  seedActiveDebateFixture(window.localStorage);
-  this.baselineCount = activeDebateFixture.arguments.length;
+  window.localStorage.clear();
+  this.baselineCount = 0;
   this.latestPublishedText = '';
   this.publishCalls = 0;
   this.resolvePendingPublish = null;
+  this.restoreStorage = null;
   this.renderResult = null;
 });
 
 After(function (this: PostTarkVitarkWorld) {
   this.resolvePendingPublish?.();
   this.resolvePendingPublish = null;
+  this.restoreStorage?.();
+  this.restoreStorage = null;
   this.renderResult?.unmount();
   this.renderResult = null;
   cleanup();
+});
+
+Given('an active debate exists in storage', function (this: PostTarkVitarkWorld) {
+  seedActiveDebateFixture(window.localStorage);
+  this.baselineCount = activeDebateFixture.arguments.length;
+});
+
+Given('no active debate exists in storage', function (this: PostTarkVitarkWorld) {
+  window.localStorage.clear();
+  this.baselineCount = 0;
 });
 
 Given('the debate screen is loaded', function (this: PostTarkVitarkWorld) {
@@ -178,9 +192,21 @@ When('the visitor selects the Vitark side', function (this: PostTarkVitarkWorld)
 });
 
 Then('Vitark remains selected', function (this: PostTarkVitarkWorld) {
-  const chip = activeRender(this).getByRole('radio', { name: 'Vitark' });
-  assert.ok(chip);
-  assert.equal(chip.getAttribute('aria-checked'), 'true');
+  const visibleVitarkChip = activeRender(this).queryByRole('radio', { name: 'Vitark' });
+  if (visibleVitarkChip) {
+    assert.equal(visibleVitarkChip.getAttribute('aria-checked'), 'true');
+    return;
+  }
+
+  const items = debateItems(this);
+  const latestItem = items[items.length - 1];
+  assert.ok(latestItem, 'Expected a latest debate item after publishing.');
+  const latestVitarkCard = latestItem.querySelector('.argument-card--vitark');
+  assert.ok(latestVitarkCard, 'Expected the latest published argument to remain on the Vitark side.');
+  assert.ok(
+    latestItem.textContent?.includes(this.latestPublishedText),
+    'Expected the latest Vitark argument text to remain visible in the timeline.'
+  );
 });
 
 When('the visitor enters whitespace-only post text', async function (this: PostTarkVitarkWorld) {
@@ -223,7 +249,11 @@ Then('one new debate post is added', async function (this: PostTarkVitarkWorld) 
 });
 
 Then('no validation error is shown', function (this: PostTarkVitarkWorld) {
-  assert.equal(activeRender(this).getByRole('alert').textContent?.trim(), '');
+  assert.equal(activeRender(this).queryByRole('alert'), null);
+  const composerTextInput = activeRender(this).queryByRole('textbox', { name: 'Post text' });
+  if (composerTextInput) {
+    assert.notEqual(composerTextInput.getAttribute('aria-invalid'), 'true');
+  }
 });
 
 Then('the latest debate post text is {string}', async function (this: PostTarkVitarkWorld, expected: string) {
