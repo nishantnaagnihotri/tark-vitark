@@ -203,7 +203,7 @@ describe('tokens.css — M3 3-layer token presence', () => {
     ['--color-spine-line', '#90909A'],
     ['--color-on-surface-variant', '#CAC4D0'],
     ['--color-error', '#F2B8B5'],
-    ['--color-surface-container-highest', '#E4E1E9'],
+    ['--color-surface-container-highest', '#36343B'],
     ['--color-tark-surface', '#1565C0'],
     ['--color-tark-on-surface', '#E3F2FD'],
     ['--color-tark-header', '#90CAF9'],
