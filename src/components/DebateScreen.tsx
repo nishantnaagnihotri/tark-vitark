@@ -96,12 +96,14 @@ export function DebateScreen() {
         setIsFabExpanded(false);
         setIsSheetOpen(false);
         setIsReplaceFlowOpen(false);
+        setRestoreOverflowFocusRequest(0);
         ignoreNextSheetCloseRef.current = false;
     }
 
     function handleStartReplaceFlow(): void {
         setDebateActionError(null);
         setIsReplaceFlowOpen(true);
+        setRestoreOverflowFocusRequest(0);
         setIsFabExpanded(false);
         setIsSheetOpen(false);
         ignoreNextSheetCloseRef.current = false;
