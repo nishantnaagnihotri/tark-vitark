@@ -131,10 +131,14 @@ class PostTarkVitarkWorld extends World {
     this.renderResult = render(createElement(DebateScreen));
     const currentDebateItems = debateItems(this);
     if (this.expectsActiveDebate) {
-      assert.ok(
-        currentDebateItems.length > 0,
-        'Expected an active debate timeline to be preloaded before rendering posting regressions.'
+      const expectedPreloadedDebateItems = activeDebateFixture.arguments.length;
+      assert.equal(
+        currentDebateItems.length,
+        expectedPreloadedDebateItems,
+        'Expected the active debate timeline to match the seeded debate before posting.'
       );
+      this.baselineCount = expectedPreloadedDebateItems;
+      return;
     }
     this.baselineCount = currentDebateItems.length;
   }
