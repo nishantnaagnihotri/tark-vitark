@@ -352,9 +352,7 @@ describe('DebateScreen', () => {
         const storedRecord = window.localStorage.getItem(ACTIVE_DEBATE_STORAGE_KEY);
         const unavailableWriteStorage = {
             clear() {
-                if (storedRecord !== null) {
-                    return;
-                }
+                throw new Error('Storage unavailable');
             },
             getItem(key: string) {
                 return key === ACTIVE_DEBATE_STORAGE_KEY ? storedRecord : null;
@@ -363,9 +361,7 @@ describe('DebateScreen', () => {
                 return index === 0 ? ACTIVE_DEBATE_STORAGE_KEY : null;
             },
             removeItem(_key: string) {
-                if (storedRecord !== null) {
-                    return;
-                }
+                throw new Error('Storage unavailable');
             },
             setItem(_key: string, _value: string) {
                 throw new Error('Storage unavailable');
