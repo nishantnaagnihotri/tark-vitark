@@ -199,10 +199,8 @@ Then('the active debate timeline is empty', function (this: CreateDebateWorld) {
 Then('no standalone clear debate action is available', function (this: CreateDebateWorld) {
   const view = activeRender(this);
   assert.equal(view.queryByRole('button', { name: /clear debate/i }), null);
-  fireEvent.click(
-    view.getByRole('button', {
-      name: 'Open debate actions',
-    })
-  );
+});
+
+Then('no clear debate action is available in debate actions', function (this: CreateDebateWorld) {
   assert.equal(activeRender(this).queryByRole('button', { name: /clear debate/i }), null);
 });
