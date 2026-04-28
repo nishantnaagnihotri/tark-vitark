@@ -16,7 +16,10 @@ interface RenderBottomSheetOptions {
     isOpen?: boolean;
     selectedSide?: Side;
     onSideChange?: (side: Side) => void;
-    onPublish?: (text: string, side: Side) => void;
+    onPublish?: (
+        text: string,
+        side: Side
+    ) => string | null | void | Promise<string | null | void>;
     onClose?: () => void;
 }
 
@@ -121,6 +124,32 @@ describe('PodiumBottomSheet', () => {
 
         expect(textarea).toHaveValue('');
         expect(screen.getByRole('alert')).toHaveTextContent('');
+    });
+
+    it('AC-39: keeps composer open when publish reports a fail-closed storage error', async () => {
+        const onClose = vi.fn();
+        const onPublish = vi.fn().mockResolvedValue('Unable to publish right now. Please try again.');
+        renderBottomSheet({ onPublish, onClose, selectedSide: 'tark' });
+
+        const textarea = screen.getByRole('textbox', { name: 'Post text' });
+        fireEvent.change(textarea, {
+            target: { value: ' Storage-backed publish should fail closed. ' },
+        });
+        fireEvent.click(screen.getByRole('button', { name: 'Publish post' }));
+
+        await waitFor(() => {
+            expect(onPublish).toHaveBeenCalledWith(
+                'Storage-backed publish should fail closed.',
+                'tark'
+            );
+        });
+
+        expect(onClose).not.toHaveBeenCalled();
+        expect(screen.getByRole('dialog', { name: 'Post composer' })).toBeInTheDocument();
+        expect(textarea).toHaveValue(' Storage-backed publish should fail closed. ');
+        expect(screen.getByRole('alert')).toHaveTextContent(
+            'Unable to publish right now. Please try again.'
+        );
     });
 
     it('focuses the first interactive element, traps tabbing, and closes on Escape', async () => {
