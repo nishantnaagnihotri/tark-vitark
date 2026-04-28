@@ -274,7 +274,7 @@ describe('DebateScreen', () => {
         expect(screen.queryByRole('navigation', { name: 'Debate sides legend' })).not.toBeInTheDocument();
     });
 
-    it('AC-34, AC-40: uses the overflow trigger to enter replace mode with inline warning', async () => {
+    it('AC-34, AC-40: enters replace mode from New Debate with inline warning', async () => {
         render(<DebateScreen />);
 
         fireEvent.click(screen.getByRole('button', { name: 'Open debate actions' }));
