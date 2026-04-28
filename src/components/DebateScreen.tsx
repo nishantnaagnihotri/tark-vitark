@@ -51,6 +51,7 @@ export function DebateScreen() {
     const [isFabExpanded, setIsFabExpanded] = useState(false);
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [isReplaceFlowOpen, setIsReplaceFlowOpen] = useState(false);
+    const [shouldRestoreOverflowFocus, setShouldRestoreOverflowFocus] = useState(false);
     const [debateActionError, setDebateActionError] = useState<string | null>(null);
     const ignoreNextSheetCloseRef = useRef(false);
     const clearIgnoreCloseAnimationFrameRef = useRef<number | null>(null);
@@ -95,12 +96,14 @@ export function DebateScreen() {
         setIsFabExpanded(false);
         setIsSheetOpen(false);
         setIsReplaceFlowOpen(false);
+        setShouldRestoreOverflowFocus(false);
         ignoreNextSheetCloseRef.current = false;
     }
 
     function handleStartReplaceFlow(): void {
         setDebateActionError(null);
         setIsReplaceFlowOpen(true);
+        setShouldRestoreOverflowFocus(false);
         setIsFabExpanded(false);
         setIsSheetOpen(false);
         ignoreNextSheetCloseRef.current = false;
@@ -108,6 +111,7 @@ export function DebateScreen() {
 
     function handleCancelReplaceFlow(): void {
         setDebateActionError(null);
+        setShouldRestoreOverflowFocus(true);
         setIsReplaceFlowOpen(false);
     }
 
@@ -121,6 +125,8 @@ export function DebateScreen() {
                     <ActiveDebateHeader
                         topic={activeDebate.topic}
                         onStartNewDebate={handleStartReplaceFlow}
+                        restoreOverflowFocus={shouldRestoreOverflowFocus}
+                        onOverflowFocusRestored={() => setShouldRestoreOverflowFocus(false)}
                     />
                     {debateActionError ? (
                         <p
