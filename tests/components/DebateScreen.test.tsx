@@ -403,7 +403,7 @@ describe('DebateScreen', () => {
         );
     });
 
-    it('matches create-mode theme-toggle offsets for mobile and tablet/desktop Figma frames', () => {
+    it('AC-29: keeps topic drafting aligned across mobile, tablet, and desktop breakpoints', () => {
         expect(debateScreenCss).toContain(
             '.debate-screen__empty-state {\n    position: relative;\n    min-height: 100vh;\n    min-height: 100dvh;\n    display: flex;\n    flex-direction: column;'
         );
