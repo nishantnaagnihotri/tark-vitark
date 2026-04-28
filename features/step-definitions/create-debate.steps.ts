@@ -119,15 +119,14 @@ Then('the topic length error is not shown', function (this: CreateDebateWorld) {
   assert.notEqual(topicInput(this).getAttribute('aria-invalid'), 'true');
 });
 
-When('the visitor starts a debate with topic {string}', async function (this: CreateDebateWorld, topic: string) {
+When('the visitor enters debate topic {string}', function (this: CreateDebateWorld, topic: string) {
   fireEvent.change(topicInput(this), {
     target: { value: topic },
   });
-  fireEvent.click(startButton(this));
+});
 
-  await waitFor(() => {
-    assert.ok(activeRender(this).getByRole('heading', { level: 1 }));
-  });
+When('the visitor presses Start', function (this: CreateDebateWorld) {
+  fireEvent.click(startButton(this));
 });
 
 Then('the active debate heading is {string}', async function (this: CreateDebateWorld, expectedTopic: string) {
@@ -140,12 +139,15 @@ Then('the active debate heading is {string}', async function (this: CreateDebate
   assert.equal(storedActiveDebate?.topic, expectedTopic);
 });
 
-When('the visitor opens New Debate from debate actions', function (this: CreateDebateWorld) {
+When('the visitor opens debate actions', function (this: CreateDebateWorld) {
   fireEvent.click(
     activeRender(this).getByRole('button', {
       name: 'Open debate actions',
     })
   );
+});
+
+When('the visitor chooses New Debate', function (this: CreateDebateWorld) {
   fireEvent.click(
     activeRender(this).getByRole('button', {
       name: 'New Debate',
@@ -186,21 +188,6 @@ Then('the existing active debate remains unchanged', async function (this: Creat
     JSON.stringify(createStoredActiveDebateFixtureRecord())
   );
 });
-
-When(
-  'the visitor starts a replacement debate with topic {string}',
-  async function (this: CreateDebateWorld, topic: string) {
-    fireEvent.change(topicInput(this), {
-      target: { value: topic },
-    });
-    fireEvent.click(startButton(this));
-
-    await waitFor(() => {
-      const heading = activeRender(this).getByRole('heading', { level: 1 });
-      assert.equal(heading.textContent?.trim(), topic);
-    });
-  }
-);
 
 Then('the active debate timeline is empty', function (this: CreateDebateWorld) {
   assert.equal(activeRender(this).queryAllByRole('listitem').length, 0);

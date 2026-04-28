@@ -20,7 +20,8 @@ Feature: Create Debate Lifecycle
   Scenario: AC-31 AC-32 AC-33 creating a valid topic transitions into a persisted active debate
     Given no active debate exists in storage
     And the debate screen is loaded
-    When the visitor starts a debate with topic "Should remote work stay flexible?"
+    When the visitor enters debate topic "Should remote work stay flexible?"
+    And the visitor presses Start
     Then the active debate heading is "Should remote work stay flexible?"
     And podium entry controls are visible
     When the page is refreshed
@@ -29,7 +30,8 @@ Feature: Create Debate Lifecycle
   Scenario: AC-34 AC-35 AC-40 replace flow warning and cancel keep the active debate unchanged
     Given an active debate exists in storage
     And the debate screen is loaded
-    When the visitor opens New Debate from debate actions
+    When the visitor opens debate actions
+    And the visitor chooses New Debate
     Then the replace warning is visible
     And the replace form is visible
     When the visitor cancels replacing the debate
@@ -38,8 +40,10 @@ Feature: Create Debate Lifecycle
   Scenario: AC-34 replacing an active debate writes a fresh topic and clears prior arguments
     Given an active debate exists in storage
     And the debate screen is loaded
-    When the visitor opens New Debate from debate actions
-    And the visitor starts a replacement debate with topic "Should city centers restrict private cars?"
+    When the visitor opens debate actions
+    And the visitor chooses New Debate
+    And the visitor enters debate topic "Should city centers restrict private cars?"
+    And the visitor presses Start
     Then the active debate heading is "Should city centers restrict private cars?"
     And the active debate timeline is empty
 
@@ -48,13 +52,13 @@ Feature: Create Debate Lifecycle
     And the debate screen is loaded
     Then no standalone clear debate action is available
 
-  Scenario: AC-39 corrupt persisted data fails closed to the empty state
+  Scenario: AC-39 invalid saved debate data returns visitors to create debate state
     Given active debate storage contains corrupt payload
     And the debate screen is loaded
     Then the debate topic form is visible in empty state
     And podium entry controls are not visible
 
-  Scenario: AC-39 unavailable storage fails closed to the empty state
+  Scenario: AC-39 unavailable saved debate data returns visitors to create debate state
     Given active debate storage is unavailable
     And the debate screen is loaded
     Then the debate topic form is visible in empty state
