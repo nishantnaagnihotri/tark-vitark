@@ -173,6 +173,49 @@ describe('DebateScreen', () => {
         }
     });
 
+    it('AC-33: derives published argument ID from latest persisted active debate state', async () => {
+        render(<DebateScreen />);
+        const fixtureMaxId = activeDebateFixture.arguments.reduce(
+            (highestId, argument) => Math.max(highestId, argument.id),
+            0,
+        );
+        const externallyPersistedArgumentId = fixtureMaxId + 1;
+
+        window.localStorage.setItem(
+            ACTIVE_DEBATE_STORAGE_KEY,
+            JSON.stringify(
+                createStoredActiveDebateFixtureRecord({
+                    topic: activeDebateFixture.topic,
+                    arguments: [
+                        ...activeDebateFixture.arguments,
+                        {
+                            id: externallyPersistedArgumentId,
+                            side: 'vitark',
+                            text: 'Externally persisted argument before publish.',
+                        },
+                    ],
+                }),
+            ),
+        );
+
+        await openComposerForSide('Post as Tark');
+        fireEvent.change(screen.getByRole('textbox', { name: 'Post text' }), {
+            target: { value: 'Publish should avoid persisted ID collisions.' },
+        });
+        fireEvent.click(screen.getByRole('button', { name: 'Publish post' }));
+
+        await waitFor(() => {
+            const storedArguments = loadStoredActiveDebateRecord(window.localStorage).record
+                .activeDebate?.arguments;
+            expect(storedArguments).toBeDefined();
+            expect(storedArguments?.filter((argument) => argument.id === externallyPersistedArgumentId)).toHaveLength(1);
+            expect(storedArguments?.at(-1)).toMatchObject({
+                id: externallyPersistedArgumentId + 1,
+                text: 'Publish should avoid persisted ID collisions.',
+            });
+        });
+    });
+
     it('AC-33: keeps published arguments after remount from persisted active debate storage', async () => {
         const { unmount } = render(<DebateScreen />);
         const publishedArgumentText = 'Persisted argument text.';
