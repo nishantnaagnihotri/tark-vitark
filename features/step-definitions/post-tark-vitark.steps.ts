@@ -119,6 +119,7 @@ async function submitComposer(world: PostTarkVitarkWorld): Promise<void> {
 
 class PostTarkVitarkWorld extends World {
   baselineCount = 0;
+  expectsActiveDebate = false;
   latestPublishedText = '';
   publishCalls = 0;
   resolvePendingPublish: (() => void) | null = null;
@@ -128,7 +129,14 @@ class PostTarkVitarkWorld extends World {
   renderDebateScreen(): void {
     cleanup();
     this.renderResult = render(createElement(DebateScreen));
-    this.baselineCount = debateItems(this).length;
+    const currentDebateItems = debateItems(this);
+    if (this.expectsActiveDebate) {
+      assert.ok(
+        currentDebateItems.length > 0,
+        'Expected an active debate timeline to be preloaded before rendering posting regressions.'
+      );
+    }
+    this.baselineCount = currentDebateItems.length;
   }
 }
 
@@ -138,6 +146,7 @@ Before(function (this: PostTarkVitarkWorld) {
   cleanup();
   window.localStorage.clear();
   this.baselineCount = 0;
+  this.expectsActiveDebate = false;
   this.latestPublishedText = '';
   this.publishCalls = 0;
   this.resolvePendingPublish = null;
@@ -157,11 +166,13 @@ After(function (this: PostTarkVitarkWorld) {
 
 Given('an active debate exists in storage', function (this: PostTarkVitarkWorld) {
   seedActiveDebateFixture(window.localStorage);
+  this.expectsActiveDebate = true;
   this.baselineCount = activeDebateFixture.arguments.length;
 });
 
 Given('no active debate exists in storage', function (this: PostTarkVitarkWorld) {
   window.localStorage.clear();
+  this.expectsActiveDebate = false;
   this.baselineCount = 0;
 });
 
@@ -198,7 +209,16 @@ Then('Vitark remains selected', function (this: PostTarkVitarkWorld) {
     return;
   }
 
+  assert.ok(
+    this.latestPublishedText.length > 0,
+    'Expected a published Vitark argument before evaluating fallback selection state.'
+  );
   const items = debateItems(this);
+  assert.equal(
+    items.length,
+    this.baselineCount + 1,
+    'Expected one newly published argument before fallback Vitark selection assertion.'
+  );
   const latestItem = items[items.length - 1];
   assert.ok(latestItem, 'Expected a latest debate item after publishing.');
   const latestVitarkCard = latestItem.querySelector('.argument-card--vitark');
