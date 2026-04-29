@@ -17,13 +17,20 @@ https://github.com/nishantnaagnihotri/tark-vitark/issues/202
 
 | Task | GitHub Issue | Title | Dependency | Architecture Section | Status |
 |---|---|---|---|---|---|
-| T1 | [#203](https://github.com/nishantnaagnihotri/tark-vitark/issues/203) | Active-debate storage foundation | None | Section 2.2, Section 2.4, Section 6 (T1) | Open |
-| T2 | [#204](https://github.com/nishantnaagnihotri/tark-vitark/issues/204) | Shared topic form and topic validation | None | Section 2.2, Section 2.3, Section 5, Section 6 (T2) | Open - recommended A/B replacement-test issue |
-| T3 | [#205](https://github.com/nishantnaagnihotri/tark-vitark/issues/205) | Active header chrome | Merge after T1 and T2 | Section 2.2, Section 2.3, Section 6 (T3) | Open |
-| T4 | [#206](https://github.com/nishantnaagnihotri/tark-vitark/issues/206) | DebateScreen empty-state and create integration | T1 (#203), T2 (#204) | Section 2.5, Section 5, Section 6 (T4) | Open |
-| T5 | [#207](https://github.com/nishantnaagnihotri/tark-vitark/issues/207) | Replace-flow integration | T3 (#205), T4 (#206) | Section 2.5, Section 5, Section 6 (T5) | Open |
-| T6 | [#208](https://github.com/nishantnaagnihotri/tark-vitark/issues/208) | Persisted Podium publish and no-cap behavior | T1 (#203), T4 (#206) | Section 2.5, Section 5, Section 6 (T6) | Open |
-| T7 | [#209](https://github.com/nishantnaagnihotri/tark-vitark/issues/209) | Acceptance and regression migration | T4 (#206), T5 (#207), T6 (#208) | Section 3, Section 5, Section 6 (T7) | Open |
+| T1 | [#203](https://github.com/nishantnaagnihotri/tark-vitark/issues/203) | Active-debate storage foundation | None | Section 2.2, Section 2.4, Section 6 (T1) | Closed |
+| T2 | [#204](https://github.com/nishantnaagnihotri/tark-vitark/issues/204) | Shared topic form and topic validation | None | Section 2.2, Section 2.3, Section 5, Section 6 (T2) | Closed |
+| T3 | [#205](https://github.com/nishantnaagnihotri/tark-vitark/issues/205) | Active header chrome | Merge after T1 and T2 | Section 2.2, Section 2.3, Section 6 (T3) | Closed |
+| T4 | [#206](https://github.com/nishantnaagnihotri/tark-vitark/issues/206) | DebateScreen empty-state and create integration | T1 (#203), T2 (#204) | Section 2.5, Section 5, Section 6 (T4) | Closed |
+| T5 | [#207](https://github.com/nishantnaagnihotri/tark-vitark/issues/207) | Replace-flow integration | T3 (#205), T4 (#206) | Section 2.5, Section 5, Section 6 (T5) | Closed |
+| T6 | [#208](https://github.com/nishantnaagnihotri/tark-vitark/issues/208) | Persisted Podium publish and no-cap behavior | T1 (#203), T4 (#206) | Section 2.5, Section 5, Section 6 (T6) | Closed |
+| T7 | [#209](https://github.com/nishantnaagnihotri/tark-vitark/issues/209) | Acceptance and regression migration | T4 (#206), T5 (#207), T6 (#208) | Section 3, Section 5, Section 6 (T7) | Closed |
+
+---
+
+## Slice Closure
+
+- Final slice completion: 2026-04-29 via merged slice PR #219
+- Task issues #203 through #209 closed through merged task PRs #212, #211, #213, #214, #215, #216, and #217
 
 ---
 
