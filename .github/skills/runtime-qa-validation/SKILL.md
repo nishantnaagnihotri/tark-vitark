@@ -10,7 +10,7 @@ Use this skill to validate runtime behavior in a real browser session when manua
 ## When To Use
 
 - Running Gate 5.5 Runtime QA for a UI-impacting issue
-- Running the final slice-level integrated runtime QA pass before recommending a `slice/* -> master` PR
+- Running the final `Slice-Level Integrated` runtime QA pass before recommending a `slice/* -> master` PR
 - Verifying that implemented acceptance criteria work in a live browser session
 - Checking responsive behavior and theme behavior before Gate 6 merge recommendation
 - Producing a runtime verdict package for orchestrator progression decisions
@@ -18,10 +18,10 @@ Use this skill to validate runtime behavior in a real browser session when manua
 ## Scope Classification
 
 1. This skill supports two scopes only:
-   - `Issue-level Gate 5.5 runtime QA` for a single UI-impacting task PR.
-   - `Slice-level integrated runtime QA` for the fully merged `slice/<slice-name>` branch before recommending the final slice PR to `master`.
+   - `Issue-Level Gate 5.5` for a single UI-impacting task PR.
+   - `Slice-Level Integrated` for the fully merged `slice/<slice-name>` branch before recommending the final slice PR to `master`.
 2. Runtime QA is required for UI-impacting issues at Gate 5.5.
-3. Slice-level integrated runtime QA is required when the slice contains one or more UI-impacting issues.
+3. `Slice-Level Integrated` runtime QA is required when the slice contains one or more UI-impacting issues.
 4. Non-UI work may skip runtime QA only when orchestrator records `Runtime QA: Not Required` or `Slice Runtime QA: Not Required` with rationale, as appropriate to the scope.
 5. If the handoff does not make the validation scope explicit, request orchestrator clarification and do not self-classify within this skill.
 
@@ -120,8 +120,8 @@ This is a hard stop — do NOT mark the AC as Fail or Pass while an `AC-DELTA` i
 
 Scope-specific expectations:
 
-1. For `Issue-level Gate 5.5 runtime QA`, validate the issue's literal acceptance-criterion journeys and immediate regressions needed for that task PR to merge into `slice/<slice-name>`.
-2. For `Slice-level integrated runtime QA`, validate the full slice branch as an integrated product surface:
+1. For `Issue-Level Gate 5.5`, validate the issue's literal acceptance-criterion journeys and immediate regressions needed for that task PR to merge into `slice/<slice-name>`.
+2. For `Slice-Level Integrated`, validate the full slice branch as an integrated product surface:
    - all primary slice acceptance journeys end-to-end
    - cross-task seams and state handoffs
    - regressions that emerge only after multiple task PRs have merged together
