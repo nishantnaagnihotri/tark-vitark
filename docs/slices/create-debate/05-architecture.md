@@ -126,10 +126,10 @@ Highest-impact existing test files:
 
 Highest-impact BDD files:
 
+- `features/create-debate.feature`
 - `features/post-tark-vitark.feature`
-- `features/debate-screen-polish.feature`
+- `features/step-definitions/create-debate.steps.ts`
 - `features/step-definitions/post-tark-vitark.steps.ts`
-- `features/step-definitions/debate-screen-polish.steps.ts`
 
 ---
 
@@ -152,20 +152,18 @@ Rollback is clean: the slice introduces one new localStorage key and no migratio
 
 ## 5. Verification Strategy
 
-| AC | Primary automated evidence | Runtime QA evidence |
+`features/create-debate.feature` is the canonical acceptance-criteria source for this slice. Supporting regression references from `features/post-tark-vitark.feature` are called out explicitly where needed; that file does not carry AC ids in scenario titles. No AC-38-tagged scenario currently exists in the feature suite.
+
+| Canonical feature source | Planned automated evidence | Runtime QA / regression evidence |
 |---|---|---|
-| AC-29 | `DebateScreen` tests assert empty-state render with no legend, no timeline, and no Podium when no active debate is stored; topic-form tests cover the inline form structure | Compare against `837:456`, `890:457`, `925:494`, `925:507`, `926:496`, `926:509` |
-| AC-30 | Topic-validation unit tests plus topic-form tests for counter updates, disabled Start under 10, enabled Start for 10-120, and visible error only over 120 | Compare against `892:458`, `893:459`, `895:460`, `896:461` |
-| AC-31 | Storage-adapter unit tests plus `DebateScreen` integration tests for create success and reload into active state | Verify empty-to-active transition against `947:476` and `947:521` |
-| AC-32 | `DebateScreen` integration tests for Podium absence in empty mode and presence after create | Verify Podium is not reachable from empty state and is operable immediately after create |
-| AC-33 | Storage-adapter tests for append persistence plus reload tests; migrated post feature preloads active debate via storage instead of seeded data | Runtime QA creates a debate, publishes arguments, reloads, and confirms timeline restoration |
-| AC-34 | Active-header tests for overflow trigger and one-item menu wiring; `DebateScreen` integration tests for successful replace and cleared arguments | Compare replace flow against `897:462` and `898:463`, then confirm return to `947:476` and `947:521` |
-| AC-35 | Replace-mode topic-form tests for Cancel behavior and `DebateScreen` tests proving prior topic and arguments remain unchanged after cancel | Verify Cancel affordance against `977:481` and `977:483` |
-| AC-36 | Header tests assert there is no standalone clear action in any mode | Runtime QA confirms the menu exposes only New Debate and no clear action |
-| AC-37 | Source-level review confirms runtime `DEBATE` removal from `src/data/debate.ts`; initial-render tests prove the app no longer shows seeded content on first load | Gate 5 review includes repo search for remaining runtime seed references under `src` |
-| AC-38 | Storage-adapter and `DebateScreen` tests append multiple arguments without cap logic; old count-based seed tests are replaced | Runtime QA posts repeatedly and confirms the timeline continues to grow |
-| AC-39 | Storage-adapter tests cover unavailable storage and corrupt payloads; render tests prove empty-state fallback and no throw | Runtime QA simulates broken storage if feasible; otherwise rely on automated adapter coverage |
-| AC-40 | Replace-mode topic-form tests assert the inline warning is rendered and that no blocking dialog appears | Verify warning placement against `897:475` and `898:475` |
+| `features/create-debate.feature` -> `Scenario: AC-29 AC-30 AC-32 AC-37 empty state gates posting behind valid topic creation` | `DebateScreen` empty-state tests, topic-form validation coverage, and source-level review that seeded runtime debate content is removed from `src` | Compare against `837:456`, `890:457`, `925:494`, `925:507`, `926:496`, `926:509`, `892:458`, `893:459`, `895:460`, `896:461` |
+| `features/create-debate.feature` -> `Scenario: AC-31 AC-32 AC-33 creating a valid topic transitions into a persisted active debate` | storage-adapter tests plus `DebateScreen` create-and-reload integration tests | Verify empty-to-active transition against `947:476` and `947:521`; supporting regression reference: `features/post-tark-vitark.feature` -> `Scenario: Full page refresh keeps the published argument in the active debate` |
+| `features/create-debate.feature` -> `Scenario: AC-34 AC-35 AC-40 replace flow warning and cancel keep the active debate unchanged` | replace-mode topic-form tests plus `DebateScreen` cancel-path integration tests | Verify warning and cancel affordances against `897:462`, `898:463`, `897:475`, `898:475`, `977:481`, `977:483` |
+| `features/create-debate.feature` -> `Scenario: AC-34 replacing an active debate writes a fresh topic and clears prior arguments` | active-header/menu tests plus `DebateScreen` replace-submit integration tests | Compare replace flow against `897:462` and `898:463`, then confirm return to `947:476` and `947:521` |
+| `features/create-debate.feature` -> `Scenario: AC-36 there is no standalone clear action back to empty state` | header/menu tests asserting only `New Debate` is exposed | Runtime QA confirms no standalone clear action in active mode |
+| `features/create-debate.feature` -> `Scenario: AC-39 invalid saved debate data returns visitors to create debate state` | storage-adapter corrupt-payload tests plus render fallback coverage | Runtime QA simulates broken stored payload if feasible; otherwise rely on automated adapter coverage |
+| `features/create-debate.feature` -> `Scenario: AC-39 unavailable saved debate data returns visitors to create debate state` | storage-unavailable adapter tests plus render fallback coverage | Runtime QA simulates unavailable storage if feasible; otherwise rely on automated adapter coverage |
+| No current AC-tagged feature scenario (`AC-38`) | storage-adapter and `DebateScreen` tests for uncapped append behavior | Supporting regression references: `features/post-tark-vitark.feature` -> `Scenario: Valid post is appended at the bottom of the debate` and `Scenario: Full page refresh keeps the published argument in the active debate` |
 
 Gate 5 validation must run:
 

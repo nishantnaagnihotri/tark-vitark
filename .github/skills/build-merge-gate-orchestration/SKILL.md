@@ -204,7 +204,7 @@ Execution rule:
 Proceeding rule:
 
 1. Recommend the final `slice/<slice-name> -> master` PR for merge only when either:
-   - `Slice Runtime QA Verdict: Pass`, or
+   - a `Slice Runtime QA Verdict Package` is attached and records `Runtime QA Verdict: Pass`, or
    - `Slice Runtime QA: Not Required` is explicitly recorded with rationale.
 2. If the slice-level integrated runtime QA verdict is `Fail`, `Blocked`, or `AC-DELTA`, do not recommend final merge. Loop back according to the runtime verdict rules.
 3. Task-level Gate 5.5 evidence is still required for each UI-impacting task PR. The slice-level integrated pass is additive, not substitutive.

@@ -62,7 +62,7 @@ Return sections in one of the following formats:
 ### If orchestrator classification requires execution
 
 1. `Runtime QA Verdict Package` for `Issue-Level Gate 5.5`, or `Slice Runtime QA Verdict Package` for `Slice-Level Integrated`.
-2. `Validation Scope: Issue-Level Gate 5.5 | Slice-Level Integrated`.
+2. `Validation Scope`: emit exactly one orchestrator-provided value — `Issue-Level Gate 5.5` or `Slice-Level Integrated`. Do not output both values or copy the options verbatim.
 3. `Runtime QA Verdict: Pass | Fail | Blocked | AC-DELTA`.
 4. `Coverage Matrix`: journey x viewport x theme x Figma Fidelity status.
 5. `Figma Frames Consulted`: node ids consulted, or `none` when design context was not provided.

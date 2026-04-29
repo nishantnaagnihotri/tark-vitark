@@ -144,8 +144,10 @@ Scope-specific expectations:
 2. Executed runtime QA package:
    - `Runtime QA Verdict Package` when `Validation Scope: Issue-Level Gate 5.5`.
    - `Slice Runtime QA Verdict Package` when `Validation Scope: Slice-Level Integrated`.
-   - `Validation Scope: Issue-Level Gate 5.5 | Slice-Level Integrated`
-   - `Runtime QA Verdict: Pass | Fail | Blocked | AC-DELTA` (use `AC-DELTA` when a Figma-vs-AC conflict was found and must be resolved before a verdict can be issued).
+   - `Validation Scope`: exactly one of:
+     - `Issue-Level Gate 5.5`
+     - `Slice-Level Integrated`
+   - `Runtime QA Verdict`: exactly one of `Pass`, `Fail`, `Blocked`, or `AC-DELTA` (use `AC-DELTA` when a Figma-vs-AC conflict was found and must be resolved before a verdict can be issued).
    - `Coverage Matrix`: journey × viewport × theme × Figma Fidelity status table. When no Figma frame node IDs were provided, still emit the full matrix and set `Figma Fidelity` to `Not Consulted` for every row.
    - `Figma Frames Consulted`: list of node IDs fetched, paired to the AC state they cover. When no Figma frame node IDs were provided, output `none`.
    - `Findings`: defects, severity, and reproducibility notes. `AC-DELTA` conflicts listed separately before any Pass/Fail findings.
