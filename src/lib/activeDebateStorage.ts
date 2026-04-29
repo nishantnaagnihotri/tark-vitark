@@ -24,6 +24,15 @@ export type ActiveDebateStorageWriteResult =
         record: StoredActiveDebateRecord;
     };
 
+export interface LoadStoredActiveDebateRecordOptions {
+    persistNormalization?: boolean;
+}
+
+export interface AppendActiveDebateArgumentInput {
+    side: Side;
+    text: string;
+}
+
 export function createEmptyStoredActiveDebateRecord(): StoredActiveDebateRecord {
     return {
         version: ACTIVE_DEBATE_RECORD_VERSION,
@@ -116,6 +125,15 @@ function normalizeStoredActiveDebateRecord(
     return record;
 }
 
+function nextStoredArgumentId(existingArguments: Argument[]): number {
+    const highestArgumentId = existingArguments.reduce(
+        (highestId, argument) => Math.max(highestId, argument.id),
+        0,
+    );
+
+    return highestArgumentId + 1;
+}
+
 function persistStoredActiveDebateRecord(
     record: StoredActiveDebateRecord,
     storage?: Storage,
@@ -144,7 +162,10 @@ function persistStoredActiveDebateRecord(
     }
 }
 
-export function loadStoredActiveDebateRecord(storage?: Storage): ActiveDebateStorageLoadResult {
+export function loadStoredActiveDebateRecord(
+    storage?: Storage,
+    options?: LoadStoredActiveDebateRecordOptions,
+): ActiveDebateStorageLoadResult {
     const availableStorage = resolveStorage(storage);
     if (!availableStorage) {
         return storageUnavailableResult();
@@ -182,7 +203,10 @@ export function loadStoredActiveDebateRecord(storage?: Storage): ActiveDebateSto
     }
 
     const normalizedRecord = normalizeStoredActiveDebateRecord(parsedRecord);
-    if (normalizedRecord !== parsedRecord) {
+    if (
+        normalizedRecord !== parsedRecord
+        && (options?.persistNormalization ?? true)
+    ) {
         persistStoredActiveDebateRecord(normalizedRecord, availableStorage);
     }
 
@@ -229,7 +253,7 @@ export function clearActiveDebate(storage?: Storage): ActiveDebateStorageWriteRe
 }
 
 export function appendActiveDebateArgument(
-    argument: Argument,
+    argumentInput: AppendActiveDebateArgumentInput,
     storage?: Storage,
 ): ActiveDebateStorageWriteResult {
     const loadResult = loadStoredActiveDebateRecord(storage);
@@ -249,12 +273,18 @@ export function appendActiveDebateArgument(
         };
     }
 
+    const appendedArgument: Argument = {
+        id: nextStoredArgumentId(loadResult.record.activeDebate.arguments),
+        side: argumentInput.side,
+        text: argumentInput.text,
+    };
+
     return persistStoredActiveDebateRecord(
         {
             version: ACTIVE_DEBATE_RECORD_VERSION,
             activeDebate: {
                 topic: loadResult.record.activeDebate.topic,
-                arguments: [...loadResult.record.activeDebate.arguments, { ...argument }],
+                arguments: [...loadResult.record.activeDebate.arguments, appendedArgument],
             },
         },
         storage,

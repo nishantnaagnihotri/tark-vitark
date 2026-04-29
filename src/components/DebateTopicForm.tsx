@@ -69,10 +69,7 @@ export function DebateTopicForm(props: DebateTopicFormProps) {
     };
 
     return (
-        <section
-            className="debate-topic-form"
-            aria-label={props.mode === 'replace' ? 'Replace debate topic form' : 'Create debate topic form'}
-        >
+        <div className="debate-topic-form">
             <div className="debate-topic-form__lettermark" aria-hidden="true">
                 <span className="debate-topic-form__lettermark-text">TV</span>
             </div>
@@ -136,6 +133,6 @@ export function DebateTopicForm(props: DebateTopicFormProps) {
                     </button>
                 ) : null}
             </form>
-        </section>
+        </div>
     );
 }

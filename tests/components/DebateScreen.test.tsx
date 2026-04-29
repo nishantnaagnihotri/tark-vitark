@@ -216,6 +216,93 @@ describe('DebateScreen', () => {
         });
     });
 
+    it('AC-33: publishing keeps argument IDs unique when storage changes between publish reads', async () => {
+        const baselineRecord = createStoredActiveDebateFixtureRecord({
+            topic: activeDebateFixture.topic,
+            arguments: [
+                {
+                    id: 2,
+                    side: 'tark',
+                    text: 'Baseline argument available at publish start.',
+                },
+            ],
+        });
+        const concurrentlyUpdatedRecord = createStoredActiveDebateFixtureRecord({
+            topic: activeDebateFixture.topic,
+            arguments: [
+                ...baselineRecord.activeDebate!.arguments,
+                {
+                    id: 3,
+                    side: 'vitark',
+                    text: 'Concurrent argument written after the first publish read.',
+                },
+            ],
+        });
+        const sequencedRecords = [
+            JSON.stringify(baselineRecord),
+            JSON.stringify(baselineRecord),
+            JSON.stringify(concurrentlyUpdatedRecord),
+        ];
+        let getItemCallCount = 0;
+        let persistedRecordPayload: string | null = sequencedRecords[0];
+        const sequencedStorage = {
+            clear() {
+                persistedRecordPayload = null;
+            },
+            getItem(key: string) {
+                if (key !== ACTIVE_DEBATE_STORAGE_KEY) {
+                    return null;
+                }
+
+                const payloadIndex = Math.min(getItemCallCount, sequencedRecords.length - 1);
+                getItemCallCount += 1;
+                return sequencedRecords[payloadIndex] ?? persistedRecordPayload;
+            },
+            key(index: number) {
+                return index === 0 && persistedRecordPayload !== null
+                    ? ACTIVE_DEBATE_STORAGE_KEY
+                    : null;
+            },
+            removeItem(key: string) {
+                if (key === ACTIVE_DEBATE_STORAGE_KEY) {
+                    persistedRecordPayload = null;
+                }
+            },
+            setItem(key: string, value: string) {
+                if (key === ACTIVE_DEBATE_STORAGE_KEY) {
+                    persistedRecordPayload = value;
+                }
+            },
+            get length() {
+                return persistedRecordPayload === null ? 0 : 1;
+            },
+        } as Storage;
+        vi.stubGlobal('localStorage', sequencedStorage);
+
+        try {
+            render(<DebateScreen />);
+            await openComposerForSide('Post as Tark');
+            fireEvent.change(screen.getByRole('textbox', { name: 'Post text' }), {
+                target: { value: 'Published argument must keep unique IDs.' },
+            });
+            fireEvent.click(screen.getByRole('button', { name: 'Publish post' }));
+
+            await waitFor(() => {
+                const storedArguments = JSON.parse(
+                    persistedRecordPayload ?? JSON.stringify(createStoredActiveDebateFixtureRecord())
+                ).activeDebate.arguments as Array<{ id: number; text: string }>;
+                const storedArgumentIds = storedArguments.map((argument) => argument.id);
+
+                expect(storedArguments.at(-1)).toMatchObject({
+                    text: 'Published argument must keep unique IDs.',
+                });
+                expect(new Set(storedArgumentIds).size).toBe(storedArgumentIds.length);
+            });
+        } finally {
+            vi.unstubAllGlobals();
+        }
+    });
+
     it('AC-33: keeps published arguments after remount from persisted active debate storage', async () => {
         const { unmount } = render(<DebateScreen />);
         const publishedArgumentText = 'Persisted argument text.';
@@ -288,6 +375,14 @@ describe('DebateScreen', () => {
         expect(screen.queryByRole('dialog', { name: 'Post composer' })).not.toBeInTheDocument();
     });
 
+    it('AC-29: create mode exposes a single meaningful region landmark', () => {
+        window.localStorage.clear();
+        render(<DebateScreen />);
+
+        expect(screen.getByRole('region', { name: 'Create debate' })).toBeInTheDocument();
+        expect(screen.getAllByRole('region')).toHaveLength(1);
+    });
+
     it('AC-31: persists a fresh active debate and transitions into active mode after Start', async () => {
         window.localStorage.clear();
         render(<DebateScreen />);
@@ -346,6 +441,22 @@ describe('DebateScreen', () => {
         expect(screen.getByRole('textbox', { name: 'Debate topic' })).toBeInTheDocument();
         expect(screen.queryByRole('heading', { level: 1 })).not.toBeInTheDocument();
         expect(screen.queryByRole('navigation', { name: 'Debate sides legend' })).not.toBeInTheDocument();
+    });
+
+    it('AC-39: first render uses read-only normalization for legacy empty-topic payloads', () => {
+        const legacyRecordPayload = JSON.stringify({
+            version: 1,
+            activeDebate: {
+                topic: '   ',
+                arguments: [],
+            },
+        });
+        window.localStorage.setItem(ACTIVE_DEBATE_STORAGE_KEY, legacyRecordPayload);
+
+        render(<DebateScreen />);
+
+        expect(screen.getByRole('textbox', { name: 'Debate topic' })).toBeInTheDocument();
+        expect(window.localStorage.getItem(ACTIVE_DEBATE_STORAGE_KEY)).toBe(legacyRecordPayload);
     });
 
     it('AC-39: publish failure keeps debate state unchanged and does not fake success', async () => {
@@ -446,6 +557,7 @@ describe('DebateScreen', () => {
             expect(screen.getByText(/You already have an active debate\./)).toBeInTheDocument();
             expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
             expect(screen.getByRole('region', { name: 'Replace debate' })).toBeInTheDocument();
+            expect(screen.getAllByRole('region')).toHaveLength(1);
             expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
             expect(screen.queryByRole('heading', { level: 1 })).not.toBeInTheDocument();
             expect(screen.queryByRole('button', { name: 'Open debate actions' })).not.toBeInTheDocument();

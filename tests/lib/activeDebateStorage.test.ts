@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { Argument, Debate } from '../../src/data/debate';
+import type { Debate } from '../../src/data/debate';
 import {
     ACTIVE_DEBATE_RECORD_VERSION,
     ACTIVE_DEBATE_STORAGE_KEY,
@@ -139,20 +139,31 @@ describe('active debate storage foundation', () => {
             ACTIVE_DEBATE_STORAGE_KEY,
             JSON.stringify(createStoredActiveDebateFixtureRecord()),
         );
-        const newArgument: Argument = {
-            id: 9,
-            side: 'tark',
-            text: 'Public transport reduces emissions and lowers household transport costs.',
-        };
+        const publishedArgumentText =
+            'Public transport reduces emissions and lowers household transport costs.';
+        const expectedAppendedArgumentId = activeDebateFixture.arguments.reduce(
+            (highestId, argument) => Math.max(highestId, argument.id),
+            0,
+        ) + 1;
 
-        const appendResult = appendActiveDebateArgument(newArgument, storage);
+        const appendResult = appendActiveDebateArgument(
+            {
+                side: 'tark',
+                text: publishedArgumentText,
+            },
+            storage,
+        );
         const loadResult = loadStoredActiveDebateRecord(storage);
 
         expect(appendResult.ok).toBe(true);
         expect(loadResult.record.activeDebate?.arguments).toHaveLength(
             activeDebateFixture.arguments.length + 1,
         );
-        expect(loadResult.record.activeDebate?.arguments.at(-1)).toEqual(newArgument);
+        expect(loadResult.record.activeDebate?.arguments.at(-1)).toEqual({
+            id: expectedAppendedArgumentId,
+            side: 'tark',
+            text: publishedArgumentText,
+        });
     });
 
     it('AC-39: corrupt JSON resolves to a safe empty result without throwing', () => {
@@ -200,6 +211,25 @@ describe('active debate storage foundation', () => {
         );
     });
 
+    it('AC-39: read-only load keeps normalization persistence out of render-time reads', () => {
+        const legacyEmptyTopicRecord = JSON.stringify({
+            version: ACTIVE_DEBATE_RECORD_VERSION,
+            activeDebate: {
+                topic: '   ',
+                arguments: [],
+            },
+        } satisfies StoredActiveDebateRecord);
+        storage.setItem(ACTIVE_DEBATE_STORAGE_KEY, legacyEmptyTopicRecord);
+
+        const loadResult = loadStoredActiveDebateRecord(storage, {
+            persistNormalization: false,
+        });
+
+        expect(loadResult.state).toBe('loaded');
+        expect(loadResult.record).toEqual(createEmptyStoredActiveDebateRecord());
+        expect(storage.getItem(ACTIVE_DEBATE_STORAGE_KEY)).toEqual(legacyEmptyTopicRecord);
+    });
+
     it('AC-39: unavailable storage load fails closed to the safe empty record', () => {
         const unavailableStorage = createUnavailableStorage();
 
@@ -218,7 +248,6 @@ describe('active debate storage foundation', () => {
         );
         const appendResult = appendActiveDebateArgument(
             {
-                id: 1,
                 side: 'vitark',
                 text: 'Cycling lanes can reduce road capacity for emergency access in dense zones.',
             },
@@ -250,7 +279,6 @@ describe('active debate storage foundation', () => {
 
         const appendResult = appendActiveDebateArgument(
             {
-                id: 1,
                 side: 'tark',
                 text: 'A topic must exist before arguments can be appended.',
             },

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import type { Argument, Debate, Side } from '../data/debate';
+import type { Debate, Side } from '../data/debate';
 import {
     appendActiveDebateArgument,
     loadStoredActiveDebateRecord,
@@ -23,17 +23,10 @@ function emptyActiveDebate(): Debate {
 
 function loadInitialActiveDebate(): Debate {
     return (
-        loadStoredActiveDebateRecord().record.activeDebate ?? emptyActiveDebate()
+        loadStoredActiveDebateRecord(undefined, {
+            persistNormalization: false,
+        }).record.activeDebate ?? emptyActiveDebate()
     );
-}
-
-function nextPublishedArgumentId(existingArguments: Argument[]): number {
-    const highestArgumentId = existingArguments.reduce(
-        (highestId, argument) => Math.max(highestId, argument.id),
-        0,
-    );
-
-    return highestArgumentId + 1;
 }
 
 function hasActiveDebateTopic(topic: string): boolean {
@@ -65,17 +58,10 @@ export function DebateScreen() {
     }, []);
 
     function handlePublish(text: string, side: Side): string | null {
-        const latestStoredDebate = loadStoredActiveDebateRecord().record.activeDebate;
-        if (!latestStoredDebate) {
-            return ARGUMENT_PERSISTENCE_ERROR_MESSAGE;
-        }
-
-        const publishedArgument: Argument = {
-            id: nextPublishedArgumentId(latestStoredDebate.arguments),
+        const appendResult = appendActiveDebateArgument({
             side,
             text,
-        };
-        const appendResult = appendActiveDebateArgument(publishedArgument);
+        });
         if (!appendResult.ok || !appendResult.record.activeDebate) {
             return ARGUMENT_PERSISTENCE_ERROR_MESSAGE;
         }
