@@ -132,7 +132,7 @@ describe('DebateTopicForm', () => {
         });
     });
 
-    it('uses semantic brand typography tokens for the TV lettermark treatment (issue-220 contract)', () => {
+    it('keeps the TV lettermark treatment aligned with approved brand styling (issue-220 contract)', () => {
         const lettermarkTypographyBlock = debateTopicFormCss.match(
             /\.debate-topic-form__lettermark-text\s*\{[^}]+\}/
         )?.[0];
