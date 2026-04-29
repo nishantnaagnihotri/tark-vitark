@@ -25,7 +25,7 @@ Task issue closure and final slice completion are therefore grounded in GitHub i
 - Artifact changes: Updated `docs/slices/create-debate/01-requirement.md` with amended AC-29, AC-30, AC-34, AC-35 and new AC-40; updated `docs/slices/create-debate/02-prd.md` with FR-12, resolved OQ-1 references, and a Gate 3 `## Amendments` section. Updated global AC counter to AC-40.
 - Open questions status: OQ-1 closed at Gate 3 via AC-40 (inline warning, no blocking dialog). OQ-2 and OQ-3 remained accepted for Gate 4 architecture and were resolved before Build authorization.
 - Next micro-goal: Gate 4 — hand off `create-debate` to `architecture-agent` with `01-requirement.md`, `02-prd.md`, `03-ux.md`, `04-design-qa.md`, and the node-targeted Figma frame URLs from `04-design-qa.md`.
-- Blockers/owner decisions: none for Gate 4 start. Architecture must carry OQ-2 and OQ-3 to resolution before Build authorization.
+- Blockers/owner decisions: None for Gate 4 start. Architecture must carry OQ-2 and OQ-3 to resolution before Build authorization.
 
 ### 2026-04-29 (create-debate Slice Completion, recorded 2026-04-29)
 - Gate status: `create-debate` Gate 4 ✅ Pass, Gate 5 ✅ Complete, Gate 5.5 ✅ Pass, Gate 6 ✅ Complete. Task issues #203 through #209 closed through merged task PRs #212, #211, #213, #214, #215, #216, and #217. Final slice PR #219 merged into `master` at head `58dc3b4a7033726a56f3ce48169011af976cc7da`.
