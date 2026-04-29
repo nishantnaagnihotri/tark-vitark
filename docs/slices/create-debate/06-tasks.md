@@ -1,5 +1,5 @@
-# Task Breakdown - create-debate
-## Gate 4 End - 2026-04-27
+# Task Breakdown — create-debate
+## Gate 4 End — 2026-04-27
 
 ---
 
