@@ -163,6 +163,8 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). U
 91. Gate 3 async pass model (adopted 2026-04-24, amended 2026-04-24, PO decision): `scripts/run-agent.ts` is a single-shot `sendAndWait(...)` execution path, not a persistent user-interactive UX thread. Gate 3A therefore runs as bounded async `ux-agent` passes rehydrated from `03-ux.md`. Rejected or incomplete UX work is revised via a new async dispatch from the latest checkpoint, not by reopening the old terminal session. Sync `runSubagent` is a fallback only when the Product Owner explicitly wants to stay in the current chat for short critique/revision. Cross-ref: `.github/skills/design-gate-orchestration/SKILL.md`, `.github/skills/async-agent-dispatch/SKILL.md`, `scripts/run-agent.ts`.
 92. Gate 3 manual-resume boundary (adopted 2026-04-24, PO decision): after any async Gate 3A `ux-agent` dispatch, orchestrator records the terminal, waits for completion, updates session memory, and stops. Even when `03-ux.md` contains a valid final packet, Gate 3 does not progress until the Product Owner explicitly asks the orchestrator to resume. Cross-ref: `.github/skills/orchestrator-session-context-lifecycle/SKILL.md`, `.github/agents/architect-orchestrator.agent.md`.
 93. Gate 5 PR opening ownership (adopted 2026-04-25, amended 2026-04-25, PO decision): Gate 5 task PRs are opened by the implementing dev agent by default, with no separate Product Owner confirmation checkpoint, unless the handoff explicitly suppresses PR creation (`branch-only`, `prepare PR package only`, or `do not open PR yet`). This automatic PR-opening allowance is unique to the implementing dev agent. No other agent may open a PR without explicit Product Owner authorization. Opening the Gate 5 task PR is part of the dev-owned review loop. Orchestrator-opened PRs remain under explicit orchestrator mutation rules. Cross-ref: `.github/AGENTS.md` PR Opening Policy, `.github/skills/pr-review-loop/SKILL.md`, `.github/agents/dev.agent.md`, `.github/skills/build-merge-gate-orchestration/SKILL.md`, `.github/agents/architect-orchestrator.agent.md`.
+94. Silent async dev-lane recovery ladder (adopted 2026-04-28, PO decision): when a Gate 5 async dev lane shows no visible progress for a long interval and no PR is visible, use a three-step ladder. First silent wake: external-only terminal plus GitHub checks, then re-arm. Second silent wake: re-arm first, then one read-only salvage probe in the assigned branch or worktree. Third silent wake or terminal exit without PR: run exactly one recovery pass in the same branch or worktree if useful local progress exists; otherwise kill the stale lane and relaunch one fresh pass in the same prepared branch or worktree. Terminal silence alone never outweighs GitHub or local worktree evidence. Only one automatic recovery pass is allowed before Product Owner escalation. Cross-ref: `.github/skills/gate-recovery-and-resume/SKILL.md`, `.github/skills/async-agent-dispatch/SKILL.md`, `.github/skills/orchestrator-session-context-lifecycle/SKILL.md`.
+95. Hybrid issue-level runtime QA ownership (adopted 2026-04-28, PO decision): for UI-impacting Gate 5 tasks, the implementing `dev` agent invokes issue-level `runtime-qa` before final handback. `runtime-qa` still owns the verdict package and findings, while `dev` owns fixes, PR updates, and reruns until the latest PR head has a passing issue-level runtime verdict or an explicit orchestrator-routed escalation. Orchestrator verifies the issue-level verdict evidence and still owns the final slice-level integrated runtime QA pass after all task PRs merge into `slice/<slice-name>`. Cross-ref: `.github/skills/build-merge-gate-orchestration/SKILL.md`, `.github/skills/domain-ownership-governance/SKILL.md`, `.github/agents/dev.agent.md`.
 
 ## Resume Protocol For Orchestrator
 
@@ -197,7 +199,7 @@ On first response in any new activity:
 | `debate-screen` | ✅ Pass | ✅ Full Pass | ✅ Pass (PO approved 2026-04-06) | ✅ Pass (Revision 1.1) | ✅ Complete (T1–T9 + visual polish PR #61) | ✅ Complete (2026-04-07) |
 | `post-tark-vitark` | ✅ Re-pass (refined, 2026-04-08) | ✅ Re-pass (2026-04-08) | ✅ Pass (PO approved 2026-04-16, PR #83 merged) | ✅ Pass (2026-04-16, PR #94 merged) | ✅ Complete (T-1–T-8 + post-build PRs #106, #108, slice merge PR #109) | ✅ Complete (2026-04-17, PR #112 merged) |
 | `debate-screen-polish` | ✅ Pass (2026-04-17, Standard) | ✅ Full Pass (2026-04-17) | ✅ Pass | ✅ Pass | ✅ Complete (T-1 #124, T-2 #125, T-3 #126; integrated 2026-04-19) | ✅ Complete (2026-04-19; tracker #127 closed) |
-| `create-debate` | ✅ Pass (2026-04-23, Standard) | ✅ Full Pass (2026-04-23) | ✅ Pass (PO approved 2026-04-26; Gate 3 writeback complete) | — | — | — |
+| `create-debate` | ✅ Pass (2026-04-23, Standard) | ✅ Full Pass (2026-04-23) | ✅ Pass (PO approved 2026-04-26; Gate 3 writeback complete) | ✅ Pass (2026-04-27; architecture + task decomposition complete) | ✅ Complete (PRs #212, #211, #213, #214, #215, #216, #217 merged; integrated runtime QA Pass) | ✅ Complete (2026-04-29; PR #219 merged) |
 
 ## Log Archive Protocol
 
@@ -230,68 +232,19 @@ Template:
 - Next micro-goal:
 - Blockers/owner decisions:
 
-### 2026-04-23 (create-debate Gate 1 Pass)
-- Gate status: `create-debate` Gate 1 ✅ Pass. Complexity: Standard (full 6-gate flow).
-- Artifact changes: Created `docs/slices/create-debate/01-requirement.md`. Updated global AC counter to AC-39.
-- Open questions status: OQ-1 accepted for Gate 3 UX (replace-flow confirmation guard), OQ-2 accepted for Gate 4 architecture (trimmed vs raw topic validation), OQ-3 accepted for Gate 4 architecture (localStorage unavailable fallback beyond the no-crash floor).
-- Next micro-goal: Gate 2 — invoke PRD Agent with the `create-debate` Requirement Context Package.
-- Blockers/owner decisions: None. Ready for Gate 2.
+### 2026-04-28 (Silent Dev Lane Recovery Policy)
+- Gate status: Gate 5 silent async dev-lane recovery policy adopted for active and future build lanes.
+- Artifact changes: Updated `gate-recovery-and-resume`, `async-agent-dispatch`, and `orchestrator-session-context-lifecycle` skills. Added Known Rule #94 for the silent-lane recovery ladder.
+- Open questions status: none. This is a workflow hardening decision, not a slice-scope change.
+- Next micro-goal: apply the new ladder to the active `create-debate` T5 lane for issue #207 and choose between continued wait, reuse-first recovery, or relaunch.
+- Blockers/owner decisions: none. Orchestrator can apply the ladder autonomously using GitHub and local evidence.
 
-### 2026-04-23 (create-debate Gate 2 Full Pass)
-- Gate status: `create-debate` Gate 2 ✅ Full Pass. PRD v0 complete with 11 FRs, 7 constraints/non-goals, 7 success metrics, and zero requirement drift.
-- Artifact changes: Created `docs/slices/create-debate/02-prd.md`.
-- Open questions status: OQ-1 remains non-blocking and must resolve at Gate 3 UX. OQ-2 and OQ-3 remain non-blocking and must resolve at Gate 4 architecture before Build.
-- Next micro-goal: Gate 3 — UX+Design single-pass for the create-debate empty state, active debate, and replace flow.
-- Blockers/owner decisions: None. Ready for Gate 3.
-
-### 2026-04-24 (Gate 3 Protocol Update — UX Agent Restored)
-- Gate status: Gate 3A routing updated. `ux-agent` restored as the active Gate 3A owner for UX design and Figma execution.
-- Artifact changes: Updated shared gate policy, model routing, domain ownership rules, `ux.agent.md`, and Gate 3 handoff requirements to require an `Orchestrator Resume Packet`.
-- Open questions status: none. This is a protocol/routing decision, not a slice-scope change.
-- Next micro-goal: invoke `ux-agent` for `create-debate` Gate 3A on `claude-sonnet-4.6` and validate the returned `UX Flow/State Package` plus `Orchestrator Resume Packet`.
-- Blockers/owner decisions: none. Protocol now supports a dedicated Sonnet-led UX lane.
-
-### 2026-04-24 (Gate 3 Protocol Update — UX Agent Async Dispatch)
-- Gate status: Gate 3A dispatch semantics updated. `ux-agent` runs as bounded async passes with `03-ux.md` checkpointing.
-- Artifact changes: Updated shared gate policy, async dispatch rules, Gate 3 orchestration rules, and context rules so Gate 3A resumes only from the returned `UX Flow/State Package` plus `Orchestrator Resume Packet`.
-- Open questions status: none. This is a protocol/routing clarification.
-- Next micro-goal: async-dispatch `ux-agent` for `create-debate` Gate 3A and resume orchestration from the final return packet.
-- Blockers/owner decisions: none. Async UX dispatch is now the canonical Gate 3A mechanism.
-
-### 2026-04-24 (Gate 3 Resume Check Added)
-- Gate status: Gate 3 resume protocol tightened for async UX work.
-- Artifact changes: Updated resume protocol, Gate 3 orchestration rules, and orchestrator constraints so resumed Gate 3 sessions must verify `docs/slices/<slice-name>/03-ux.md` contains the final `UX Flow/State Package` plus `Orchestrator Resume Packet` before continuing.
-- Open questions status: none. This is a gate-safety rule, not a slice-scope change.
-- Next micro-goal: async-dispatch `ux-agent` for `create-debate` Gate 3A, then resume only after the UX return document is present.
-- Blockers/owner decisions: none.
-
-### 2026-04-24 (Gate 3 Delta Triage Added)
-- Gate status: Gate 3 refinement handling clarified.
-- Artifact changes: Added explicit Gate 3 delta triage rules to the design-gate skill, PRD gate loop-back rules, shared AGENTS policy, and orchestrator constraints so UX-driven requirement refinements are classified before progression.
-- Open questions status: none. This is a protocol clarification for handling UX-driven contract changes.
-- Next micro-goal: run `create-debate` Gate 3A under the new delta-triage rule and write back any approved behavioral refinements before Gate 3 closure.
-- Blockers/owner decisions: none.
-
-### 2026-04-24 (Gate 3 Progressive Persistence Added)
-- Gate status: Gate 3A long-thread recovery hardened.
-- Artifact changes: Updated UX agent contract, UX execution skill, resume/recovery rules, and shared AGENTS policy so `ux-agent` incrementally checkpoints `03-ux.md` throughout the async UX lane instead of waiting for a final end-of-thread dump.
-- Open questions status: none. This is a resilience hardening rule for long UX discussions and context compaction.
-- Next micro-goal: launch `create-debate` Gate 3A with live `03-ux.md` checkpointing enabled so any long discussion can be resumed from the artifact.
-- Blockers/owner decisions: none.
-
-### 2026-04-24 (Gate 3 Discussion Loop Corrected)
-- Gate status: Gate 3A interaction model corrected to match actual tooling behavior.
-- Artifact changes: Updated shared AGENTS policy, async-dispatch skill, design-gate skill, orchestrator contract, and context rules to distinguish bounded async UX passes from the in-chat critique fallback. Removed the false assumption that `run-agent.ts` opens a persistent user-interactive UX thread.
-- Open questions status: none. This is a tooling-capability correction.
-- Next micro-goal: use a rerun-capable async `ux-agent` pass for the next `create-debate` Phase 1 revision, with `03-ux.md` as the rehydration source.
-- Blockers/owner decisions: Product Owner rejected the first Phase 1 direction and requested a better UX iteration process.
-
-### 2026-04-24 (Gate 3 Async UX Dispatch Finalized)
-- Gate status: Gate 3A async UX dispatch process finalized after live rerun validation.
-- Artifact changes: Updated shared AGENTS policy, orchestrator and UX agent contracts, design-gate orchestration, async-dispatch skill, session-lifecycle skill, and orchestrator context to codify bounded async UX passes, `03-ux.md` rehydration, rerun-by-redispatch, and the manual orchestrator resume boundary.
-- Open questions status: none. This is protocol hardening, not a slice-scope change.
-- Next micro-goal: use the finalized async Gate 3A process for remaining `create-debate` UX iterations and future slices.
-- Blockers/owner decisions: none. Product Owner confirmed the async UX dispatch process is working and should be the preferred Gate 3A lane.
+### 2026-04-28 (Hybrid Issue-Level Runtime QA Policy)
+- Gate status: Gate 5 / Gate 5.5 workflow refined. UI-impacting task PRs now use a hybrid QA model: dev invokes issue-level runtime QA before final handback; orchestrator verifies evidence and still owns the final slice-level integrated runtime QA pass.
+- Artifact changes: Updated `domain-ownership-governance`, `build-merge-gate-orchestration`, `build-evidence-and-merge-readiness`, and `dev.agent.md`. Added Known Rule #95 for hybrid issue-level runtime QA ownership.
+- Open questions status: none. Product Owner selected the hybrid model over orchestrator-only or final-slice-only QA.
+- Next micro-goal: apply the hybrid model to `create-debate` issue #207 by dispatching a same-worktree fix lane that resolves the Gate 5.5 finding and reruns issue-level runtime QA before handing back.
+- Blockers/owner decisions: none. The new default is now active for UI-impacting Gate 5 tasks.
 
 ### 2026-04-25 (Gate 5 PR Opening Ownership Clarified)
 - Gate status: Gate 5 PR-opening ownership clarified.
@@ -307,12 +260,7 @@ Template:
 - Next micro-goal: apply the stricter non-dev PR lock on future orchestrator and specialist workflows while continuing the active PR #200 review loop.
 - Blockers/owner decisions: none.
 
-### 2026-04-26 (create-debate Gate 3 Pass)
-- Gate status: `create-debate` Gate 3 ✅ Pass. UX execution complete, Design QA final verdict PASS, Product Owner approval captured, and Gate 3 behavioral writeback completed.
-- Artifact changes: Updated `docs/slices/create-debate/01-requirement.md` with amended AC-29, AC-30, AC-34, AC-35 and new AC-40; updated `docs/slices/create-debate/02-prd.md` with FR-12, resolved OQ-1 references, and a Gate 3 `## Amendments` section. Updated global AC counter to AC-40.
-- Open questions status: OQ-1 closed at Gate 3 via AC-40 (inline warning, no blocking dialog). OQ-2 and OQ-3 remain accepted for Gate 4 architecture and must resolve before Gate 5.
-- Next micro-goal: Gate 4 — hand off `create-debate` to `architecture-agent` with `01-requirement.md`, `02-prd.md`, `03-ux.md`, `04-design-qa.md`, and the node-targeted Figma frame URLs from `04-design-qa.md`.
-- Blockers/owner decisions: none for Gate 4 start. Architecture must carry OQ-2 and OQ-3 to resolution before Build authorization.
+### create-debate — Gate 6 ✅ Complete (2026-04-29) — Full log: docs/slices/create-debate/context-log.md
 
 ### debate-screen-polish — Gate 6 ✅ Complete (2026-04-19) — Full log: docs/slices/debate-screen-polish/context-log.md
 

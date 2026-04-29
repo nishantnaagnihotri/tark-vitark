@@ -41,6 +41,26 @@ Gate 3A-specific recovery rule:
 2. If timeout occurs three consecutive times for the same PR, escalate with options: extend wait, accept current review state, or investigate service status.
 3. Do not silently skip the review loop.
 
+### Silent Async Dev Lane
+
+Use this ladder when a Gate 5 async dev lane stays quiet for a long interval and no PR is visible yet.
+
+Definitions:
+
+- `silent wake`: an alarm fires, the dev terminal is still running, and there is no new terminal output, PR, or issue activity proving completion.
+- `silent-progress`: the lane is quiet externally, but the prepared branch or worktree shows real local progress such as changed files, new commits, or a valid task worktree.
+- `suspect-stalled`: the lane is quiet externally and the prepared branch or worktree shows no useful progress, or the terminal exited without producing a PR.
+
+Recovery ladder:
+
+1. First silent wake (about 10 minutes): do external-only checks. Poll the dev terminal once and cross-check GitHub for a task PR or issue activity. If still unresolved, re-arm the alarm and wait.
+2. Second silent wake (about 20 minutes): re-arm first, then do exactly one read-only salvage probe in the existing prepared branch or worktree. Check branch name, `git status --short`, changed files, and the latest commit. Do not edit files, run tests, kill the lane, or open a competing lane during this probe.
+3. If the salvage probe shows useful local progress, classify the lane as `silent-progress`, keep the existing lane alive, and continue waiting with alarms.
+4. Third silent wake (about 30 minutes total) or terminal exit without a PR: if useful local progress exists, launch one recovery pass in the same prepared branch or worktree with instructions to inspect and reuse the existing state first and only rewrite code if a local defect blocks PR creation or review readiness.
+5. If the third silent wake shows no useful progress, or the exited lane left no usable worktree state, kill the stale lane and relaunch one fresh dev pass in the same prepared branch or worktree.
+6. Only one automatic recovery pass is allowed. If that recovery pass also stalls, exits without a PR, or fails to become review-ready, escalate to Product Owner with the evidence trail.
+7. Terminal silence alone is not proof of failure. A task PR, issue activity, local commits, or worktree diffs outweigh missing terminal chatter.
+
 ## Resume Validation
 
 On resume, before any Gate 3 or later work:

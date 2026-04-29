@@ -11,6 +11,7 @@ Use this skill to run Gate 5, Gate 5.5 Runtime QA, and Gate 6 consistently from 
 
 - Running Gate 5 implementation handoff from orchestrator
 - Running Gate 5.5 runtime QA validation for UI-impacting issues
+- Running the final slice-level integrated runtime QA pass before recommending a `slice/* -> master` PR
 - Validating Build Output Package readiness and progression decisions
 - Running Gate 6 merge-readiness review in local context
 - Applying build and merge checklist contracts before recommendation
@@ -104,6 +105,13 @@ Task PR ownership rule:
 4. If Product Owner wants a non-default hold before PR creation for a specific issue, orchestrator must state that override explicitly in the dev handoff.
 5. Non-dev PR creation remains outside this default and still requires explicit Product Owner authorization.
 
+Issue-level runtime QA ownership rule for UI-impacting tasks:
+
+1. Default hybrid model: the implementing `dev` agent invokes issue-level `runtime-qa` before returning final task completion for a UI-impacting PR.
+2. `runtime-qa` remains the owner of the verdict package; `dev` owns only the dispatch, the subsequent fixes, and the PR update/review loop.
+3. Orchestrator verifies the issue-level runtime QA evidence and findings disposition before Gate 6, but does not need to manually initiate every issue-level QA run when a valid verdict package is already attached.
+4. Orchestrator still owns the final slice-level integrated runtime QA pass after all task PRs merge into `slice/<slice-name>`.
+
 Execution rule:
 
 1. Gate 5 is implementation-only and works one Issue at a time.
@@ -121,8 +129,9 @@ Gate 5 completion rule:
 
 1. Each Issue is complete only when code, tests, and PR package are produced.
 2. PR must include explicit issue-closing reference.
-3. For UI-impacting issues, Gate 5.5 Runtime QA must pass before Gate 6 progression (or Product Owner must explicitly accept residual runtime risk via `vscode_askQuestions` — see Explicit PO Acceptance Enforcement rule below).
-4. Gate 6 (Merge) may begin for that Issue only after required Gate 5 and Gate 5.5 checks pass.
+3. For UI-impacting issues, the implementing `dev` agent must invoke issue-level Gate 5.5 runtime QA before final handback and include the runtime verdict package or failure handback in its evidence set.
+4. Gate 5.5 Runtime QA must pass before Gate 6 progression (or Product Owner must explicitly accept residual runtime risk via `vscode_askQuestions` — see Explicit PO Acceptance Enforcement rule below).
+5. Gate 6 (Merge) may begin for that Issue only after required Gate 5 and Gate 5.5 checks pass.
 
 Local-validation rule:
 
@@ -136,16 +145,22 @@ Build Gate Checklist (Orchestrator-owned):
 
 When Gate 5 implementation output is ready, run Runtime QA before Gate 6 for UI-impacting issues.
 
+Scope rule:
+
+1. Gate 5.5 is an **issue-level** gate. It validates the specific UI-impacting task PR before that PR may merge into `slice/<slice-name>`.
+2. Gate 5.5 does **not** replace the final slice-level integrated runtime QA pass. Task-level QA proves the task PR is safe to merge into the slice branch; it does not prove the fully integrated slice is ready for `master`.
+
 Execution rule:
 
-1. If issue scope is UI-impacting, invoke `runtime-qa` with:
+1. If issue scope is UI-impacting, the default path is: `dev` invokes `runtime-qa` after opening or updating the task PR and before returning final task completion. The handoff must include:
    - PR link and issue reference
    - Acceptance-criterion journey mapping (AC IDs and literal AC text)
    - **Figma frame index from `04-design-qa.md`** — include the full node-ID-to-AC mapping table so the QA agent can run Figma Frame Fidelity checks against the live browser. This is mandatory for UI-impacting issues. Without it, QA can only validate against AC text and will miss Figma-vs-AC drift.
    - Route list and expected states
    - Test data/setup notes and known-risk notes
-2. If issue scope is non-UI, orchestrator may mark `Runtime QA: Not Required` with explicit rationale.
-3. Runtime QA execution is Local by default.
+2. Orchestrator consumes the resulting verdict package as Gate 5.5 evidence. Orchestrator re-invokes `runtime-qa` directly only when the dev-provided verdict is missing, stale against the current head, contradictory, or otherwise insufficient.
+3. If issue scope is non-UI, orchestrator may mark `Runtime QA: Not Required` with explicit rationale.
+4. Runtime QA execution is Local by default.
 
 Proceeding rule:
 
@@ -169,6 +184,37 @@ Gate 5.5 completion rule:
 Runtime QA Checklist (Orchestrator-owned):
 
 1. Run the canonical runtime QA workflow in `runtime-qa-validation` (`.github/skills/runtime-qa-validation/SKILL.md`).
+
+## Final Slice-Level Integrated Runtime QA Trigger
+
+When all task PRs for a slice have merged into `slice/<slice-name>` and the orchestrator is preparing the final `slice/<slice-name> -> master` PR recommendation, run one integrated runtime QA pass on the slice branch if the slice contains one or more UI-impacting issues.
+
+Execution rule:
+
+1. This pass is **slice-level**, not issue-level.
+2. Run it after the last task PR is merged into `slice/<slice-name>` and before recommending the final slice PR for Product Owner merge.
+3. Invoke `runtime-qa` against the integrated slice branch or the final slice PR with:
+   - slice reference and final PR link when available
+   - end-to-end acceptance-criterion journey mapping for the full slice
+   - the authoritative Figma frame index from `04-design-qa.md`
+   - cross-task seam checks, route list, expected states, and known-risk notes
+4. The integrated pass must explicitly validate cross-task interactions and regressions that no single task PR could prove in isolation.
+5. If the slice has no UI-impacting issues, the orchestrator may record `Slice Runtime QA: Not Required` with rationale.
+
+Proceeding rule:
+
+1. Recommend the final `slice/<slice-name> -> master` PR for merge only when either:
+   - `Slice Runtime QA Verdict: Pass`, or
+   - `Slice Runtime QA: Not Required` is explicitly recorded with rationale.
+2. If the slice-level integrated runtime QA verdict is `Fail`, `Blocked`, or `AC-DELTA`, do not recommend final merge. Loop back according to the runtime verdict rules.
+3. Task-level Gate 5.5 evidence is still required for each UI-impacting task PR. The slice-level integrated pass is additive, not substitutive.
+
+Completion rule:
+
+1. Attach one of the following to the final slice PR evidence set:
+   - `Slice Runtime QA Verdict Package`, or
+   - explicit `Slice Runtime QA: Not Required` marker with rationale.
+2. The final slice PR cannot be considered merge-ready without this integrated evidence when the slice contains UI-impacting work.
 
 ## Merge Gate Trigger
 

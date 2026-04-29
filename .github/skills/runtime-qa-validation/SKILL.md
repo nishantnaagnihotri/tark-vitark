@@ -10,15 +10,20 @@ Use this skill to validate runtime behavior in a real browser session when manua
 ## When To Use
 
 - Running Gate 5.5 Runtime QA for a UI-impacting issue
+- Running the final slice-level integrated runtime QA pass before recommending a `slice/* -> master` PR
 - Verifying that implemented acceptance criteria work in a live browser session
 - Checking responsive behavior and theme behavior before Gate 6 merge recommendation
 - Producing a runtime verdict package for orchestrator progression decisions
 
 ## Scope Classification
 
-1. Runtime QA is required for UI-impacting issues.
-2. Non-UI issues may skip runtime QA only when orchestrator records `Runtime QA: Not Required` with rationale.
-3. If issue metadata does not clearly indicate UI impact, request orchestrator clarification and do not self-classify within this skill.
+1. This skill supports two scopes only:
+   - `Issue-level Gate 5.5 runtime QA` for a single UI-impacting task PR.
+   - `Slice-level integrated runtime QA` for the fully merged `slice/<slice-name>` branch before recommending the final slice PR to `master`.
+2. Runtime QA is required for UI-impacting issues at Gate 5.5.
+3. Slice-level integrated runtime QA is required when the slice contains one or more UI-impacting issues.
+4. Non-UI work may skip runtime QA only when orchestrator records `Runtime QA: Not Required` or `Slice Runtime QA: Not Required` with rationale, as appropriate to the scope.
+5. If the handoff does not make the validation scope explicit, request orchestrator clarification and do not self-classify within this skill.
 
 ## Default Validation Matrix
 
@@ -113,6 +118,15 @@ This is a hard stop — do NOT mark the AC as Fail or Pass while an `AC-DELTA` i
 5. Capture concise evidence per journey, per required viewport, and per required theme when the surface is theme-affecting. Include the Figma frame node ID alongside each browser screenshot as a paired reference.
 6. If execution fails due to infrastructure/tooling issues, follow `gate-recovery-and-resume` before progression.
 
+Scope-specific expectations:
+
+1. For `Issue-level Gate 5.5 runtime QA`, validate the issue's literal acceptance-criterion journeys and immediate regressions needed for that task PR to merge into `slice/<slice-name>`.
+2. For `Slice-level integrated runtime QA`, validate the full slice branch as an integrated product surface:
+   - all primary slice acceptance journeys end-to-end
+   - cross-task seams and state handoffs
+   - regressions that emerge only after multiple task PRs have merged together
+3. Slice-level integrated QA is additive. It does not waive, replace, or retroactively satisfy issue-level Gate 5.5 evidence for earlier UI-impacting task PRs.
+
 ## Verdict Rules
 
 1. `Pass` only when all required checks pass for all required journeys, viewports, and themes.
@@ -124,16 +138,18 @@ This is a hard stop — do NOT mark the AC as Fail or Pass while an `AC-DELTA` i
 ## Runtime QA Output Contract
 
 1. Output must use exactly one of these forms:
-   - Executed runtime QA package for UI-impacting issues.
-   - Non-UI skip package when orchestrator has recorded `Runtime QA: Not Required` with rationale.
+   - Executed runtime QA package for issue-level Gate 5.5.
+   - Executed runtime QA package for slice-level integrated QA.
+   - Non-UI skip package when orchestrator has recorded `Runtime QA: Not Required` or `Slice Runtime QA: Not Required` with rationale.
 2. Executed runtime QA package:
+   - `Validation Scope: Issue-Level Gate 5.5 | Slice-Level Integrated`
    - `Runtime QA Verdict: Pass | Fail | Blocked | AC-DELTA` (use `AC-DELTA` when a Figma-vs-AC conflict was found and must be resolved before a verdict can be issued).
    - `Coverage Matrix`: journey × viewport × theme × Figma Fidelity status table. When no Figma frame node IDs were provided, still emit the full matrix and set `Figma Fidelity` to `Not Consulted` for every row.
    - `Figma Frames Consulted`: list of node IDs fetched, paired to the AC state they cover. When no Figma frame node IDs were provided, output `none`.
    - `Findings`: defects, severity, and reproducibility notes. `AC-DELTA` conflicts listed separately before any Pass/Fail findings.
    - `Evidence`: command list, route list, captured runtime observations, paired browser screenshots, plus Figma frame design context (node IDs) when available. If no Figma frame node IDs were provided, include the runtime evidence only and record that design context was not consulted.
-   - `Gate Recommendation`: proceed to Gate 6 | loop back to Dev | AC-DELTA — orchestrator must amend AC before verdict | blocked pending owner action.
+   - `Gate Recommendation`: proceed to Gate 6 | proceed to final slice merge review | loop back to Dev | AC-DELTA — orchestrator must amend AC before verdict | blocked pending owner action.
 3. Non-UI skip package:
-   - `Runtime QA: Not Required`.
+   - `Runtime QA: Not Required` or `Slice Runtime QA: Not Required`.
    - `Rationale`: concise explanation of why the issue is non-UI and does not require live browser validation.
    - `Gate Recommendation`: proceed according to orchestrator flow for non-UI work.

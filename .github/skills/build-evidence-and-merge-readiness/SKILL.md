@@ -47,10 +47,18 @@ A superset block injected by the orchestrator (with additional fields such as `t
 
 ## Merge Gate Policy
 
-1. Gate 6 is an orchestrator-owned decision gate for issue-level merge readiness.
+1. Gate 6 is an orchestrator-owned decision gate for issue-level task PR merge readiness.
 2. Merge recommendation requires tests, provenance/linkage, review closure, docs/release updates when needed, and rollback note.
 3. Product Owner remains the only authority who performs the actual merge.
 4. If merge readiness evidence is incomplete, the PR must loop back with explicit remediation items.
+
+Final slice PR rule:
+
+1. Task PR merge readiness and final `slice/<slice-name> -> master` merge readiness are distinct checks.
+2. For task PRs, runtime evidence is satisfied by issue-level Gate 5.5 verdicts.
+3. For the final slice PR, runtime evidence is satisfied only by the integrated slice-level runtime QA verdict package, or explicit `Slice Runtime QA: Not Required` rationale.
+4. The final slice PR may not rely on task-level Gate 5.5 verdicts alone as a substitute for integrated slice runtime evidence.
+5. The final slice PR uses the same merge-evidence framework as a task PR, plus the additional integrated slice runtime QA requirement.
 
 ## Architecture Delta Protocol (Dev-owned, Gate 5)
 
@@ -93,6 +101,8 @@ Rules:
 10. Approval lock: verify unresolved open questions are resolved or explicitly accepted by Product Owner.
 11. Runtime QA scope lock: verify issue is classified as `UI-impacting` or `Runtime QA: Not Required` with explicit rationale.
 12. Runtime QA evidence lock: for `UI-impacting` issues, verify Runtime QA Verdict Package is present with coverage matrix and findings disposition.
+12a. Runtime QA provenance lock: for `UI-impacting` issues, verify the issue-level Runtime QA Verdict Package is attached to the current PR head and was produced after the latest dev fix batch. If dev invoked the QA lane directly, verify the verdict is still runtime-qa-authored rather than a dev-written summary.
+13. Final slice runtime QA lock: when preparing a `slice/<slice-name> -> master` PR and the slice contains UI-impacting work, verify a `Slice Runtime QA Verdict Package` is present, or `Slice Runtime QA: Not Required` is explicitly recorded with rationale.
 
 ## Merge Gate Checklist (Orchestrator-owned)
 
@@ -101,12 +111,13 @@ Rules:
 3. Provenance lock: verify PR includes issue-closing keyword and a full `## Agent Provenance` block with `run-id` tracing back to session memory terminal-dispatch records.
 4. Review lock: verify review comments are resolved or explicitly accepted by Product Owner.
 5. Copilot review loop lock: verify the latest Copilot review on the latest commit reports zero comments in its review body, including known phrasings such as **"generated 0 comments"**, **"0 new comments"**, or **"generated no new comments"**. This is the only exit condition. Historical outdated threads do not count. If the latest review still reports >0 comments, the loop must continue. `semantically-closed/tooling-unresolved` items must be reported explicitly and do not block merge unless Product Owner decides otherwise.
-6. Runtime QA lock: for `UI-impacting` issues, verify latest Runtime QA verdict is `Pass`, or explicit Product Owner risk acceptance is documented via `vscode_askQuestions` (unilateral agent declaration is not valid — see `build-merge-gate-orchestration` Explicit PO Acceptance Enforcement rule).
-7. Documentation lock: verify docs and release notes are updated when applicable.
-8. Rollback lock: verify rollback note is documented and feasible.
-9. Risk acceptance lock: verify residual risks are visible and explicitly accepted when required.
-10. AC SSoT lock: verify `02-prd.md`, `05-architecture.md`, and `06-tasks.md` do not contain copied AC prose — they must reference AC IDs and link to the canonical `.feature` file. Flag any artifact that re-states AC text as a drift risk.
-11. Architecture delta lock: if the task changed an interface contract or a previously "no-changes" component, verify `05-architecture.md` includes an appended `## Architecture Delta` section as the canonical record; the PR description may link to or summarize that delta, but is not the source of truth. If there is no architecture delta, verify the PR description includes an explicit `Architecture Delta: none` statement. Missing the required evidence is a Build Gate loop-back condition.
+6. Runtime QA lock: for task PRs tied to `UI-impacting` issues, verify latest issue-level Runtime QA verdict is `Pass`, or explicit Product Owner risk acceptance is documented via `vscode_askQuestions` (unilateral agent declaration is not valid — see `build-merge-gate-orchestration` Explicit PO Acceptance Enforcement rule).
+7. Final slice runtime QA lock: for the final `slice/<slice-name> -> master` PR when the slice contains UI-impacting work, verify the latest slice-level integrated Runtime QA verdict is `Pass`, or explicit Product Owner risk acceptance is documented via `vscode_askQuestions`.
+8. Documentation lock: verify docs and release notes are updated when applicable.
+9. Rollback lock: verify rollback note is documented and feasible.
+10. Risk acceptance lock: verify residual risks are visible and explicitly accepted when required.
+11. AC SSoT lock: verify `02-prd.md`, `05-architecture.md`, and `06-tasks.md` do not contain copied AC prose — they must reference AC IDs and link to the canonical `.feature` file. Flag any artifact that re-states AC text as a drift risk.
+12. Architecture delta lock: if the task changed an interface contract or a previously "no-changes" component, verify `05-architecture.md` includes an appended `## Architecture Delta` section as the canonical record; the PR description may link to or summarize that delta, but is not the source of truth. If there is no architecture delta, verify the PR description includes an explicit `Architecture Delta: none` statement. Missing the required evidence is a Build Gate loop-back condition.
 
 ## Merge Gate Output Contract
 
@@ -125,4 +136,5 @@ Recommend merge only if all are true:
 3. Review issues are resolved or explicitly accepted by Product Owner.
 4. Documentation and release notes are updated.
 5. Rollback approach is documented.
-6. For UI-impacting issues, runtime QA verdict is `Pass` or Product Owner has explicitly accepted residual runtime risk via `vscode_askQuestions` in the current session (unilateral agent declaration is not valid).
+6. For task PRs tied to UI-impacting issues, issue-level runtime QA verdict is `Pass` or Product Owner has explicitly accepted residual runtime risk via `vscode_askQuestions` in the current session (unilateral agent declaration is not valid).
+7. For the final `slice/<slice-name> -> master` PR when the slice contains UI-impacting work, slice-level integrated runtime QA verdict is `Pass` or Product Owner has explicitly accepted residual runtime risk via `vscode_askQuestions` in the current session.
