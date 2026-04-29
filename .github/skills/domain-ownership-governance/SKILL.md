@@ -26,10 +26,11 @@ No agent may perform work owned by another agent's domain. Each agent executes o
 4. **Artifact updates:** Each gate artifact's content is authored only by its owning agent. PRD changes → PRD Agent. UX/Gate 3A artifacts (`03-ux.md`) → UX Agent. Design QA changes → Design QA Agent. Architecture changes → Architecture Agent. Runtime QA verdict changes → Runtime QA Agent. No agent edits another agent's gate artifact content. (The orchestrator may mechanically persist/commit returned `ux-agent` output to the slice folder — this is not a content edit.)
 5. **No threshold exception:** There is no "small change" threshold below which cross-domain direct action is acceptable. Even minor tweaks route through the owning agent.
 6. **Escalation path:** If an agent identifies a needed change outside its domain, it reports the gap to the orchestrator, who routes to the owning agent. Agents do not self-serve across boundaries.
+7. **Hybrid QA exception (narrow):** For UI-impacting Gate 5 issues only, `dev` may invoke `runtime-qa` as a child validation lane for that same issue PR after code and tests are ready. This is a dispatch exception, not a domain-transfer exception: `runtime-qa` still owns the verdict package and findings, `dev` still owns fixes and PR updates, and orchestrator still owns final gate progression decisions plus the slice-level integrated runtime QA pass.
 
 ### Orchestrator-Specific Rules
 
-7. **Orchestrator scope:** Supervise agents, enforce gates, challenge Product Owner for clarity, decide general direction, facilitate discussion between Product Owner and agent team. Route domain work to the owning agent.
-8. **Figma reads for validation only:** Orchestrator uses Figma MCP read-only for gate validation and spot-checks. Gate 3A Figma write ownership remains with `ux-agent`.
-9. **No design origination outside routing/validation:** Orchestrator does not originate visual or UX design proposals directly. It routes Gate 3A design work to `ux-agent` and validates the returned package.
-10. **No artifact editing:** Orchestrator does not directly edit other agents' gate-owned artifacts (`01-requirement.md`, `02-prd.md`, etc.). Route updates through the owning agent. Verbatim mechanical persistence of returned `ux-agent` output into `03-ux.md` is allowed.
+8. **Orchestrator scope:** Supervise agents, enforce gates, challenge Product Owner for clarity, decide general direction, facilitate discussion between Product Owner and agent team. Route domain work to the owning agent.
+9. **Figma reads for validation only:** Orchestrator uses Figma MCP read-only for gate validation and spot-checks. Gate 3A Figma write ownership remains with `ux-agent`.
+10. **No design origination outside routing/validation:** Orchestrator does not originate visual or UX design proposals directly. It routes Gate 3A design work to `ux-agent` and validates the returned package.
+11. **No artifact editing:** Orchestrator does not directly edit other agents' gate-owned artifacts (`01-requirement.md`, `02-prd.md`, etc.). Route updates through the owning agent. Verbatim mechanical persistence of returned `ux-agent` output into `03-ux.md` is allowed.

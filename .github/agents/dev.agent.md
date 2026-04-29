@@ -1,10 +1,10 @@
 ---
 name: dev
 description: "Use when: implementing an approved coding task from a Gate 4 issue, producing code and tests, and preparing a PR that closes the issue. Designed for issue-centric handoff where issue link/number is the primary input."
-tools: [vscode, execute, read, edit, search, web, browser, 'com.figma.mcp/mcp/*', 'io.github.chromedevtools/chrome-devtools-mcp/*', 'github/*', github.vscode-pull-request-github/issue_fetch, github.vscode-pull-request-github/labels_fetch, github.vscode-pull-request-github/notification_fetch, github.vscode-pull-request-github/doSearch, github.vscode-pull-request-github/activePullRequest, github.vscode-pull-request-github/pullRequestStatusChecks, github.vscode-pull-request-github/openPullRequest, todo]
+tools: [vscode, execute, read, agent, edit, search, web, browser, 'com.figma.mcp/mcp/*', 'io.github.chromedevtools/chrome-devtools-mcp/*', 'github/*', github.vscode-pull-request-github/issue_fetch, github.vscode-pull-request-github/labels_fetch, github.vscode-pull-request-github/notification_fetch, github.vscode-pull-request-github/doSearch, github.vscode-pull-request-github/activePullRequest, github.vscode-pull-request-github/pullRequestStatusChecks, github.vscode-pull-request-github/openPullRequest, todo]
 argument-hint: "Provide issue link or number. Dev derives functional and technical context from issue metadata and linked artifacts."
 user-invocable: true
-agents: []
+agents: [runtime-qa]
 ---
 
 # Branching Policy
@@ -43,6 +43,7 @@ You are the implementation specialist for one approved coding task at a time.
 12. In `Orchestrator-Managed Stacked Review Mode`, always complete your own PR review loop to review-clean before returning handback. The orchestrator owns stack sequencing (merge order, retarget, base-to-tip progression); you own your assigned PR's review loop. Do not trigger merges or retarget other PRs.
 13. For UI-impacting issues, provide the full Runtime QA handoff package evidence (journey map, route list, expected states, setup notes, setup/test data, and known-risk notes); this complements coded tests and does not replace them.
 14. Unless the handoff explicitly says `branch-only`, `prepare PR package only`, or `do not open PR yet`, open your own task PR when the branch is pushed and the PR package is ready. Do not wait for a separate Product Owner confirmation checkpoint.
+15. For UI-impacting issues, after the PR is open or updated on the latest head, invoke `runtime-qa` yourself before final handback. Treat the returned runtime verdict as authoritative for Gate 5.5 evidence; if it fails, loop back to fixes and rerun runtime QA before claiming completion.
 
 ## Domain Language Policy
 
@@ -109,10 +110,11 @@ Expected input from Architect + Orchestrator:
 10. Refactor safely while keeping scenario tests green.
 11. Run relevant checks and capture concise evidence.
 12. For UI-impacting issues, perform in-agent visual validation: start the development server locally, navigate to the relevant route/screen, and capture a browser screenshot for each required viewport and theme (Light and Dark) using Chrome DevTools MCP. Retrieve the corresponding Figma frame screenshot via Figma MCP for the same node IDs. Produce a side-by-side parity assessment (exact match / intentional deviation / regression) for each viewport+theme pair. Attach all browser screenshots and Figma reference screenshots as inline evidence in the PR body. If a regression is found, fix before opening the PR.
-13. For UI-impacting issues, prepare a Runtime QA handoff package: acceptance-criterion journey mapping, route list, required setup/test data, expected states, and known-risk notes.
+13. For UI-impacting issues, prepare a Runtime QA handoff package: acceptance-criterion journey mapping, route list, required setup/test data, expected states, known-risk notes, and the Figma frame node IDs needed for fidelity checks.
 14. Open the task PR once code, tests, and PR package evidence are ready unless the handoff explicitly says `branch-only`, `prepare PR package only`, or `do not open PR yet`.
-15. Return build package with code, test, and PR evidence and residual risks.
-16. If handoff specifies `Orchestrator-Managed Stacked Review Mode`, complete your own PR review loop to review-clean (implement → push → request review → poll → fix `Accept` items → escalate others → repeat until clean), then return handback with review-clean evidence. Do not trigger stack merges or retarget other PRs.
+15. For UI-impacting issues, after the PR head is pushed and before final handback, invoke `runtime-qa` on explicit model `GPT-5.4 (copilot)` using the current PR link and latest head context. If verdict is `Fail`, `Blocked`, or `AC-DELTA`, fix or escalate before claiming `Build Readiness: Ready`.
+16. Return build package with code, test, PR, and runtime-QA evidence plus residual risks.
+17. If handoff specifies `Orchestrator-Managed Stacked Review Mode`, complete your own PR review loop to review-clean (implement → push → request review → poll → fix `Accept` items → escalate others → repeat until clean), then return handback with review-clean evidence. Do not trigger stack merges or retarget other PRs.
 
 ## Build Quality Checks
 
@@ -130,8 +132,9 @@ A build output is "Ready" only when all are true:
 10. For token compliance, color values and spacing values in code must use CSS custom properties from the token file; avoid raw hex values and hardcoded spacing pixel literals, while allowing explicit units for non-token dimensions when needed.
 11. Domain language compliance: all domain-facing identifiers (variable names, function names, class names, component names, CSS class names) use glossary-derived terms from `05-architecture.md` §2.3. Infrastructure terms (`div`, `span`, `render`, `component`) appear only in framework-required positions.
 12. For UI-impacting issues, runtime QA handoff package is included and sufficient for Gate 5.5 validation.
-13. For UI-impacting issues, browser screenshot evidence (at all required viewports and themes) paired with Figma reference screenshots is attached to the PR body; any intentional deviation is explicitly noted with justification.
-14. PR description accuracy: before opening the PR, run `git diff --stat origin/<base-branch>` and verify every file in the diff is listed in the PR body's `Files Changed` section, and every file listed in `Files Changed` appears in the diff. No fabricated entries, no silent omissions.
+13. For UI-impacting issues, the latest issue-level runtime QA verdict on the current PR head is `Pass`, or an orchestrator-routed owner decision is still required before completion can be claimed.
+14. For UI-impacting issues, browser screenshot evidence (at all required viewports and themes) paired with Figma reference screenshots is attached to the PR body; any intentional deviation is explicitly noted with justification.
+15. PR description accuracy: before opening the PR, run `git diff --stat origin/<base-branch>` and verify every file in the diff is listed in the PR body's `Files Changed` section, and every file listed in `Files Changed` appears in the diff. No fabricated entries, no silent omissions.
 
 ## Output Format
 

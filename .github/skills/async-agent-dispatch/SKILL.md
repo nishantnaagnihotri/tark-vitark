@@ -193,6 +193,20 @@ Useful for verifying rate-limit headroom before a long parallel run:
 npx tsx scripts/run-agent.ts requirement-challenger "Reply with exactly: ALIVE"
 ```
 
+## Silent Async Dev Lane Recovery
+
+Gate 5 dev lanes may continue working even when terminal output stops. Treat terminal chatter as advisory, not authoritative.
+
+Rules:
+
+1. Use the alarm skill's 10-minute interval for the first wait state when a dev lane has no PR yet.
+2. At the first silent wake, do not start a competing dev lane. Poll the terminal and cross-check GitHub only, then re-arm if still unresolved.
+3. At the second silent wake, re-arm first and then allow one read-only salvage probe against the already assigned branch or worktree. Inspect existing state before concluding the lane is stalled.
+4. If the assigned branch or worktree contains useful local progress, any recovery dispatch must reuse that same branch or worktree. The recovery prompt must explicitly say: inspect existing state first, reuse existing commits or diffs, and do not rewrite working code unless a local defect blocks PR creation or review readiness.
+5. Only if the existing lane has no useful progress may orchestrator kill it and start a fresh dev pass in the same prepared branch or worktree.
+6. Do not dispatch multiple competing recovery lanes for the same issue. One active canonical lane plus at most one later recovery pass is the limit.
+7. A GitHub task PR or issue-linked review activity is ground truth for completion even if the terminal still appears running.
+
 ---
 
 ## Sync Dispatch Banner (Mandatory)

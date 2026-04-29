@@ -85,6 +85,15 @@ Do this before any other response content. If `/memories/session/active-state.md
 
 **On completion** — when `get_terminal_output` confirms a terminal has exited or GitHub PR cross-check marks a task done, update its row status in session memory and record the outcome (output preview or error). Do not delete the row — keep it as an audit trail for the session. For Gate 3A `ux-agent` completion, recording the outcome does not itself authorize gate progression; the Product Owner must explicitly ask to resume.
 
+**Silent dev-lane tracking (Gate 5)** — when a running Gate 5 dev lane reaches a wake check with no visible PR and no meaningful new terminal output, track the quiet interval explicitly in session memory and follow the ladder below:
+
+1. First silent wake: update the run status to `silent-1`, re-arm the 10-minute alarm, and do external-only checks.
+2. Second silent wake: update the run status to `silent-2`, re-arm first, then run one read-only salvage probe on the assigned branch or worktree. If useful local progress exists, change the run status to `silent-progress`; otherwise keep `silent-2` and prepare for recovery on the next wake.
+3. Third silent wake or terminal exit without PR: if useful local progress exists, dispatch one recovery pass in the same branch or worktree and mark the row `recovery-running`. If no useful progress exists, mark the old row `suspect-stalled`, kill that terminal, and dispatch one fresh canonical recovery pass in the same prepared branch or worktree.
+4. If the recovery pass also stalls or exits without a task PR, mark the row `escalated-silent-stall` and stop automatic retries pending Product Owner direction.
+
+Useful local progress means one or more of: non-trivial changed files in the assigned worktree, a new local commit on the assigned branch, or a valid prepared task worktree containing the expected implementation surface. Silence alone never outweighs this evidence.
+
 **Standing rule** — never leave a turn where parallel `run-agent.ts` agents were dispatched without updating session memory with all terminal IDs. This is not optional. Forgetting to write terminal IDs to session memory is a protocol violation.
 
 ## Log Archiving Protocol
