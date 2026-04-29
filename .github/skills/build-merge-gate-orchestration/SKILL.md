@@ -153,6 +153,7 @@ Scope rule:
 Execution rule:
 
 1. If issue scope is UI-impacting, the default path is: `dev` invokes `runtime-qa` after opening or updating the task PR and before returning final task completion. The handoff must include:
+   - `Validation Scope: Issue-Level Gate 5.5`
    - PR link and issue reference
    - Acceptance-criterion journey mapping (AC IDs and literal AC text)
    - **Figma frame index from `04-design-qa.md`** — include the full node-ID-to-AC mapping table so the QA agent can run Figma Frame Fidelity checks against the live browser. This is mandatory for UI-impacting issues. Without it, QA can only validate against AC text and will miss Figma-vs-AC drift.
