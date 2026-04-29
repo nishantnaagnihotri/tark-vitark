@@ -132,6 +132,34 @@ describe('DebateTopicForm', () => {
         });
     });
 
+    it('uses semantic brand typography tokens for the TV lettermark treatment (AC-29)', () => {
+        const lettermarkTypographyBlock = debateTopicFormCss.match(
+            /\.debate-topic-form__lettermark-text\s*\{[^}]+\}/
+        )?.[0];
+
+        expect(lettermarkTypographyBlock).toBeDefined();
+        expect(lettermarkTypographyBlock).toContain(
+            'font-size: var(--typescale-brand-tv-lettermark-size);'
+        );
+        expect(lettermarkTypographyBlock).toContain(
+            'font-weight: var(--typescale-brand-tv-lettermark-weight);'
+        );
+        expect(lettermarkTypographyBlock).toContain(
+            'line-height: var(--typescale-brand-tv-lettermark-line-height);'
+        );
+        expect(lettermarkTypographyBlock).toContain(
+            'letter-spacing: var(--typescale-brand-tv-lettermark-tracking);'
+        );
+        expect(lettermarkTypographyBlock).not.toContain('font-size: 20px;');
+        expect(lettermarkTypographyBlock).not.toContain('font-weight: 900;');
+        expect(lettermarkTypographyBlock).not.toContain('letter-spacing: -1.5px;');
+
+        expect(tokensCss).toContain('--typescale-brand-tv-lettermark-size: 1.25rem;');
+        expect(tokensCss).toContain('--typescale-brand-tv-lettermark-weight: 900;');
+        expect(tokensCss).toContain('--typescale-brand-tv-lettermark-line-height: normal;');
+        expect(tokensCss).toContain('--typescale-brand-tv-lettermark-tracking: -0.09375rem;');
+    });
+
     it('pins topic-form geometry and token usage to Figma values for create and replace states', () => {
         expect(debateTopicFormCss).toContain(
             '.debate-topic-form {\n    width: 100%;\n    max-width: var(--size-create-debate-content-max-width);'
