@@ -1,5 +1,5 @@
-# Architecture Plan - create-debate
-## Gate 4 Artifact - 2026-04-27
+# Architecture Plan — create-debate
+## Gate 4 Artifact — 2026-04-27
 
 ---
 
