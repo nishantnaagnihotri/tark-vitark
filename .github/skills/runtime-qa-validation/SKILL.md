@@ -138,10 +138,12 @@ Scope-specific expectations:
 ## Runtime QA Output Contract
 
 1. Output must use exactly one of these forms:
-   - Executed runtime QA package for issue-level Gate 5.5.
-   - Executed runtime QA package for slice-level integrated QA.
+   - `Runtime QA Verdict Package` for issue-level Gate 5.5.
+   - `Slice Runtime QA Verdict Package` for slice-level integrated QA.
    - Non-UI skip package when orchestrator has recorded `Runtime QA: Not Required` or `Slice Runtime QA: Not Required` with rationale.
 2. Executed runtime QA package:
+   - `Runtime QA Verdict Package` when `Validation Scope: Issue-Level Gate 5.5`.
+   - `Slice Runtime QA Verdict Package` when `Validation Scope: Slice-Level Integrated`.
    - `Validation Scope: Issue-Level Gate 5.5 | Slice-Level Integrated`
    - `Runtime QA Verdict: Pass | Fail | Blocked | AC-DELTA` (use `AC-DELTA` when a Figma-vs-AC conflict was found and must be resolved before a verdict can be issued).
    - `Coverage Matrix`: journey × viewport × theme × Figma Fidelity status table. When no Figma frame node IDs were provided, still emit the full matrix and set `Figma Fidelity` to `Not Consulted` for every row.
