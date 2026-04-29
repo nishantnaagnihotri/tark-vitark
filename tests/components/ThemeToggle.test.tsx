@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { ThemeToggle } from '../../src/components/ThemeToggle';
 
@@ -51,6 +51,22 @@ describe('ThemeToggle', () => {
         sessionStorage.setItem('tark-vitark:theme', 'dark');
         render(<ThemeToggle />);
         expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
+    });
+
+    it('keeps the icon aligned when active theme changes outside the switch', async () => {
+        document.documentElement.setAttribute('data-theme', 'light');
+        render(<ThemeToggle />);
+
+        const button = screen.getByRole('switch');
+        expect(button).toHaveAttribute('aria-checked', 'false');
+        expect(button.querySelector('.theme-toggle__icon--dark')).not.toBeNull();
+
+        document.documentElement.setAttribute('data-theme', 'dark');
+
+        await waitFor(() => {
+            expect(button).toHaveAttribute('aria-checked', 'true');
+            expect(button.querySelector('.theme-toggle__icon--light')).not.toBeNull();
+        });
     });
 
     it('reflects system dark preference in button without setting data-theme', () => {

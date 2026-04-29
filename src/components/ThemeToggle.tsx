@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import '../styles/components/theme-toggle.css';
 
 const THEME_STORAGE_KEY = 'tark-vitark:theme';
@@ -72,6 +72,28 @@ export function ThemeToggle({ variant = 'floating', className }: ThemeToggleProp
     const [initial] = useState(getInitialTheme);
     const [theme, setTheme] = useState<'light' | 'dark'>(initial.theme);
     const hasExplicitChoice = useRef(initial.explicit);
+
+    useEffect(() => {
+        const documentThemeObserver = new MutationObserver(() => {
+            const documentTheme = document.documentElement.getAttribute('data-theme');
+            if (documentTheme !== 'light' && documentTheme !== 'dark') {
+                return;
+            }
+
+            setTheme((currentTheme) =>
+                currentTheme === documentTheme ? currentTheme : documentTheme
+            );
+        });
+
+        documentThemeObserver.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme'],
+        });
+
+        return () => {
+            documentThemeObserver.disconnect();
+        };
+    }, []);
 
     useLayoutEffect(() => {
         if (hasExplicitChoice.current) {
