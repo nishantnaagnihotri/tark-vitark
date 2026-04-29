@@ -53,7 +53,7 @@ describe('ThemeToggle', () => {
         expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
     });
 
-    it('keeps the icon aligned when active theme changes outside the switch', async () => {
+    it('AC-34: keeps the theme icon aligned when active theme changes outside the switch', async () => {
         document.documentElement.setAttribute('data-theme', 'light');
         render(<ThemeToggle />);
 
