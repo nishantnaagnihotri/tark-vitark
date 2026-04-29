@@ -66,6 +66,11 @@
   --typescale-label-md-weight: 500;
   --typescale-label-md-tracking: 0.03125rem;
 
+  --typescale-brand-tv-lettermark-size: 1.25rem;
+  --typescale-brand-tv-lettermark-line-height: normal;
+  --typescale-brand-tv-lettermark-weight: 900;
+  --typescale-brand-tv-lettermark-tracking: -0.09375rem;
+
   /* ── Spacing ── */
   --space-4: 1rem;
   --space-5: 1.25rem;
