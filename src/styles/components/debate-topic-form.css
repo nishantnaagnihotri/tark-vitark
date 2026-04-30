@@ -68,6 +68,7 @@
     align-self: flex-end;
     margin: calc(var(--space-4) / 4) 0 0;
     color: var(--color-on-surface-variant);
+    font-family: var(--font-family-plain);
     font-size: var(--typescale-create-debate-topic-counter-size);
     font-weight: var(--typescale-create-debate-topic-counter-weight);
     line-height: var(--typescale-create-debate-topic-counter-line-height);

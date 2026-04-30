@@ -201,6 +201,9 @@ describe('DebateTopicForm', () => {
         );
 
         expect(topicCounterBlock).toContain(
+            'font-family: var(--font-family-plain);'
+        );
+        expect(topicCounterBlock).toContain(
             'font-size: var(--typescale-create-debate-topic-counter-size);'
         );
         expect(topicCounterBlock).toContain(
