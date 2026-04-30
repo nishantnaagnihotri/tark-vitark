@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import '../styles/components/theme-toggle.css';
 
 const THEME_STORAGE_KEY = 'tark-vitark:theme';
@@ -95,26 +95,46 @@ export function ThemeToggle({ variant = 'floating', className }: ThemeToggleProp
     const [theme, setTheme] = useState<'light' | 'dark'>(initial.theme);
     const hasExplicitChoice = useRef(initial.explicit);
 
-    useEffect(() => {
-        const documentThemeObserver = new MutationObserver(() => {
-            const documentTheme = resolveDocumentTheme();
-            hasExplicitChoice.current = documentTheme.explicit;
+    useLayoutEffect(() => {
+        const syncThemeFromDocument = (options: { allowImplicitReset: boolean }) => {
+            const explicitDocumentTheme = readThemeValue(
+                document.documentElement.getAttribute('data-theme')
+            );
 
-            if (!documentTheme.explicit) {
-                safeStorageRemove(THEME_STORAGE_KEY);
+            if (explicitDocumentTheme) {
+                hasExplicitChoice.current = true;
+                setTheme((currentTheme) =>
+                    currentTheme === explicitDocumentTheme
+                        ? currentTheme
+                        : explicitDocumentTheme
+                );
+                return;
             }
 
+            if (!options.allowImplicitReset && hasExplicitChoice.current) {
+                return;
+            }
+
+            hasExplicitChoice.current = false;
+            safeStorageRemove(THEME_STORAGE_KEY);
+            const systemTheme = getSystemTheme();
             setTheme((currentTheme) =>
-                currentTheme === documentTheme.theme
+                currentTheme === systemTheme
                     ? currentTheme
-                    : documentTheme.theme
+                    : systemTheme
             );
+        };
+
+        const documentThemeObserver = new MutationObserver(() => {
+            syncThemeFromDocument({ allowImplicitReset: true });
         });
 
         documentThemeObserver.observe(document.documentElement, {
             attributes: true,
             attributeFilter: ['data-theme'],
         });
+
+        syncThemeFromDocument({ allowImplicitReset: false });
 
         return () => {
             documentThemeObserver.disconnect();
