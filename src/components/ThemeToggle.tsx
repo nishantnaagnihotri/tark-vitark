@@ -25,22 +25,44 @@ function safeStorageSet(key: string, value: string): void {
     }
 }
 
+function safeStorageRemove(key: string): void {
+    try {
+        sessionStorage.removeItem(key);
+    } catch {
+        /* storage unavailable — ignore */
+    }
+}
+
+function readThemeValue(value: string | null): 'light' | 'dark' | null {
+    if (value === 'light' || value === 'dark') {
+        return value;
+    }
+
+    return null;
+}
+
 function getSystemTheme(): 'light' | 'dark' {
     return window.matchMedia('(prefers-color-scheme: dark)').matches
         ? 'dark'
         : 'light';
 }
 
-function getInitialTheme(): { theme: 'light' | 'dark'; explicit: boolean } {
-    const stored = safeStorageGet(THEME_STORAGE_KEY);
-    if (stored === 'light' || stored === 'dark')
-        return { theme: stored, explicit: true };
-
-    const existing = document.documentElement.getAttribute('data-theme');
-    if (existing === 'light' || existing === 'dark')
-        return { theme: existing, explicit: true };
+function resolveDocumentTheme(): { theme: 'light' | 'dark'; explicit: boolean } {
+    const documentTheme = readThemeValue(document.documentElement.getAttribute('data-theme'));
+    if (documentTheme) {
+        return { theme: documentTheme, explicit: true };
+    }
 
     return { theme: getSystemTheme(), explicit: false };
+}
+
+function getInitialTheme(): { theme: 'light' | 'dark'; explicit: boolean } {
+    const storedTheme = readThemeValue(safeStorageGet(THEME_STORAGE_KEY));
+    if (storedTheme) {
+        return { theme: storedTheme, explicit: true };
+    }
+
+    return resolveDocumentTheme();
 }
 
 function DarkModeIcon() {
@@ -75,13 +97,17 @@ export function ThemeToggle({ variant = 'floating', className }: ThemeToggleProp
 
     useEffect(() => {
         const documentThemeObserver = new MutationObserver(() => {
-            const documentTheme = document.documentElement.getAttribute('data-theme');
-            if (documentTheme !== 'light' && documentTheme !== 'dark') {
-                return;
+            const documentTheme = resolveDocumentTheme();
+            hasExplicitChoice.current = documentTheme.explicit;
+
+            if (!documentTheme.explicit) {
+                safeStorageRemove(THEME_STORAGE_KEY);
             }
 
             setTheme((currentTheme) =>
-                currentTheme === documentTheme ? currentTheme : documentTheme
+                currentTheme === documentTheme.theme
+                    ? currentTheme
+                    : documentTheme.theme
             );
         });
 
