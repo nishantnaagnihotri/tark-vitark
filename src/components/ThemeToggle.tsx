@@ -25,14 +25,6 @@ function safeStorageSet(key: string, value: string): void {
     }
 }
 
-function safeStorageRemove(key: string): void {
-    try {
-        sessionStorage.removeItem(key);
-    } catch {
-        /* storage unavailable — ignore */
-    }
-}
-
 function readThemeValue(value: string | null): 'light' | 'dark' | null {
     if (value === 'light' || value === 'dark') {
         return value;
@@ -96,7 +88,7 @@ export function ThemeToggle({ variant = 'floating', className }: ThemeToggleProp
     const hasExplicitChoice = useRef(initial.explicit);
 
     useLayoutEffect(() => {
-        const syncThemeFromDocument = (options: { allowImplicitReset: boolean }) => {
+        const syncThemeFromDocument = () => {
             const explicitDocumentTheme = readThemeValue(
                 document.documentElement.getAttribute('data-theme')
             );
@@ -111,12 +103,19 @@ export function ThemeToggle({ variant = 'floating', className }: ThemeToggleProp
                 return;
             }
 
-            if (!options.allowImplicitReset && hasExplicitChoice.current) {
+            const storedTheme = readThemeValue(safeStorageGet(THEME_STORAGE_KEY));
+            if (storedTheme) {
+                hasExplicitChoice.current = true;
+                document.documentElement.setAttribute('data-theme', storedTheme);
+                setTheme((currentTheme) =>
+                    currentTheme === storedTheme
+                        ? currentTheme
+                        : storedTheme
+                );
                 return;
             }
 
             hasExplicitChoice.current = false;
-            safeStorageRemove(THEME_STORAGE_KEY);
             const systemTheme = getSystemTheme();
             setTheme((currentTheme) =>
                 currentTheme === systemTheme
@@ -126,7 +125,7 @@ export function ThemeToggle({ variant = 'floating', className }: ThemeToggleProp
         };
 
         const documentThemeObserver = new MutationObserver(() => {
-            syncThemeFromDocument({ allowImplicitReset: true });
+            syncThemeFromDocument();
         });
 
         documentThemeObserver.observe(document.documentElement, {
@@ -134,7 +133,7 @@ export function ThemeToggle({ variant = 'floating', className }: ThemeToggleProp
             attributeFilter: ['data-theme'],
         });
 
-        syncThemeFromDocument({ allowImplicitReset: false });
+        syncThemeFromDocument();
 
         return () => {
             documentThemeObserver.disconnect();
