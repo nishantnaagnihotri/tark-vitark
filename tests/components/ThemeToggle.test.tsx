@@ -91,6 +91,7 @@ describe('ThemeToggle', () => {
                 expect(button.querySelector('.theme-toggle__icon--dark')).not.toBeNull();
             });
 
+            sessionStorage.removeItem('tark-vitark:theme');
             document.documentElement.removeAttribute('data-theme');
 
             await waitFor(() => {
@@ -106,6 +107,24 @@ describe('ThemeToggle', () => {
         } finally {
             matchMediaSpy.mockRestore();
         }
+    });
+
+    it('AC-34: keeps explicit theme choice when data-theme is transiently removed', async () => {
+        sessionStorage.setItem('tark-vitark:theme', 'light');
+        render(<ThemeToggle />);
+
+        const button = screen.getByRole('switch');
+        expect(button).toHaveAttribute('aria-checked', 'false');
+
+        document.documentElement.removeAttribute('data-theme');
+
+        await waitFor(() => {
+            expect(document.documentElement.getAttribute('data-theme')).toBe('light');
+            expect(button).toHaveAttribute('aria-checked', 'false');
+            expect(button.querySelector('.theme-toggle__icon--dark')).not.toBeNull();
+        });
+
+        expect(sessionStorage.getItem('tark-vitark:theme')).toBe('light');
     });
 
     it('AC-34: re-aligns when the active theme source changes during mount', async () => {
