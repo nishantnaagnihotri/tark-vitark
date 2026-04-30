@@ -160,6 +160,149 @@ describe('DebateTopicForm', () => {
         expect(tokensCss).toContain('--typescale-brand-tv-lettermark-tracking: -0.09375rem;');
     });
 
+    it('pins debate topic form copy typography to semantic tokens without visual drift (issue-221 contract)', () => {
+        const topicInputBlock = debateTopicFormCss.match(
+            /\.debate-topic-form__topic-input\s*\{[^}]+\}/
+        )?.[0];
+        const topicCounterBlock = debateTopicFormCss.match(
+            /\.debate-topic-form__counter\s*\{[^}]+\}/
+        )?.[0];
+        const replaceWarningBlock = debateTopicFormCss.match(
+            /\.debate-topic-form__replace-warning\s*\{[^}]+\}/
+        )?.[0];
+        const topicErrorBlock = debateTopicFormCss.match(
+            /\.debate-topic-form__error\s*\{[^}]+\}/
+        )?.[0];
+        const startActionBlock = debateTopicFormCss.match(
+            /\.debate-topic-form__start\s*\{[^}]+\}/
+        )?.[0];
+        const cancelActionBlock = debateTopicFormCss.match(
+            /\.debate-topic-form__cancel\s*\{[^}]+\}/
+        )?.[0];
+
+        expect(topicInputBlock).toBeDefined();
+        expect(topicCounterBlock).toBeDefined();
+        expect(replaceWarningBlock).toBeDefined();
+        expect(topicErrorBlock).toBeDefined();
+        expect(startActionBlock).toBeDefined();
+        expect(cancelActionBlock).toBeDefined();
+
+        expect(topicInputBlock).toContain(
+            'font-size: var(--typescale-create-debate-topic-input-size);'
+        );
+        expect(topicInputBlock).toContain(
+            'font-weight: var(--typescale-create-debate-topic-input-weight);'
+        );
+        expect(topicInputBlock).toContain(
+            'line-height: var(--typescale-create-debate-topic-input-line-height);'
+        );
+        expect(topicInputBlock).toContain(
+            'letter-spacing: var(--typescale-create-debate-topic-input-tracking);'
+        );
+
+        expect(topicCounterBlock).toContain(
+            'font-size: var(--typescale-create-debate-topic-counter-size);'
+        );
+        expect(topicCounterBlock).toContain(
+            'font-weight: var(--typescale-create-debate-topic-counter-weight);'
+        );
+        expect(topicCounterBlock).toContain(
+            'line-height: var(--typescale-create-debate-topic-counter-line-height);'
+        );
+        expect(topicCounterBlock).toContain(
+            'letter-spacing: var(--typescale-create-debate-topic-counter-tracking);'
+        );
+
+        expect(replaceWarningBlock).toContain(
+            'font-size: var(--typescale-create-debate-topic-warning-size);'
+        );
+        expect(replaceWarningBlock).toContain(
+            'font-weight: var(--typescale-create-debate-topic-warning-weight);'
+        );
+        expect(replaceWarningBlock).toContain(
+            'line-height: var(--typescale-create-debate-topic-warning-line-height);'
+        );
+        expect(replaceWarningBlock).toContain(
+            'letter-spacing: var(--typescale-create-debate-topic-warning-tracking);'
+        );
+
+        expect(topicErrorBlock).toContain(
+            'font-size: var(--typescale-create-debate-topic-error-size);'
+        );
+        expect(topicErrorBlock).toContain(
+            'font-weight: var(--typescale-create-debate-topic-error-weight);'
+        );
+        expect(topicErrorBlock).toContain(
+            'line-height: var(--typescale-create-debate-topic-error-line-height);'
+        );
+        expect(topicErrorBlock).toContain(
+            'letter-spacing: var(--typescale-create-debate-topic-error-tracking);'
+        );
+
+        expect(startActionBlock).toContain(
+            'font-size: var(--typescale-create-debate-start-action-size);'
+        );
+        expect(startActionBlock).toContain(
+            'font-weight: var(--typescale-create-debate-start-action-weight);'
+        );
+        expect(startActionBlock).toContain(
+            'line-height: var(--typescale-create-debate-start-action-line-height);'
+        );
+        expect(startActionBlock).toContain(
+            'letter-spacing: var(--typescale-create-debate-start-action-tracking);'
+        );
+
+        expect(cancelActionBlock).toContain(
+            'font-size: var(--typescale-create-debate-cancel-action-size);'
+        );
+        expect(cancelActionBlock).toContain(
+            'font-weight: var(--typescale-create-debate-cancel-action-weight);'
+        );
+        expect(cancelActionBlock).toContain(
+            'line-height: var(--typescale-create-debate-cancel-action-line-height);'
+        );
+        expect(cancelActionBlock).toContain(
+            'letter-spacing: var(--typescale-create-debate-cancel-action-tracking);'
+        );
+
+        expect(debateTopicFormCss).not.toContain('font-size: 16px;');
+        expect(debateTopicFormCss).not.toContain('font-size: 14px;');
+        expect(debateTopicFormCss).not.toContain('font-size: 12px;');
+        expect(debateTopicFormCss).not.toContain('font-size: 11px;');
+        expect(debateTopicFormCss).not.toContain('line-height: 16px;');
+        expect(debateTopicFormCss).not.toContain('letter-spacing: 0.1px;');
+
+        expect(tokensCss).toContain('--typescale-create-debate-topic-input-size: 1rem;');
+        expect(tokensCss).toContain('--typescale-create-debate-topic-input-weight: 400;');
+        expect(tokensCss).toContain('--typescale-create-debate-topic-input-line-height: normal;');
+        expect(tokensCss).toContain('--typescale-create-debate-topic-input-tracking: 0;');
+
+        expect(tokensCss).toContain('--typescale-create-debate-topic-counter-size: 0.6875rem;');
+        expect(tokensCss).toContain('--typescale-create-debate-topic-counter-weight: 500;');
+        expect(tokensCss).toContain('--typescale-create-debate-topic-counter-line-height: 1rem;');
+        expect(tokensCss).toContain('--typescale-create-debate-topic-counter-tracking: 0;');
+
+        expect(tokensCss).toContain('--typescale-create-debate-topic-warning-size: 0.75rem;');
+        expect(tokensCss).toContain('--typescale-create-debate-topic-warning-weight: 400;');
+        expect(tokensCss).toContain('--typescale-create-debate-topic-warning-line-height: normal;');
+        expect(tokensCss).toContain('--typescale-create-debate-topic-warning-tracking: 0;');
+
+        expect(tokensCss).toContain('--typescale-create-debate-topic-error-size: 0.6875rem;');
+        expect(tokensCss).toContain('--typescale-create-debate-topic-error-weight: 400;');
+        expect(tokensCss).toContain('--typescale-create-debate-topic-error-line-height: normal;');
+        expect(tokensCss).toContain('--typescale-create-debate-topic-error-tracking: 0;');
+
+        expect(tokensCss).toContain('--typescale-create-debate-start-action-size: 0.875rem;');
+        expect(tokensCss).toContain('--typescale-create-debate-start-action-weight: 600;');
+        expect(tokensCss).toContain('--typescale-create-debate-start-action-line-height: normal;');
+        expect(tokensCss).toContain('--typescale-create-debate-start-action-tracking: 0;');
+
+        expect(tokensCss).toContain('--typescale-create-debate-cancel-action-size: 0.875rem;');
+        expect(tokensCss).toContain('--typescale-create-debate-cancel-action-weight: 500;');
+        expect(tokensCss).toContain('--typescale-create-debate-cancel-action-line-height: normal;');
+        expect(tokensCss).toContain('--typescale-create-debate-cancel-action-tracking: 0.00625rem;');
+    });
+
     it('pins topic-form geometry and token usage to Figma values for create and replace states', () => {
         expect(debateTopicFormCss).toContain(
             '.debate-topic-form {\n    width: 100%;\n    max-width: var(--size-create-debate-content-max-width);'
