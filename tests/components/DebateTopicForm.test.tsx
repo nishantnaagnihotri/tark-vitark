@@ -160,7 +160,7 @@ describe('DebateTopicForm', () => {
         expect(tokensCss).toContain('--typescale-brand-tv-lettermark-tracking: -0.09375rem;');
     });
 
-    it('pins debate topic form copy typography to semantic tokens without visual drift (issue-221 contract)', () => {
+    it('keeps create-debate topic copy aligned with approved typography (issue-221 contract)', () => {
         const topicInputBlock = debateTopicFormCss.match(
             /\.debate-topic-form__topic-input\s*\{[^}]+\}/
         )?.[0];
