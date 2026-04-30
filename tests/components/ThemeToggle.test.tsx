@@ -53,20 +53,58 @@ describe('ThemeToggle', () => {
         expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
     });
 
-    it('AC-34: keeps the theme icon aligned when active theme changes outside the switch', async () => {
-        document.documentElement.setAttribute('data-theme', 'light');
-        render(<ThemeToggle />);
+    it('AC-34: keeps the theme icon aligned through external theme-source transitions', async () => {
+        const matchMediaSpy = vi.spyOn(window, 'matchMedia').mockImplementation(
+            (query: string) =>
+                ({
+                    matches: query === '(prefers-color-scheme: dark)',
+                    media: query,
+                    addEventListener: vi.fn(),
+                    removeEventListener: vi.fn(),
+                    addListener: vi.fn(),
+                    removeListener: vi.fn(),
+                    onchange: null,
+                    dispatchEvent: vi.fn(),
+                }) as MediaQueryList
+        );
 
-        const button = screen.getByRole('switch');
-        expect(button).toHaveAttribute('aria-checked', 'false');
-        expect(button.querySelector('.theme-toggle__icon--dark')).not.toBeNull();
+        try {
+            document.documentElement.setAttribute('data-theme', 'light');
+            const { unmount } = render(<ThemeToggle />);
+            const button = screen.getByRole('switch');
 
-        document.documentElement.setAttribute('data-theme', 'dark');
+            expect(button).toHaveAttribute('aria-checked', 'false');
+            expect(button.querySelector('.theme-toggle__icon--dark')).not.toBeNull();
 
-        await waitFor(() => {
-            expect(button).toHaveAttribute('aria-checked', 'true');
-            expect(button.querySelector('.theme-toggle__icon--light')).not.toBeNull();
-        });
+            document.documentElement.setAttribute('data-theme', 'dark');
+
+            await waitFor(() => {
+                expect(button).toHaveAttribute('aria-checked', 'true');
+                expect(button.querySelector('.theme-toggle__icon--light')).not.toBeNull();
+            });
+
+            document.documentElement.setAttribute('data-theme', 'light');
+
+            await waitFor(() => {
+                expect(button).toHaveAttribute('aria-checked', 'false');
+                expect(button.querySelector('.theme-toggle__icon--dark')).not.toBeNull();
+            });
+
+            document.documentElement.removeAttribute('data-theme');
+
+            await waitFor(() => {
+                expect(button).toHaveAttribute('aria-checked', 'true');
+                expect(button.querySelector('.theme-toggle__icon--light')).not.toBeNull();
+            });
+
+            expect(sessionStorage.getItem('tark-vitark:theme')).toBeNull();
+
+            unmount();
+            render(<ThemeToggle />);
+            expect(screen.getByRole('switch')).toHaveAttribute('aria-checked', 'true');
+        } finally {
+            matchMediaSpy.mockRestore();
+        }
     });
 
     it('reflects system dark preference in button without setting data-theme', () => {
