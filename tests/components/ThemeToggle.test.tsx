@@ -1,4 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { useLayoutEffect } from 'react';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { ThemeToggle } from '../../src/components/ThemeToggle';
 
@@ -105,6 +106,25 @@ describe('ThemeToggle', () => {
         } finally {
             matchMediaSpy.mockRestore();
         }
+    });
+
+    it('AC-34: re-aligns when the active theme source changes during mount', async () => {
+        function MountThemeSourceShift() {
+            useLayoutEffect(() => {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }, []);
+
+            return <ThemeToggle />;
+        }
+
+        document.documentElement.setAttribute('data-theme', 'light');
+        render(<MountThemeSourceShift />);
+
+        const button = screen.getByRole('switch');
+        await waitFor(() => {
+            expect(button).toHaveAttribute('aria-checked', 'true');
+            expect(button.querySelector('.theme-toggle__icon--light')).not.toBeNull();
+        });
     });
 
     it('reflects system dark preference in button without setting data-theme', () => {
