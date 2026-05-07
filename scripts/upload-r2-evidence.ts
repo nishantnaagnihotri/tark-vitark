@@ -20,7 +20,7 @@
  *   R2_ENDPOINT             Optional explicit endpoint. If unset, defaults to https://<ACCOUNT_ID>.r2.cloudflarestorage.com
  *   R2_PUBLIC_BASE_URL      Public base URL, for example https://<bucket-id>.r2.dev
  *   R2_ACCESS_KEY_ID        Access key id / token id
- *   R2_SECRET_ACCESS_KEY    Secret access key. If it looks like a raw cfat_ token, this script derives the S3 secret by SHA-256 hashing it.
+ *   R2_SECRET_ACCESS_KEY    Required unless R2_API_TOKEN is set. If it looks like a raw cfat_ token, this script derives the S3 secret by SHA-256 hashing it.
  *   R2_API_TOKEN            Optional raw API token. When present, this is preferred and hashed into the S3 secret.
  */
 
