@@ -124,7 +124,7 @@ interface AsyncRunContext {
     startedAt: string;
     taskId: string;
     progressLogPath: string;
-    agentMilestonesSupported: boolean;
+    semanticProgressSupported: boolean;
     semanticProgressLogPath?: string;
 }
 
@@ -765,14 +765,14 @@ function injectAsyncRunContext(prompt: string, runContext: AsyncRunContext): str
         );
     }
 
-    if (runContext.agentMilestonesSupported && !/##\s*Optional Agent Milestones/i.test(prompt)) {
+    if (runContext.semanticProgressSupported && !/##\s*Optional Agent Milestones/i.test(prompt)) {
         sections.push(
             "",
             "## Optional Agent Milestones",
             "",
             `semantic-progress-log-path: ${runContext.semanticProgressLogPath ?? "(not provisioned)"}`,
             "instruction: if your tool surface allows workspace file writes, append concise markdown bullet milestones to the semantic progress file",
-            "suggested-markdown: - [2026-05-07T10:55:28.607Z] Implemented validation wiring",
+            "suggested-markdown: - [<ISO_TIMESTAMP>] Implemented validation wiring",
             "scope: task-specific milestones only; wrapper lifecycle events already go to the JSONL progress log",
             "fallback: do not block or fail the task if you cannot update this optional file",
         );
@@ -822,8 +822,8 @@ logInfo(`[run-agent] progress ${progressLogPath}`);
 const { tools, systemMessage } = readAgentMeta(role);
 const mcpServers = resolveAgentMcpServers(tools);
 const mcpKeys = Object.keys(mcpServers);
-const agentMilestonesSupported = supportsAgentMilestones(tools);
-const semanticProgressLogPath = agentMilestonesSupported ? runSemanticProgressLogPath(runId) : undefined;
+const semanticProgressSupported = supportsAgentMilestones(tools);
+const semanticProgressLogPath = semanticProgressSupported ? runSemanticProgressLogPath(runId) : undefined;
 const asyncRunContext: AsyncRunContext = {
     runId,
     role,
@@ -831,7 +831,7 @@ const asyncRunContext: AsyncRunContext = {
     startedAt,
     taskId,
     progressLogPath,
-    agentMilestonesSupported,
+    semanticProgressSupported,
     ...(semanticProgressLogPath ? { semanticProgressLogPath } : {}),
 };
 logInfo(`[run-agent] tools    ${tools.length > 0 ? tools.join(", ") : "(none)"}`);
@@ -863,7 +863,7 @@ persistRun({
     startedAt,
     status: "running",
     progressLogPath,
-    semanticProgressSupported: agentMilestonesSupported,
+    semanticProgressSupported,
     ...(semanticProgressLogPath ? { semanticProgressLogPath } : {}),
     phase: "dispatched",
     lastHeartbeatAt: startedAt,
@@ -1008,7 +1008,7 @@ try {
                 status,
                 phase,
                 progressLogPath,
-                semanticProgressSupported: agentMilestonesSupported,
+                semanticProgressSupported,
                 ...(semanticProgressLogPath ? { semanticProgressLogPath } : {}),
                 ...(challenge ? { challenge } : {}),
                 output,
