@@ -23,7 +23,7 @@
  */
 
 import { CopilotClient, approveAll, type MCPServerConfig } from "@github/copilot-sdk";
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join, resolve } from "node:path";
 import { randomUUID } from "node:crypto";
@@ -50,6 +50,7 @@ const RUNS_LOG_DIR = join(
     resolve(fileURLToPath(new URL(".", import.meta.url)), ".."),
     "logs", "parallel-agents"
 );
+const RUNS_INDEX_PATH = join(RUNS_LOG_DIR, "runs.json");
 
 const WORKSPACE_ROOT = resolve(fileURLToPath(new URL(".", import.meta.url)), "..");
 const AGENTS_DIR = join(WORKSPACE_ROOT, ".github", "agents");
@@ -63,6 +64,29 @@ interface AgentMeta {
     tools: string[];
     systemMessage: string;
 }
+
+type RunTaskStatus = "done" | "failed" | "needs-clarification";
+type RunStatus = "running" | "done" | "failed" | "pending-clarification";
+
+interface RunTaskResult {
+    taskId: string;
+    role: string;
+    status: RunTaskStatus;
+    error?: string;
+    challenge?: string;
+}
+
+interface RunRecordIndex {
+    runId: string;
+    startedAt: string;
+    finishedAt?: string;
+    status: RunStatus;
+    taskIds: string[];
+    results: RunTaskResult[];
+    pendingClarification: string[];
+}
+
+type RunsIndexSnapshot = Record<string, RunRecordIndex>;
 
 function readAgentMeta(agentRole: string): AgentMeta {
     const fallback: AgentMeta = {
@@ -263,7 +287,104 @@ function runLogPath(runId: string): string {
     return join(RUNS_LOG_DIR, `${runId}.json`);
 }
 
-/** Persist a single run record to the per-run JSON log file (append/update). */
+function readRunsIndex(): RunsIndexSnapshot {
+    if (!existsSync(RUNS_INDEX_PATH)) {
+        return {};
+    }
+
+    try {
+        return JSON.parse(readFileSync(RUNS_INDEX_PATH, "utf-8")) as RunsIndexSnapshot;
+    } catch {
+        return {};
+    }
+}
+
+function writeJsonAtomic(path: string, payload: unknown): void {
+    const temporaryPath = `${path}.tmp`;
+    writeFileSync(temporaryPath, JSON.stringify(payload, null, 2), "utf-8");
+    try {
+        renameSync(temporaryPath, path);
+    } catch {
+        try {
+            unlinkSync(path);
+        } catch {
+            // file may not exist on first write
+        }
+        renameSync(temporaryPath, path);
+    }
+}
+
+function resolveRunStatus(status: unknown, fallback: RunStatus): RunStatus {
+    if (status === "running" || status === "done" || status === "failed" || status === "pending-clarification") {
+        return status;
+    }
+    return fallback;
+}
+
+function persistRunsIndex(runRecord: Record<string, unknown>): void {
+    try {
+        const runId = runRecord.runId;
+        if (typeof runId !== "string" || runId.length === 0) {
+            return;
+        }
+
+        mkdirSync(RUNS_LOG_DIR, { recursive: true });
+        const snapshot = readRunsIndex();
+        const previous = snapshot[runId];
+
+        const taskId = typeof runRecord.taskId === "string" && runRecord.taskId.length > 0
+            ? runRecord.taskId
+            : previous?.taskIds[0] ?? "direct-invocation";
+        const role = typeof runRecord.role === "string" && runRecord.role.length > 0
+            ? runRecord.role
+            : previous?.results[0]?.role ?? "unknown";
+        const startedAt = typeof runRecord.startedAt === "string" && runRecord.startedAt.length > 0
+            ? runRecord.startedAt
+            : previous?.startedAt ?? new Date().toISOString();
+        const finishedAt = typeof runRecord.finishedAt === "string" && runRecord.finishedAt.length > 0
+            ? runRecord.finishedAt
+            : previous?.finishedAt;
+        const status = resolveRunStatus(runRecord.status, previous?.status ?? "running");
+        const error = typeof runRecord.error === "string" && runRecord.error.length > 0
+            ? runRecord.error
+            : undefined;
+        const challenge = typeof runRecord.challenge === "string" && runRecord.challenge.length > 0
+            ? runRecord.challenge
+            : undefined;
+
+        const taskStatus: RunTaskStatus =
+            status === "done"
+                ? "done"
+                : status === "pending-clarification"
+                    ? "needs-clarification"
+                    : "failed";
+        const results: RunTaskResult[] = status === "running"
+            ? previous?.results ?? []
+            : [{
+                taskId,
+                role,
+                status: taskStatus,
+                ...(error ? { error } : {}),
+                ...(challenge ? { challenge } : {}),
+            }];
+
+        snapshot[runId] = {
+            runId,
+            startedAt,
+            ...(finishedAt ? { finishedAt } : {}),
+            status,
+            taskIds: [taskId],
+            results,
+            pendingClarification: status === "pending-clarification" ? [taskId] : [],
+        };
+
+        writeJsonAtomic(RUNS_INDEX_PATH, snapshot);
+    } catch (err) {
+        console.error("[run-agent] Warning: could not persist runs index:", err);
+    }
+}
+
+/** Persist a single run record to per-run JSON and maintain runs.json index. */
 function persistRun(record: Record<string, unknown>): void {
     try {
         const id = record.runId;
@@ -279,6 +400,7 @@ function persistRun(record: Record<string, unknown>): void {
         }
         const next = { ...prior, ...record };
         writeFileSync(path, JSON.stringify(next, null, 2), "utf-8");
+        persistRunsIndex(next);
     } catch (err) {
         console.error("[run-agent] Warning: could not persist run log:", err);
     }
@@ -355,6 +477,7 @@ function inferTaskId(prompt: string, explicitTaskId?: string): string {
 
 const runId = randomUUID();
 const startedAt = new Date().toISOString();
+const taskId = inferTaskId(prompt, taskIdArg);
 logInfo(`[run-agent] started  runId=${runId} role=${role} model=${model} at=${startedAt}`);
 logInfo(`[run-agent] routing  policy-model=${policyModel} policy-source=${policyModelSelection.source} model-source=${modelSource}`);
 if (!modelOverride && policyModelSelection.source === "fallback") {
@@ -380,7 +503,7 @@ logInfo(`[run-agent] mcp      ${mcpKeys.length > 0 ? mcpKeys.join(", ") : "(none
 logInfo(`[run-agent] system   ${systemMessage.slice(0, 80).replace(/\n/g, " ")}…`);
 logInfo(`[run-agent] flags    no-intro=${noIntro} output-format=${outputFormat}`);
 
-persistRun({ runId, role, model, prompt: prompt.slice(0, 200), startedAt, status: "running" });
+persistRun({ runId, taskId, role, model, prompt: prompt.slice(0, 200), startedAt, status: "running" });
 
 let exitCode = 0;
 const client = new CopilotClient();
@@ -399,7 +522,7 @@ try {
         modelLookupStatus = "failed";
         modelLookupError = error instanceof Error ? error.message : String(error);
         logInfo(`[run-agent] models   failed to list models; using fallback metadata. error=${modelLookupError}`);
-        persistRun({ runId, modelLookupStatus, modelLookupError });
+        persistRun({ runId, taskId, modelLookupStatus, modelLookupError });
     }
     const reasoningEffortSelection = reasoningEffortSelectionForModel(model, availableModels);
     const reasoningEffort = reasoningEffortSelection.reasoningEffort;
@@ -411,6 +534,7 @@ try {
     };
     persistRun({
         runId,
+        taskId,
         reasoningEffort: resolvedReasoningEffort,
         reasoningEffortSource: resolvedReasoningEffortSource,
         ...modelLookupRecord,
@@ -446,7 +570,6 @@ try {
         await new Promise((resolve) => setTimeout(resolve, preSleepMs));
     }
 
-    const taskId = inferTaskId(prompt, taskIdArg);
     const promptWithProvenance = injectDevAgentProvenanceBlock(prompt, {
         runId,
         role,
@@ -468,6 +591,7 @@ try {
     const finishedAt = new Date().toISOString();
     persistRun({
         runId,
+        taskId,
         status: "done",
         finishedAt,
         output,
@@ -504,6 +628,7 @@ try {
     const finishedAt = new Date().toISOString();
     persistRun({
         runId,
+        taskId,
         status: "failed",
         finishedAt,
         error: err instanceof Error ? err.message : String(err),
