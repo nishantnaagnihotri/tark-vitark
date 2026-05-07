@@ -76,6 +76,9 @@ for (let index = 0; index < argv.length;) {
         }
         outputFormat = format;
         argv.splice(index, 2);
+    } else if (argv[index].startsWith("--")) {
+        console.error(`Unknown option: ${argv[index]}`);
+        process.exit(1);
     } else {
         index += 1;
     }
