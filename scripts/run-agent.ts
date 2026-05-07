@@ -470,26 +470,32 @@ function resolveRunPhase(phase: unknown, fallback?: RunPhase): RunPhase | undefi
 }
 
 function ensureProgressLog(runContext: AsyncRunContext): void {
-    mkdirSync(RUNS_LOG_DIR, { recursive: true });
-    if (existsSync(runContext.progressLogPath)) {
-        return;
-    }
+    try {
+        mkdirSync(RUNS_LOG_DIR, { recursive: true });
+        if (existsSync(runContext.progressLogPath)) {
+            return;
+        }
 
-    writeFileSync(
-        runContext.progressLogPath,
-        JSON.stringify({
-            timestamp: runContext.startedAt,
-            source: "wrapper" as ProgressEventSource,
-            kind: "meta" as ProgressEventKind,
-            runId: runContext.runId,
-            taskId: runContext.taskId,
-            role: runContext.role,
-            model: runContext.model,
-            workspaceRoot: WORKSPACE_ROOT,
-            runRecordPath: runLogPath(runContext.runId),
-        }) + "\n",
-        "utf-8"
-    );
+        writeFileSync(
+            runContext.progressLogPath,
+            JSON.stringify({
+                timestamp: runContext.startedAt,
+                source: "wrapper" as ProgressEventSource,
+                kind: "meta" as ProgressEventKind,
+                runId: runContext.runId,
+                taskId: runContext.taskId,
+                role: runContext.role,
+                model: runContext.model,
+                workspaceRoot: WORKSPACE_ROOT,
+                runRecordPath: runLogPath(runContext.runId),
+            }) + "\n",
+            "utf-8"
+        );
+    } catch (err) {
+        console.error(
+            `[run-agent] warning: could not initialize progress log for run ${runContext.runId}: ${err instanceof Error ? err.message : String(err)}`,
+        );
+    }
 }
 
 function ensureSemanticProgressLog(runContext: AsyncRunContext): void {
@@ -497,29 +503,35 @@ function ensureSemanticProgressLog(runContext: AsyncRunContext): void {
         return;
     }
 
-    mkdirSync(RUNS_LOG_DIR, { recursive: true });
-    if (existsSync(runContext.semanticProgressLogPath)) {
-        return;
-    }
+    try {
+        mkdirSync(RUNS_LOG_DIR, { recursive: true });
+        if (existsSync(runContext.semanticProgressLogPath)) {
+            return;
+        }
 
-    writeFileSync(
-        runContext.semanticProgressLogPath,
-        [
-            "# Async Agent Semantic Milestones",
-            "",
-            `run-id: ${runContext.runId}`,
-            `task-id: ${runContext.taskId}`,
-            `role: ${runContext.role}`,
-            `dispatched: ${runContext.startedAt}`,
-            `model: ${runContext.model}`,
-            `workspace-root: ${WORKSPACE_ROOT}`,
-            `wrapper-progress-log: ${runContext.progressLogPath}`,
-            "",
-            "## Milestones",
-            "",
-        ].join("\n"),
-        "utf-8"
-    );
+        writeFileSync(
+            runContext.semanticProgressLogPath,
+            [
+                "# Async Agent Semantic Milestones",
+                "",
+                `run-id: ${runContext.runId}`,
+                `task-id: ${runContext.taskId}`,
+                `role: ${runContext.role}`,
+                `dispatched: ${runContext.startedAt}`,
+                `model: ${runContext.model}`,
+                `workspace-root: ${WORKSPACE_ROOT}`,
+                `wrapper-progress-log: ${runContext.progressLogPath}`,
+                "",
+                "## Milestones",
+                "",
+            ].join("\n"),
+            "utf-8"
+        );
+    } catch (err) {
+        console.error(
+            `[run-agent] warning: could not initialize semantic progress log for run ${runContext.runId}: ${err instanceof Error ? err.message : String(err)}`,
+        );
+    }
 }
 
 function supportsAgentMilestones(agentTools: string[]): boolean {
@@ -533,20 +545,26 @@ function appendProgressEvent(
     payload: Record<string, unknown>,
     timestamp = new Date().toISOString()
 ): void {
-    ensureProgressLog(runContext);
-    appendFileSync(
-        runContext.progressLogPath,
-        JSON.stringify({
-            timestamp,
-            source,
-            kind,
-            runId: runContext.runId,
-            taskId: runContext.taskId,
-            role: runContext.role,
-            ...payload,
-        }) + "\n",
-        "utf-8"
-    );
+    try {
+        ensureProgressLog(runContext);
+        appendFileSync(
+            runContext.progressLogPath,
+            JSON.stringify({
+                timestamp,
+                source,
+                kind,
+                runId: runContext.runId,
+                taskId: runContext.taskId,
+                role: runContext.role,
+                ...payload,
+            }) + "\n",
+            "utf-8"
+        );
+    } catch (err) {
+        console.error(
+            `[run-agent] warning: could not append progress event for run ${runContext.runId}: ${err instanceof Error ? err.message : String(err)}`,
+        );
+    }
 }
 
 function recordRunProgress(
