@@ -23,7 +23,7 @@
  */
 
 import { CopilotClient, approveAll, type MCPServerConfig } from "@github/copilot-sdk";
-import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
+import { appendFileSync, existsSync, mkdirSync, readFileSync, readdirSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join, resolve } from "node:path";
 import { randomUUID } from "node:crypto";
@@ -71,6 +71,15 @@ interface AgentMeta {
 
 type RunTaskStatus = "done" | "failed" | "needs-clarification";
 type RunStatus = "running" | "done" | "failed" | "pending-clarification";
+type RunPhase =
+    | "dispatched"
+    | "model-resolved"
+    | "session-created"
+    | "waiting-before-send"
+    | "waiting-for-agent"
+    | "completed"
+    | "needs-clarification"
+    | "failed";
 
 interface RunTaskResult {
     taskId: string;
@@ -85,12 +94,31 @@ interface RunRecordIndex {
     startedAt: string;
     finishedAt?: string;
     status: RunStatus;
+    phase?: RunPhase;
+    lastHeartbeatAt?: string;
+    progressLogPath?: string;
+    semanticProgressSupported?: boolean;
+    semanticProgressLogPath?: string;
     taskIds: string[];
     results: RunTaskResult[];
     pendingClarification: string[];
 }
 
 type RunsIndexSnapshot = Record<string, RunRecordIndex>;
+
+interface AsyncRunContext {
+    runId: string;
+    role: string;
+    model: string;
+    startedAt: string;
+    taskId: string;
+    progressLogPath: string;
+    agentMilestonesSupported: boolean;
+    semanticProgressLogPath?: string;
+}
+
+type ProgressEventKind = "meta" | "lifecycle" | "milestone";
+type ProgressEventSource = "wrapper" | "agent";
 
 function readAgentMeta(agentRole: string): AgentMeta {
     const fallback: AgentMeta = {
@@ -291,6 +319,14 @@ function runLogPath(runId: string): string {
     return join(RUNS_LOG_DIR, `${runId}.json`);
 }
 
+function runProgressLogPath(runId: string): string {
+    return join(RUNS_LOG_DIR, `${runId}-progress.jsonl`);
+}
+
+function runSemanticProgressLogPath(runId: string): string {
+    return join(RUNS_LOG_DIR, `${runId}-semantic-progress.md`);
+}
+
 function readRunsIndex(): RunsIndexSnapshot {
     if (!existsSync(RUNS_INDEX_PATH)) {
         return {};
@@ -406,6 +442,119 @@ function resolveRunStatus(status: unknown, fallback: RunStatus): RunStatus {
     return fallback;
 }
 
+function resolveRunPhase(phase: unknown, fallback?: RunPhase): RunPhase | undefined {
+    if (
+        phase === "dispatched" ||
+        phase === "model-resolved" ||
+        phase === "session-created" ||
+        phase === "waiting-before-send" ||
+        phase === "waiting-for-agent" ||
+        phase === "completed" ||
+        phase === "needs-clarification" ||
+        phase === "failed"
+    ) {
+        return phase;
+    }
+    return fallback;
+}
+
+function ensureProgressLog(runContext: AsyncRunContext): void {
+    mkdirSync(RUNS_LOG_DIR, { recursive: true });
+    if (existsSync(runContext.progressLogPath)) {
+        return;
+    }
+
+    writeFileSync(
+        runContext.progressLogPath,
+        JSON.stringify({
+            timestamp: runContext.startedAt,
+            source: "wrapper" as ProgressEventSource,
+            kind: "meta" as ProgressEventKind,
+            runId: runContext.runId,
+            taskId: runContext.taskId,
+            role: runContext.role,
+            model: runContext.model,
+            workspaceRoot: WORKSPACE_ROOT,
+            runRecordPath: runLogPath(runContext.runId),
+        }) + "\n",
+        "utf-8"
+    );
+}
+
+function ensureSemanticProgressLog(runContext: AsyncRunContext): void {
+    if (!runContext.semanticProgressLogPath) {
+        return;
+    }
+
+    mkdirSync(RUNS_LOG_DIR, { recursive: true });
+    if (existsSync(runContext.semanticProgressLogPath)) {
+        return;
+    }
+
+    writeFileSync(
+        runContext.semanticProgressLogPath,
+        [
+            "# Async Agent Semantic Milestones",
+            "",
+            `run-id: ${runContext.runId}`,
+            `task-id: ${runContext.taskId}`,
+            `role: ${runContext.role}`,
+            `dispatched: ${runContext.startedAt}`,
+            `model: ${runContext.model}`,
+            `workspace-root: ${WORKSPACE_ROOT}`,
+            `wrapper-progress-log: ${runContext.progressLogPath}`,
+            "",
+            "## Milestones",
+            "",
+        ].join("\n"),
+        "utf-8"
+    );
+}
+
+function supportsAgentMilestones(agentTools: string[]): boolean {
+    return agentTools.includes("edit") || agentTools.includes("execute");
+}
+
+function appendProgressEvent(
+    runContext: AsyncRunContext,
+    source: ProgressEventSource,
+    kind: ProgressEventKind,
+    payload: Record<string, unknown>,
+    timestamp = new Date().toISOString()
+): void {
+    ensureProgressLog(runContext);
+    appendFileSync(
+        runContext.progressLogPath,
+        JSON.stringify({
+            timestamp,
+            source,
+            kind,
+            runId: runContext.runId,
+            taskId: runContext.taskId,
+            role: runContext.role,
+            ...payload,
+        }) + "\n",
+        "utf-8"
+    );
+}
+
+function recordRunProgress(
+    runContext: AsyncRunContext,
+    phase: RunPhase,
+    detail: string,
+    heartbeatAt = new Date().toISOString()
+): void {
+    const normalizedDetail = detail.replace(/\s+/g, " ").trim();
+    appendProgressEvent(runContext, "wrapper", "lifecycle", { phase, detail: normalizedDetail }, heartbeatAt);
+    persistRun({
+        runId: runContext.runId,
+        taskId: runContext.taskId,
+        progressLogPath: runContext.progressLogPath,
+        phase,
+        lastHeartbeatAt: heartbeatAt,
+    });
+}
+
 function persistRunsIndex(runRecord: Record<string, unknown>): void {
     let lockAcquired = false;
     try {
@@ -433,6 +582,19 @@ function persistRunsIndex(runRecord: Record<string, unknown>): void {
             ? runRecord.finishedAt
             : previous?.finishedAt;
         const status = resolveRunStatus(runRecord.status, previous?.status ?? "running");
+        const phase = resolveRunPhase(runRecord.phase, previous?.phase);
+        const lastHeartbeatAt = typeof runRecord.lastHeartbeatAt === "string" && runRecord.lastHeartbeatAt.length > 0
+            ? runRecord.lastHeartbeatAt
+            : previous?.lastHeartbeatAt;
+        const progressLogPath = typeof runRecord.progressLogPath === "string" && runRecord.progressLogPath.length > 0
+            ? runRecord.progressLogPath
+            : previous?.progressLogPath;
+        const semanticProgressSupported = typeof runRecord.semanticProgressSupported === "boolean"
+            ? runRecord.semanticProgressSupported
+            : previous?.semanticProgressSupported;
+        const semanticProgressLogPath = typeof runRecord.semanticProgressLogPath === "string" && runRecord.semanticProgressLogPath.length > 0
+            ? runRecord.semanticProgressLogPath
+            : previous?.semanticProgressLogPath;
         const error = typeof runRecord.error === "string" && runRecord.error.length > 0
             ? runRecord.error
             : undefined;
@@ -461,6 +623,11 @@ function persistRunsIndex(runRecord: Record<string, unknown>): void {
             startedAt,
             ...(finishedAt ? { finishedAt } : {}),
             status,
+            ...(phase ? { phase } : {}),
+            ...(lastHeartbeatAt ? { lastHeartbeatAt } : {}),
+            ...(progressLogPath ? { progressLogPath } : {}),
+            ...(typeof semanticProgressSupported === "boolean" ? { semanticProgressSupported } : {}),
+            ...(semanticProgressLogPath ? { semanticProgressLogPath } : {}),
             taskIds: [taskId],
             results,
             pendingClarification: status === "pending-clarification" ? [taskId] : [],
@@ -529,27 +696,48 @@ function isRetryableSendAndWaitError(err: unknown): boolean {
     return /(429|rate limit|timeout|timed out|ECONNRESET|EAI_AGAIN|ENOTFOUND|ENETUNREACH|503|Service Unavailable)/i.test(message);
 }
 
-function injectDevAgentProvenanceBlock(prompt: string, runContext: {
-    runId: string;
-    role: string;
-    model: string;
-    startedAt: string;
-    taskId: string;
-}): string {
-    if (runContext.role !== "dev" || /##\s*Agent Provenance/i.test(prompt)) {
-        return prompt;
+function injectAsyncRunContext(prompt: string, runContext: AsyncRunContext): string {
+    const sections = [prompt];
+
+    if (!/##\s*Agent Provenance/i.test(prompt)) {
+        sections.push(
+            "",
+            "## Agent Provenance",
+            "",
+            `run-id: ${runContext.runId}`,
+            `task-id: ${runContext.taskId}`,
+            `role: ${runContext.role}`,
+            `dispatched: ${runContext.startedAt}`,
+            `model: ${runContext.model}`,
+        );
     }
-    return [
-        prompt,
-        "",
-        "## Agent Provenance",
-        "",
-        `run-id: ${runContext.runId}`,
-        `task-id: ${runContext.taskId}`,
-        "role: dev",
-        `dispatched: ${runContext.startedAt}`,
-        `model: ${runContext.model}`,
-    ].join("\n");
+
+    if (!/##\s*Async Run Context/i.test(prompt)) {
+        sections.push(
+            "",
+            "## Async Run Context",
+            "",
+            `progress-log-path: ${runContext.progressLogPath}`,
+            "progress-log-format: jsonl (one JSON object per line)",
+            "wrapper-progress: scripts/run-agent.ts appends lifecycle events to this file automatically",
+            "path-guarantee: this absolute path stays valid even if you change working directories or move into a sibling worktree",
+        );
+    }
+
+    if (runContext.agentMilestonesSupported && !/##\s*Optional Agent Milestones/i.test(prompt)) {
+        sections.push(
+            "",
+            "## Optional Agent Milestones",
+            "",
+            `semantic-progress-log-path: ${runContext.semanticProgressLogPath ?? "(not provisioned)"}`,
+            "instruction: if your tool surface allows workspace file writes, append concise markdown bullet milestones to the semantic progress file",
+            "suggested-markdown: - [2026-05-07T10:55:28.607Z] Implemented validation wiring",
+            "scope: task-specific milestones only; wrapper lifecycle events already go to the JSONL progress log",
+            "fallback: do not block or fail the task if you cannot update this optional file",
+        );
+    }
+
+    return sections.join("\n");
 }
 
 function inferTaskId(prompt: string, explicitTaskId?: string): string {
@@ -581,16 +769,30 @@ function extractChallenge(output: string): string {
 const runId = randomUUID();
 const startedAt = new Date().toISOString();
 const taskId = inferTaskId(prompt, taskIdArg);
+const progressLogPath = runProgressLogPath(runId);
 logInfo(`[run-agent] started  runId=${runId} role=${role} model=${model} at=${startedAt}`);
 logInfo(`[run-agent] routing  policy-model=${policyModel} policy-source=${policyModelSelection.source} model-source=${modelSource}`);
 if (!modelOverride && policyModelSelection.source === "fallback") {
     logInfo(`[run-agent] warning  unknown role='${role}' not found in routing table; using fallback model=${policyModel}`);
 }
 logInfo(`[run-agent] prompt   ${prompt.slice(0, 120).replace(/\n/g, " ")}${prompt.length > 120 ? "…" : ""}`);
+logInfo(`[run-agent] progress ${progressLogPath}`);
 
 const { tools, systemMessage } = readAgentMeta(role);
 const mcpServers = resolveAgentMcpServers(tools);
 const mcpKeys = Object.keys(mcpServers);
+const agentMilestonesSupported = supportsAgentMilestones(tools);
+const semanticProgressLogPath = agentMilestonesSupported ? runSemanticProgressLogPath(runId) : undefined;
+const asyncRunContext: AsyncRunContext = {
+    runId,
+    role,
+    model,
+    startedAt,
+    taskId,
+    progressLogPath,
+    agentMilestonesSupported,
+    ...(semanticProgressLogPath ? { semanticProgressLogPath } : {}),
+};
 logInfo(`[run-agent] tools    ${tools.length > 0 ? tools.join(", ") : "(none)"}`);
 for (const [k, v] of Object.entries(mcpServers)) {
     const { headers, ...rest } = v as any;
@@ -605,8 +807,27 @@ for (const [k, v] of Object.entries(mcpServers)) {
 logInfo(`[run-agent] mcp      ${mcpKeys.length > 0 ? mcpKeys.join(", ") : "(none)"}`);
 logInfo(`[run-agent] system   ${systemMessage.slice(0, 80).replace(/\n/g, " ")}…`);
 logInfo(`[run-agent] flags    no-intro=${noIntro} output-format=${outputFormat}`);
+if (semanticProgressLogPath) {
+    logInfo(`[run-agent] semantic-progress ${semanticProgressLogPath}`);
+}
 
-persistRun({ runId, taskId, role, model, prompt: prompt.slice(0, 200), startedAt, status: "running" });
+ensureProgressLog(asyncRunContext);
+ensureSemanticProgressLog(asyncRunContext);
+persistRun({
+    runId,
+    taskId,
+    role,
+    model,
+    prompt: prompt.slice(0, 200),
+    startedAt,
+    status: "running",
+    progressLogPath,
+    semanticProgressSupported: agentMilestonesSupported,
+    ...(semanticProgressLogPath ? { semanticProgressLogPath } : {}),
+    phase: "dispatched",
+    lastHeartbeatAt: startedAt,
+});
+recordRunProgress(asyncRunContext, "dispatched", "Run registered and awaiting Copilot session setup.", startedAt);
 
 let exitCode = 0;
 const client = new CopilotClient();
@@ -642,6 +863,13 @@ try {
         reasoningEffortSource: resolvedReasoningEffortSource,
         ...modelLookupRecord,
     });
+    recordRunProgress(
+        asyncRunContext,
+        "model-resolved",
+        modelLookupStatus === "ok"
+            ? `Model ${model} resolved with reasoning effort ${reasoningEffort} (${reasoningEffortSelection.source}).`
+            : `Model metadata lookup failed; using reasoning effort ${reasoningEffort} (${reasoningEffortSelection.source}).`,
+    );
     logInfo(
         `[run-agent] effort   model=${model} effort=${reasoningEffort} source=${reasoningEffortSelection.source}`
     );
@@ -667,21 +895,22 @@ try {
     });
 
     logInfo(`[run-agent] session  id=${session.sessionId}`);
+    recordRunProgress(asyncRunContext, "session-created", `Copilot session ${session.sessionId} created.`);
 
     if (preSleepMs > 0) {
         logInfo(`[run-agent] sleeping ${preSleepMs / 1000}s before sending prompt…`);
+        recordRunProgress(
+            asyncRunContext,
+            "waiting-before-send",
+            `Pre-sleep enabled for ${preSleepMs / 1000}s before sending the prompt.`,
+        );
         await new Promise((resolve) => setTimeout(resolve, preSleepMs));
     }
 
-    const promptWithProvenance = injectDevAgentProvenanceBlock(prompt, {
-        runId,
-        role,
-        model,
-        startedAt,
-        taskId,
-    });
-    const finalPrompt = noIntro ? promptWithProvenance : ROLE_INTRO_PREFIX + promptWithProvenance;
+    const promptWithRunContext = injectAsyncRunContext(prompt, asyncRunContext);
+    const finalPrompt = noIntro ? promptWithRunContext : ROLE_INTRO_PREFIX + promptWithRunContext;
     const runSession = session;
+    recordRunProgress(asyncRunContext, "waiting-for-agent", "Prompt sent to agent; waiting for the final response.");
     const result = await withRetry(
         () => runSession.sendAndWait({ prompt: finalPrompt }, TIMEOUT_MS),
         MAX_RETRIES,
@@ -693,12 +922,14 @@ try {
     const needsClarification = detectNeedsClarification(output);
     const challenge = needsClarification ? extractChallenge(output) : undefined;
     const status: RunStatus = needsClarification ? "pending-clarification" : "done";
+    const phase: RunPhase = needsClarification ? "needs-clarification" : "completed";
 
     const finishedAt = new Date().toISOString();
     persistRun({
         runId,
         taskId,
         status,
+        phase,
         finishedAt,
         output,
         ...(challenge ? { challenge } : {}),
@@ -707,6 +938,14 @@ try {
         modelLookupStatus,
         ...(modelLookupError ? { modelLookupError } : {}),
     });
+    recordRunProgress(
+        asyncRunContext,
+        phase,
+        needsClarification
+            ? "Agent returned a needs-clarification result."
+            : "Agent returned a final response.",
+        finishedAt,
+    );
     logInfo(`[run-agent] finished at=${finishedAt}`);
 
     if (outputFormat === "json") {
@@ -722,6 +961,10 @@ try {
                 startedAt,
                 finishedAt,
                 status,
+                phase,
+                progressLogPath,
+                semanticProgressSupported: agentMilestonesSupported,
+                ...(semanticProgressLogPath ? { semanticProgressLogPath } : {}),
                 ...(challenge ? { challenge } : {}),
                 output,
             }) + "\n"
@@ -738,6 +981,7 @@ try {
         runId,
         taskId,
         status: "failed",
+        phase: "failed",
         finishedAt,
         error: err instanceof Error ? err.message : String(err),
         reasoningEffort: resolvedReasoningEffort,
@@ -745,6 +989,12 @@ try {
         modelLookupStatus,
         ...(modelLookupError ? { modelLookupError } : {}),
     });
+    recordRunProgress(
+        asyncRunContext,
+        "failed",
+        err instanceof Error ? err.message : String(err),
+        finishedAt,
+    );
     console.error(`[run-agent] failed:`, err instanceof Error ? err.message : err);
     exitCode = 1;
 } finally {
