@@ -23,7 +23,7 @@
  */
 
 import { CopilotClient, approveAll, type MCPServerConfig } from "@github/copilot-sdk";
-import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
+import { closeSync, existsSync, mkdirSync, openSync, readFileSync, readdirSync, renameSync, statSync, unlinkSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join, resolve } from "node:path";
 import { randomUUID } from "node:crypto";
@@ -51,6 +51,11 @@ const RUNS_LOG_DIR = join(
     "logs", "parallel-agents"
 );
 const RUNS_INDEX_PATH = join(RUNS_LOG_DIR, "runs.json");
+const RUNS_INDEX_LOCK_PATH = `${RUNS_INDEX_PATH}.lock`;
+const RUNS_INDEX_LOCK_WAIT_MS = 5_000;
+const RUNS_INDEX_LOCK_RETRY_MS = 50;
+const RUNS_INDEX_LOCK_STALE_MS = 30_000;
+const SLEEP_WAIT_BUFFER = new Int32Array(new SharedArrayBuffer(4));
 
 const WORKSPACE_ROOT = resolve(fileURLToPath(new URL(".", import.meta.url)), "..");
 const AGENTS_DIR = join(WORKSPACE_ROOT, ".github", "agents");
@@ -314,6 +319,61 @@ function writeJsonAtomic(path: string, payload: unknown): void {
     }
 }
 
+function sleepSync(milliseconds: number): void {
+    Atomics.wait(SLEEP_WAIT_BUFFER, 0, 0, milliseconds);
+}
+
+function acquireRunsIndexLock(): number {
+    const startedAt = Date.now();
+
+    while (true) {
+        try {
+            return openSync(RUNS_INDEX_LOCK_PATH, "wx");
+        } catch (err) {
+            const lockError = err as NodeJS.ErrnoException;
+            if (lockError.code !== "EEXIST") {
+                throw err;
+            }
+
+            try {
+                const lockAgeMs = Date.now() - statSync(RUNS_INDEX_LOCK_PATH).mtimeMs;
+                if (lockAgeMs > RUNS_INDEX_LOCK_STALE_MS) {
+                    unlinkSync(RUNS_INDEX_LOCK_PATH);
+                    continue;
+                }
+            } catch {
+                // Lock ownership changed while checking; retry acquisition.
+            }
+
+            if (Date.now() - startedAt >= RUNS_INDEX_LOCK_WAIT_MS) {
+                throw new Error(
+                    `[run-agent] Timed out acquiring runs index lock after ${RUNS_INDEX_LOCK_WAIT_MS}ms`
+                );
+            }
+
+            sleepSync(RUNS_INDEX_LOCK_RETRY_MS);
+        }
+    }
+}
+
+function releaseRunsIndexLock(lockFd: number | undefined): void {
+    if (lockFd === undefined) {
+        return;
+    }
+
+    try {
+        closeSync(lockFd);
+    } catch {
+        // best-effort close
+    }
+
+    try {
+        unlinkSync(RUNS_INDEX_LOCK_PATH);
+    } catch {
+        // lock file may already be gone
+    }
+}
+
 function resolveRunStatus(status: unknown, fallback: RunStatus): RunStatus {
     if (status === "running" || status === "done" || status === "failed" || status === "pending-clarification") {
         return status;
@@ -322,6 +382,7 @@ function resolveRunStatus(status: unknown, fallback: RunStatus): RunStatus {
 }
 
 function persistRunsIndex(runRecord: Record<string, unknown>): void {
+    let lockFd: number | undefined;
     try {
         const runId = runRecord.runId;
         if (typeof runId !== "string" || runId.length === 0) {
@@ -329,6 +390,7 @@ function persistRunsIndex(runRecord: Record<string, unknown>): void {
         }
 
         mkdirSync(RUNS_LOG_DIR, { recursive: true });
+        lockFd = acquireRunsIndexLock();
         const snapshot = readRunsIndex();
         const previous = snapshot[runId];
 
@@ -381,6 +443,8 @@ function persistRunsIndex(runRecord: Record<string, unknown>): void {
         writeJsonAtomic(RUNS_INDEX_PATH, snapshot);
     } catch (err) {
         console.error("[run-agent] Warning: could not persist runs index:", err);
+    } finally {
+        releaseRunsIndexLock(lockFd);
     }
 }
 
@@ -471,6 +535,17 @@ function inferTaskId(prompt: string, explicitTaskId?: string): string {
     if (issueRefMatch) return `#${issueRefMatch[1]}`;
 
     return "direct-invocation";
+}
+
+function detectNeedsClarification(output: string): boolean {
+    return /build readiness\s*:\s*needs clarification/i.test(output);
+}
+
+function extractChallenge(output: string): string {
+    const match = output.match(
+        /(?:open questions|needs clarification|blockers?)[^\n]*\n([\s\S]{1,800}?)(?:\n#{1,3} |\n---|\n\*\*\*|$)/i
+    );
+    return match ? match[1].trim() : output.slice(0, 600).trim();
 }
 
 // ── Run ───────────────────────────────────────────────────────────────────────
@@ -587,14 +662,18 @@ try {
         isRetryableSendAndWaitError
     );
     const output = result?.data?.content ?? "(no output)";
+    const needsClarification = detectNeedsClarification(output);
+    const challenge = needsClarification ? extractChallenge(output) : undefined;
+    const status: RunStatus = needsClarification ? "pending-clarification" : "done";
 
     const finishedAt = new Date().toISOString();
     persistRun({
         runId,
         taskId,
-        status: "done",
+        status,
         finishedAt,
         output,
+        ...(challenge ? { challenge } : {}),
         reasoningEffort: resolvedReasoningEffort,
         reasoningEffortSource: resolvedReasoningEffortSource,
         modelLookupStatus,
@@ -614,7 +693,8 @@ try {
                 ...(modelLookupError ? { modelLookupError } : {}),
                 startedAt,
                 finishedAt,
-                status: "done",
+                status,
+                ...(challenge ? { challenge } : {}),
                 output,
             }) + "\n"
         );
