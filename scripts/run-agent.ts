@@ -23,7 +23,7 @@
  */
 
 import { CopilotClient, approveAll, type MCPServerConfig } from "@github/copilot-sdk";
-import { closeSync, existsSync, mkdirSync, openSync, readFileSync, readdirSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join, resolve } from "node:path";
 import { randomUUID } from "node:crypto";
@@ -348,35 +348,20 @@ function isProcessAlive(pid: number): boolean {
     }
 }
 
-function acquireRunsIndexLock(): number {
+function acquireRunsIndexLock(): void {
     const startedAt = Date.now();
 
     while (true) {
         try {
-            const lockFd = openSync(RUNS_INDEX_LOCK_PATH, "wx");
-            try {
-                writeFileSync(
-                    lockFd,
-                    JSON.stringify({
-                        pid: process.pid,
-                        acquiredAt: new Date().toISOString(),
-                    }),
-                    "utf-8"
-                );
-                return lockFd;
-            } catch (writeError) {
-                try {
-                    closeSync(lockFd);
-                } catch {
-                    // best-effort close
-                }
-                try {
-                    unlinkSync(RUNS_INDEX_LOCK_PATH);
-                } catch {
-                    // lock file may already be gone
-                }
-                throw writeError;
-            }
+            writeFileSync(
+                RUNS_INDEX_LOCK_PATH,
+                JSON.stringify({
+                    pid: process.pid,
+                    acquiredAt: new Date().toISOString(),
+                }),
+                { encoding: "utf-8", flag: "wx" }
+            );
+            return;
         } catch (err) {
             const lockError = err as NodeJS.ErrnoException;
             if (lockError.code !== "EEXIST") {
@@ -406,17 +391,7 @@ function acquireRunsIndexLock(): number {
     }
 }
 
-function releaseRunsIndexLock(lockFd: number | undefined): void {
-    if (lockFd === undefined) {
-        return;
-    }
-
-    try {
-        closeSync(lockFd);
-    } catch {
-        // best-effort close
-    }
-
+function releaseRunsIndexLock(): void {
     try {
         unlinkSync(RUNS_INDEX_LOCK_PATH);
     } catch {
@@ -432,7 +407,7 @@ function resolveRunStatus(status: unknown, fallback: RunStatus): RunStatus {
 }
 
 function persistRunsIndex(runRecord: Record<string, unknown>): void {
-    let lockFd: number | undefined;
+    let lockAcquired = false;
     try {
         const runId = runRecord.runId;
         if (typeof runId !== "string" || runId.length === 0) {
@@ -440,7 +415,8 @@ function persistRunsIndex(runRecord: Record<string, unknown>): void {
         }
 
         mkdirSync(RUNS_LOG_DIR, { recursive: true });
-        lockFd = acquireRunsIndexLock();
+        acquireRunsIndexLock();
+        lockAcquired = true;
         const snapshot = readRunsIndex();
         const previous = snapshot[runId];
 
@@ -494,7 +470,9 @@ function persistRunsIndex(runRecord: Record<string, unknown>): void {
     } catch (err) {
         console.error("[run-agent] Warning: could not persist runs index:", err);
     } finally {
-        releaseRunsIndexLock(lockFd);
+        if (lockAcquired) {
+            releaseRunsIndexLock();
+        }
     }
 }
 
