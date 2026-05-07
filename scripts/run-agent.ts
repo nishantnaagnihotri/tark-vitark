@@ -39,6 +39,17 @@ import {
 const TIMEOUT_MS = 60 * 60 * 1000; // 1 hour
 const MAX_RETRIES = 3;             // Retry sendAndWait on transient failures
 const RETRY_BASE_MS = 2_000;       // Exponential backoff base (2 s → 4 s → 8 s)
+const DEFAULT_WAIT_HEARTBEAT_MS = 60_000;
+
+const WAIT_HEARTBEAT_MS = (() => {
+    const raw = process.env.RUN_AGENT_WAIT_HEARTBEAT_MS;
+    if (!raw) {
+        return DEFAULT_WAIT_HEARTBEAT_MS;
+    }
+
+    const parsed = Number.parseInt(raw, 10);
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : DEFAULT_WAIT_HEARTBEAT_MS;
+})();
 
 // Prepended to every prompt so the agent always opens with a role introduction.
 // Skipped when --no-intro flag is passed (e.g. for structured @file prompts).
@@ -555,6 +566,36 @@ function recordRunProgress(
     });
 }
 
+function recordRunHeartbeat(
+    runContext: AsyncRunContext,
+    detail = "Still waiting for the final response.",
+    heartbeatAt = new Date().toISOString()
+): void {
+    const normalizedDetail = detail.replace(/\s+/g, " ").trim();
+    appendProgressEvent(
+        runContext,
+        "wrapper",
+        "lifecycle",
+        { phase: "waiting-for-agent", detail: normalizedDetail, heartbeat: true },
+        heartbeatAt,
+    );
+    persistRun({
+        runId: runContext.runId,
+        taskId: runContext.taskId,
+        progressLogPath: runContext.progressLogPath,
+        phase: "waiting-for-agent",
+        lastHeartbeatAt: heartbeatAt,
+    });
+}
+
+function startWaitHeartbeat(runContext: AsyncRunContext): NodeJS.Timeout {
+    const heartbeat = setInterval(() => {
+        recordRunHeartbeat(runContext);
+    }, WAIT_HEARTBEAT_MS);
+    heartbeat.unref();
+    return heartbeat;
+}
+
 function persistRunsIndex(runRecord: Record<string, unknown>): void {
     let lockAcquired = false;
     try {
@@ -836,6 +877,7 @@ let resolvedReasoningEffort: ReasoningEffort | undefined;
 let resolvedReasoningEffortSource: ReasoningEffortSource | undefined;
 let modelLookupStatus: "ok" | "failed" = "ok";
 let modelLookupError: string | undefined;
+let waitHeartbeat: NodeJS.Timeout | undefined;
 
 try {
     await client.start();
@@ -911,6 +953,7 @@ try {
     const finalPrompt = noIntro ? promptWithRunContext : ROLE_INTRO_PREFIX + promptWithRunContext;
     const runSession = session;
     recordRunProgress(asyncRunContext, "waiting-for-agent", "Prompt sent to agent; waiting for the final response.");
+    waitHeartbeat = startWaitHeartbeat(asyncRunContext);
     const result = await withRetry(
         () => runSession.sendAndWait({ prompt: finalPrompt }, TIMEOUT_MS),
         MAX_RETRIES,
@@ -918,6 +961,8 @@ try {
         "sendAndWait",
         isRetryableSendAndWaitError
     );
+    clearInterval(waitHeartbeat);
+    waitHeartbeat = undefined;
     const output = result?.data?.content ?? "(no output)";
     const needsClarification = detectNeedsClarification(output);
     const challenge = needsClarification ? extractChallenge(output) : undefined;
@@ -976,6 +1021,10 @@ try {
     }
 
 } catch (err) {
+    if (waitHeartbeat) {
+        clearInterval(waitHeartbeat);
+        waitHeartbeat = undefined;
+    }
     const finishedAt = new Date().toISOString();
     persistRun({
         runId,
@@ -998,6 +1047,10 @@ try {
     console.error(`[run-agent] failed:`, err instanceof Error ? err.message : err);
     exitCode = 1;
 } finally {
+    if (waitHeartbeat) {
+        clearInterval(waitHeartbeat);
+        waitHeartbeat = undefined;
+    }
     if (session) {
         try { await session.disconnect(); } catch { /* non-fatal */ }
     }
