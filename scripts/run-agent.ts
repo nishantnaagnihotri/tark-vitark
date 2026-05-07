@@ -322,21 +322,82 @@ function sleepSync(milliseconds: number): void {
     Atomics.wait(SLEEP_WAIT_BUFFER, 0, 0, milliseconds);
 }
 
+function readRunsIndexLockPid(): number | undefined {
+    try {
+        const raw = readFileSync(RUNS_INDEX_LOCK_PATH, "utf-8").trim();
+        if (!raw) {
+            return undefined;
+        }
+        const parsed = JSON.parse(raw) as { pid?: unknown };
+        if (typeof parsed.pid !== "number" || !Number.isInteger(parsed.pid) || parsed.pid <= 0) {
+            return undefined;
+        }
+        return parsed.pid;
+    } catch {
+        return undefined;
+    }
+}
+
+function isProcessAlive(pid: number): boolean {
+    try {
+        process.kill(pid, 0);
+        return true;
+    } catch (err) {
+        const processError = err as NodeJS.ErrnoException;
+        return processError.code === "EPERM";
+    }
+}
+
 function acquireRunsIndexLock(): number {
     const startedAt = Date.now();
 
     while (true) {
         try {
-            return openSync(RUNS_INDEX_LOCK_PATH, "wx");
+            const lockFd = openSync(RUNS_INDEX_LOCK_PATH, "wx");
+            try {
+                writeFileSync(
+                    lockFd,
+                    JSON.stringify({
+                        pid: process.pid,
+                        acquiredAt: new Date().toISOString(),
+                    }),
+                    "utf-8"
+                );
+                return lockFd;
+            } catch (writeError) {
+                try {
+                    closeSync(lockFd);
+                } catch {
+                    // best-effort close
+                }
+                try {
+                    unlinkSync(RUNS_INDEX_LOCK_PATH);
+                } catch {
+                    // lock file may already be gone
+                }
+                throw writeError;
+            }
         } catch (err) {
             const lockError = err as NodeJS.ErrnoException;
             if (lockError.code !== "EEXIST") {
                 throw err;
             }
 
+            const ownerPid = readRunsIndexLockPid();
+            if (typeof ownerPid === "number" && !isProcessAlive(ownerPid)) {
+                try {
+                    unlinkSync(RUNS_INDEX_LOCK_PATH);
+                    continue;
+                } catch {
+                    // Another process changed lock ownership; retry.
+                }
+            }
+
             if (Date.now() - startedAt >= RUNS_INDEX_LOCK_WAIT_MS) {
+                const ownerPidText = typeof ownerPid === "number" ? `owner pid=${ownerPid}` : "owner pid=unknown";
                 throw new Error(
-                    `[run-agent] Timed out acquiring runs index lock after ${RUNS_INDEX_LOCK_WAIT_MS}ms`
+                    `[run-agent] Timed out acquiring runs index lock after ${RUNS_INDEX_LOCK_WAIT_MS}ms (${ownerPidText}). ` +
+                    `If the lock owner is no longer running, remove ${RUNS_INDEX_LOCK_PATH}.`
                 );
             }
 
