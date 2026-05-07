@@ -23,7 +23,7 @@
  */
 
 import { CopilotClient, approveAll, type MCPServerConfig } from "@github/copilot-sdk";
-import { closeSync, existsSync, mkdirSync, openSync, readFileSync, readdirSync, renameSync, statSync, unlinkSync, writeFileSync } from "node:fs";
+import { closeSync, existsSync, mkdirSync, openSync, readFileSync, readdirSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join, resolve } from "node:path";
 import { randomUUID } from "node:crypto";
@@ -54,7 +54,6 @@ const RUNS_INDEX_PATH = join(RUNS_LOG_DIR, "runs.json");
 const RUNS_INDEX_LOCK_PATH = `${RUNS_INDEX_PATH}.lock`;
 const RUNS_INDEX_LOCK_WAIT_MS = 5_000;
 const RUNS_INDEX_LOCK_RETRY_MS = 50;
-const RUNS_INDEX_LOCK_STALE_MS = 30_000;
 const SLEEP_WAIT_BUFFER = new Int32Array(new SharedArrayBuffer(4));
 
 const WORKSPACE_ROOT = resolve(fileURLToPath(new URL(".", import.meta.url)), "..");
@@ -333,16 +332,6 @@ function acquireRunsIndexLock(): number {
             const lockError = err as NodeJS.ErrnoException;
             if (lockError.code !== "EEXIST") {
                 throw err;
-            }
-
-            try {
-                const lockAgeMs = Date.now() - statSync(RUNS_INDEX_LOCK_PATH).mtimeMs;
-                if (lockAgeMs > RUNS_INDEX_LOCK_STALE_MS) {
-                    unlinkSync(RUNS_INDEX_LOCK_PATH);
-                    continue;
-                }
-            } catch {
-                // Lock ownership changed while checking; retry acquisition.
             }
 
             if (Date.now() - startedAt >= RUNS_INDEX_LOCK_WAIT_MS) {
