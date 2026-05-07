@@ -1,5 +1,5 @@
-<!-- Protocol-Version: 3.35 -->
-<!-- Last-Updated: 2026-04-30 -->
+<!-- Protocol-Version: 3.39 -->
+<!-- Last-Updated: 2026-05-07 -->
 
 # Shared Agent Protocol
 
@@ -127,6 +127,14 @@ The full Gate 5, Gate 5.5 Runtime QA, and Gate 6 orchestration workflow - issue-
 8. Before a new role is used in live orchestration, add its default model to `scripts/agent-model-routing.ts` and document it in `.github/skills/async-agent-dispatch/SKILL.md` in the same change.
 9. Repo-controlled Copilot SDK terminal sessions must set the highest supported `reasoningEffort` for the selected model. This is enforced in `scripts/run-agent.ts` by resolving the model's supported reasoning levels via `listModels()` and selecting the strongest one. If model metadata is unavailable, fall back to `high`. Sync `runSubagent` handoffs currently expose explicit model selection but no repo-controlled reasoning-effort parameter; Gate 3B therefore targets the Codex sync lane as the closest available path to the desired `xhigh` review posture, but exact sync `xhigh` cannot be repo-enforced until the tool surface exposes reasoning control.
 10. For every async terminal dispatch (`run_in_terminal mode=async`) of `scripts/run-agent.ts`, orchestrator must print exactly one dispatch banner in chat per dispatch. The single banner is emitted immediately after the dispatch call returns and must include: role, resolved model, resolved reasoning effort, reasoning source (`supported-efforts` or `fallback`), gate/slice context, terminal id, and timestamp.
+
+## Async Progress Logging
+
+1. Every async terminal dispatch via `scripts/run-agent.ts` must produce wrapper-owned progress artifacts under `logs/parallel-agents/`.
+2. `scripts/run-agent.ts` is the universal cross-role liveness surface for async runs. It must maintain the per-run JSON snapshot record, a single shared append-only JSONL wrapper progress log, and the `runs.json` index fields `phase`, `lastHeartbeatAt`, and `progressLogPath`.
+3. The progress log path must be absolute so the log remains valid even if the dispatched agent changes directories or moves into a sibling worktree.
+4. Wrapper lifecycle events always append to that JSONL progress log. Roles with workspace-write capability may additionally append human-readable milestone entries to a separate absolute Markdown semantic progress file; this human-readable file does not replace the wrapper JSONL log.
+5. Between dispatch and terminal exit, terminal output is diagnostics-only; the wrapper-owned JSON snapshot plus the wrapper JSONL progress log are the primary repo-managed progress surfaces, and the semantic Markdown file is optional supporting context.
 
 ## Terminal Mutation Override Policy
 

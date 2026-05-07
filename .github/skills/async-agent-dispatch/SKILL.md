@@ -188,6 +188,22 @@ npx tsx scripts/run-agent.ts --task-id debate-screen/gate5/dev-2 dev \
 
 The VS Code chat panel will show `[SLICE: debate-screen | GATE: 5 | dev-1]` and `[SLICE: debate-screen | GATE: 5 | dev-2]` as session titles, making it immediately obvious which root thread each belongs to.
 
+### Wrapper-Owned Progress Logging
+
+Every `scripts/run-agent.ts` dispatch writes wrapper-owned lifecycle progress for that run:
+
+- `logs/parallel-agents/<run-id>.json` — per-run record
+- `logs/parallel-agents/<run-id>-progress.jsonl` — append-only wrapper lifecycle progress log
+- `logs/parallel-agents/<run-id>-semantic-progress.md` — optional human-readable milestone log for write-capable roles
+- `logs/parallel-agents/runs.json` — index row with `status`, `phase`, `lastHeartbeatAt`, and `progressLogPath`
+
+Rules:
+
+1. Treat these wrapper-owned artifacts as the primary repo-managed progress surface between dispatch and terminal exit.
+2. The injected `## Async Run Context` block tells the agent the exact absolute wrapper progress log path, and when milestone writes are possible it also provides the semantic Markdown log path.
+3. Do not assume the agent can always write milestones: several async roles are read/search-only, so the wrapper lifecycle entries remain the universal baseline signal.
+4. If a role can write to the workspace, append concise Markdown bullet milestones to the semantic progress file rather than modifying the wrapper JSONL log.
+
 ### 5. Liveness check
 
 Useful for verifying rate-limit headroom before a long parallel run:
