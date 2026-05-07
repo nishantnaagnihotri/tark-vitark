@@ -1,6 +1,6 @@
 ---
 name: async-agent-dispatch
-description: "Async agent dispatch workflow: run a single Copilot SDK agent via run-agent.ts, launch parallel async agents for Gate 5 parallel dev dispatch, apply role-based model routing, apply session context prefix for chat traceability, read prompts from files, configure MCP servers via mcp.json, and maintain Figma OAuth token lifecycle. Use when: dispatching any named agent (prd-agent, dev, design-qa-agent, etc.) from the terminal, running Gate 5 parallel dev agents as background processes, tracing async chat sessions back to their originating slice/gate, troubleshooting MCP tool access, or refreshing an expired Figma OAuth token."
+description: "Async agent dispatch workflow: run a single Copilot SDK agent via run-agent.ts, launch parallel async work as multiple independent run-agent.ts terminal processes, apply role-based model routing, apply session context prefix for chat traceability, read prompts from files, configure MCP servers via mcp.json, and maintain Figma OAuth token lifecycle. Use when: dispatching any named agent (prd-agent, dev, design-qa-agent, etc.) from the terminal, running Gate 5 parallel dev agents as independent background processes, tracing async chat sessions back to their originating slice/gate, troubleshooting MCP tool access, or refreshing an expired Figma OAuth token."
 ---
 
 # Async Agent Dispatch
@@ -32,6 +32,8 @@ Before every agent dispatch, classify the expected output:
 | Reasoning input — analysis, verdict, pass/fail decision the orchestrator must evaluate immediately | Requirement challenger, PRD agent, design QA agent | `runSubagent` (Gates 1–4 only) |
 
 **Rule:** if the orchestrator does not need to read the agent's output to decide what to do next — because the result is a GitHub artifact verifiable via MCP or PR list — use async terminal dispatch.
+
+**Async fan-out rule:** one async lane equals one `scripts/run-agent.ts` process. For N parallel lanes, launch N separate `run_in_terminal (mode=async)` calls and track each terminal independently. Do not use any batched multi-task async dispatcher.
 
 **Gate 3A finalized process:** `scripts/run-agent.ts` uses a single-shot `sendAndWait(...)` session and is not a persistent chat thread. Gate 3A therefore runs as a sequence of bounded async `ux-agent` passes. Each pass rehydrates from `03-ux.md`, checkpoints stable decisions back into that file, and ends with an `Orchestrator Resume Packet`. Orchestrator records the dispatch, pauses, and waits for the Product Owner to come back and explicitly resume. If more UX work is needed, launch a new async pass from the latest `03-ux.md` checkpoint. Use sync `runSubagent` only for the explicit in-chat critique fallback.
 
@@ -70,7 +72,7 @@ Rules:
 4. Gate 3B sync Design QA usually runs as a nested `ux-agent` -> `design-qa-agent` handoff on explicit model `gpt-5.3-codex`.
 5. For each sync `runSubagent` handoff, print exactly one sync dispatch banner in chat immediately before the tool call. Include role, explicit model, reasoning status (`tool-controlled / not repo-configurable`), and gate/slice context.
 6. `scripts/run-agent.ts` resolves the role default automatically when `--model` is omitted, resolves the highest supported reasoning effort for the selected model via `listModels()`, and logs both the resolved model and whether it came from the role default or an override.
-7. `scripts/mcp-dev-orchestrator.ts` uses the same routing table for parallel async runs, includes the resolved model in task status output, and resolves the highest supported reasoning effort for each task's selected model via `listModels()`.
+7. Repo-supported async fan-out uses multiple independent `scripts/run-agent.ts` terminal processes. Each process resolves its own role default model and highest supported reasoning effort via `listModels()`.
 8. If a task genuinely needs a non-default model, dispatch it directly with `scripts/run-agent.ts --model <id>` and record why in the handoff or dispatch note.
 9. Before introducing a new live role, add it to `scripts/agent-model-routing.ts` and this table in the same change.
 10. For each async `run-agent.ts` dispatch, print exactly one dispatch banner in chat immediately after the dispatch call returns. Include role, model, reasoning effort, effort source (`supported-efforts` or `fallback`), gate/slice context, terminal id, and timestamp.
@@ -411,7 +413,7 @@ Expected output includes your GitHub `login`. Any auth error at this step means 
 
 ## Known Limits and Anti-Patterns
 
-- **Do not nest agents**: `delegate_to_agent`, `spawn_agent`, `create_agent`, and `run_agent` are excluded tools. `run-agent.ts` also excludes the `agent-orchestrator` MCP server by default; only enable it with `--allow-agent-orchestrator-mcp` when explicitly required.
+- **Do not nest agents**: `delegate_to_agent`, `spawn_agent`, `create_agent`, and `run_agent` are excluded tools.
 - **Single-shot only**: `infiniteSessions: { enabled: false }` — the session ends after one turn. For multi-turn workflows, invoke the script multiple times.
 - **Timeout and retries**: `sendAndWait` uses a 1-hour timeout per attempt with up to 3 attempts (plus retry backoff and optional `--pre-sleep`), so worst-case runtime can exceed 1 hour.
 - **No stdin**: The script does not accept interactive input. The full prompt must be in the argument or a file.

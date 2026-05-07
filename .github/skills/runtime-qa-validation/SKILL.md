@@ -31,6 +31,16 @@ Use this skill to validate runtime behavior in a real browser session when manua
 2. Themes: Light and Dark for themed UI surfaces; Light-only is acceptable only when the issue has no theme-affecting surface.
 3. Routes and states: all acceptance-criterion journeys plus relevant loading, empty, and error states.
 
+## Generic Coverage Heuristics
+
+Apply these heuristics to every runtime QA pass. They are generic quality floors, not feature-specific exceptions.
+
+1. **State-transition rule:** when a validated surface has more than one observable state, verify at least one real transition between states, not only static end states.
+2. **External-source synchronization rule:** when behavior depends on a source of truth outside the immediate control being exercised (for example URL state, storage, document attributes, system preference, server response, shared context, or previously persisted data), validate both initial derivation and post-change re-synchronization.
+3. **Surface-smoke rule:** after the primary acceptance-criterion journey passes, perform a small representative interaction sweep over adjacent rendered controls on the same surface so obvious seam regressions are exercised before verdict.
+4. **Evidence-matches-claim rule:** static screenshots prove layout and styling only. Any behavioral claim in the verdict must be backed by an executed interaction and an observed post-action result.
+5. **Risk-axis rule:** expand the validation matrix only along axes that can plausibly change behavior for the surface under test, such as viewport, theme, authentication state, data presence, or persisted state.
+
 ## Dev Server Launch Protocol
 
 The runtime QA agent is responsible for starting the dev server. Follow this exact sequence:
@@ -115,8 +125,14 @@ This is a hard stop — do NOT mark the AC as Fail or Pass while an `AC-DELTA` i
    - No critical layout regression (including horizontal overflow)
    - Primary interactions are functional and map to Figma frame states (not just AC text)
    - Expected content and state transitions appear correctly and match Figma frame composition
-5. Capture concise evidence per journey, per required viewport, and per required theme when the surface is theme-affecting. Include the Figma frame node ID alongside each browser screenshot as a paired reference.
-6. If execution fails due to infrastructure/tooling issues, follow `gate-recovery-and-resume` before progression.
+5. Apply the Generic Coverage Heuristics before issuing a verdict:
+   - verify at least one state transition for each multi-state surface in scope
+   - verify re-synchronization when behavior depends on an external source of truth
+   - run a brief adjacent surface-smoke sweep after the main journey
+   - ensure the chosen viewport/theme/data axes match the actual risk profile of the surface
+6. Capture concise evidence per journey, per required viewport, and per required theme when the surface is theme-affecting. Include the Figma frame node ID alongside each browser screenshot as a paired reference.
+7. For every behavioral claim in Findings or Evidence, record the triggering action and the observed post-action result. Do not rely on screenshots alone to prove interaction correctness.
+8. If execution fails due to infrastructure/tooling issues, follow `gate-recovery-and-resume` before progression.
 
 Scope-specific expectations:
 
