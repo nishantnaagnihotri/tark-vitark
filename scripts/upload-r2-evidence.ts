@@ -14,10 +14,10 @@
  *   --output-format json    Emit machine-readable JSON instead of text
  *
  * Env:
- *   CLOUDFLARE_ACCOUNT_ID   Account id used to derive the endpoint if R2_ENDPOINT is unset
+ *   CLOUDFLARE_ACCOUNT_ID   Account id used to derive the endpoint when R2_ENDPOINT is unset
  *   R2_BUCKET_NAME          Bucket name
  *   R2_REGION               Region; defaults to auto
- *   R2_ENDPOINT             Optional explicit endpoint; defaults to https://<ACCOUNT_ID>.r2.cloudflarestorage.com
+ *   R2_ENDPOINT             Optional explicit endpoint. If unset, defaults to https://<ACCOUNT_ID>.r2.cloudflarestorage.com
  *   R2_PUBLIC_BASE_URL      Public base URL, for example https://<bucket-id>.r2.dev
  *   R2_ACCESS_KEY_ID        Access key id / token id
  *   R2_SECRET_ACCESS_KEY    Secret access key. If it looks like a raw cfat_ token, this script derives the S3 secret by SHA-256 hashing it.
@@ -101,6 +101,25 @@ function readRequiredEnv(name: string): string {
         process.exit(1);
     }
     return value;
+}
+
+function resolveEndpoint(): string {
+    const explicitEndpoint = process.env.R2_ENDPOINT?.trim();
+    if (explicitEndpoint) {
+        return explicitEndpoint;
+    }
+
+    const accountId = process.env.CLOUDFLARE_ACCOUNT_ID?.trim();
+    if (!accountId) {
+        console.error(
+            "[upload-r2-evidence] Missing endpoint configuration.\n" +
+            "  Set R2_ENDPOINT directly, or set CLOUDFLARE_ACCOUNT_ID to derive the default endpoint.\n" +
+            "  Run: set -a && source local.env && set +a"
+        );
+        process.exit(1);
+    }
+
+    return `https://${accountId}.r2.cloudflarestorage.com`;
 }
 
 function sha256Hex(value: string): string {
@@ -196,15 +215,44 @@ function collectCandidates(targetPath: string): UploadCandidate[] {
 const bucketName = readRequiredEnv("R2_BUCKET_NAME");
 const accessKeyId = readRequiredEnv("R2_ACCESS_KEY_ID");
 const publicBaseUrl = readRequiredEnv("R2_PUBLIC_BASE_URL");
-const accountId = readRequiredEnv("CLOUDFLARE_ACCOUNT_ID");
 const region = process.env.R2_REGION?.trim() || "auto";
-const endpoint = process.env.R2_ENDPOINT?.trim() || `https://${accountId}.r2.cloudflarestorage.com`;
+const endpoint = resolveEndpoint();
 const secretAccessKey = resolveSecretAccessKey();
 
 const candidates = argv.flatMap((targetPath) => collectCandidates(targetPath));
 
 if (candidates.length === 0) {
     console.error("[upload-r2-evidence] No files found to upload.");
+    process.exit(1);
+}
+
+const uploadPrefix = normaliseKeySegment(prefix);
+const plannedUploads = candidates.map((candidate) => {
+    const key = normaliseKeySegment(`${uploadPrefix}/${candidate.relativeKeyPath}`);
+    return {
+        candidate,
+        key,
+        url: toPublicUrl(publicBaseUrl, key),
+    };
+});
+
+const keyToPaths = new Map<string, string[]>();
+for (const plannedUpload of plannedUploads) {
+    const collisions = keyToPaths.get(plannedUpload.key) ?? [];
+    collisions.push(plannedUpload.candidate.absolutePath);
+    keyToPaths.set(plannedUpload.key, collisions);
+}
+
+const duplicateKeys = Array.from(keyToPaths.entries()).filter(([, paths]) => paths.length > 1);
+if (duplicateKeys.length > 0) {
+    const details = duplicateKeys
+        .map(([key, paths]) => `  ${key}\n${paths.map((path) => `    - ${path}`).join("\n")}`)
+        .join("\n");
+    console.error(
+        "[upload-r2-evidence] Duplicate upload keys detected after path normalization. " +
+        "Upload aborted before sending files.\n" +
+        details
+    );
     process.exit(1);
 }
 
@@ -217,29 +265,25 @@ const client = new S3Client({
     },
 });
 
-const uploadPrefix = normaliseKeySegment(prefix);
 const results: UploadRecord[] = [];
 
-for (const candidate of candidates) {
-    const key = normaliseKeySegment(`${uploadPrefix}/${candidate.relativeKeyPath}`);
-    const url = toPublicUrl(publicBaseUrl, key);
-
+for (const plannedUpload of plannedUploads) {
     if (!dryRun) {
         await client.send(
             new PutObjectCommand({
                 Bucket: bucketName,
-                Key: key,
-                Body: readFileSync(candidate.absolutePath),
-                ContentType: inferContentType(candidate.absolutePath),
+                Key: plannedUpload.key,
+                Body: readFileSync(plannedUpload.candidate.absolutePath),
+                ContentType: inferContentType(plannedUpload.candidate.absolutePath),
                 CacheControl: "public, max-age=31536000, immutable",
             })
         );
     }
 
     results.push({
-        filePath: candidate.absolutePath,
-        key,
-        url,
+        filePath: plannedUpload.candidate.absolutePath,
+        key: plannedUpload.key,
+        url: plannedUpload.url,
         uploaded: !dryRun,
     });
 }

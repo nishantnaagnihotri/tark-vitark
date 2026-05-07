@@ -169,4 +169,4 @@ For UI-impacting issues, include an additional subsection under `Verification Ev
 7. Residual risk and rollback note.
 8. Open questions with owner status.
 9. Traceability snapshot to issue acceptance criteria and architecture sections.
-10. For UI-impacting issues: visual validation evidence — browser screenshots per viewport/theme pair with paired Figma reference screenshots and parity notes (exact match / intentional deviation / regression), referenced inline from PR-body URLs that are either GitHub-hosted attachment URLs from a non-UI upload path or repository-hosted file URLs pinned to the exact pushed current-head 40-character SHA.
+10. For UI-impacting issues: visual validation evidence — browser screenshots per viewport/theme pair with paired Figma reference screenshots and parity notes (exact match / intentional deviation / regression), referenced inline from PR-body URLs that are either absolute HTTPS URLs from configured external evidence storage, GitHub-hosted attachment URLs from a non-UI upload path, or repository-hosted file URLs pinned to the exact pushed current-head 40-character SHA.
