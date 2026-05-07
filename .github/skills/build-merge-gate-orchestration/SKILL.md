@@ -53,6 +53,21 @@ After PR is merged, clean up:
 
 Dev agent must confirm worktree setup before creating any files or making any commits.
 
+## PR Evidence Hosting Policy
+
+When a UI-impacting Gate 5 task requires inline PR-body evidence images, use this policy:
+
+1. Prefer a non-UI path.
+2. Accepted non-UI forms are:
+   - Absolute HTTPS URLs from configured external evidence storage under a PR-scoped and current-head-scoped prefix.
+   - GitHub-hosted attachment URLs when GitHub MCP or another sanctioned non-UI capability can mint them.
+   - Repository-hosted file URLs pinned to the exact pushed 40-character task-branch head SHA.
+3. If configured external evidence storage is available, dev should use it as the default durable path. In this repo, the supported helper is `npm run upload:evidence -- --prefix pr-<pr-number>/<head-sha> <evidence-path>`.
+4. If external evidence storage is used, dev must upload only the current PR's evidence images under a PR-scoped and current-head-scoped prefix, use the returned absolute HTTPS URLs in the PR body, and validate that the rendered images resolve before claiming completion.
+5. If repository-hosted file URLs are used, dev must commit only the current PR's evidence images under a PR-scoped folder, push the evidence commit, generate URLs from the exact pushed head SHA, and validate that the rendered images resolve before claiming completion.
+6. Browser/UI upload fallback is reserved for cases where Product Owner explicitly requires GitHub-hosted attachment URLs for the current PR and no non-UI upload capability exists.
+7. Gate 5 is blocked on PR evidence only when no accepted non-UI evidence path works, or when an explicit attachment-URL requirement exists and the sanctioned fallback still fails.
+
 ## Parallel Build Sequencing (Multi-Issue Gates)
 
 When Gate 4 decomposes a slice into N issues, the orchestrator must evaluate independence before choosing sequential vs parallel execution.
@@ -131,7 +146,8 @@ Gate 5 completion rule:
 2. PR must include explicit issue-closing reference.
 3. For UI-impacting issues, the implementing `dev` agent must invoke issue-level Gate 5.5 runtime QA before final handback and include the runtime verdict package or failure handback in its evidence set.
 4. Gate 5.5 Runtime QA must pass before Gate 6 progression (or Product Owner must explicitly accept residual runtime risk via `vscode_askQuestions` — see Explicit PO Acceptance Enforcement rule below).
-5. Gate 6 (Merge) may begin for that Issue only after required Gate 5 and Gate 5.5 checks pass.
+5. If the PR requires inline evidence images, the PR package is complete only when working PR-body image URLs are present on the current head. Accepted forms are absolute HTTPS URLs from configured external evidence storage, GitHub-hosted attachment URLs from a non-UI upload path, or repository-hosted file URLs pinned to the exact current-head 40-character SHA.
+6. Gate 6 (Merge) may begin for that Issue only after required Gate 5 and Gate 5.5 checks pass.
 
 Local-validation rule:
 

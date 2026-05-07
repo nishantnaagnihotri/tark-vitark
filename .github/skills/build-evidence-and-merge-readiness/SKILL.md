@@ -23,6 +23,10 @@ Use this skill to validate implementation evidence and merge readiness for Gate 
 4. Implementation and tests use domain language (per Domain Language Policy) rather than infrastructure vocabulary.
 5. PR evidence must include scenario-to-test mapping, passing tests, and rollback note.
 6. For UI-impacting issues, runtime QA evidence must include acceptance-criterion journey coverage in a live browser session with required viewport/theme matrix.
+7. When UI-impacting PR evidence requires inline PR-body images, prefer a non-UI path: use absolute HTTPS URLs from configured external evidence storage when available, otherwise use GitHub-hosted attachment URLs only when a non-UI upload capability exists, otherwise use repository-hosted file URLs pinned to the exact pushed 40-character PR head SHA. Browser/UI upload fallback is reserved for cases where Product Owner explicitly requires attachment URLs and no non-UI upload path exists.
+8. When a validated behavior has multiple observable states, verification evidence must include at least one exercised state transition rather than only static snapshots or terminal end states.
+9. When behavior depends on an external source of truth outside the unit under direct test, verification evidence must show both initial derivation and re-synchronization after that source changes.
+10. Static evidence may support visual claims, but behavioral claims require executed interaction evidence with a recorded post-action result.
 
 ## PR Provenance Convention
 
@@ -102,6 +106,8 @@ Rules:
 11. Runtime QA scope lock: verify issue is classified as `UI-impacting` or `Runtime QA: Not Required` with explicit rationale.
 12. Runtime QA evidence lock: for `UI-impacting` issues, verify Runtime QA Verdict Package is present with coverage matrix and findings disposition.
 12a. Runtime QA provenance lock: for `UI-impacting` issues, verify the issue-level Runtime QA Verdict Package is attached to the current PR head and was produced after the latest dev fix batch. If dev invoked the QA lane directly, verify the verdict is still runtime-qa-authored rather than a dev-written summary.
+12b. Visual evidence URL lock: when the PR requires inline evidence images, verify the PR body contains working inline image URLs bound to the current PR head. Accepted forms are absolute HTTPS URLs from configured external evidence storage, GitHub-hosted attachment URLs, or repository-hosted file URLs pinned to the exact current-head 40-character SHA. If external-storage URLs are used, they must be uploaded under a PR-scoped and current-head-scoped prefix and must not be listed in the PR body's `Files Changed` section because they are not branch files. If repository-hosted URLs are used, the corresponding evidence files must also appear in the diff and the PR body's `Files Changed` section. Missing, stale-SHA, or broken URLs are a Build Gate loop-back condition.
+12c. Behavioral evidence lock: when the PR or verdict makes a behavioral claim about a multi-state or externally-derived surface, verify the evidence includes an executed transition or re-synchronization check rather than screenshots or prose alone.
 13. Final slice runtime QA lock: when preparing a `slice/<slice-name> -> master` PR and the slice contains UI-impacting work, verify a `Slice Runtime QA Verdict Package` is present, or `Slice Runtime QA: Not Required` is explicitly recorded with rationale.
 
 ## Merge Gate Checklist (Orchestrator-owned)
@@ -112,7 +118,9 @@ Rules:
 4. Review lock: verify review comments are resolved or explicitly accepted by Product Owner.
 5. Copilot review loop lock: verify the latest Copilot review on the latest commit reports zero comments in its review body, including known phrasings such as **"generated 0 comments"**, **"0 new comments"**, or **"generated no new comments"**. This is the only exit condition. Historical outdated threads do not count. If the latest review still reports >0 comments, the loop must continue. `semantically-closed/tooling-unresolved` items must be reported explicitly and do not block merge unless Product Owner decides otherwise.
 6. Runtime QA lock: for task PRs tied to `UI-impacting` issues, verify latest issue-level Runtime QA verdict is `Pass`, or explicit Product Owner risk acceptance is documented via `vscode_askQuestions` (unilateral agent declaration is not valid — see `build-merge-gate-orchestration` Explicit PO Acceptance Enforcement rule).
+6a. Visual evidence lock: for UI-impacting task PRs that require PR-body evidence images, verify the PR body contains working inline image URLs on the current head. Accepted forms are absolute HTTPS URLs from configured external evidence storage, GitHub-hosted attachment URLs, or repository-hosted file URLs pinned to the exact current-head 40-character SHA. If external-storage URLs are used, they must remain publicly reachable on the current evidence prefix and must not be listed in `Files Changed`. If repository-hosted URLs are used, the corresponding evidence files must still be present in the current diff and listed in `Files Changed`. Broken or stale-SHA URLs are not compliant.
 7. Final slice runtime QA lock: for the final `slice/<slice-name> -> master` PR when the slice contains UI-impacting work, verify the latest slice-level integrated Runtime QA verdict is `Pass`, or explicit Product Owner risk acceptance is documented via `vscode_askQuestions`.
+7a. Behavioral proof lock: if the merge argument relies on interaction correctness, verify the supporting evidence records the triggering action and observed result for at least one relevant state transition or re-synchronization path.
 8. Documentation lock: verify docs and release notes are updated when applicable.
 9. Rollback lock: verify rollback note is documented and feasible.
 10. Risk acceptance lock: verify residual risks are visible and explicitly accepted when required.

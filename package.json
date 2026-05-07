@@ -12,7 +12,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:bdd": "node --import tsx/esm --loader ./features/support/css-loader.mjs node_modules/@cucumber/cucumber/bin/cucumber.js --import 'features/support/jsdom-setup.mjs' --import 'features/step-definitions/**/*.ts'"
+    "test:bdd": "node --import tsx/esm --loader ./features/support/css-loader.mjs node_modules/@cucumber/cucumber/bin/cucumber.js --import 'features/support/jsdom-setup.mjs' --import 'features/step-definitions/**/*.ts'",
+    "upload:evidence": "tsx scripts/upload-r2-evidence.ts"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.8",
@@ -20,6 +21,7 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@aws-sdk/client-s3": "^3.908.0",
     "@cucumber/cucumber": "^11.3.0",
     "@github/copilot-sdk": "^0.2.2",
     "@modelcontextprotocol/sdk": "^1.29.0",
