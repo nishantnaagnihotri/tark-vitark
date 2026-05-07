@@ -395,7 +395,7 @@ function isProcessAlive(pid: number): boolean {
     }
 }
 
-function acquireRunsIndexLock(): void {
+function acquireRunsIndexLock(waitMs = RUNS_INDEX_LOCK_WAIT_MS): boolean {
     const startedAt = Date.now();
 
     while (true) {
@@ -408,7 +408,7 @@ function acquireRunsIndexLock(): void {
                 }),
                 { encoding: "utf-8", flag: "wx" }
             );
-            return;
+            return true;
         } catch (err) {
             const lockError = err as NodeJS.ErrnoException;
             if (lockError.code !== "EEXIST") {
@@ -425,7 +425,10 @@ function acquireRunsIndexLock(): void {
                 }
             }
 
-            if (Date.now() - startedAt >= RUNS_INDEX_LOCK_WAIT_MS) {
+            if (Date.now() - startedAt >= waitMs) {
+                if (waitMs === 0) {
+                    return false;
+                }
                 const ownerPidText = typeof ownerPid === "number" ? `owner pid=${ownerPid}` : "owner pid=unknown";
                 throw new Error(
                     `[run-agent] Timed out acquiring runs index lock after ${RUNS_INDEX_LOCK_WAIT_MS}ms (${ownerPidText}). ` +
@@ -603,7 +606,7 @@ function recordRunHeartbeat(
         progressLogPath: runContext.progressLogPath,
         phase: "waiting-for-agent",
         lastHeartbeatAt: heartbeatAt,
-    });
+    }, { skipIndexIfLocked: true });
 }
 
 function startWaitHeartbeat(runContext: AsyncRunContext): NodeJS.Timeout {
@@ -614,16 +617,22 @@ function startWaitHeartbeat(runContext: AsyncRunContext): NodeJS.Timeout {
     return heartbeat;
 }
 
-function persistRunsIndex(runRecord: Record<string, unknown>): void {
+function persistRunsIndex(
+    runRecord: Record<string, unknown>,
+    options?: { skipIfLocked?: boolean }
+): void {
     let lockAcquired = false;
     try {
         const runId = runRecord.runId;
         if (typeof runId !== "string" || runId.length === 0) {
             return;
         }
+        const skipIfLocked = options?.skipIfLocked ?? false;
 
         mkdirSync(RUNS_LOG_DIR, { recursive: true });
-        acquireRunsIndexLock();
+        if (!acquireRunsIndexLock(skipIfLocked ? 0 : RUNS_INDEX_LOCK_WAIT_MS)) {
+            return;
+        }
         lockAcquired = true;
         const snapshot = readRunsIndex();
         const previous = snapshot[runId];
@@ -703,7 +712,10 @@ function persistRunsIndex(runRecord: Record<string, unknown>): void {
 }
 
 /** Persist a single run record to per-run JSON and maintain runs.json index. */
-function persistRun(record: Record<string, unknown>): void {
+function persistRun(
+    record: Record<string, unknown>,
+    options?: { skipIndexIfLocked?: boolean }
+): void {
     try {
         const id = record.runId;
         if (typeof id !== "string" || id.length === 0) {
@@ -718,7 +730,7 @@ function persistRun(record: Record<string, unknown>): void {
         }
         const next = { ...prior, ...record };
         writeFileSync(path, JSON.stringify(next, null, 2), "utf-8");
-        persistRunsIndex(next);
+        persistRunsIndex(next, { skipIfLocked: options?.skipIndexIfLocked });
     } catch (err) {
         console.error("[run-agent] Warning: could not persist run log:", err);
     }
