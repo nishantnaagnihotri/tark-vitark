@@ -259,6 +259,7 @@ if (duplicateKeys.length > 0) {
 const client = new S3Client({
     region,
     endpoint,
+    forcePathStyle: true,
     credentials: {
         accessKeyId,
         secretAccessKey,
