@@ -26,7 +26,7 @@
 
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+import { createReadStream, existsSync, readdirSync, statSync } from "node:fs";
 import { basename, extname, relative, resolve } from "node:path";
 
 type OutputFormat = "text" | "json";
@@ -277,7 +277,7 @@ for (const plannedUpload of plannedUploads) {
             new PutObjectCommand({
                 Bucket: bucketName,
                 Key: plannedUpload.key,
-                Body: readFileSync(plannedUpload.candidate.absolutePath),
+                Body: createReadStream(plannedUpload.candidate.absolutePath),
                 ContentType: inferContentType(plannedUpload.candidate.absolutePath),
                 CacheControl: "public, max-age=31536000, immutable",
             })
