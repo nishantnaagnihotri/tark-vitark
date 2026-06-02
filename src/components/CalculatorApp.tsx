@@ -43,8 +43,6 @@ export function CalculatorApp() {
   const [operator, setOperator] = useState<Operator | null>(null);
   const [replaceDisplay, setReplaceDisplay] = useState(true);
 
-  const title = 'Calculator';
-
   function resetCalculator() {
     setDisplay('0');
     setFirstOperand(null);
@@ -168,9 +166,9 @@ export function CalculatorApp() {
 
   return (
     <main className="calculator-desktop">
-      <section className="calculator-window" aria-label="Windows calculator">
+      <section className="calculator-window">
         <header className="calculator-window__header">
-          <h1>{title}</h1>
+          <h1>Calculator</h1>
         </header>
         <div className="calculator-window__display" aria-live="polite" aria-label="Display">
           {display}
