@@ -38,7 +38,7 @@
   color: var(--color-on-surface);
   font-size: var(--typescale-calculator-display-size);
   font-weight: 500;
-  min-height: 76px;
+  min-height: var(--size-calculator-display-min-height);
   overflow: hidden;
   padding: var(--space-4) var(--space-4);
   text-align: right;
@@ -59,7 +59,7 @@
   cursor: pointer;
   font: inherit;
   font-size: var(--typescale-calculator-key-size);
-  min-height: 52px;
+  min-height: var(--size-calculator-key-min-height);
   transition: background-color var(--motion-fast-duration) ease;
 }
 
@@ -103,5 +103,5 @@
   cursor: pointer;
   font: inherit;
   font-size: var(--typescale-calculator-backspace-size);
-  min-height: 44px;
+  min-height: var(--size-calculator-backspace-min-height);
 }

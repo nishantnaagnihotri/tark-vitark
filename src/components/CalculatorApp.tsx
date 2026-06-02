@@ -98,9 +98,17 @@ export function CalculatorApp() {
 
     if (firstOperand !== null && operator && !replaceDisplay) {
       const result = computeResult(firstOperand, currentValue, operator);
+      if (!Number.isFinite(result)) {
+        setDisplay('Error');
+        setFirstOperand(null);
+        setOperator(null);
+        setReplaceDisplay(true);
+        return;
+      }
+
       const formatted = formatValue(result);
       setDisplay(formatted);
-      setFirstOperand(Number.parseFloat(formatted));
+      setFirstOperand(result);
     } else if (firstOperand === null) {
       setFirstOperand(currentValue);
     }
@@ -120,6 +128,14 @@ export function CalculatorApp() {
     }
 
     const result = computeResult(firstOperand, currentValue, operator);
+    if (!Number.isFinite(result)) {
+      setDisplay('Error');
+      setFirstOperand(null);
+      setOperator(null);
+      setReplaceDisplay(true);
+      return;
+    }
+
     const formatted = formatValue(result);
     setDisplay(formatted);
     setFirstOperand(null);
@@ -170,7 +186,7 @@ export function CalculatorApp() {
         <header className="calculator-window__header">
           <h1>Calculator</h1>
         </header>
-        <div className="calculator-window__display" aria-live="polite" aria-label="Display">
+        <div className="calculator-window__display" aria-live="polite">
           {display}
         </div>
         <div className="calculator-grid">
