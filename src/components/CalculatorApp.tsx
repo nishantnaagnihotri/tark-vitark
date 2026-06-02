@@ -4,6 +4,7 @@ import '../styles/calculator.css';
 type Operator = '+' | '-' | '×' | '÷';
 
 const MAX_DISPLAY_LENGTH = 16;
+const MAX_DISPLAY_PRECISION = 10;
 
 function formatValue(value: number): string {
   if (!Number.isFinite(value)) {
@@ -15,7 +16,7 @@ function formatValue(value: number): string {
     return asString;
   }
 
-  return Number(value.toPrecision(10)).toString();
+  return Number(value.toPrecision(MAX_DISPLAY_PRECISION)).toString();
 }
 
 function computeResult(left: number, right: number, operator: Operator): number {

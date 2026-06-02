@@ -103,6 +103,12 @@
   --typescale-create-debate-cancel-action-weight: 500;
   --typescale-create-debate-cancel-action-tracking: 0.00625rem;
 
+  --typescale-calculator-title-size: 1.15rem;
+  --typescale-calculator-display-size: 2.2rem;
+  --typescale-calculator-key-size: 1.1rem;
+  --typescale-calculator-backspace-size: 1rem;
+  --motion-fast-duration: 0.12s;
+
   /* ── Spacing ── */
   --space-4: 1rem;
   --space-5: 1.25rem;
