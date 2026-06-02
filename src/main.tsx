@@ -4,6 +4,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { CalculatorApp } from './components/CalculatorApp';
 import './styles/reset.css';
+import './styles/tokens.css';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {

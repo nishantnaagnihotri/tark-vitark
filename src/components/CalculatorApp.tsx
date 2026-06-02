@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import '../styles/calculator.css';
 
 type Operator = '+' | '-' | '×' | '÷';
@@ -42,7 +42,7 @@ export function CalculatorApp() {
   const [operator, setOperator] = useState<Operator | null>(null);
   const [replaceDisplay, setReplaceDisplay] = useState(true);
 
-  const title = useMemo(() => 'Calculator', []);
+  const title = 'Calculator';
 
   function resetCalculator() {
     setDisplay('0');
@@ -166,7 +166,7 @@ export function CalculatorApp() {
   }
 
   return (
-    <main className="calculator-desktop" role="main">
+    <main className="calculator-desktop">
       <section className="calculator-window" aria-label="Windows calculator">
         <header className="calculator-window__header">
           <h1>{title}</h1>
