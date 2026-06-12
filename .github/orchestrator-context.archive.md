@@ -9,7 +9,7 @@ Transition compatibility:
 - `.github/orchestrator-context.md` remains as a deprecated alias through package `#234`.
 - This archive is non-live history and must not be used as the active workflow contract.
 
-Detailed repo-wide governance history moved out of `.github/orchestrator-context.md` to keep the live context surface small enough for efficient session loading.
+Detailed repo-wide governance history is retained here so `.github/workflow-context.md` can stay small enough for efficient live session loading.
 
 ## Repo-Wide Governance Archive
 
