@@ -1,6 +1,14 @@
-# Orchestrator Context Transfer
+# Orchestrator Context Transfer (Deprecated Compatibility Alias)
 
-Canonical live handover context for the Architect + Orchestrator agent.
+Deprecated as a live context surface by migration package `#230` (2026-06-12).
+
+Live source of truth:
+- `.github/workflow-context.md`
+
+Compatibility status:
+- This file is retained only as a transition alias through package `#234`.
+- Any orchestrator-owned progression language below is historical and non-normative.
+- Do not add new live rules here; write live updates to `.github/workflow-context.md`.
 
 ## Product Owner Model
 
@@ -151,7 +159,7 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). U
 79. UX Agent restored as the active Gate 3A owner (adopted 2026-04-24, amended 2026-04-24): UX Agent owns Gate 3A UX execution and Figma write operations using the `ux-design-execution` skill (`.github/skills/ux-design-execution/SKILL.md`). Gate 3A runs as bounded async passes by default: each pass checkpoints `03-ux.md`, ends with an `Orchestrator Resume Packet`, and hands control back to the Product Owner for manual orchestrator resume. This supersedes Protocol 3.19's temporary UX Agent deprecation. Cross-ref: Known Rules #68, #76, `domain-ownership-governance` skill.
 80. PRD Amendment Protocol (adopted 2026-04-16): When the Product Owner approves a scope change after Gate 2 is closed, all three conditions must be met before Gate 3 closure: (1) a dated `## Amendments` entry appended in `02-prd.md` (amendment number, date, scope narrative, supersession clause if applicable), (2) delta markers in `03-ux.md` and `04-design-qa.md` citing the amendment number, and (3) no downstream artifact may remain with stale scope that conflicts with the amendment. Gate 3 is blocked until all three are satisfied. Cross-ref: `.github/skills/requirement-prd-alignment/SKILL.md` §PRD Amendment Protocol, `.github/skills/prd-gate-orchestration/SKILL.md` §PRD Amendment trigger rule.
 81. Gate 5.5 skip enforcement (adopted 2026-04-17): "Explicitly accept residual runtime risk" is only satisfied when the orchestrator has invoked `vscode_askQuestions` presenting the specific skip risk to Product Owner and received an explicit in-session confirmation. An orchestrator unilaterally declaring "PO accepted residual runtime risk" in a gate closure summary — without a `vscode_askQuestions` call in that session — is a workflow failure and an invalid Gate 5.5 skip path. Gate 5.5 remains blocking for UI-impacting issues until either a `Runtime QA Verdict: Pass` or a confirmed `vscode_askQuestions` risk acceptance is on record. Cross-ref: `build-merge-gate-orchestration` skill Explicit PO Acceptance Enforcement rule, `build-evidence-and-merge-readiness` skill Runtime QA lock and Merge Recommendation Checklist #6.
-82. Global AC numbering (adopted 2026-04-20, PO decision): AC IDs are globally unique across all slices. The last AC assigned is **AC-40** (`create-debate`, 2026-04-26; added at Gate 3 to formalize the OQ-1 resolution). The next slice must seed its first AC at **AC-41**. Orchestrator must update this rule (last assigned AC + slice + date) at Gate 1 freeze for every new slice. If a slice is expected to add ACs after Gate 1 (e.g., deferred OQs formalized at Gate 3), the orchestrator must either (a) reserve those AC IDs at Gate 1 freeze — recording them here with status "reserved, prose deferred to Gate N" — even though their prose is not yet written, or (b) update this rule immediately at the gate where each new AC ID is first assigned, before any subsequent slice may seed IDs. If option (b) is used and Gate 3 assigns new IDs for this slice, update this rule at Gate 3 closure with the new last assigned AC + slice + date. Per-slice feature files remain self-contained, but global uniqueness must be preserved for AC IDs created at any gate.
+82. Global AC numbering (adopted 2026-04-20, PO decision): AC IDs are globally unique across all slices. The last AC assigned is **AC-52** (`active-debate-m3-alignment`, 2026-05-08; seeded at Gate 1 freeze). The next slice must seed its first AC at **AC-53**. Orchestrator must update this rule (last assigned AC + slice + date) at Gate 1 freeze for every new slice. If a slice is expected to add ACs after Gate 1 (e.g., deferred OQs formalized at Gate 3), the orchestrator must either (a) reserve those AC IDs at Gate 1 freeze — recording them here with status "reserved, prose deferred to Gate N" — even though their prose is not yet written, or (b) update this rule immediately at the gate where each new AC ID is first assigned, before any subsequent slice may seed IDs. If option (b) is used and Gate 3 assigns new IDs for this slice, update this rule at Gate 3 closure with the new last assigned AC + slice + date. Per-slice feature files remain self-contained, but global uniqueness must be preserved for AC IDs created at any gate.
 83. Model routing policy (adopted 2026-04-21, amended 2026-04-25, 2026-04-30, PO decision): `architect-orchestrator`, `architecture-agent`, and `runtime-qa` use `gpt-5.4`; `requirement-challenger`, `prd-agent`, and `ux-agent` use `claude-sonnet-4.6`; `design-qa-agent` and `dev` use `gpt-5.3-codex`. Gates 1, 2, 3B nested QA, 4, and 5.5 sync handoffs must pass an explicit `model` argument. Gate 3A defaults to async `ux-agent` dispatch and uses the role default model unless a deliberate override is specified. Gate 3B routes through `ux-agent`, which sync-dispatches `design-qa-agent`; orchestrator persists the returned critique in `04-design-qa.md` before Product Owner review. Terminal dispatch via `scripts/run-agent.ts` resolves the role default automatically unless a deliberate override is specified. Parallel async work uses multiple independent `scripts/run-agent.ts` terminal processes rather than any batched multi-task dispatcher. Any new live role must be added to `scripts/agent-model-routing.ts` and `.github/skills/async-agent-dispatch/SKILL.md` before use. Cross-ref: `.github/AGENTS.md` Model Routing Policy.
 84. Reasoning-effort policy (adopted 2026-04-23, amended 2026-04-25, 2026-04-30, PO decision): all repo-controlled Copilot SDK terminal sessions must use the highest supported `reasoningEffort` for the selected model. `scripts/run-agent.ts` enforces this centrally by inspecting `listModels()` metadata and selecting the strongest supported level, with `high` as the fallback when model metadata is unavailable. Sync `runSubagent` handoffs currently expose explicit model selection but no repo-controlled reasoning-effort parameter; Gate 3B therefore targets the Codex sync lane as the closest available approximation to the desired `xhigh` review posture, but exact sync `xhigh` remains a tool limitation rather than an enforceable repo guarantee. Cross-ref: `.github/AGENTS.md` Model Routing Policy.
 85. Dispatch routing transparency (adopted 2026-04-23, PO decision): for each async `run_in_terminal (mode=async)` dispatch of `scripts/run-agent.ts`, orchestrator must print exactly one dispatch banner in chat immediately after dispatch returns, including role, model, reasoning effort, effort source (`supported-efforts` or `fallback`), gate/slice context, terminal id, and timestamp. Cross-ref: `.github/AGENTS.md` Model Routing Policy and `.github/skills/async-agent-dispatch/SKILL.md`.
@@ -168,13 +176,19 @@ Project-specific Figma identifiers live in `.figma-config.local` (gitignored). U
 96. Async fan-out policy (adopted 2026-04-30, PO decision): repo-supported async execution is one agent per `scripts/run-agent.ts` process. For parallel work, orchestrator launches N independent `run_in_terminal (mode=async)` calls for N lanes and tracks terminal IDs independently. The batched `scripts/mcp-dev-orchestrator.ts` / `agent-orchestrator` MCP path is retired from live orchestration because aggregate completion via `Promise.all` delays per-lane completion visibility and defeats terminal-exit notifications. Cross-ref: `.github/skills/async-agent-dispatch/SKILL.md`, `.github/AGENTS.md`.
 97. PR evidence no-UI hosting policy (adopted 2026-04-30, amended 2026-04-30, PO decision): for PR-body evidence images, agents prefer non-UI paths. Accepted forms are absolute HTTPS URLs from configured agent-controlled external evidence storage keyed by PR number and exact pushed 40-character current-head SHA, GitHub-hosted attachment URLs when a non-UI upload capability exists, or repository-hosted file URLs pinned to the exact pushed 40-character current-head SHA. When external evidence storage is used, objects are uploaded under a PR-scoped and current-head-scoped prefix and validated after upload; they are not branch files and must not appear in `Files Changed`. When repository-hosted evidence is used, evidence files are committed under a PR-scoped folder for the current PR, URLs are generated only after push from the actual pushed head SHA, and agents validate that the rendered images resolve before claiming completion. Browser/UI upload fallback is reserved for cases where Product Owner explicitly requires attachment URLs and no non-UI upload path exists. Cross-ref: `.github/AGENTS.md` GitHub Interaction Policy, `.github/agents/dev.agent.md`, `.github/skills/build-merge-gate-orchestration/SKILL.md`.
 
-## Resume Protocol For Orchestrator
+## Historical Resume Protocol (Deprecated)
+
+This section is retained for historical traceability only.
+
+Live resume protocol:
+- Read `.github/workflow-context.md`.
+- Follow `.github/skills/orchestrator-session-context-lifecycle/SKILL.md` (role-owned contract, compatibility skill name).
 
 On first response in any new activity:
 
 1. Read `.github/AGENTS.md`.
-2. Read this file (`.github/orchestrator-context.md`).
-3. Identify current gate from this file.
+2. Read `.github/workflow-context.md`.
+3. Identify current gate and gate owner from that file.
 4. Read only the gate-relevant agent file(s) under `.github/agents/`.
 5. Write `/memories/session/active-state.md` with current slice, gate, blockers, and next micro-goal.
 6. Return a short resume snapshot:
@@ -202,6 +216,7 @@ On first response in any new activity:
 | `post-tark-vitark` | ✅ Re-pass (refined, 2026-04-08) | ✅ Re-pass (2026-04-08) | ✅ Pass (PO approved 2026-04-16, PR #83 merged) | ✅ Pass (2026-04-16, PR #94 merged) | ✅ Complete (T-1–T-8 + post-build PRs #106, #108, slice merge PR #109) | ✅ Complete (2026-04-17, PR #112 merged) |
 | `debate-screen-polish` | ✅ Pass (2026-04-17, Standard) | ✅ Full Pass (2026-04-17) | ✅ Pass | ✅ Pass | ✅ Complete (T-1 #124, T-2 #125, T-3 #126; integrated 2026-04-19) | ✅ Complete (2026-04-19; tracker #127 closed) |
 | `create-debate` | ✅ Pass (2026-04-23, Standard) | ✅ Full Pass (2026-04-23) | ✅ Pass (PO approved 2026-04-26; Gate 3 writeback complete) | ✅ Pass (2026-04-27; architecture + task decomposition complete) | ✅ Complete (PRs #212, #211, #213, #214, #215, #216, #217 merged; integrated runtime QA Pass) | ✅ Complete (2026-04-29; PR #219 merged) |
+| `active-debate-m3-alignment` | ✅ Pass (2026-05-08, Standard) | ✅ Full Pass (2026-05-08) | 🔁 Gate 3 blocked; PO selected manual exact-screen rebuild handoff to ux-agent (2026-05-08) | ⏳ Pending | ⏳ Pending | ⏳ Pending |
 
 ## Log Archive Protocol
 
@@ -340,6 +355,62 @@ Detailed repo-wide governance history from 2026-03-30 through 2026-04-02 is arch
 - Major decisions: None new — PRD preserved Gate 1 intent with zero unapproved deltas. Alignment check confirmed one-to-one mapping.
 - Next micro-goal: Gate 3A — invoke UX Agent with PRD Draft Package.
 - Blockers/owner decisions: None. Ready for Gate 3.
+
+### 2026-05-08 (active-debate-m3-alignment Gate 3 blocked — sync UX fallback confirmed schematic Phase 2 frames)
+- Gate status: `active-debate-m3-alignment` Gate 3 remains blocked. Sync UX fallback confirmed that all 17 Phase 2 frames are still schematic placeholder frames and are not exact screens.
+- Artifact changes: Updated `docs/slices/active-debate-m3-alignment/03-ux.md` to the blocked recovery state: top-level status, Product Owner rejection record, Gate Decision, Design Review Access, Phase 2 status, and Orchestrator Resume Packet now all explicitly mark the 17 Phase 2 node IDs as rejected schematic placeholders. Updated `/memories/session/active-state.md` to the blocked state.
+- Open questions status: no new open questions. OQ-1, OQ-2, and OQ-3 remain resolved. The block is frame fidelity only.
+- Major decisions: Orchestrator sampled nodes `996:482` and `997:596` directly from Figma and confirmed they are still ghost/schematic placeholders. Two async UX recovery lanes returned empty output and failed to correct the artifact. Sync UX fallback corrected the artifact honesty and confirmed that Design QA must not start.
+- Next micro-goal: present Product Owner with the rebuild-path decision: another constrained exact-screen rebuild attempt versus tooling-blocker escalation.
+- Blockers/owner decisions: Product Owner must choose the rebuild path for the rejected Phase 2 frames before Gate 3 can continue. Gate 4 remains blocked.
+
+### 2026-05-08 (active-debate-m3-alignment manual rebuild path selected)
+- Gate status: `active-debate-m3-alignment` remains blocked in Gate 3A. Product Owner selected the rebuild option and requested a manual direct-chat handoff to `ux-agent` instead of another orchestrator-dispatched lane.
+- Artifact changes: Created `docs/slices/active-debate-m3-alignment/gate-3a-phase2-exact-screen-manual-chat-prompt.md` as the copy-paste handoff packet for direct UX chat.
+- Open questions status: none new. The blocked state remains a Figma exact-screen execution problem, not a requirement ambiguity.
+- Major decisions: Product Owner chose Option 1, but specifically as a manual chat handoff rather than an orchestrator-run async or sync dispatch. The next valid action is a bounded direct `ux-agent` rebuild using the manual packet.
+- Next micro-goal: Product Owner sends the manual prompt to `ux-agent`, then returns the resulting updated `03-ux.md` / review packet for orchestrator validation.
+- Blockers/owner decisions: Gate 4 remains blocked until the manual rebuild either restores an exact-screen review set or returns a concrete tooling blocker.
+
+### 2026-05-08 (active-debate-m3-alignment Gate 3 loop-back — exact-screen rerun dispatched)
+- Gate status: `active-debate-m3-alignment` Gate 3 reopened. Product Owner explicitly rejected the Phase 2 ghost/schematic frames, so the prior `Agent-Ready` posture is superseded and Gate 3 is back in loop-back.
+- Artifact changes: Created `docs/slices/active-debate-m3-alignment/gate-3a-phase2-exact-screen-rerun-handoff.md`; updated `/memories/session/active-state.md` to track the rejection state and async rerun terminal `def0c9d0-eea3-45c5-9771-abef895850cc`.
+- Open questions status: no new open questions. The requirement is clarified: Figma must contain exact source-of-truth screens, not ghost proxies.
+- Major decisions: Product Owner rejected the current Phase 2 output because Figma is the source of truth and the screens must be exact and self-explanatory. The corrective Gate 3A pass is required to replace the 17 ghost frames with exact screens or stop with a concrete MCP/tooling blocker; no further Design QA is valid until that rerun completes.
+- Next micro-goal: wait for the bounded async `ux-agent` rerun, then validate `docs/slices/active-debate-m3-alignment/03-ux.md` and the returned design access packet before requesting any further Product Owner review.
+- Blockers/owner decisions: Gate 4 remains blocked until the rerun either produces exact screens or returns a concrete tooling blocker for owner decision.
+
+### 2026-05-08 (active-debate-m3-alignment Gate 3A Phase 1 Rerun Complete — pending PO approval)
+- Gate status: `active-debate-m3-alignment` Gate 3A Phase 1 rerun complete and locally validated. Gate 3 remains open until Product Owner visually approves the rerun frame.
+- Artifact changes: Updated `docs/slices/active-debate-m3-alignment/03-ux.md`; updated `docs/slices/active-debate-m3-alignment/01-requirement.md` AC-50 scope clarification; updated `docs/slices/active-debate-m3-alignment/02-prd.md` FR-10 scope clarification; created `docs/slices/active-debate-m3-alignment/gate-3a-phase1-rerun-handoff.md`.
+- Open questions status: OQ-1 ✅ resolved; OQ-2 ✅ resolved as moot; OQ-3 ✅ resolved by applying 332 px card width in Phase 1.
+- Major decisions: The original clone-only Phase 1 frame was rejected as review-insufficient. The Phase 1 review frame at node `984:478` now composes create-debate header authority with debate-screen-polish mobile card-width authority (`332 px`). The FAB expanded-state dismiss button is retained as an approved M3 behavioral refinement and explicitly excluded from AC-50 / FR-10 rogue-control scope.
+- Next micro-goal: Return the node-targeted Phase 1 rerun frame to Product Owner for visual approval and, if approved, dispatch Gate 3A Phase 2 using this updated artifact as resume context.
+- Blockers/owner decisions: Phase 2 is blocked pending Product Owner approval of `ActiveDebate/Default/Light/Mobile` at node `984:478`.
+
+### 2026-05-08 (active-debate-m3-alignment Gate 3B Agent-Ready — pending PO approval)
+- Gate status: `active-debate-m3-alignment` Gate 3B critique complete with `Agent-Ready` verdict. Gate 3 remains open pending Product Owner approval.
+- Artifact changes: Updated `docs/slices/active-debate-m3-alignment/03-ux.md` through Phase 2 completion and governance cleanup; created `docs/slices/active-debate-m3-alignment/gate-3a-phase2-handoff.md`; created `docs/slices/active-debate-m3-alignment/04-design-qa.md`.
+- Open questions status: OQ-1 ✅ resolved; OQ-2 ✅ resolved as moot; OQ-3 ✅ resolved. No new Gate 3B OQs raised.
+- Major decisions: Phase 2 normalized Figma governance by renaming `06-create-debate` to `[APPROVED]`, creating `07-active-debate-m3-alignment [IN PROGRESS]` (`994:482`), preserving approved frame `984:478`, and creating the remaining 17 frames. Gate 3B found no blocking design defects. Two non-blocking findings carry to Gate 5: FAB dismiss-button bounds overflow in FAB-expanded frames, and Phase 2 schematic frame representations should be treated as layout/state authority rather than DS-instance fidelity.
+- Next micro-goal: Present the Gate 3B verdict and node-targeted review links to Product Owner, then close Gate 3 on explicit approval and route to Gate 4.
+- Blockers/owner decisions: Product Owner must explicitly approve Gate 3 closure and confirm the two non-blocking findings are acceptable as Gate 5 engineering follow-through.
+
+### 2026-05-08 (active-debate-m3-alignment Gate 2 Full Pass)
+- Gate status: `active-debate-m3-alignment` Gate 2 ✅ Full Pass. PRD v0 complete with 12 FRs, 12 AC IDs, 10 constraints, 11 success metrics.
+- Artifact changes: Created `docs/slices/active-debate-m3-alignment/02-prd.md`.
+- Open questions status: OQ-1 remains accepted downstream and non-blocking for Gate 3; Gate 3A must close the interactive-control list before Gate 5. OQ-2 and OQ-3 remain resolved at Gate 1 and were preserved verbatim.
+- Major decisions: None new — PRD preserved the Gate 1 contract with zero owner-approved deltas and zero requirement drift.
+- Next micro-goal: Gate 3A — invoke UX Agent with the PRD Draft Package for `active-debate-m3-alignment`.
+- Blockers/owner decisions: None for Gate 3. OQ-1 blocks Gate 5 only.
+
+### 2026-05-08 (active-debate-m3-alignment Gate 1 Pass)
+- Gate status: `active-debate-m3-alignment` Gate 1 ✅ Pass. Complexity: Standard (full 6-gate flow).
+- Artifact changes: Created `docs/slices/active-debate-m3-alignment/01-requirement.md` and `features/active-debate-m3-alignment.feature`. Updated global AC numbering to AC-52.
+- Open questions status: Gate 3A delegation accepted for the closed interactive-control list and drift enumeration. Under-authority items become deferred issues via partial loop-back. Pure interaction states may rely on `material.io/m3` when approved Figma is silent.
+- Major decisions: Dismiss model after rogue X removal is drag, scrim, and Escape only. Escape dismissal returns focus to the collapsed FAB trigger. Motion scope includes FAB expand/collapse and bottom-sheet open/close.
+- Next micro-goal: Gate 2 — invoke PRD Agent with the Requirement Context Package for `active-debate-m3-alignment`.
+- Blockers/owner decisions: None for Gate 2. Gate 3A will close the control list and any under-authority deferred items.
 
 ### 2026-04-04 (debate-screen Gate 3A Pass)
 - Gate status: `debate-screen` Gate 3A ✅ Pass. UX flows, state matrix, interaction notes complete.
