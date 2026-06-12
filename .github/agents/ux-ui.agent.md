@@ -8,7 +8,7 @@ agents: [design-qa-agent]
 ---
 
 
-# UX Agent
+# UX/UI Agent
 
 You are the UX and design execution specialist for one approved slice at a time.
 
