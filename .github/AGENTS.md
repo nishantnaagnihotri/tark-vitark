@@ -1,4 +1,4 @@
-<!-- Protocol-Version: 3.40 -->
+<!-- Protocol-Version: 3.41 -->
 <!-- Last-Updated: 2026-06-12 -->
 
 # Shared Agent Protocol
@@ -32,9 +32,17 @@ This repository follows a human-led, agent-executed workflow.
 3. Personality must not reduce technical precision. Risks, blockers, ownership boundaries, destructive actions, and irreversible steps must still be stated plainly.
 4. Playful language is welcome; fluff, vagueness, or softened warnings are not.
 
+## Visible Workflow Ownership
+
+1. Live visible role chain is fixed to: `product-owner` -> `ux-ui` -> `architect` -> `dev` -> `test`.
+2. Gate ownership map is fixed to: Gate 1-2 (`product-owner`), Gate 3 (`ux-ui`), Gate 4 (`architect`), Gate 5 (`dev`), Gate 5.5-6 (`test`).
+3. Hidden helper lanes remain fixed to: `requirement-challenger`, `prd-agent`, `design-qa-agent`.
+4. Legacy names (`architect-orchestrator`, `ux-agent`, `architecture-agent`, `runtime-qa`) are transition-only compatibility aliases through migration package `#234`; they are not part of the live visible role surface.
+5. Any remaining reference to "orchestrator" in this repository is a transition compatibility reference, not a required visible control-plane role.
+
 ## Slice Complexity Classification
 
-Applied by orchestrator at Gate 1 intake. Product Owner confirms classification.
+Applied by the Product Owner role at Gate 1 intake. Product Owner confirms classification.
 
 | Level | Description | Example | Gate Flow |
 |---|---|---|---|
@@ -55,7 +63,7 @@ Product Owner may override classification at any time.
 1. Requirement challenge gate must pass before PRD freeze for Standard and Complex slices.
 2. PRD drafting uses Requirement Context Package and must pass PRD quality gate before PRD freeze (Standard and Complex slices; Trivial slices skip Gate 2).
 3. Gate 2 (PRD) must preserve Gate 1 intent: no silent reinterpretation of requirement statement, scope boundaries, or acceptance criteria.
-4. Design freeze must happen before coding for Standard and Complex slices. Gate 3 includes two substeps: (A) UX+Design single-pass and (B) Design QA. Gate 3A's canonical operating mode is async `scripts/run-agent.ts` dispatch to `ux-agent` as a bounded pass: `ux-agent` rehydrates from `docs/slices/<slice-name>/03-ux.md`, progressively checkpoints stable decisions back into that file, and ends the pass with an `Orchestrator Resume Packet`. After dispatch, orchestrator records the terminal ID and pauses Gate 3 until the Product Owner explicitly returns to resume; terminal completion alone never advances the gate. If the Product Owner explicitly wants to stay in the current chat for a short critique/revision loop, orchestrator may use sync `runSubagent` rounds with `ux-agent` and an explicit model resolved from role defaults in `scripts/agent-model-routing.ts`, still checkpointing stable decisions into `03-ux.md`. Further UX iteration after async feedback happens as a new async pass rehydrated from the latest `03-ux.md` checkpoint, not by keeping the prior terminal session open. There is no separate Figma Agent substep.
+4. Design freeze must happen before coding for Standard and Complex slices. Gate 3 includes two substeps: (A) UX+Design single-pass and (B) Design QA. Gate 3A's canonical operating mode is async `scripts/run-agent.ts` dispatch to `ux-agent` as a bounded pass: `ux-agent` rehydrates from `docs/slices/<slice-name>/03-ux.md`, progressively checkpoints stable decisions back into that file, and ends the pass with an `Orchestrator Resume Packet` (legacy packet name retained for transition compatibility). After dispatch, the Gate 3 owner role (`ux-ui`) records the terminal ID and pauses Gate 3 until the Product Owner explicitly returns to resume; terminal completion alone never advances the gate. If the Product Owner explicitly wants to stay in the current chat for a short critique/revision loop, the Gate 3 owner role may use sync `runSubagent` rounds with `ux-agent` and an explicit model resolved from role defaults in `scripts/agent-model-routing.ts` (currently `qwen/qwen3.6-35b-a3b`), still checkpointing stable decisions into `03-ux.md`. Further UX iteration after async feedback happens as a new async pass rehydrated from the latest `03-ux.md` checkpoint, not by keeping the prior terminal session open. There is no separate Figma Agent substep.
 5. Design artifact is mandatory for every UX task: each Gate 3A UX output must include a Figma artifact reference (Figma file URL) before progression. Raw file keys must never appear in git-tracked artifacts — store them only in `.figma-config.local`.
 6. UX Agent must run an internal challenge phase (per `ux-design-execution` skill) before producing UX flow/state artifacts: all `Must Resolve` UX gaps must be addressed or accepted by Product Owner before Gate 3A can pass.
 7. Architecture signoff must happen before coding for Standard and Complex slices.
@@ -63,22 +71,22 @@ Product Owner may override classification at any time.
 9. Architecture Agent must run a Discussion Phase before freezing the plan: key technical decisions across System Design, Solution Architecture, and Implementation Design must be surfaced, discussed with Product Owner, and confirmed before the full plan is written.
 10. UI-impacting implementation issues must pass the Gate 5.5 Runtime QA substep before Gate 6 progression, unless Product Owner explicitly accepts residual runtime risk.
 11. Merge requires passing tests, review closure, docs update when applicable, and rollback note.
-12. After Gate 3A (UX+Design single-pass) execution, orchestrator must return a Product Owner `Design Review Access Packet` with: node-targeted Figma URL(s) (include `?node-id=`), page list, key frame/state names with node IDs, pass-level change summary, and the exact review decision requested next. Packet links must prioritize runtime-preview visual frames (minimal/no QA overlays); annotated traceability frames may be included as secondary evidence links. Root file URL alone is insufficient. If node IDs are missing, loop back for clarification before claiming review-ready.
-13. If UX, Design QA, or Product Owner discussion during Gate 3 refines the approved contract, orchestrator must classify the delta before progression: `Visual-only refinement` stays in Gate 3 artifacts only; `Behavioral refinement within scope` requires explicit Product Owner approval plus AC/PRD amendment writeback; `Material scope change` loops back to Gate 2, and to Gate 1 as well if requirement boundaries changed.
+12. After Gate 3A (UX+Design single-pass) execution, the Gate 3 owner role must return a Product Owner `Design Review Access Packet` with: node-targeted Figma URL(s) (include `?node-id=`), page list, key frame/state names with node IDs, pass-level change summary, and the exact review decision requested next. Packet links must prioritize runtime-preview visual frames (minimal/no QA overlays); annotated traceability frames may be included as secondary evidence links. Root file URL alone is insufficient. If node IDs are missing, loop back for clarification before claiming review-ready.
+13. If UX, Design QA, or Product Owner discussion during Gate 3 refines the approved contract, the Gate 3 owner role must classify the delta before progression: `Visual-only refinement` stays in Gate 3 artifacts only; `Behavioral refinement within scope` requires explicit Product Owner approval plus AC/PRD amendment writeback; `Material scope change` loops back to Gate 2, and to Gate 1 as well if requirement boundaries changed.
 
 ## Architecture Reference Documents
 
 1. Architecture discussion topics are maintained in `.github/references/architecture-discussion-topics.md`.
 2. Architecture quality checks and package schema are maintained in `.github/references/architecture-quality-checks.md`.
-3. Architecture and orchestrator agents reference these documents instead of duplicating large checklists.
+3. Architecture and role-owner agents reference these documents instead of duplicating large checklists.
 
 ## Requirement Gate Orchestration Workflow
 
-The full Gate 1 orchestration workflow - slice complexity classification, requirement-challenger handoff, readiness/open-question checks, and Requirement Context Package transfer - is defined in the `requirement-gate-orchestration` skill (`.github/skills/requirement-gate-orchestration/SKILL.md`). Orchestrator must follow this skill when running Gate 1 or deciding progression to PRD.
+The full Gate 1 orchestration workflow - slice complexity classification, requirement-challenger handoff, readiness/open-question checks, and Requirement Context Package transfer - is defined in the `requirement-gate-orchestration` skill (`.github/skills/requirement-gate-orchestration/SKILL.md`). The Product Owner role must follow this skill when running Gate 1 or deciding progression to PRD.
 
 ## PRD Gate Orchestration Workflow
 
-The full Gate 2 orchestration workflow - PRD handoff trigger, local/cloud execution checks, readiness/open-question progression rules, and cloud-return validation - is defined in the `prd-gate-orchestration` skill (`.github/skills/prd-gate-orchestration/SKILL.md`). Orchestrator must follow this skill when running Gate 2 or deciding progression to Design.
+The full Gate 2 orchestration workflow - PRD handoff trigger, local/cloud execution checks, readiness/open-question progression rules, and cloud-return validation - is defined in the `prd-gate-orchestration` skill (`.github/skills/prd-gate-orchestration/SKILL.md`). The Product Owner role must follow this skill when running Gate 2 or deciding progression to Design.
 
 ## Requirement-To-PRD Alignment Workflow
 
@@ -90,11 +98,11 @@ The full Gate 3 orchestration workflow - UX/Figma/Design QA substep triggers, lo
 
 ## Architecture Gate Orchestration Workflow
 
-The full Gate 4 orchestration workflow - architecture handoff trigger, local-only signoff policy, readiness/loop-back checks, and completion/traceability validation - is defined in the `architecture-gate-orchestration` skill (`.github/skills/architecture-gate-orchestration/SKILL.md`). Orchestrator must follow this skill when running Gate 4 or authorizing Build progression.
+The full Gate 4 orchestration workflow - architecture handoff trigger, local-only signoff policy, readiness/loop-back checks, and completion/traceability validation - is defined in the `architecture-gate-orchestration` skill (`.github/skills/architecture-gate-orchestration/SKILL.md`). The Architect role must follow this skill when running Gate 4 or authorizing Build progression.
 
 ## Build And Merge Gate Orchestration Workflow
 
-The full Gate 5, Gate 5.5 Runtime QA, and Gate 6 orchestration workflow - issue-based Build handoff, runtime QA validation, local merge-review execution, readiness/loop-back rules, and checklist/output validation - is defined in the `build-merge-gate-orchestration` skill (`.github/skills/build-merge-gate-orchestration/SKILL.md`). Orchestrator must follow this skill when running Gate 5, Gate 5.5 Runtime QA, and Gate 6 decisions.
+The full Gate 5, Gate 5.5 Runtime QA, and Gate 6 orchestration workflow - issue-based Build handoff, runtime QA validation, local merge-review execution, readiness/loop-back rules, and checklist/output validation - is defined in the `build-merge-gate-orchestration` skill (`.github/skills/build-merge-gate-orchestration/SKILL.md`). The Dev and Test roles must follow this skill when running Gate 5, Gate 5.5 Runtime QA, and Gate 6 decisions.
 
 ## Environment Routing
 
@@ -109,7 +117,7 @@ The full Gate 5, Gate 5.5 Runtime QA, and Gate 6 orchestration workflow - issue-
 2. Hidden helper lane contract is frozen to exactly three names: `requirement-challenger`, `prd-agent`, `design-qa-agent`. These remain helper lanes and are not part of the visible role surface.
 3. Legacy role-name compatibility is time-boxed to one transition cycle (issues `#229` through `#234`) for: `architect-orchestrator`, `ux-agent`, `architecture-agent`, `runtime-qa`.
 4. First implementation approach is frozen to a hybrid wrapper-plus-alias path: promote/wrap to the five-role visible surface first (`#229`), then add explicit alias resolution in dispatch tooling (`#233`), and defer broad file renames/cleanup to later migration packages.
-5. Model-routing policy is frozen to local-Qwen-first for the transition window. `scripts/agent-model-routing.ts` remains the live source of truth for resolved role defaults; downstream migration packages must align routing implementation to this frozen policy.
+5. Model-routing policy is frozen to local-Qwen-first for the transition window. `scripts/agent-model-routing.ts` is the source of truth and currently routes all active role keys to `qwen/qwen3.6-35b-a3b`.
 6. Downstream migration packages (`#229`-`#234`) must treat this contract as fixed and must not reopen role names, helper visibility, alias policy, model policy, or first-step approach without a new Product Owner-approved decision issue.
 
 ## Model Routing Policy
@@ -118,24 +126,24 @@ The full Gate 5, Gate 5.5 Runtime QA, and Gate 6 orchestration workflow - issue-
 
 | Role | Default model source | Default use |
 |---|---|---|
-| `architect-orchestrator` | `scripts/agent-model-routing.ts` | coordination, gate decisions, merge-readiness reasoning |
-| `requirement-challenger` | `scripts/agent-model-routing.ts` | requirement challenge and ambiguity reduction |
-| `prd-agent` | `scripts/agent-model-routing.ts` | PRD drafting and acceptance-criteria quality checks |
-| `ux-agent` | `scripts/agent-model-routing.ts` | Gate 3A UX design, control selection, and Figma execution |
-| `design-qa-agent` | `scripts/agent-model-routing.ts` | design coverage and UX/design critique |
-| `architecture-agent` | `scripts/agent-model-routing.ts` | architecture planning and dependency/risk reasoning |
-| `dev` | `scripts/agent-model-routing.ts` | issue-scoped implementation and code editing |
-| `runtime-qa` | `scripts/agent-model-routing.ts` | browser-verdict synthesis and runtime triage |
+| `architect-orchestrator` | `qwen/qwen3.6-35b-a3b` | coordination, gate decisions, merge-readiness reasoning |
+| `requirement-challenger` | `qwen/qwen3.6-35b-a3b` | requirement challenge and ambiguity reduction |
+| `prd-agent` | `qwen/qwen3.6-35b-a3b` | PRD drafting and acceptance-criteria quality checks |
+| `ux-agent` | `qwen/qwen3.6-35b-a3b` | Gate 3A UX design, control selection, and Figma execution |
+| `design-qa-agent` | `qwen/qwen3.6-35b-a3b` | design coverage and UX/design critique |
+| `architecture-agent` | `qwen/qwen3.6-35b-a3b` | architecture planning and dependency/risk reasoning |
+| `dev` | `qwen/qwen3.6-35b-a3b` | issue-scoped implementation and code editing |
+| `runtime-qa` | `qwen/qwen3.6-35b-a3b` | browser-verdict synthesis and runtime triage |
 
 2. For sync handoffs via `runSubagent`, the dispatching agent must pass an explicit `model` argument for Gate 1, Gate 2, Gate 3A discussion loops, Gate 3B nested Design QA, Gate 4, and Gate 5.5. Do not rely on platform default selection.
-3. For every sync `runSubagent` handoff, orchestrator must print exactly one sync dispatch banner in chat immediately before the tool call. The banner must include: role, explicit model, reasoning status (`tool-controlled / not repo-configurable`), and gate/slice context.
+3. For every sync `runSubagent` handoff, the dispatching role must print exactly one sync dispatch banner in chat immediately before the tool call. The banner must include: role, explicit model, reasoning status (`tool-controlled / not repo-configurable`), and gate/slice context.
 4. Gate 3A default path uses async `scripts/run-agent.ts` dispatch to `ux-agent` and the role default model. Sync `runSubagent` fallback must pass an explicit model resolved from `scripts/agent-model-routing.ts` unless a deliberate override is declared.
-5. Gate 3B default path uses sync `runSubagent` from `ux-agent` to `design-qa-agent` with an explicit role-default model resolved from `scripts/agent-model-routing.ts` unless deliberately overridden. Orchestrator consumes the returned critique and persists the latest Gate 3B pass to `04-design-qa.md` before Product Owner review.
+5. Gate 3B default path uses sync `runSubagent` from `ux-agent` to `design-qa-agent` with an explicit role-default model (currently `qwen/qwen3.6-35b-a3b` unless deliberately overridden). The UX/UI role consumes the returned critique and persists the latest Gate 3B pass to `04-design-qa.md` before Product Owner review.
 6. For terminal-dispatched agents via `scripts/run-agent.ts`, omit `--model` unless deliberately overriding; the script resolves the role default automatically from `scripts/agent-model-routing.ts`. For parallel async work, launch multiple independent `scripts/run-agent.ts` terminal processes rather than using any batched multi-task dispatcher.
 7. Any override must be deliberate, called out in the handoff or dispatch note, and used only when the task clearly needs a non-default reasoning lane.
 8. Before a new role is used in live orchestration, add its default model to `scripts/agent-model-routing.ts` and document it in `.github/skills/async-agent-dispatch/SKILL.md` in the same change.
 9. Repo-controlled Copilot SDK terminal sessions must set the highest supported `reasoningEffort` for the selected model. This is enforced in `scripts/run-agent.ts` by resolving the model's supported reasoning levels via `listModels()` and selecting the strongest one. If model metadata is unavailable, fall back to `high`. Sync `runSubagent` handoffs currently expose explicit model selection but no repo-controlled reasoning-effort parameter; exact sync `xhigh` cannot be repo-enforced until the tool surface exposes reasoning control.
-10. For every async terminal dispatch (`run_in_terminal mode=async`) of `scripts/run-agent.ts`, orchestrator must print exactly one dispatch banner in chat per dispatch. The single banner is emitted immediately after the dispatch call returns and must include: role, resolved model, resolved reasoning effort, reasoning source (`supported-efforts` or `fallback`), gate/slice context, terminal id, and timestamp.
+10. For every async terminal dispatch (`run_in_terminal mode=async`) of `scripts/run-agent.ts`, the dispatching role must print exactly one dispatch banner in chat per dispatch. The single banner is emitted immediately after the dispatch call returns and must include: role, resolved model, resolved reasoning effort, reasoning source (`supported-efforts` or `fallback`), gate/slice context, terminal id, and timestamp.
 
 ## Async Progress Logging
 
@@ -147,15 +155,15 @@ The full Gate 5, Gate 5.5 Runtime QA, and Gate 6 orchestration workflow - issue-
 
 ## Terminal Mutation Override Policy
 
-1. Default orchestrator terminal behavior remains diagnostics-first.
-2. If Product Owner explicitly requests mutation (for example `git add`, `git commit`, `git push`, branch creation, or PR creation), orchestrator may execute those commands.
-3. Within an already approved workflow, orchestrator should autonomously perform the minimal, directly implied, low-risk local follow-on mutations needed to complete the task end-to-end. Do not pause for reconfirmation between obvious local steps such as switching to the target branch, fast-forwarding the local target branch after a merge, or deleting the just-merged local working branch. This local cleanup example does not authorize deleting any remote branch.
+1. Default terminal behavior for the active owner role remains diagnostics-first.
+2. If Product Owner explicitly requests mutation (for example `git add`, `git commit`, `git push`, branch creation, or PR creation), the active owner role may execute those commands.
+3. Within an already approved workflow, the active owner role should autonomously perform the minimal, directly implied, low-risk local follow-on mutations needed to complete the task end-to-end. Do not pause for reconfirmation between obvious local steps such as switching to the target branch, fast-forwarding the local target branch after a merge, or deleting the just-merged local working branch. This local cleanup example does not authorize deleting any remote branch.
 4. Allowed mutations must stay narrowly scoped to the approved task and referenced files.
 5. Confirmation is still required before destructive, irreversible, externally visible, security-sensitive, or scope-expanding actions that are not already covered by the approved workflow. Remote branch deletion remains externally visible and always requires explicit Product Owner confirmation.
 6. Destructive commands (`git reset --hard`, force-push, history rewrite, mass deletion) remain disallowed unless Product Owner gives explicit command-level approval for that exact operation.
-7. Orchestrator must summarize intended commands before execution and record the decision in orchestration context updates.
+7. The active owner role must summarize intended commands before execution and record the decision in workflow context updates.
 8. PR merges into `master` (or any default branch) are never executed by any agent. These are always performed by the Product Owner directly.
-9. Explicit exception to rule 2: for PRs whose base branch matches `slice/*` (integration branches, never `master` or the default branch), the Orchestrator MAY execute the merge without a separate Product Owner mutation request, provided: (a) all gate conditions for that merge tier are satisfied, (b) the Orchestrator summarizes the exact action and target before executing, and (c) the action is recorded in the orchestration context update. The Orchestrator must use GitHub MCP tools for this merge action when that capability is available; `gh pr merge --squash` (or `--merge`) is permitted only as a fallback when GitHub MCP does not provide the required merge capability for that specific action and the Product Owner explicitly approves the non-MCP fallback.
+9. Explicit exception to rule 2: for PRs whose base branch matches `slice/*` (integration branches, never `master` or the default branch), the role currently owning Gate 6 merge-readiness decisions MAY execute the merge without a separate Product Owner mutation request, provided: (a) all gate conditions for that merge tier are satisfied, (b) that role summarizes the exact action and target before executing, and (c) the action is recorded in the workflow context update. The role must use GitHub MCP tools for this merge action when that capability is available; `gh pr merge --squash` (or `--merge`) is permitted only as a fallback when GitHub MCP does not provide the required merge capability for that specific action and the Product Owner explicitly approves the non-MCP fallback.
 
 ## PR Opening Policy
 
@@ -163,7 +171,7 @@ The full Gate 5, Gate 5.5 Runtime QA, and Gate 6 orchestration workflow - issue-
 2. This automatic PR-opening allowance is unique to the implementing Gate 5 dev agent. No other agent inherits it.
 3. A separate Product Owner confirmation checkpoint is not required before that dev agent opens its own task PR unless the handoff explicitly says `branch-only`, `prepare PR package only`, or otherwise suppresses PR creation.
 4. The dev agent that opens the task PR becomes the review-loop owner immediately and must enter the `Create PR -> [REVIEW REQUESTED] -> [POLLING STARTED]` sequence without pause.
-5. Any PR creation by a non-dev agent, including orchestrator-opened PRs, requires explicit Product Owner authorization unless a different shared rule explicitly says otherwise.
+5. Any PR creation by a non-dev agent, including Product Owner/Architect/Test role-opened PRs, requires explicit Product Owner authorization unless a different shared rule explicitly says otherwise.
 
 ## Owner Question Protocol
 
@@ -172,7 +180,7 @@ The full Gate 5, Gate 5.5 Runtime QA, and Gate 6 orchestration workflow - issue-
 3. **Context in chat, choices in the tool.** Before invoking `vscode_askQuestions`, print the elaborated context, tradeoffs, and recommendation in the chat message. The tool call itself contains only concise choice labels — not the full explanation. The `question` field in the tool is a short one-line prompt only.
 4. The `header` must be a short unique identifier (3–6 words). Batch related decisions into a single `vscode_askQuestions` call.
 5. **Always mark one option as `recommended: true`** — the option the agent would choose given available information. The only exception is when all options are genuinely cost-equivalent with no clear recommendation; in that case, explicitly note in the chat context why no recommendation is given.
-6. Cross-ref: `orchestrator-context.md` Known Rule #69 and #72.
+6. Cross-ref: `.github/workflow-context.md` Known Rules and Lifecycle Notes.
 
 ## Figma Canvas Layout Protocol
 
@@ -181,9 +189,9 @@ The full Gate 5, Gate 5.5 Runtime QA, and Gate 6 orchestration workflow - issue-
 3. Journey row vertical gap: 300px minimum from the bottom of the tallest frame in a row to the top of the next row.
 4. First journey row origin: x=0, y=0. Subsequent rows stack downward. y-coordinate for each new row = y_start of previous row + previous row max height + 300.
 5. Baseline-lock frames occupy a dedicated Baseline Zone: x≥1200 (or ≥1000px right of the last design frame column), y=0, labeled with a text node `_label/baseline-zone`. Baseline frames are named with the `_baseline/` prefix to distinguish them from active design frames of the same state name.
-6. Stale or unrecognized frames are always reported as QGs by the Orchestrator — never silently left in place or deleted without Product Owner confirmation.
-7. Orchestrator must read current frame positions and heights via MCP before computing any new row coordinates. No hardcoded y values in handoff prompts.
-8. Cross-ref: `orchestrator-context.md` Known Rule #75.
+6. Stale or unrecognized frames are always reported as QGs by the UX/UI role — never silently left in place or deleted without Product Owner confirmation.
+7. The UX/UI role must read current frame positions and heights via MCP before computing any new row coordinates. No hardcoded y values in handoff prompts.
+8. Cross-ref: `.github/workflow-context.md` Known Rules and Lifecycle Notes.
 
 ## PO Actionable Link Policy
 
@@ -192,8 +200,8 @@ The full Gate 5, Gate 5.5 Runtime QA, and Gate 6 orchestration workflow - issue-
 3. **GitHub issues:** always `https://github.com/nishantnaagnihotri/tark-vitark/issues/<n>`.
 4. **GitHub PRs:** always `https://github.com/nishantnaagnihotri/tark-vitark/pull/<n>`.
 5. If multiple PO actions exist in one message, each action must have its own link on its own line.
-6. Applies to all agents without exception. Orchestrator enforces this in every gate-closure and handoff message.
-7. Cross-ref: `orchestrator-context.md` Known Rule #74.
+6. Applies to all agents without exception. The active gate owner role enforces this in every gate-closure and handoff message.
+7. Cross-ref: `.github/workflow-context.md` Known Rules and Lifecycle Notes.
 
 ## GitHub Interaction Policy
 
@@ -213,7 +221,7 @@ The full gate handoff and decision workflow - Cloud Handoff Policy, Handoff Cont
 
 ## Domain Ownership Policy
 
-The full Domain Ownership Policy - universal rules, Figma read/write routing, cross-domain escalation, and orchestrator-specific execution boundaries - is defined in the `domain-ownership-governance` skill (`.github/skills/domain-ownership-governance/SKILL.md`). All agents must follow this skill when determining ownership boundaries or routing cross-domain work.
+The full Domain Ownership Policy - universal rules, Figma read/write routing, cross-domain escalation, and role-specific execution boundaries - is defined in the `domain-ownership-governance` skill (`.github/skills/domain-ownership-governance/SKILL.md`). All agents must follow this skill when determining ownership boundaries or routing cross-domain work.
 
 ## PR Review Workflow
 
@@ -223,15 +231,15 @@ The full PR review workflow — Strict Accept-vs-Challenge Lens, PR Review Intak
 
 The stacked PR review-loop workflow - pipelined review requests, base-to-tip disposition sequencing, retarget/sync order, and rebase-compatibility recovery - is defined in the `stacked-pr-review-loop` skill (`.github/skills/stacked-pr-review-loop/SKILL.md`). Agents must follow this skill when handling dependent PR chains.
 
-For orchestrator-managed dependent PR chains, ownership is split: orchestrator owns stack sequencing (merge order, base-to-tip progression, PR retargeting); dev agents own their assigned PR's full review loop (request Copilot review, poll to review-clean, triage and fix `Accept` comments, escalate `Challenge` / `Needs Product Owner Decision` items to orchestrator, return a `REVIEW_CLEAN` or `REVIEW_CLEAN_WITH_ESCALATIONS` exit-status handback). Dev agents do not advance stack sequencing, trigger merges, or retarget PR bases.
+For architect-managed dependent PR chains, ownership is split: the Architect role owns stack sequencing (merge order, base-to-tip progression, PR retargeting); dev agents own their assigned PR's full review loop (request Copilot review, poll to review-clean, triage and fix `Accept` comments, escalate `Challenge` / `Needs Product Owner Decision` items to the Architect role, return a `REVIEW_CLEAN` or `REVIEW_CLEAN_WITH_ESCALATIONS` exit-status handback). Dev agents do not advance stack sequencing, trigger merges, or retarget PR bases.
 
 ## Gate Recovery And Resume Workflow
 
 The full recovery and resume workflow - partial artifact recovery, Figma MCP failure handling, Copilot poll timeout handling, config validation on resume, and escalation - is defined in the `gate-recovery-and-resume` skill (`.github/skills/gate-recovery-and-resume/SKILL.md`). All agents must follow this skill when a gate run fails, is resumed, or is blocked by external tooling.
 
-## Orchestrator Session And Context Lifecycle Workflow
+## Role Session And Context Lifecycle Workflow (Compatibility Alias)
 
-The full orchestrator session and context lifecycle workflow - activity resume protocol, part-time session checkpoints, context update requirements, universal principle persistence, and Gate 6 log archiving - is defined in the `orchestrator-session-context-lifecycle` skill (`.github/skills/orchestrator-session-context-lifecycle/SKILL.md`). Orchestrator must follow this skill when starting/resuming sessions or maintaining `.github/orchestrator-context.md`.
+The full role-owned session and context lifecycle workflow - activity resume protocol, part-time session checkpoints, context update requirements, universal principle persistence, and Gate 6 log archiving - is defined in the `orchestrator-session-context-lifecycle` skill (`.github/skills/orchestrator-session-context-lifecycle/SKILL.md`). The skill name/path is retained for transition compatibility through package `#234`, but the live contract is role-owned. Product Owner, UX/UI, Architect, Dev, and Test roles must follow this skill when starting/resuming sessions or maintaining `.github/workflow-context.md`.
 
 ## Protocol Versioning
 
@@ -254,7 +262,7 @@ When deferring a decision, UX option, or requirement gap out of scope for the ac
 All agents use domain language — not framework, infrastructure, or implementation vocabulary — for domain-facing concepts in every artifact, from requirement through code. Shared design-system token taxonomies are the exception: global tokens, CSS custom properties in `src/styles/tokens.css`, and Figma variable categories may use standardized infrastructure-oriented token names such as `color/*`, `spacing/*`, `--color-*`, and `--space-*`.
 
 1. **Glossary origin:** At Gate 1, the requirement-challenger produces a Domain Glossary (5–15 canonical terms) as part of the Requirement Context Package. Product Owner confirms the glossary before Gate 1 closes.
-2. **Downstream binding:** Every agent from Gate 2 onward must use only glossary terms when referring to domain concepts in artifacts. If a new domain concept emerges, the agent flags it for glossary addition via orchestrator (routed back to requirement-challenger or Product Owner).
+2. **Downstream binding:** Every agent from Gate 2 onward must use only glossary terms when referring to domain concepts in artifacts. If a new domain concept emerges, the agent flags it for glossary addition via the Product Owner role (optionally routed through `requirement-challenger` when needed).
 3. **Figma binding:** Figma layer names, component names, and frame names use glossary terms (e.g., `ArgumentCard/Tark/Light` not `Frame 47` or `Card Component`). Figma variable categories used for shared design tokens follow the token taxonomy rather than the domain glossary.
 4. **Architecture binding:** At Gate 4, the architecture agent maps each glossary term to its code identifier (function name, class name, CSS class, variable). This mapping lives in `05-architecture.md`.
 5. **Code binding:** Implementation code uses glossary-derived identifiers for domain-facing names (variables, functions, classes, selectors, and component-specific custom properties). Global design tokens and their CSS custom properties follow the shared token taxonomy in `src/styles/tokens.css`. Infrastructure terms (`div`, `span`, `render`, `component`) appear only in framework-required positions or in standardized token taxonomy names, never in domain-facing names.
@@ -274,17 +282,17 @@ Follow the `figma-governance-and-fidelity` skill (`.github/skills/figma-governan
 
 ## Figma Baseline-Lock Policy
 
-1. **One Figma file per screen.** All slices that add to or modify the same screen share one Figma file for that screen. Frames from different screens must never share a single Figma file. The file key is recorded in `.figma-config.local` (gitignored); the file URL may appear in git-tracked artifacts. Cross-ref: `orchestrator-context.md` Known Rule #73.
+1. **One Figma file per screen.** All slices that add to or modify the same screen share one Figma file for that screen. Frames from different screens must never share a single Figma file. The file key is recorded in `.figma-config.local` (gitignored); the file URL may appear in git-tracked artifacts. Cross-ref: `.github/workflow-context.md` Known Rules and Lifecycle Notes.
 2. **Mandatory baseline-lock for continuation slices.** When a slice modifies or extends an existing approved screen, the UX Agent's first Figma action (during Gate 3A using the `ux-design-execution` skill) must be to call `node.clone()` on the approved baseline frame(s) within the same file — not recreate, reinterpret, or approximate them. The source node ID(s) and resulting clone node ID(s) must be recorded as provenance in the `Design Review Access` packet. Because the file is shared, `node.clone()` works natively — no cross-file workaround is needed.
 3. **No rebuilding approved elements.** Any element already present in the approved baseline frame (cards, typography, spacing, spine, layout) must come from the clone — never rebuilt from raw shapes or primitives. Only net-new additions for this slice (e.g., a composer bar) are authored fresh by the agent.
 4. **New-screen slices.** When a slice introduces a brand-new screen with no approved predecessor, a new dedicated file is created for that screen. No baseline duplication is required. All elements must still use Design System library variables only — no raw values.
-5. Violation of rules 2–3 is a loop-back condition: orchestrator must reject `UX Readiness: Ready` claims and re-execute Gate 3A compliant with baseline-lock rules.
+5. Violation of rules 2–3 is a loop-back condition: the Gate 3 owner role must reject `UX Readiness: Ready` claims and re-execute Gate 3A compliant with baseline-lock rules.
 
 ## Design System Foundation Policy
 
 Follow the `figma-governance-and-fidelity` skill (`.github/skills/figma-governance-and-fidelity/SKILL.md`) for design system library, token governance, and M3 component library-first requirements.
 
-Key mandate: the design system follows a strict 3-layer library chain — (L1) M3 Baseline Kit (Material 3 Design Kit, read-only, enabled only in the TV Library file), (L2+L3) TarkVitark Design System file (TV brand token overrides + TV functional components), and slice files (design frames only, import TV Library only). M3 primitives are imported from L1 — never recreated. TV functional components are built in L2+L3 using M3 primitives as building blocks. Slice frames import TV Library components only — no direct M3 Kit enablement in slice files. Orchestrator enforces this via a Component Coverage Check (self-blocking, per `ux-design-execution` skill) before any frame creation. If a required TV Library component is absent, Orchestrator creates it directly in the DS library before proceeding. See `3-Layer Design System Architecture` in the skill for full detail.
+Key mandate: the design system follows a strict 3-layer library chain — (L1) M3 Baseline Kit (Material 3 Design Kit, read-only, enabled only in the TV Library file), (L2+L3) TarkVitark Design System file (TV brand token overrides + TV functional components), and slice files (design frames only, import TV Library only). M3 primitives are imported from L1 — never recreated. TV functional components are built in L2+L3 using M3 primitives as building blocks. Slice frames import TV Library components only — no direct M3 Kit enablement in slice files. The UX/UI role enforces this via a Component Coverage Check (self-blocking, per `ux-design-execution` skill) before any frame creation. If a required TV Library component is absent, the UX/UI role creates it directly in the DS library before proceeding. See `3-Layer Design System Architecture` in the skill for full detail.
 
 ## Figma Fidelity Policy
 

@@ -1,6 +1,15 @@
 # Orchestrator Context Archive
 
-Detailed repo-wide governance history moved out of `.github/orchestrator-context.md` to keep the live orchestrator context small enough for efficient session loading.
+Historical governance archive only.
+
+Live source of truth:
+- `.github/workflow-context.md`
+
+Transition compatibility:
+- `.github/orchestrator-context.md` remains as a deprecated alias through package `#234`.
+- This archive is non-live history and must not be used as the active workflow contract.
+
+Detailed repo-wide governance history moved out of `.github/orchestrator-context.md` to keep the live context surface small enough for efficient session loading.
 
 ## Repo-Wide Governance Archive
 

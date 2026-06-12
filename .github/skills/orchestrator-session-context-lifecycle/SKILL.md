@@ -1,15 +1,21 @@
 ---
 name: orchestrator-session-context-lifecycle
-description: "Orchestrator session and context lifecycle workflow: run resume protocol, manage part-time session checkpoints, emit context updates, persist universal principles, and archive completed-slice logs. Use when: starting/resuming sessions, closing sessions, or maintaining orchestrator context after gate transitions."
+description: "Role-owned session and context lifecycle workflow (skill name retained as a compatibility alias): run resume protocol, manage part-time checkpoints, emit context updates, persist universal principles, and archive completed-slice logs. Use when: starting/resuming sessions, closing sessions, or maintaining workflow context after gate transitions."
 ---
 
-# Orchestrator Session And Context Lifecycle Workflow
+# Role Session And Context Lifecycle Workflow (Compatibility Alias)
 
-Use this skill to keep orchestrator sessions resumable, auditable, and consistent across gate transitions.
+This skill name is retained for transition compatibility through migration package `#234`.
+
+Live contract:
+- Role-owned workflow context is anchored in `.github/workflow-context.md`.
+- `.github/orchestrator-context.md` is a deprecated compatibility alias, not the live source of truth.
+
+Use this skill to keep role-owned sessions resumable, auditable, and consistent across gate transitions.
 
 ## When To Use
 
-- Starting or resuming an orchestrator activity
+- Starting or resuming a role-owned gate activity
 - Closing a part-time session checkpoint
 - Recording gate transitions or major Product Owner decisions
 - Archiving slice-specific context logs after Gate 6 completion
@@ -19,8 +25,8 @@ Use this skill to keep orchestrator sessions resumable, auditable, and consisten
 On first response in any new activity:
 
 1. Read `.github/AGENTS.md`.
-2. Read `.github/orchestrator-context.md`.
-3. Identify current gate from context.
+2. Read `.github/workflow-context.md`.
+3. Identify current gate and gate owner from context.
 4. Read only gate-relevant agent files under `.github/agents/`.
 5. If the current gate is Gate 3 and the slice has been routed through async `ux-agent` dispatch, inspect `docs/slices/<slice-name>/03-ux.md`. If it contains the final `UX Flow/State Package` and `Orchestrator Resume Packet`, Gate 3 is resumable. If it instead contains `STATUS: IN PROGRESS` with checkpoint metadata (`Last Updated`, `Checkpoint Ledger`, design access snapshot, and a checkpointed `Orchestrator Resume Packet`), treat Gate 3 as blocked pending UX completion but use that artifact as the rehydration source for the resumed UX lane. If neither final output nor checkpoint metadata is present, treat Gate 3 as blocked pending UX return and do not continue orchestration beyond reporting the blocker.
 6. Write or update `/memories/session/active-state.md` with current slice, gate, blockers, and next micro-goal. When updating an existing file, preserve and merge the `## Pending Async Runs` section and all prior rows — do not replace the whole file.
@@ -52,8 +58,8 @@ After any gate transition or major owner decision:
 1. Emit a `Context Update` block in plain markdown.
 2. Include: date, gate status, artifact created or updated, open-questions state, next micro-goal.
    Include: major decision challenged, options presented, tradeoff summary, and owner-selected option.
-3. Universal principle rule: if the transition/decision creates a reusable repo-wide principle, write it to `Known Rules From User Decisions` in `.github/orchestrator-context.md` immediately (not only in log entries).
-4. Ask Product Owner to append the log block into `.github/orchestrator-context.md`.
+3. Universal principle rule: if the transition/decision creates a reusable repo-wide principle, write it to `Known Rules And Lifecycle Notes` in `.github/workflow-context.md` immediately (not only in log entries).
+4. Append the log block into `.github/workflow-context.md`.
 5. Use the updated context file as next-session baseline.
 
 ## Async Run Tracking Protocol
@@ -74,7 +80,7 @@ Do this before any other response content. If `/memories/session/active-state.md
 
 **On resume** — as the very first action of the Resume Protocol (before returning the resume snapshot), scan `## Pending Async Runs` in session memory. For each row with status `running`, call `get_terminal_output <terminal-id>` immediately and update the row to reflect the current state (`running` / `done` / `failed`). Surface any completed or blocked runs in the resume snapshot.
 
-**Gate 3A UX-return check (mandatory on resume)** — if any pending or recently completed async run is a Gate 3A `ux-agent` dispatch, inspect `docs/slices/<slice-name>/03-ux.md` before resuming the gate. Terminal completion alone is not sufficient. If the file contains the final `UX Flow/State Package` and `Orchestrator Resume Packet`, mark Gate 3 as resumable but do not auto-progress; wait for explicit Product Owner instruction to resume. If it contains `STATUS: IN PROGRESS` with checkpoint metadata, keep Gate 3 blocked for progression but surface the artifact as the authoritative recovery source for the next UX pass. If the file or checkpoint metadata is missing, keep the async run record, mark Gate 3 as blocked pending UX return, and report that the orchestrator cannot resume until the UX artifact is reconstructed and/or persisted.
+**Gate 3A UX-return check (mandatory on resume)** — if any pending or recently completed async run is a Gate 3A `ux-agent` dispatch, inspect `docs/slices/<slice-name>/03-ux.md` before resuming the gate. Terminal completion alone is not sufficient. If the file contains the final `UX Flow/State Package` and `Orchestrator Resume Packet`, mark Gate 3 as resumable but do not auto-progress; wait for explicit Product Owner instruction to resume. If it contains `STATUS: IN PROGRESS` with checkpoint metadata, keep Gate 3 blocked for progression but surface the artifact as the authoritative recovery source for the next UX pass. If the file or checkpoint metadata is missing, keep the async run record, mark Gate 3 as blocked pending UX return, and report that the gate owner cannot resume until the UX artifact is reconstructed and/or persisted.
 
 **On every turn while runs are active** — if `## Pending Async Runs` contains any row with status `running` at the start of a turn, do both of the following before processing the user message:
 
@@ -100,12 +106,12 @@ Useful local progress means one or more of: non-trivial changed files in the ass
 
 When a slice reaches Gate 6 ✅ Complete:
 
-1. Pre-archive: extract universal principles to `Known Rules From User Decisions` or permanent shared protocol docs before archiving.
-2. Move only slice-specific log entries for that slice from `.github/orchestrator-context.md` to `docs/slices/<slice-name>/context-log.md`.
-3. Keep repo-wide/global governance history in `.github/orchestrator-context.md` (or move old global history to `.github/orchestrator-context.archive.md` when needed).
+1. Pre-archive: extract universal principles to `Known Rules And Lifecycle Notes` in `.github/workflow-context.md` or permanent shared protocol docs before archiving.
+2. Move only slice-specific log entries for that slice from `.github/workflow-context.md` to `docs/slices/<slice-name>/context-log.md`.
+3. Keep repo-wide/global governance history in `.github/workflow-context.md` (or move old global history to `.github/orchestrator-context.archive.md` when needed).
 4. Replace moved slice history with a one-line summary:
    `### <slice-name> — Gate 6 ✅ Complete (<date>) — Full log: docs/slices/<slice-name>/context-log.md`
 
 Periodic archival rule:
 
-5. If context update log grows beyond 15 entries or 100 lines without a slice completion event, archive oldest governance entries to `.github/orchestrator-context.archive.md` and keep a short summary line in `.github/orchestrator-context.md`.
+5. If context update log grows beyond 15 entries or 100 lines without a slice completion event, archive oldest governance entries to `.github/orchestrator-context.archive.md` and keep a short summary line in `.github/workflow-context.md`.
