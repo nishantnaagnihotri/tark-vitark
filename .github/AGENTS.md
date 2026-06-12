@@ -124,7 +124,7 @@ The full Gate 5, Gate 5.5 Runtime QA, and Gate 6 orchestration workflow - issue-
 
 1. Repository-standard role defaults are:
 
-| Role | Default model source | Default use |
+| Role | Default model | Default use |
 |---|---|---|
 | `architect-orchestrator` | `gpt-5.4` | coordination, gate decisions, merge-readiness reasoning |
 | `requirement-challenger` | `claude-sonnet-4.6` | requirement challenge and ambiguity reduction |
@@ -231,7 +231,7 @@ The full PR review workflow — Strict Accept-vs-Challenge Lens, PR Review Intak
 
 The stacked PR review-loop workflow - pipelined review requests, base-to-tip disposition sequencing, retarget/sync order, and rebase-compatibility recovery - is defined in the `stacked-pr-review-loop` skill (`.github/skills/stacked-pr-review-loop/SKILL.md`). Agents must follow this skill when handling dependent PR chains.
 
-For architect-managed dependent PR chains, ownership is split: the Architect role owns stack sequencing (merge order, base-to-tip progression, PR retargeting); dev agents own their assigned PR's full review loop (request Copilot review, poll to review-clean, triage and fix `Accept` comments, escalate `Challenge` / `Needs Product Owner Decision` items to the Architect role, return a `REVIEW_CLEAN` or `REVIEW_CLEAN_WITH_ESCALATIONS` exit-status handback). Dev agents do not advance stack sequencing, trigger merges, or retarget PR bases.
+For dependent PR chains in `Orchestrator-Managed Stacked Review Mode` (with the Architect role owning sequencing during transition), ownership is split: the Architect role owns stack sequencing (merge order, base-to-tip progression, PR retargeting); dev agents own their assigned PR's full review loop (request Copilot review, poll to review-clean, triage and fix `Accept` comments, escalate `Challenge` / `Needs Product Owner Decision` items to the Architect role, return a `REVIEW_CLEAN` or `REVIEW_CLEAN_WITH_ESCALATIONS` exit-status handback). Dev agents do not advance stack sequencing, trigger merges, or retarget PR bases.
 
 ## Gate Recovery And Resume Workflow
 

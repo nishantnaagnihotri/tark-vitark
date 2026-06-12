@@ -51,7 +51,7 @@ Transition status:
    - Output: PRD Draft Package plus readiness, alignment/traceability, quality gaps, open questions, and gate decision.
 
 3. Gate 3 (Design)
-   - Flow: PRD Draft Package -> bounded async `ux-agent` pass -> checkpointed `03-ux.md` + `Orchestrator Resume Packet` (legacy packet label retained for transition compatibility) -> manual Product Owner resume -> Design QA Verdict Package.
+   - Flow: PRD Draft Package -> bounded async `ux-ui` role pass (internally dispatched via legacy alias `ux-agent` during transition) -> checkpointed `03-ux.md` + `Orchestrator Resume Packet` (legacy packet label retained for transition compatibility) -> manual Product Owner resume -> Design QA Verdict Package.
    - Gate closes only after UX+Design pass and Design QA pass and Product Owner explicit approval.
 
 4. Gate 4 (Architecture)
@@ -77,7 +77,7 @@ Transition status:
 3. All async `run-agent.ts` lanes are tracked in `/memories/session/active-state.md` with terminal IDs and statuses.
 4. Product Owner questions must use `vscode_askQuestions` with `allowFreeformInput: true`.
 5. GitHub MCP is the default interface for GitHub interactions; fallback use requires explicit gap disclosure.
-6. Copilot review loop completion requires no semantically open review threads.
+6. Copilot review loop completion requires the latest Copilot review on the current head to indicate 0 new comments (or equivalent wording); thread state alone is not sufficient.
 7. PR merges into `master` remain Product Owner-only.
 8. Raw Figma file keys must never be committed. Store keys only in `.figma-config.local`.
 9. Figma baseline-lock is mandatory for continuation slices; existing approved elements must be cloned, not rebuilt.
