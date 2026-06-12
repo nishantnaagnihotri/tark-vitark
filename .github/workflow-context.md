@@ -112,8 +112,6 @@ On first response in any new activity:
 
 ## Current Slice Status
 
-Table scope: only slices with repository-tracked artifacts in this branch are listed.
-
 | Slice | Gate 1 | Gate 2 | Gate 3 | Gate 4 | Gate 5 | Gate 6 |
 |---|---|---|---|---|---|---|
 | `coming-soon-splash-page` | ✅ Pass | ✅ Full Pass | ✅ Pass (PO approved 2026-03-29) | ✅ Pass | ✅ Complete (T3 PR #18, T4 PR #19, T5 PR #20 all merged) | ✅ Complete (2026-03-29) |
