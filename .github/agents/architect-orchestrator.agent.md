@@ -1,6 +1,6 @@
 ---
 name: architect-orchestrator
-description: "Legacy compatibility alias for product-owner during issues #229-#234. Not a primary user-facing entry."
+description: "Legacy orchestrator compatibility lane retained during issues #229-#234; hidden from the primary user-facing surface."
 argument-hint: "Provide requirement statement and current checkpoint (done/next/blockers)."
 user-invocable: false
 tools: [vscode, execute, read, agent, edit, search, web, browser, 'com.figma.mcp/mcp/*', 'io.github.chromedevtools/chrome-devtools-mcp/*', 'github/*', 'github.vscode-pull-request-github/*', todo]
