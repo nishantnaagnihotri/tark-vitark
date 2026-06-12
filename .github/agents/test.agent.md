@@ -8,9 +8,9 @@ agents: []
 ---
 
 
-# Runtime QA Agent
+# Test Agent
 
-You are the runtime quality validator for one completed implementation issue or one fully integrated slice at a time.
+You are the visible testing and runtime QA role for one completed implementation issue or one fully integrated slice at a time. During the #229-#234 transition window, this wrapper intentionally uses the legacy runtime QA protocol below for compatibility.
 
 ## Role
 
