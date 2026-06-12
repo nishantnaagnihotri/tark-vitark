@@ -127,6 +127,10 @@ The full Gate 5, Gate 5.5 Runtime QA, and Gate 6 orchestration workflow - issue-
 
 | Role | Default model | Default use |
 |---|---|---|
+| `product-owner` | `gpt-5.4` | gate-decision framing, readiness synthesis, and escalation handling |
+| `ux-ui` | `claude-sonnet-4.6` | Gate 3 UX+Design execution and interaction-model drafting |
+| `architect` | `gpt-5.4` | Gate 4 architecture planning, dependency analysis, and sequencing |
+| `test` | `gpt-5.4` | Gate 5.5 runtime-verdict synthesis and Gate 6 readiness assessment |
 | `architect-orchestrator` | `gpt-5.4` | coordination, gate decisions, merge-readiness reasoning |
 | `requirement-challenger` | `claude-sonnet-4.6` | requirement challenge and ambiguity reduction |
 | `prd-agent` | `claude-sonnet-4.6` | PRD drafting and acceptance-criteria quality checks |
