@@ -82,7 +82,7 @@ Transition status:
 8. Raw Figma file keys must never be committed. Store keys only in `.figma-config.local`.
 9. Figma baseline-lock is mandatory for continuation slices; existing approved elements must be cloned, not rebuilt.
 10. UI-impacting implementation work must pass Gate 5.5 runtime QA unless Product Owner explicitly accepts residual runtime risk.
-11. Global AC numbering remains in force. Last assigned AC is `AC-52` (`active-debate-m3-alignment`, 2026-05-08); next AC seed is `AC-53`.
+11. Global AC numbering remains in force. Before assigning new AC IDs, determine the latest assigned AC from repository-tracked feature artifacts and continue from the next ID.
 
 ## Resume Protocol (Role-Owned)
 
@@ -112,6 +112,8 @@ On first response in any new activity:
 
 ## Current Slice Status
 
+Table scope: only slices with repository-tracked artifacts in this branch are listed.
+
 | Slice | Gate 1 | Gate 2 | Gate 3 | Gate 4 | Gate 5 | Gate 6 |
 |---|---|---|---|---|---|---|
 | `coming-soon-splash-page` | ✅ Pass | ✅ Full Pass | ✅ Pass (PO approved 2026-03-29) | ✅ Pass | ✅ Complete (T3 PR #18, T4 PR #19, T5 PR #20 all merged) | ✅ Complete (2026-03-29) |
@@ -119,7 +121,6 @@ On first response in any new activity:
 | `post-tark-vitark` | ✅ Re-pass (refined, 2026-04-08) | ✅ Re-pass (2026-04-08) | ✅ Pass (PO approved 2026-04-16, PR #83 merged) | ✅ Pass (2026-04-16, PR #94 merged) | ✅ Complete (T-1–T-8 + post-build PRs #106, #108, slice merge PR #109) | ✅ Complete (2026-04-17, PR #112 merged) |
 | `debate-screen-polish` | ✅ Pass (2026-04-17, Standard) | ✅ Full Pass (2026-04-17) | ✅ Pass | ✅ Pass | ✅ Complete (T-1 #124, T-2 #125, T-3 #126; integrated 2026-04-19) | ✅ Complete (2026-04-19; tracker #127 closed) |
 | `create-debate` | ✅ Pass (2026-04-23, Standard) | ✅ Full Pass (2026-04-23) | ✅ Pass (PO approved 2026-04-26; Gate 3 writeback complete) | ✅ Pass (2026-04-27; architecture + task decomposition complete) | ✅ Complete (PRs #212, #211, #213, #214, #215, #216, #217 merged; integrated runtime QA Pass) | ✅ Complete (2026-04-29; PR #219 merged) |
-| `active-debate-m3-alignment` | ✅ Pass (2026-05-08, Standard) | ✅ Full Pass (2026-05-08) | 🔁 Gate 3 blocked; PO selected manual exact-screen rebuild handoff to ux-agent (2026-05-08) | ⏳ Pending | ⏳ Pending | ⏳ Pending |
 
 ## Log Archive Protocol
 
