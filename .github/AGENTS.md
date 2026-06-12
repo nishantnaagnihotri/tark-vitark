@@ -63,7 +63,7 @@ Product Owner may override classification at any time.
 1. Requirement challenge gate must pass before PRD freeze for Standard and Complex slices.
 2. PRD drafting uses Requirement Context Package and must pass PRD quality gate before PRD freeze (Standard and Complex slices; Trivial slices skip Gate 2).
 3. Gate 2 (PRD) must preserve Gate 1 intent: no silent reinterpretation of requirement statement, scope boundaries, or acceptance criteria.
-4. Design freeze must happen before coding for Standard and Complex slices. Gate 3 includes two substeps: (A) UX+Design single-pass and (B) Design QA. Gate 3A's canonical operating mode is async `scripts/run-agent.ts` dispatch to `ux-agent` as a bounded pass: `ux-agent` rehydrates from `docs/slices/<slice-name>/03-ux.md`, progressively checkpoints stable decisions back into that file, and ends the pass with an `Orchestrator Resume Packet` (legacy packet name retained for transition compatibility). After dispatch, the Gate 3 owner role (`ux-ui`) records the terminal ID and pauses Gate 3 until the Product Owner explicitly returns to resume; terminal completion alone never advances the gate. If the Product Owner explicitly wants to stay in the current chat for a short critique/revision loop, the Gate 3 owner role may use sync `runSubagent` rounds with `ux-agent` and an explicit model resolved from role defaults in `scripts/agent-model-routing.ts` (currently `qwen/qwen3.6-35b-a3b`), still checkpointing stable decisions into `03-ux.md`. Further UX iteration after async feedback happens as a new async pass rehydrated from the latest `03-ux.md` checkpoint, not by keeping the prior terminal session open. There is no separate Figma Agent substep.
+4. Design freeze must happen before coding for Standard and Complex slices. Gate 3 includes two substeps: (A) UX+Design single-pass and (B) Design QA. Gate 3A's canonical operating mode is async `scripts/run-agent.ts` dispatch to `ux-agent` as a bounded pass: `ux-agent` rehydrates from `docs/slices/<slice-name>/03-ux.md`, progressively checkpoints stable decisions back into that file, and ends the pass with an `Orchestrator Resume Packet` (legacy packet name retained for transition compatibility). After dispatch, the Gate 3 owner role (`ux-ui`) records the terminal ID and pauses Gate 3 until the Product Owner explicitly returns to resume; terminal completion alone never advances the gate. If the Product Owner explicitly wants to stay in the current chat for a short critique/revision loop, the Gate 3 owner role may use sync `runSubagent` rounds with `ux-agent` and an explicit model resolved from `scripts/agent-model-routing.ts`, still checkpointing stable decisions into `03-ux.md`. Further UX iteration after async feedback happens as a new async pass rehydrated from the latest `03-ux.md` checkpoint, not by keeping the prior terminal session open. There is no separate Figma Agent substep.
 5. Design artifact is mandatory for every UX task: each Gate 3A UX output must include a Figma artifact reference (Figma file URL) before progression. Raw file keys must never appear in git-tracked artifacts — store them only in `.figma-config.local`.
 6. UX Agent must run an internal challenge phase (per `ux-design-execution` skill) before producing UX flow/state artifacts: all `Must Resolve` UX gaps must be addressed or accepted by Product Owner before Gate 3A can pass.
 7. Architecture signoff must happen before coding for Standard and Complex slices.
@@ -117,7 +117,7 @@ The full Gate 5, Gate 5.5 Runtime QA, and Gate 6 orchestration workflow - issue-
 2. Hidden helper lane contract is frozen to exactly three names: `requirement-challenger`, `prd-agent`, `design-qa-agent`. These remain helper lanes and are not part of the visible role surface.
 3. Legacy role-name compatibility is time-boxed to one transition cycle (issues `#229` through `#234`) for: `architect-orchestrator`, `ux-agent`, `architecture-agent`, `runtime-qa`.
 4. First implementation approach is frozen to a hybrid wrapper-plus-alias path: promote/wrap to the five-role visible surface first (`#229`), then add explicit alias resolution in dispatch tooling (`#233`), and defer broad file renames/cleanup to later migration packages.
-5. Model-routing policy is frozen to local-Qwen-first for the transition window. `scripts/agent-model-routing.ts` is the source of truth and currently routes all active role keys to `qwen/qwen3.6-35b-a3b`.
+5. Model-routing policy is controlled by `scripts/agent-model-routing.ts`, which is the source of truth for live role defaults during the transition window.
 6. Downstream migration packages (`#229`-`#234`) must treat this contract as fixed and must not reopen role names, helper visibility, alias policy, model policy, or first-step approach without a new Product Owner-approved decision issue.
 
 ## Model Routing Policy
@@ -126,19 +126,19 @@ The full Gate 5, Gate 5.5 Runtime QA, and Gate 6 orchestration workflow - issue-
 
 | Role | Default model source | Default use |
 |---|---|---|
-| `architect-orchestrator` | `qwen/qwen3.6-35b-a3b` | coordination, gate decisions, merge-readiness reasoning |
-| `requirement-challenger` | `qwen/qwen3.6-35b-a3b` | requirement challenge and ambiguity reduction |
-| `prd-agent` | `qwen/qwen3.6-35b-a3b` | PRD drafting and acceptance-criteria quality checks |
-| `ux-agent` | `qwen/qwen3.6-35b-a3b` | Gate 3A UX design, control selection, and Figma execution |
-| `design-qa-agent` | `qwen/qwen3.6-35b-a3b` | design coverage and UX/design critique |
-| `architecture-agent` | `qwen/qwen3.6-35b-a3b` | architecture planning and dependency/risk reasoning |
-| `dev` | `qwen/qwen3.6-35b-a3b` | issue-scoped implementation and code editing |
-| `runtime-qa` | `qwen/qwen3.6-35b-a3b` | browser-verdict synthesis and runtime triage |
+| `architect-orchestrator` | `gpt-5.4` | coordination, gate decisions, merge-readiness reasoning |
+| `requirement-challenger` | `claude-sonnet-4.6` | requirement challenge and ambiguity reduction |
+| `prd-agent` | `claude-sonnet-4.6` | PRD drafting and acceptance-criteria quality checks |
+| `ux-agent` | `claude-sonnet-4.6` | Gate 3A UX design, control selection, and Figma execution |
+| `design-qa-agent` | `gpt-5.3-codex` | design coverage and UX/design critique |
+| `architecture-agent` | `gpt-5.4` | architecture planning and dependency/risk reasoning |
+| `dev` | `gpt-5.3-codex` | issue-scoped implementation and code editing |
+| `runtime-qa` | `gpt-5.4` | browser-verdict synthesis and runtime triage |
 
 2. For sync handoffs via `runSubagent`, the dispatching agent must pass an explicit `model` argument for Gate 1, Gate 2, Gate 3A discussion loops, Gate 3B nested Design QA, Gate 4, and Gate 5.5. Do not rely on platform default selection.
 3. For every sync `runSubagent` handoff, the dispatching role must print exactly one sync dispatch banner in chat immediately before the tool call. The banner must include: role, explicit model, reasoning status (`tool-controlled / not repo-configurable`), and gate/slice context.
 4. Gate 3A default path uses async `scripts/run-agent.ts` dispatch to `ux-agent` and the role default model. Sync `runSubagent` fallback must pass an explicit model resolved from `scripts/agent-model-routing.ts` unless a deliberate override is declared.
-5. Gate 3B default path uses sync `runSubagent` from `ux-agent` to `design-qa-agent` with an explicit role-default model (currently `qwen/qwen3.6-35b-a3b` unless deliberately overridden). The UX/UI role consumes the returned critique and persists the latest Gate 3B pass to `04-design-qa.md` before Product Owner review.
+5. Gate 3B default path uses sync `runSubagent` from `ux-agent` to `design-qa-agent` with an explicit role-default model resolved from `scripts/agent-model-routing.ts` unless deliberately overridden. The UX/UI role consumes the returned critique and persists the latest Gate 3B pass to `04-design-qa.md` before Product Owner review.
 6. For terminal-dispatched agents via `scripts/run-agent.ts`, omit `--model` unless deliberately overriding; the script resolves the role default automatically from `scripts/agent-model-routing.ts`. For parallel async work, launch multiple independent `scripts/run-agent.ts` terminal processes rather than using any batched multi-task dispatcher.
 7. Any override must be deliberate, called out in the handoff or dispatch note, and used only when the task clearly needs a non-default reasoning lane.
 8. Before a new role is used in live orchestration, add its default model to `scripts/agent-model-routing.ts` and document it in `.github/skills/async-agent-dispatch/SKILL.md` in the same change.
