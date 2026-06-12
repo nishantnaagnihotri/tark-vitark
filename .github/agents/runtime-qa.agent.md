@@ -1,8 +1,8 @@
 ---
 name: runtime-qa
-description: "Use when: validating runtime behavior for a completed implementation issue or a fully integrated slice, executing acceptance-criterion browser journeys across the required viewport and theme matrix, and returning a runtime QA verdict package before merge readiness."
+description: "Legacy compatibility alias for test during issues #229-#234. Not a primary user-facing entry."
 argument-hint: "Provide PR or slice reference, validation scope or explicit skip marker with rationale, acceptance criteria mapping, route list, expected states, test data/setup notes, known-risk notes, and any Figma frame node ids needed for fidelity checks."
-user-invocable: true
+user-invocable: false
 tools: [vscode, execute, read, search, browser, 'com.figma.mcp/mcp/*', 'io.github.chromedevtools/chrome-devtools-mcp/*', 'github/*', todo]
 agents: []
 ---

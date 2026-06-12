@@ -3,7 +3,7 @@ name: prd-agent
 description: "Use when: converting a validated Requirement Context Package into a PRD v0 draft, quality-checking PRD completeness, and preparing PRD gate decisions."
 tools: [read, search, todo]
 argument-hint: "Provide Requirement Context Package and PRD scope intent for this slice."
-user-invocable: true
+user-invocable: false
 agents: []
 ---
 

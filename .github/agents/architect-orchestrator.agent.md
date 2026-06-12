@@ -1,8 +1,8 @@
 ---
 name: architect-orchestrator
-description: "Use when: planning a new slice, sequencing agent work, enforcing gates, architecture signoff, and preparing merge-readiness decisions."
+description: "Legacy compatibility alias for product-owner during issues #229-#234. Not a primary user-facing entry."
 argument-hint: "Provide requirement statement and current checkpoint (done/next/blockers)."
-user-invocable: true
+user-invocable: false
 tools: [vscode, execute, read, agent, edit, search, web, browser, 'com.figma.mcp/mcp/*', 'io.github.chromedevtools/chrome-devtools-mcp/*', 'github/*', 'github.vscode-pull-request-github/*', todo]
 agents: [requirement-challenger, prd-agent, ux-agent, design-qa-agent, architecture-agent, dev, runtime-qa]
 ---

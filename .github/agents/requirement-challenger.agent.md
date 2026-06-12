@@ -3,7 +3,7 @@ name: requirement-challenger
 description: "Use when: grilling requirements, exposing ambiguity, challenging assumptions, identifying missing information, and scoring readiness before PRD freeze."
 tools: [read, search, todo, web]
 argument-hint: "Provide requirement statement (if available) and any optional context."
-user-invocable: true
+user-invocable: false
 agents: []
 ---
 

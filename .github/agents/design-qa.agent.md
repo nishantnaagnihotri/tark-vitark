@@ -3,7 +3,7 @@ name: design-qa-agent
 description: "Use when: reviewing a Design Draft Package against PRD and UX artifacts, verifying state coverage and component consistency, and producing a design QA verdict before architecture work begins."
 tools: [read, search, todo, 'com.figma.mcp/mcp/*']
 argument-hint: "Provide Design Draft Package and any Product Owner design-system, accessibility, or platform constraints."
-user-invocable: true
+user-invocable: false
 agents: []
 ---
 
