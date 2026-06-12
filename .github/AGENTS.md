@@ -123,6 +123,7 @@ The full Gate 5, Gate 5.5 Runtime QA, and Gate 6 orchestration workflow - issue-
 ## Model Routing Policy
 
 1. Repository-standard role defaults are:
+   - The table below is a compatibility snapshot and must be kept in sync with `scripts/agent-model-routing.ts`; if there is any drift, `scripts/agent-model-routing.ts` is authoritative.
 
 | Role | Default model | Default use |
 |---|---|---|

@@ -8,7 +8,7 @@ Live source of truth:
 Compatibility status:
 - This file is retained only as a transition alias through package `#234`.
 - Any orchestrator-owned progression language below is historical and non-normative.
-- Do not add new live rules here; write live updates to `.github/workflow-context.md`.
+- Author new live rules in `.github/workflow-context.md`; only mirror wording here when transition compatibility requires it.
 
 ## Product Owner Model
 
