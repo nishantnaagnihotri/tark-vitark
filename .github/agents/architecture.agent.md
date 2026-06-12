@@ -1,9 +1,9 @@
 ---
 name: architecture-agent
-description: "Use when: converting approved requirement, PRD, and design artifacts into an implementable architecture plan, defining module boundaries and risks, and producing a task-ready breakdown for Gate 5 implementation."
+description: "Legacy compatibility alias for architect during issues #229-#234. Not a primary user-facing entry."
 tools: [read, search, todo]
 argument-hint: "Provide Design QA Verdict Package, UX/PRD artifacts, and repository context constraints for architecture planning."
-user-invocable: true
+user-invocable: false
 agents: []
 ---
 

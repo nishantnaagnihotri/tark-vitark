@@ -31,6 +31,10 @@ export type ReasoningEffortSelection = {
 };
 
 export const ROLE_DEFAULT_MODELS = {
+    "product-owner": "gpt-5.4",
+    "ux-ui": "claude-sonnet-4.6",
+    architect: "gpt-5.4",
+    test: "gpt-5.4",
     "architect-orchestrator": "gpt-5.4",
     "requirement-challenger": "claude-sonnet-4.6",
     "prd-agent": "claude-sonnet-4.6",

@@ -1,9 +1,9 @@
 ---
 name: ux-agent
-description: "Gate 3A UX design and Figma execution specialist: resolve control selection, interaction model, and screen-state design using the `ux-design-execution` skill, then return a lossless UX Flow/State Package plus Orchestrator Resume Packet. Use when: Gate 3A bounded async UX passes, UX design, control selection, interaction model, Figma execution, or an explicit in-chat critique fallback is needed before Design QA."
+description: "Legacy compatibility alias for ux-ui during issues #229-#234. Not a primary user-facing entry."
 tools: [vscode, execute, read, edit, search, web, browser, agent, 'com.figma.mcp/mcp/*', todo]
 argument-hint: "Provide PRD Draft Package and any Product Owner UX, platform, or design-system constraints."
-user-invocable: true
+user-invocable: false
 agents: [design-qa-agent]
 ---
 
